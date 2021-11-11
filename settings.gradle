@@ -1,0 +1,6 @@
+rootProject.name = 'BridgeBuilders'
+include 'game'
+include 'commons'
+include 'lobby'
+include 'mod'
+
