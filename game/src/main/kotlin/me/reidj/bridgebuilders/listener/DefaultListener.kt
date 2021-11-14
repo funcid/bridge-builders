@@ -14,6 +14,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.inventory.ItemStack
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.realm.RealmId
 
@@ -54,19 +55,39 @@ object DefaultListener : Listener {
         }
     }
 
+    lateinit var toDelete: List<ItemStack>
+
     @EventHandler
     fun PlayerDeathEvent.handle() {
+        cancelled = true
+
         val player = entity as Player
 
+        if (player.gameMode == GameMode.SPECTATOR)
+            return
+
         player.gameMode = GameMode.SPECTATOR
+
         Cycle.run(20, 5) {
-            if (it == 20 * 5 - 1) {
+            if (it == 5) {
                 player.gameMode = GameMode.SURVIVAL
                 teams.stream()
                     .filter { team -> team.players.contains(player.uniqueId) }
                     .forEach { team -> player.teleport(team.location) }
+                Cycle.exit()
             }
-            ModHelper.sendTitle(app.getUser(player), "До возрождения $it")
+            ModHelper.sendTitle(app.getUser(player), "До возрождения ${5 - it}")
         }
+
+        player.inventory.contents.toList().stream()
+            .filter { it != null }
+            .forEach {
+                when (it.amount > 4) {
+                    true -> it.amount -= 2
+                    false -> toDelete = listOf(it)
+                }
+            }
+
+        toDelete.forEach { player.inventory.remove(it) }
     }
 }

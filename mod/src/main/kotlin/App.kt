@@ -1,3 +1,4 @@
+
 import dev.xdark.clientapi.event.render.*
 import ru.cristalix.clientapi.KotlinMod
 import ru.cristalix.uiengine.UIEngine
@@ -14,7 +15,6 @@ class App : KotlinMod() {
         TimeBar
         MarkerManager
         OnlineBar
-        TeleportCoolDown
 
         registerHandler<HealthRender> { isCancelled = true }
         registerHandler<ExpBarRender> { isCancelled = true }
@@ -24,6 +24,11 @@ class App : KotlinMod() {
 
         registerChannel("func:glow") {
             GlowEffect.show(0.3, readInt(), readInt(), readInt(), 0.7)
+        }
+
+        registerChannel("bridge:start") {
+            registerHandler<HealthRender> { isCancelled = false }
+            registerHandler<HungerRender> { isCancelled = false }
         }
     }
 }
