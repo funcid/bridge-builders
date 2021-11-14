@@ -55,6 +55,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 teams.forEach { team ->
                     team.players.forEach {
                         val player = Bukkit.getPlayer(it) ?: return@forEach
+                        player.gameMode = org.bukkit.GameMode.SURVIVAL
                         player.itemOnCursor = null
                         player.teleport(team.location)
                         player.inventory.armorContents = kit.armor
@@ -122,9 +123,20 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 user.stat.games++
             }
         }
+        teams.forEach {
+            it.players.forEach { player ->
+                try {
+                    val find = org.bukkit.Bukkit.getPlayer(player)
+                    if (find != null)
+                        it.team!!.removePlayer(find)
+                } catch (ignored: Exception) {
+                }
+            }
+            it.players.clear()
+        }
         when {
             time == GAME.lastSecond * 20 + 20 * 10 -> {
-                me.reidj.bridgebuilders.app.restart()
+                app.restart()
                 -1
             }
             time < (END.lastSecond - 10) * 20 -> (END.lastSecond - 10) * 20

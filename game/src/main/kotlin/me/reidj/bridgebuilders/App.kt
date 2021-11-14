@@ -5,6 +5,7 @@ import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.listener.ConnectionHandler
+import me.reidj.bridgebuilders.listener.DamageListener
 import me.reidj.bridgebuilders.listener.DefaultListener
 import me.reidj.bridgebuilders.listener.GlobalListeners
 import me.reidj.bridgebuilders.top.TopManager
@@ -56,7 +57,8 @@ class App : JavaPlugin() {
         B.events(
             GlobalListeners,
             ConnectionHandler,
-            DefaultListener
+            DefaultListener,
+            DamageListener
         )
 
         // Запуск игрового таймера
