@@ -55,7 +55,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 teams.forEach { team ->
                     team.players.forEach {
                         val player = Bukkit.getPlayer(it) ?: return@forEach
-                        player.gameMode = org.bukkit.GameMode.SURVIVAL
+                        player.gameMode = GameMode.SURVIVAL
                         player.itemOnCursor = null
                         player.teleport(team.location)
                         player.inventory.armorContents = kit.armor
@@ -68,6 +68,13 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 users.forEach { user ->
                     // Отправить информацию о начале игры клиенту
                     me.reidj.bridgebuilders.mod.ModTransfer().send("bridge:start", user)
+                    teams.forEach {
+                        me.reidj.bridgebuilders.mod.ModTransfer()
+                            .double(it.teleportLocation.x)
+                            .double(it.teleportLocation.y)
+                            .double(it.teleportLocation.z)
+                            .send("bridge:teleportcreate", user)
+                    }
                 }
                 // Выдача активных ролей
                 activeStatus = GAME

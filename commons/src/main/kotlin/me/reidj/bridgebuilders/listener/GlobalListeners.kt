@@ -1,7 +1,6 @@
 package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
-import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent
 import io.netty.buffer.Unpooled
 import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.worldMeta
@@ -10,14 +9,14 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutCustomPayload
 import org.bukkit.entity.Arrow
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.block.*
-import org.bukkit.event.entity.EntityExplodeEvent
+import org.bukkit.event.block.BlockFadeEvent
+import org.bukkit.event.block.BlockRedstoneEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.entity.ProjectileHitEvent
-import org.bukkit.event.hanging.HangingBreakByEntityEvent
-import org.bukkit.event.inventory.CraftItemEvent
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.player.*
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent
+import org.bukkit.event.player.PlayerInteractEntityEvent
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import ru.cristalix.core.account.IAccountService
 import ru.cristalix.core.display.DisplayChannels
 import ru.cristalix.core.display.messages.Mod
@@ -70,17 +69,7 @@ object GlobalListeners : Listener {
     }
 
     @EventHandler
-    fun CraftItemEvent.handle() {
-        isCancelled = true
-    }
-
-    @EventHandler
     fun PlayerInteractEntityEvent.handle() {
-        isCancelled = true
-    }
-
-    @EventHandler
-    fun PlayerDropItemEvent.handle() {
         isCancelled = true
     }
 
@@ -90,52 +79,12 @@ object GlobalListeners : Listener {
     }
 
     @EventHandler
-    fun BlockSpreadEvent.handle() {
-        isCancelled = true
-    }
-
-    @EventHandler
-    fun BlockGrowEvent.handle() {
-        isCancelled = true
-    }
-
-    @EventHandler
-    fun BlockFromToEvent.handle() {
-        isCancelled = true
-    }
-
-    @EventHandler
-    fun HangingBreakByEntityEvent.handle() {
-        isCancelled = true
-    }
-
-    @EventHandler
-    fun BlockBurnEvent.handle() {
-        isCancelled = true
-    }
-
-    @EventHandler
-    fun EntityExplodeEvent.handle() {
-        isCancelled = true
-    }
-
-    @EventHandler
     fun PlayerArmorStandManipulateEvent.handle() {
         isCancelled = true
     }
 
     @EventHandler
-    fun PlayerAdvancementCriterionGrantEvent.handle() {
-        isCancelled = true
-    }
-
-    @EventHandler
     fun PlayerSwapHandItemsEvent.handle() {
-        isCancelled = true
-    }
-
-    @EventHandler
-    fun InventoryClickEvent.handle() {
         isCancelled = true
     }
 

@@ -26,20 +26,13 @@ val map = MapLoader.load("Aquamarine")
 val LOBBY_SERVER: RealmId = RealmId.of("BRIL-1")
 var activeStatus = Status.STARTING
 var games = 0
+
 var teams = listOf(
-    Color.RED,
-    Color.BLUE,
-    Color.GREEN,
-    Color.YELLOW
-).map {
-    Team(
-        mutableListOf(),
-        it,
-        map.getLabel(it.name.toLowerCase() + "-team"),
-        null,
-        true
-    )
-}
+    Team(mutableListOf(), Color.RED, map.getLabel("red-team"), map.getLabel("red-teleport"),null, true, mutableMapOf()),
+    Team(mutableListOf(), Color.BLUE, map.getLabel("blue-team"), map.getLabel("blue-teleport"),null, true, mutableMapOf()),
+    Team(mutableListOf(), Color.GREEN, map.getLabel("green-team"), map.getLabel("green-teleport"),null, true, mutableMapOf()),
+    Team(mutableListOf(), Color.YELLOW, map.getLabel("yellow-team"), map.getLabel("yellow-teleport"),null, true, mutableMapOf())
+)
 
 class App : JavaPlugin() {
 

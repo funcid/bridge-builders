@@ -7,6 +7,7 @@ import me.reidj.bridgebuilders.*
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import ru.cristalix.core.formatting.Formatting
@@ -50,5 +51,12 @@ object DefaultListener : Listener {
                 B.postpone(20 * 2) { team.isActiveTeleport = true }
             }
         }
+    }
+
+    @EventHandler
+    fun BlockBreakEvent.handle() {
+        teams.stream()
+            .filter { it.players.contains(player.uniqueId) }
+            .forEach { it.breakBlocks[block.location] = block.type }
     }
 }
