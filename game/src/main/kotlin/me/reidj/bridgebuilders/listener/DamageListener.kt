@@ -21,7 +21,7 @@ object DamageListener : Listener {
 
     @EventHandler
     fun EntityDamageEvent.handle() {
-        if (activeStatus != Status.GAME)
+        if (activeStatus != Status.GAME || (entity as Player).gameMode == GameMode.SPECTATOR)
             cancelled = true
     }
 
@@ -31,10 +31,31 @@ object DamageListener : Listener {
 
         val player = entity as Player
 
-        B.bc("§a ${player.name} §fбыл убит игроком ${player.killer.name}")
+        if (player.killer != null)
+            B.bc("§a ${player.name} §fбыл убит игроком ${player.killer.name}")
 
         if (player.gameMode == GameMode.SPECTATOR)
             return
+
+        player.inventory
+            .filterNotNull()
+            .forEach {
+                if (it.getAmount() > 4) {
+                    it.setAmount(it.getAmount() - 2)
+                } else {
+                    val name = it.getType().name
+                    if (name.endsWith("SWORD") || name.endsWith("AXE") || name.endsWith("PICKAXE")) {
+                        if (it.getDurability() >= 0)
+                            it.setDurability((it.getDurability() + 20).toShort())
+                        else
+                            toDelete.add(it)
+                    } else {
+                        toDelete.add(it)
+                    }
+                }
+            }
+        toDelete.forEach { player.inventory.remove(it) }
+        toDelete.clear()
 
         player.gameMode = GameMode.SPECTATOR
 
@@ -48,15 +69,5 @@ object DamageListener : Listener {
             }
             ModHelper.sendTitle(app.getUser(player), "До возрождения ${5 - it}")
         }
-
-        player.inventory.contents.toList().stream()
-            .filter { it != null }
-            .forEach {
-                when (it.amount > 4) {
-                    true -> it.amount -= 2
-                    false -> toDelete.add(it)
-                }
-            }
-        toDelete.forEach { player.inventory.remove(it) }
     }
 }

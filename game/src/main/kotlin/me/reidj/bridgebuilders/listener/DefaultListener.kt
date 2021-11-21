@@ -42,14 +42,15 @@ object DefaultListener : Listener {
     @EventHandler
     fun PlayerMoveEvent.handle() {
         if (player.location.subtract(0.0, 1.0, 0.0).block.type == Material.EMERALD_BLOCK && timer.time / 20 >= 180) {
-            val team = ListUtils.random(teams.stream()
-                .filter { !it.players.contains(player.uniqueId) }
-                .collect(Collectors.toList()))
-            if (team.isActiveTeleport) {
-                team.isActiveTeleport = false
-                player.teleport(team.location)
-                B.postpone(20 * 2) { team.isActiveTeleport = true }
-            }
+            teams.filter { it.players.contains(player.uniqueId) }
+                .filter { it.isActiveTeleport }
+                .forEach {
+                    it.isActiveTeleport = false
+                    player.teleport(ListUtils.random(teams.stream()
+                        .filter { team -> !team.players.contains(player.uniqueId) }
+                        .collect(Collectors.toList())).location)
+                    B.postpone(20 * 2) { it.isActiveTeleport = true }
+                }
         }
     }
 

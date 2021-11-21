@@ -17,7 +17,7 @@ object TeleportCoolDown {
     val banner = rectangle {
         size = V3(100.0, 200.0)
         rotation = Rotation(2 * Math.PI, 0.0, 1.0, 0.0)
-        color = TRANSPARENT
+        color = BLACK
         addChild(text)
     }
 

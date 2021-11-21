@@ -6,13 +6,11 @@ import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.worldMeta
 import net.minecraft.server.v1_12_R1.PacketDataSerializer
 import net.minecraft.server.v1_12_R1.PacketPlayOutCustomPayload
-import org.bukkit.entity.Arrow
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockFadeEvent
 import org.bukkit.event.block.BlockRedstoneEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
-import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -91,11 +89,5 @@ object GlobalListeners : Listener {
     @EventHandler
     fun FoodLevelChangeEvent.handle() {
         foodLevel = 20
-    }
-
-    @EventHandler
-    fun ProjectileHitEvent.handle() {
-        if (entity is Arrow)
-            entity.remove()
     }
 }

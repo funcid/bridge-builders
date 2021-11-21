@@ -81,6 +81,7 @@ class App : JavaPlugin() {
     fun restart() {
         activeStatus = Status.STARTING
         Bukkit.getOnlinePlayers().forEach { it.kickPlayer("Выключение сервера.") }
+        Bukkit.unloadWorld(map.name, false)
 
         // Полная перезагрузка если много игр наиграно
         if (games > GAMES_STREAK_RESTART)
