@@ -11,6 +11,7 @@ data class Team(
     val color: Color,
     var location: Location,
     var teleportLocation: Location,
+    var rotate: Double,
     var team: Team?,
     var isActiveTeleport: Boolean,
     var breakBlocks: MutableMap<Location, Material>

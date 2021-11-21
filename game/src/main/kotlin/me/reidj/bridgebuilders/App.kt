@@ -28,10 +28,46 @@ var activeStatus = Status.STARTING
 var games = 0
 
 var teams = listOf(
-    Team(mutableListOf(), Color.RED, map.getLabel("red-team"), map.getLabel("red-teleport"),null, true, mutableMapOf()),
-    Team(mutableListOf(), Color.BLUE, map.getLabel("blue-team"), map.getLabel("blue-teleport"),null, true, mutableMapOf()),
-    Team(mutableListOf(), Color.GREEN, map.getLabel("green-team"), map.getLabel("green-teleport"),null, true, mutableMapOf()),
-    Team(mutableListOf(), Color.YELLOW, map.getLabel("yellow-team"), map.getLabel("yellow-teleport"),null, true, mutableMapOf())
+    Team(
+        mutableListOf(),
+        Color.RED,
+        map.getLabel("red-team"),
+        map.getLabel("red-teleport"),
+        1.0,
+        null,
+        true,
+        mutableMapOf()
+    ),
+    Team(
+        mutableListOf(),
+        Color.BLUE,
+        map.getLabel("blue-team"),
+        map.getLabel("blue-teleport"),
+        2.0,
+        null,
+        true,
+        mutableMapOf()
+    ),
+    Team(
+        mutableListOf(),
+        Color.GREEN,
+        map.getLabel("green-team"),
+        map.getLabel("green-teleport"),
+        4.0,
+        null,
+        true,
+        mutableMapOf()
+    ),
+    Team(
+        mutableListOf(),
+        Color.YELLOW,
+        map.getLabel("yellow-team"),
+        map.getLabel("yellow-teleport"),
+        6.0,
+        null,
+        true,
+        mutableMapOf()
+    )
 )
 
 class App : JavaPlugin() {

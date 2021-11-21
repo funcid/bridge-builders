@@ -68,13 +68,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 users.forEach { user ->
                     // Отправить информацию о начале игры клиенту
                     me.reidj.bridgebuilders.mod.ModTransfer().send("bridge:start", user)
-                    teams.forEach {
-                        me.reidj.bridgebuilders.mod.ModTransfer()
-                            .double(it.teleportLocation.x)
-                            .double(it.teleportLocation.y)
-                            .double(it.teleportLocation.z)
-                            .send("bridge:teleportcreate", user)
-                    }
                 }
                 // Выдача активных ролей
                 activeStatus = GAME
@@ -95,6 +88,14 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     .integer(time)
                     .boolean(false)
                     .send("bridge:online", app.getUser(it))
+                me.reidj.bridgebuilders.teams.forEach { team ->
+                    me.reidj.bridgebuilders.mod.ModTransfer()
+                        .double(team.teleportLocation.x)
+                        .double(team.teleportLocation.y)
+                        .double(team.teleportLocation.z)
+                        .double(team.rotate)
+                        .send("bridge:teleportupdate", app.getUser(it))
+                }
             }
         }
         // Проверка на победу

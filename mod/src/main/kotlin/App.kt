@@ -13,9 +13,9 @@ class App : KotlinMod() {
 
         Title
         TimeBar
-        TeleportCoolDown
+        CommandChoose
         MarkerManager
-        //OnlineBar
+        OnlineBar
 
         registerHandler<HealthRender> { isCancelled = true }
         registerHandler<ExpBarRender> { isCancelled = true }
