@@ -32,8 +32,6 @@ var teams = listOf(
         mutableListOf(),
         Color.RED,
         map.getLabel("red-team"),
-        map.getLabel("red-teleport"),
-        1.0,
         null,
         true,
         mutableMapOf()
@@ -42,8 +40,6 @@ var teams = listOf(
         mutableListOf(),
         Color.BLUE,
         map.getLabel("blue-team"),
-        map.getLabel("blue-teleport"),
-        2.0,
         null,
         true,
         mutableMapOf()
@@ -52,8 +48,6 @@ var teams = listOf(
         mutableListOf(),
         Color.GREEN,
         map.getLabel("green-team"),
-        map.getLabel("green-teleport"),
-        4.0,
         null,
         true,
         mutableMapOf()
@@ -62,8 +56,6 @@ var teams = listOf(
         mutableListOf(),
         Color.YELLOW,
         map.getLabel("yellow-team"),
-        map.getLabel("yellow-teleport"),
-        6.0,
         null,
         true,
         mutableMapOf()

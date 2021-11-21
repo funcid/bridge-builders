@@ -32,7 +32,7 @@ object DamageListener : Listener {
         val player = entity as Player
 
         if (player.killer != null)
-            B.bc("§a ${player.name} §fбыл убит игроком ${player.killer.name}")
+            ModHelper.allNotification("§a ${player.name} §fбыл убит игроком ${player.killer.name}")
 
         if (player.gameMode == GameMode.SPECTATOR)
             return

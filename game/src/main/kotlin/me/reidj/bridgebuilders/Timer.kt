@@ -1,6 +1,7 @@
 package me.reidj.bridgebuilders
 
 import clepto.bukkit.B
+import me.reidj.bridgebuilders.mod.ModHelper
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.scheduler.BukkitRunnable
@@ -38,6 +39,8 @@ class Timer : BukkitRunnable() {
                 }
             }
             toDelete.forEach { teams.forEach { team -> team.breakBlocks.remove(it) } }
+            if (time == 180)
+                ModHelper.allNotification("Телепорт на чужие базы теперь §aдоступен")
         }
         time = activeStatus.now(time) + 1
     }
