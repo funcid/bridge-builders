@@ -9,8 +9,9 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutCustomPayload
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockFadeEvent
+import org.bukkit.event.block.BlockGrowEvent
 import org.bukkit.event.block.BlockRedstoneEvent
-import org.bukkit.event.entity.FoodLevelChangeEvent
+import org.bukkit.event.block.BlockSpreadEvent
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -77,6 +78,16 @@ object GlobalListeners : Listener {
     }
 
     @EventHandler
+    fun BlockSpreadEvent.handle() {
+        isCancelled = true
+    }
+
+    @EventHandler
+    fun BlockGrowEvent.handle() {
+        isCancelled = true
+    }
+
+    @EventHandler
     fun PlayerArmorStandManipulateEvent.handle() {
         isCancelled = true
     }
@@ -84,10 +95,5 @@ object GlobalListeners : Listener {
     @EventHandler
     fun PlayerSwapHandItemsEvent.handle() {
         isCancelled = true
-    }
-
-    @EventHandler
-    fun FoodLevelChangeEvent.handle() {
-        foodLevel = 20
     }
 }

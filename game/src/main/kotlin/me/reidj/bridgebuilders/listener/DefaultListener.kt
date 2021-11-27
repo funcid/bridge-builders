@@ -10,6 +10,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -45,6 +46,35 @@ object DefaultListener : Listener {
                     .forEach { showTeamList(app.getUser(it)!!) }
                 player.sendMessage(Formatting.fine("Вы выбрали команду: " + team.color.chatFormat + team.color.teamName))
             }
+        }
+        if (action == Action.LEFT_CLICK_AIR) {
+            teams.filter { it.players.contains(player.uniqueId) }
+                .forEach { team ->
+                    team.requiredBlocks.entries.forEachIndexed { index, block ->
+                        val itemHand = player.itemInHand
+                        if (itemHand.getType().getId() == block.key) {
+                            val must = block.value.needTotal - block.value.collected
+                            if (must == 0) {
+                                ModHelper.notification(
+                                    getByUuid(player.uniqueId),
+                                    Formatting.error("Мне больше не нужен этот ресурс")
+                                )
+                                return@forEach
+                            } else {
+                                block.value.collected = block.value.needTotal - maxOf(0, must - itemHand.getAmount())
+                                itemHand.setAmount(itemHand.getAmount() - must)
+                            }
+                            team.players.forEach { uuid ->
+                                ModTransfer()
+                                    .integer(index)
+                                    .integer(block.value.needTotal)
+                                    .integer(block.value.collected)
+                                    .send("bridge:tabupdate", getByUuid(uuid))
+                            }
+                            player.updateInventory()
+                        }
+                    }
+                }
         }
     }
 
@@ -95,10 +125,16 @@ object DefaultListener : Listener {
                         it.isActiveTeleport = false
                         player.teleport(ListUtils.random(teams.stream()
                             .filter { team -> !team.players.contains(player.uniqueId) }
-                            .collect(Collectors.toList())).location)
-                        B.postpone(20 * 2) { it.isActiveTeleport = true }
-                    } else {
-                        ModHelper.allNotification("Телепорт §cперезагружается §fосталось §6 секунд.")
+                            .collect(Collectors.toList())).spawn)
+                        B.postpone(20 * 180) {
+                            it.isActiveTeleport = true
+                            it.players.forEach { uuid ->
+                                ModHelper.notification(
+                                    getByUuid(uuid),
+                                    "Телепорт на чужие базы теперь §aдоступен"
+                                )
+                            }
+                        }
                     }
                 }
         }

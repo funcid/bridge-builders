@@ -11,8 +11,9 @@ import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_RESTRICTED
 lateinit var winMessage: String
 const val needPlayers: Int = 3
 val kit = DefaultKit
+
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(30, { it ->
+    STARTING(5, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 40)
             realm.status = GAME_STARTED_CAN_JOIN
@@ -57,10 +58,20 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         val player = Bukkit.getPlayer(it) ?: return@forEach
                         player.gameMode = GameMode.SURVIVAL
                         player.itemOnCursor = null
-                        player.teleport(team.location)
+                        player.teleport(team.spawn)
                         player.inventory.armorContents = kit.armor
                         player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
                         team.team!!.addEntry(player.name)
+
+                        team.requiredBlocks.entries.forEachIndexed { index, block ->
+                            me.reidj.bridgebuilders.mod.ModTransfer()
+                                .integer(index)
+                                .integer(block.value.needTotal)
+                                .integer(block.value.collected)
+                                .string(block.value.title)
+                                .integer(block.key)
+                                .send("bridge:init", getByUuid(it))
+                        }
                     }
                 }
                 // Список игроков
@@ -88,15 +99,9 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     .integer(time)
                     .boolean(false)
                     .send("bridge:online", app.getUser(it))
-                me.reidj.bridgebuilders.teams.forEach { team ->
-                    me.reidj.bridgebuilders.mod.ModTransfer()
-                        .double(team.teleportLocation.x)
-                        .double(team.teleportLocation.y)
-                        .double(team.teleportLocation.z)
-                        .double(team.rotate)
-                        .send("bridge:teleportupdate", app.getUser(it))
-                }
             }
+            if (time == 180)
+                me.reidj.bridgebuilders.mod.ModHelper.allNotification("Телепорт на чужие базы теперь §aдоступен")
         }
         // Проверка на победу
         if (me.reidj.bridgebuilders.util.WinUtil.check4win()) {
@@ -134,7 +139,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         teams.forEach {
             it.players.forEach { player ->
                 try {
-                    val find = org.bukkit.Bukkit.getPlayer(player)
+                    val find = Bukkit.getPlayer(player)
                     if (find != null)
                         it.team!!.removePlayer(find)
                 } catch (ignored: Exception) {

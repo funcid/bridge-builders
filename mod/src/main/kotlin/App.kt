@@ -16,6 +16,8 @@ class App : KotlinMod() {
         CommandChoose
         MarkerManager
         OnlineBar
+        NotificationManager
+        BoardBlocks
 
         registerHandler<HealthRender> { isCancelled = true }
         registerHandler<ExpBarRender> { isCancelled = true }

@@ -9,8 +9,10 @@ import java.util.*
 data class Team(
     val players: MutableList<UUID>,
     val color: Color,
-    var location: Location,
+    var spawn: Location,
+    var board: Location,
     var team: Team?,
     var isActiveTeleport: Boolean,
-    var breakBlocks: MutableMap<Location, Material>
+    var breakBlocks: MutableMap<Location, Material>,
+    var requiredBlocks: MutableMap<Int, RequiredBlock>
 )

@@ -1,6 +1,5 @@
 package me.reidj.bridgebuilders.listener
 
-import clepto.bukkit.B
 import clepto.bukkit.Cycle
 import me.reidj.bridgebuilders.Status
 import me.reidj.bridgebuilders.activeStatus
@@ -64,7 +63,7 @@ object DamageListener : Listener {
                 player.gameMode = GameMode.SURVIVAL
                 teams.stream()
                     .filter { team -> team.players.contains(player.uniqueId) }
-                    .forEach { team -> player.teleport(team.location) }
+                    .forEach { team -> player.teleport(team.spawn) }
                 Cycle.exit()
             }
             ModHelper.sendTitle(app.getUser(player), "До возрождения ${5 - it}")

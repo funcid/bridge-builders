@@ -3,11 +3,13 @@ package me.reidj.bridgebuilders
 import clepto.bukkit.B
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
+import me.reidj.bridgebuilders.data.RequiredBlock
 import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.listener.ConnectionHandler
 import me.reidj.bridgebuilders.listener.DamageListener
 import me.reidj.bridgebuilders.listener.DefaultListener
 import me.reidj.bridgebuilders.listener.GlobalListeners
+import me.reidj.bridgebuilders.map.MapType
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.util.MapLoader
 import org.bukkit.Bukkit
@@ -22,45 +24,31 @@ const val GAMES_STREAK_RESTART = 6
 
 lateinit var app: App
 
-val map = MapLoader.load("Aquamarine")
+val map = MapLoader.load(MapType.AQUAMARINE.data.title)
 val LOBBY_SERVER: RealmId = RealmId.of("BRIL-1")
 var activeStatus = Status.STARTING
 var games = 0
 
 var teams = listOf(
+    Color.RED,
+    Color.BLUE,
+    Color.GREEN,
+    Color.YELLOW
+).map {
     Team(
         mutableListOf(),
-        Color.RED,
-        map.getLabel("red-team"),
+        it,
+        map.getLabel(it.name.toLowerCase() + "-team"),
+        map.getLabel(it.name.toLowerCase() + "-board"),
         null,
         true,
-        mutableMapOf()
-    ),
-    Team(
-        mutableListOf(),
-        Color.BLUE,
-        map.getLabel("blue-team"),
-        null,
-        true,
-        mutableMapOf()
-    ),
-    Team(
-        mutableListOf(),
-        Color.GREEN,
-        map.getLabel("green-team"),
-        null,
-        true,
-        mutableMapOf()
-    ),
-    Team(
-        mutableListOf(),
-        Color.YELLOW,
-        map.getLabel("yellow-team"),
-        null,
-        true,
-        mutableMapOf()
+        mutableMapOf(),
+        mutableMapOf(
+            1 to RequiredBlock("Камень",1, 2),
+            2 to RequiredBlock("Земля", 0, 5)
+        )
     )
-)
+}
 
 class App : JavaPlugin() {
 

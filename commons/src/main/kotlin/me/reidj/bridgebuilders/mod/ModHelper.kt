@@ -6,7 +6,7 @@ import org.bukkit.Bukkit
 
 object ModHelper {
 
-    fun sendTitle(user: me.reidj.bridgebuilders.user.User, text: String) {
+    fun sendTitle(user: User, text: String) {
         ModTransfer()
             .string(text)
             .send("func:title", user)
@@ -16,7 +16,7 @@ object ModHelper {
         if (user != null) {
             ModTransfer()
                 .string(message)
-                .send("thepit:notification", user)
+                .send("bridge:notification", user)
         }
     }
 
@@ -24,7 +24,7 @@ object ModHelper {
         Bukkit.getOnlinePlayers().forEach { player ->
             ModTransfer()
                 .string(message)
-                .send("thepit:notification", getByPlayer(player))
+                .send("bridge:notification", getByPlayer(player))
         }
     }
 }
