@@ -1,6 +1,8 @@
 package me.reidj.bridgebuilders.listener
 
+import clepto.bukkit.B
 import dev.implario.bukkit.item.item
+import me.func.mod.Anime
 import me.reidj.bridgebuilders.Status
 import me.reidj.bridgebuilders.activeStatus
 import me.reidj.bridgebuilders.teams
@@ -23,6 +25,8 @@ object ConnectionHandler : Listener {
     fun PlayerJoinEvent.handle() {
         player.inventory.clear()
         player.gameMode = GameMode.ADVENTURE
+
+        B.postpone(5) {Anime.sendStandardMods(player)}
 
         if (activeStatus == Status.STARTING) {
             player.inventory.setItem(8, back)

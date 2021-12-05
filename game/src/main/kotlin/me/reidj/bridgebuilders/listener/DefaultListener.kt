@@ -7,7 +7,9 @@ import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.mod.ModTransfer
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
+import org.bukkit.FireworkEffect
 import org.bukkit.Material
+import org.bukkit.entity.Firework
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
@@ -144,6 +146,33 @@ object DefaultListener : Listener {
     fun BlockBreakEvent.handle() {
         teams.stream()
             .filter { it.players.contains(player.uniqueId) }
-            .forEach { it.breakBlocks[block.location] = block.type }
+            .forEach {
+                if (block.type == Material.BEACON) {
+                    ModHelper.allNotification("Победила команда ${it.color}")
+                    it.players.forEach { uuid ->
+                        val user = app.getUser(uuid)
+                        user.stat.wins++
+                        val firework = user.player!!.world!!.spawn(user.player!!.location, Firework::class.java)
+                        val meta = firework.fireworkMeta
+                        meta.addEffect(
+                            FireworkEffect.builder()
+                                .flicker(true)
+                                .trail(true)
+                                .with(FireworkEffect.Type.BALL_LARGE)
+                                .with(FireworkEffect.Type.BALL)
+                                .with(FireworkEffect.Type.BALL_LARGE)
+                                .withColor(org.bukkit.Color.YELLOW)
+                                .withColor(org.bukkit.Color.GREEN)
+                                .withColor(org.bukkit.Color.WHITE)
+                                .build()
+                        )
+                        meta.power = 0
+                        firework.fireworkMeta = meta
+                        user.stat.games++
+                    }
+                    return@forEach
+                }
+                it.breakBlocks[block.location] = block.type
+            }
     }
 }

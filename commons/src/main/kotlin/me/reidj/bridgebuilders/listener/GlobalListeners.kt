@@ -8,10 +8,7 @@ import net.minecraft.server.v1_12_R1.PacketDataSerializer
 import net.minecraft.server.v1_12_R1.PacketPlayOutCustomPayload
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.block.BlockFadeEvent
-import org.bukkit.event.block.BlockGrowEvent
-import org.bukkit.event.block.BlockRedstoneEvent
-import org.bukkit.event.block.BlockSpreadEvent
+import org.bukkit.event.block.*
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -84,6 +81,11 @@ object GlobalListeners : Listener {
 
     @EventHandler
     fun BlockGrowEvent.handle() {
+        isCancelled = true
+    }
+
+    @EventHandler
+    fun BlockPhysicsEvent.handle() {
         isCancelled = true
     }
 

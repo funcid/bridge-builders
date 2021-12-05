@@ -50,5 +50,6 @@ dependencies {
 
     implementation 'ru.cristalix:boards-bukkit-api:3.0.0'
     implementation 'ru.cristalix:npcs-bukkit-api:3.0.5'
+    implementation files('D:/IdeaProjects/BridgeBuilders/libs/animation-api.jar')
     implementation project(':commons')
 }

@@ -63,6 +63,14 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
                         team.team!!.addEntry(player.name)
 
+                        me.reidj.bridgebuilders.mod.ModTransfer()
+                            .string(org.apache.commons.lang.RandomStringUtils.random(5))
+                            .double(team.teleport.x)
+                            .double(team.teleport.y)
+                            .double(team.teleport.z)
+                            .string("mcpatcher/cit/among_us/alert.png")
+                            .send("func:marker-create", getByUuid(it))
+
                         team.requiredBlocks.entries.forEachIndexed { index, block ->
                             me.reidj.bridgebuilders.mod.ModTransfer()
                                 .integer(index)
@@ -93,13 +101,13 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     GAME(330, { time ->
         // Обновление шкалы времени
         if (time % 20 == 0) {
-            Bukkit.getOnlinePlayers().forEach {
+            /*Bukkit.getOnlinePlayers().forEach {
                 me.reidj.bridgebuilders.mod.ModTransfer()
                     .integer(GAME.lastSecond)
                     .integer(time)
                     .boolean(false)
                     .send("bridge:online", app.getUser(it))
-            }
+            }*/
             if (time == 180)
                 me.reidj.bridgebuilders.mod.ModHelper.allNotification("Телепорт на чужие базы теперь §aдоступен")
         }
@@ -114,25 +122,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             // Выдача побед выжившим и выдача всем доп. игр
             Bukkit.getOnlinePlayers().forEach {
                 val user = app.getUser(it)
-                if (it.gameMode != GameMode.SPECTATOR) {
-                    user.stat.wins++
-                    val firework = it.world!!.spawn(it.location, Firework::class.java)
-                    val meta = firework.fireworkMeta
-                    meta.addEffect(
-                        FireworkEffect.builder()
-                            .flicker(true)
-                            .trail(true)
-                            .with(FireworkEffect.Type.BALL_LARGE)
-                            .with(FireworkEffect.Type.BALL)
-                            .with(FireworkEffect.Type.BALL_LARGE)
-                            .withColor(org.bukkit.Color.YELLOW)
-                            .withColor(org.bukkit.Color.GREEN)
-                            .withColor(org.bukkit.Color.WHITE)
-                            .build()
-                    )
-                    meta.power = 0
-                    firework.fireworkMeta = meta
-                }
                 user.stat.games++
             }
         }

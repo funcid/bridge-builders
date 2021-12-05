@@ -10,7 +10,7 @@ data class Team(
     val players: MutableList<UUID>,
     val color: Color,
     var spawn: Location,
-    var board: Location,
+    var teleport: Location,
     var team: Team?,
     var isActiveTeleport: Boolean,
     var breakBlocks: MutableMap<Location, Material>,
