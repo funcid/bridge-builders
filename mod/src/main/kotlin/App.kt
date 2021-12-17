@@ -14,7 +14,6 @@ class App : KotlinMod() {
         Title
         TimeBar
         CommandChoose
-        MarkerManager
         OnlineBar
         NotificationManager
         BoardBlocks

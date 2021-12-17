@@ -2,9 +2,7 @@ package me.reidj.bridgebuilders
 
 import me.reidj.bridgebuilders.data.DefaultKit
 import org.bukkit.Bukkit
-import org.bukkit.FireworkEffect
 import org.bukkit.GameMode
-import org.bukkit.entity.Firework
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_JOIN
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_RESTRICTED
 
@@ -101,13 +99,13 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     GAME(330, { time ->
         // Обновление шкалы времени
         if (time % 20 == 0) {
-            /*Bukkit.getOnlinePlayers().forEach {
+            Bukkit.getOnlinePlayers().forEach {
                 me.reidj.bridgebuilders.mod.ModTransfer()
                     .integer(GAME.lastSecond)
                     .integer(time)
                     .boolean(false)
                     .send("bridge:online", app.getUser(it))
-            }*/
+            }
             if (time == 180)
                 me.reidj.bridgebuilders.mod.ModHelper.allNotification("Телепорт на чужие базы теперь §aдоступен")
         }

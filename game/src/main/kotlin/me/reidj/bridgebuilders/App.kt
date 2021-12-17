@@ -4,6 +4,7 @@ import clepto.bukkit.B
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
+import me.func.mod.Kit
 import me.reidj.bridgebuilders.data.RequiredBlock
 import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.listener.ConnectionHandler
@@ -59,7 +60,7 @@ class App : JavaPlugin() {
         Platforms.set(PlatformDarkPaper())
         teams = teams.dropLast(teams.size - 4)
 
-        Anime.initStandardMods()
+        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD)
 
         BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, map, 4)
         realm.readableName = "BridgeBuilders ${realm.realmId.id}"
