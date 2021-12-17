@@ -1,5 +1,7 @@
 package me.reidj.bridgebuilders
 
+import me.func.mod.Anime
+import me.func.protocol.Marker
 import me.reidj.bridgebuilders.data.DefaultKit
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
@@ -9,6 +11,7 @@ import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_RESTRICTED
 lateinit var winMessage: String
 const val needPlayers: Int = 3
 val kit = DefaultKit
+val markers: MutableList<Marker> = mutableListOf()
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     STARTING(5, { it ->
@@ -61,13 +64,34 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
                         team.team!!.addEntry(player.name)
 
-                        me.reidj.bridgebuilders.mod.ModTransfer()
-                            .string(org.apache.commons.lang.RandomStringUtils.random(5))
-                            .double(team.teleport.x)
-                            .double(team.teleport.y)
-                            .double(team.teleport.z)
-                            .string("mcpatcher/cit/among_us/alert.png")
-                            .send("func:marker-create", getByUuid(it))
+                        markers.add(
+                            Anime.marker(
+                                player,
+                                Marker(
+                                    java.util.UUID.randomUUID(),
+                                    team.teleport.x + 0.5,
+                                    team.teleport.y + 1.5,
+                                    team.teleport.z + 0.5,
+                                    16.0,
+                                    me.func.protocol.MarkerSign.ARROW_DOWN.texture
+                                )
+                            )
+                        )
+
+                        markers.forEach { marker ->
+                            var up = false
+                            clepto.bukkit.B.repeat(15) {
+                                up = !up
+                                me.func.mod.Anime.moveMarker(
+                                    player,
+                                    marker.uuid,
+                                    marker.x,
+                                    marker.y - if (up) 0.0 else 0.7,
+                                    marker.z,
+                                    0.75
+                                )
+                            }
+                        }
 
                         team.requiredBlocks.entries.forEachIndexed { index, block ->
                             me.reidj.bridgebuilders.mod.ModTransfer()
