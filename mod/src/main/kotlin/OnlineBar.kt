@@ -6,10 +6,10 @@ import ru.cristalix.uiengine.element.TextElement
 import ru.cristalix.uiengine.eventloop.animate
 import ru.cristalix.uiengine.utility.*
 
-object OnlineBar {
+class OnlineBar {
 
     private val online = rectangle {
-        offset = V3(0.0, 40.0)
+        offset = V3(0.0, 25.0)
         origin = TOP
         align = TOP
         size = V3(180.0, 5.0, 0.0)
@@ -19,7 +19,7 @@ object OnlineBar {
                 origin = LEFT
                 align = LEFT
                 size = V3(0.0, 5.0, 0.0)
-                color = Color(42, 102, 200, 1.0)
+                color = Color(42, 102, 189, 1.0)
             },
             text {
                 origin = TOP
@@ -33,14 +33,9 @@ object OnlineBar {
     }
 
     init {
-        UIEngine.overlayContext + online
+        UIEngine.overlayContext.addChild(online)
 
-        App::class.mod.registerChannel("bridge:start") {
-            online.animate(2, Easings.BACK_BOTH) { offset.y = 25.0 }
-        }
         App::class.mod.registerChannel("bridge:online") {
-            (online.children[1] as TextElement).content = ""
-
             val max = readInt()
             val current = readInt()
             val waiting = readBoolean()

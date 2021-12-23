@@ -25,7 +25,7 @@ object GlobalListeners : Listener {
 
     // Прогрузка файлов модов
     private var modList = try {
-        File("./mods/").listFiles()!!
+        File("./mods2").listFiles()!!
             .map {
                 val buffer = Unpooled.buffer()
                 buffer.writeBytes(Mod.serialize(Mod(Files.readAllBytes(it.toPath()))))

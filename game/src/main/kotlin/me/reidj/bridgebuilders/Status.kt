@@ -64,6 +64,8 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
                         team.team!!.addEntry(player.name)
 
+                        Anime.alert(player, "Цель", "Принесите нужные блоки строителю, \nчтобы построить мост к центру")
+
                         markers.add(
                             Anime.marker(
                                 player,
@@ -79,10 +81,11 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         )
 
                         markers.forEach { marker ->
+                            me.func.mod.Glow.addPlace(me.func.protocol.GlowColor.GREEN, marker.x, marker.y - 1.5, marker.z, )
                             var up = false
                             clepto.bukkit.B.repeat(15) {
                                 up = !up
-                                me.func.mod.Anime.moveMarker(
+                                Anime.moveMarker(
                                     player,
                                     marker.uuid,
                                     marker.x,
@@ -102,6 +105,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                 .integer(block.key)
                                 .send("bridge:init", getByUuid(it))
                         }
+                        me.func.mod.Glow.showAllPlaces(player)
                     }
                 }
                 // Список игроков
@@ -110,7 +114,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     // Отправить информацию о начале игры клиенту
                     me.reidj.bridgebuilders.mod.ModTransfer().send("bridge:start", user)
                 }
-                // Выдача активных ролей
                 activeStatus = GAME
                 actualTime + 1
             }
