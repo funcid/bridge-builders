@@ -78,8 +78,6 @@ class App : JavaPlugin() {
         timer = Timer()
         timer.runTaskTimer(this, 10, 1)
 
-        B.events(GlobalListeners)
-
         TopManager()
         Npcs.init(this)
 

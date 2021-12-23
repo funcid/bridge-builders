@@ -1,6 +1,5 @@
 package me.reidj.bridgebuilders.listener
 
-import clepto.bukkit.B
 import io.netty.buffer.Unpooled
 import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.worldMeta
@@ -25,11 +24,10 @@ object GlobalListeners : Listener {
 
     // Прогрузка файлов модов
     private var modList = try {
-        File("./mods2").listFiles()!!
+        File("./mods/").listFiles()!!
             .map {
                 val buffer = Unpooled.buffer()
                 buffer.writeBytes(Mod.serialize(Mod(Files.readAllBytes(it.toPath()))))
-                buffer
             }.toList()
     } catch (exception: Exception) {
         Collections.emptyList()
@@ -41,22 +39,20 @@ object GlobalListeners : Listener {
 
         player.teleport(worldMeta.getLabel("spawn"))
 
+        // Отправка модов
+        modList.forEach {
+            user.sendPacket(
+                PacketPlayOutCustomPayload(
+                    DisplayChannels.MOD_CHANNEL,
+                    PacketDataSerializer(it.retainedSlice())
+                )
+            )
+        }
+
         // Заполнение имени для топа
         if (user.stat.lastSeenName == null || (user.stat.lastSeenName != null && user.stat.lastSeenName!!.isEmpty()))
             user.stat.lastSeenName =
                 IAccountService.get().getNameByUuid(UUID.fromString(user.session.userId)).get(1, TimeUnit.SECONDS)
-
-        // Отправка модов
-        B.postpone(1) {
-            modList.forEach {
-                user.sendPacket(
-                    PacketPlayOutCustomPayload(
-                        DisplayChannels.MOD_CHANNEL,
-                        PacketDataSerializer(it.retainedSlice())
-                    )
-                )
-            }
-        }
     }
 
     @EventHandler
