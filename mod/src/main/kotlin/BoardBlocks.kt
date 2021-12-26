@@ -74,7 +74,7 @@ object BoardBlocks {
             val index = readInt()
             val needTotal = readInt()
             val collected = readInt()
-            val box = tab.children[0] as RectangleElement
+            val box = tab.children[1] as RectangleElement
             val needBlocks = readInt()
             val sum = readInt()
 

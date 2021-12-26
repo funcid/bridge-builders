@@ -8,7 +8,7 @@ data class Drop(
     val needTotal: Int,
     val collected: Int,
     val element: RectangleElement = rectangle {
-        val index = BoardBlocks.tab.children.size + 1
+        val index = BoardBlocks.tab.children.size
         val margin = 20.0
         origin = TOP
         align = TOP

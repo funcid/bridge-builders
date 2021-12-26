@@ -68,7 +68,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
 
                         team.requiredBlocks.entries.forEachIndexed { index, block ->
                             me.reidj.bridgebuilders.mod.ModTransfer()
-                                .integer(index + 1)
+                                .integer(index + 2)
                                 .integer(block.value.needTotal)
                                 .integer(block.value.collected)
                                 .string(block.value.title)
@@ -79,6 +79,10 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                             val npcArgs = label.tag.split(" ")
                             val npc = me.func.mod.Npc.npc {
                                 onClick {
+                                    if (user.activeHand)
+                                        return@onClick
+                                    user.activeHand = true
+                                    clepto.bukkit.B.postpone(5) { user.activeHand = false }
                                     teams.filter { it.players.contains(player.uniqueId) }
                                         .forEach { team ->
                                             team.requiredBlocks.entries.forEachIndexed { index, block ->
@@ -94,6 +98,12 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             user,
                                                             ru.cristalix.core.formatting.Formatting.error("Мне больше не нужен этот ресурс")
                                                         )
+                                                        player.playSound(
+                                                            player.location,
+                                                            org.bukkit.Sound.ENTITY_ARMORSTAND_HIT,
+                                                            1f,
+                                                            1f
+                                                        )
                                                         return@forEach
                                                     } else {
                                                         val subtraction = must - itemHand.getAmount()
@@ -106,6 +116,12 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                         itemHand.setAmount(itemHand.getAmount() - must)
                                                         user.collectedBlocks += brought
                                                         team.collectedBlocks += brought
+                                                        player.playSound(
+                                                            player.location,
+                                                            org.bukkit.Sound.ENTITY_PLAYER_LEVELUP,
+                                                            1f,
+                                                            1f
+                                                        )
                                                     }
                                                     team.players.forEach { _ ->
                                                         me.reidj.bridgebuilders.mod.ModTransfer()
