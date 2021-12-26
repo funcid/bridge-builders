@@ -117,6 +117,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             )
                                                         val brought = must - subtraction
                                                         itemHand.setAmount(itemHand.getAmount() - must)
+
                                                         user.collectedBlocks += brought
                                                         team.collectedBlocks += brought
                                                         player.playSound(
@@ -126,7 +127,13 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             1f
                                                         )
                                                     }
-                                                    team.players.forEach { _ ->
+                                                    team.players.forEach { uuid ->
+                                                        me.reidj.bridgebuilders.mod.ModHelper.notification(
+                                                            getByUuid(
+                                                                uuid
+                                                            ),
+                                                            "§e${player.name} §fпринёс §b${block.value.title}, §fстроительство продолжается"
+                                                        )
                                                         me.reidj.bridgebuilders.mod.ModTransfer()
                                                             .integer(index + 1)
                                                             .integer(block.value.needTotal)
@@ -139,6 +146,13 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             )
                                                     }
                                                     player.updateInventory()
+                                                } else {
+                                                    if (block.value.collected != block.value.needTotal)
+                                                        me.reidj.bridgebuilders.mod.ModHelper.notification(
+                                                            user,
+                                                            "Хей друг! У меня закончился материал §b${block.value.title}§f, принеси его мне"
+                                                        )
+                                                    return@onClick
                                                 }
                                             }
                                         }
