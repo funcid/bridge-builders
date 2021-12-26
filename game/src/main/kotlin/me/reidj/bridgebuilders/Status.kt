@@ -89,7 +89,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                     ).i18NDisplayName
                                                 ) {
                                                     val must = block.value.needTotal - block.value.collected
-                                                    println(must)
                                                     if (must == 0) {
                                                         me.reidj.bridgebuilders.mod.ModHelper.notification(
                                                             user,
@@ -97,21 +96,24 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                         )
                                                         return@forEach
                                                     } else {
+                                                        val subtraction = must - itemHand.getAmount()
                                                         block.value.collected =
                                                             block.value.needTotal - maxOf(
                                                                 0,
-                                                                must - itemHand.getAmount()
+                                                                subtraction
                                                             )
+                                                        val brought = must - subtraction
                                                         itemHand.setAmount(itemHand.getAmount() - must)
+                                                        user.collectedBlocks += brought
+                                                        team.collectedBlocks += brought
                                                     }
                                                     team.players.forEach { _ ->
-                                                        me.reidj.bridgebuilders.listener.DefaultListener.sum += 1
                                                         me.reidj.bridgebuilders.mod.ModTransfer()
                                                             .integer(index + 1)
                                                             .integer(block.value.needTotal)
                                                             .integer(block.value.collected)
                                                             .integer(170)
-                                                            .integer(me.reidj.bridgebuilders.listener.DefaultListener.sum)
+                                                            .integer(team.collectedBlocks)
                                                             .send(
                                                                 "bridge:tabupdate",
                                                                 user

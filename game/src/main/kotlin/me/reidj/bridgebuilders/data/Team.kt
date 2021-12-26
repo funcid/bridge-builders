@@ -15,4 +15,5 @@ data class Team(
     var isActiveTeleport: Boolean,
     var breakBlocks: MutableMap<Location, Material>,
     var requiredBlocks: MutableMap<Int, RequiredBlock>,
+    var collectedBlocks: Int
 )

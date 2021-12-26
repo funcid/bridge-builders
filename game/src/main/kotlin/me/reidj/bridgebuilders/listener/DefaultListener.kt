@@ -20,10 +20,9 @@ import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import ru.cristalix.core.formatting.Formatting
 import java.util.stream.Collectors
+import kotlin.math.min
 
 object DefaultListener : Listener {
-
-    var sum = 0
 
     @EventHandler
     fun PlayerInteractEvent.handle() {
@@ -122,6 +121,18 @@ object DefaultListener : Listener {
                 if (block.type == Material.BEACON) {
                     activeStatus = Status.END
                     ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
+                    B.bc(" ")
+                    B.bc("§b―――――――――――――――――")
+                    B.bc("" + team.color.chatFormat + team.color.teamName + " §f победили!")
+                    B.bc(" ")
+                    B.bc("§e§lТОП ПРИНЕСЁННЫХ БЛОКОВ")
+                    team.players.map { getByUuid(it) }.sortedBy { -it.collectedBlocks }
+                        .subList(0, min(3, team.players.size))
+                        .forEachIndexed { index, user ->
+                            B.bc(" §l${index + 1}. §e" + user.player?.name + " §с" + user.collectedBlocks + " блоков принесено")
+                        }
+                    B.bc("§b―――――――――――――――――")
+                    B.bc(" ")
                     team.players.forEach { uuid ->
                         val user = app.getUser(uuid)
                         user.stat.wins++
