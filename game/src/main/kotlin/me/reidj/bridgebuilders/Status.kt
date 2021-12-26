@@ -64,6 +64,16 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
                         team.team!!.addEntry(player.name)
 
+                        team.requiredBlocks.entries.forEachIndexed { index, block ->
+                            me.reidj.bridgebuilders.mod.ModTransfer()
+                                .integer(index + 1)
+                                .integer(block.value.needTotal)
+                                .integer(block.value.collected)
+                                .string(block.value.title)
+                                .integer(block.key)
+                                .send("bridge:init", getByUuid(it))
+                        }
+
                         Anime.alert(player, "Цель", "Принесите нужные блоки строителю, \nчтобы построить мост к центру")
 
                         markers.add(
@@ -94,16 +104,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                     0.75
                                 )
                             }
-                        }
-
-                        team.requiredBlocks.entries.forEachIndexed { index, block ->
-                            me.reidj.bridgebuilders.mod.ModTransfer()
-                                .integer(index)
-                                .integer(block.value.needTotal)
-                                .integer(block.value.collected)
-                                .string(block.value.title)
-                                .integer(block.key)
-                                .send("bridge:init", getByUuid(it))
                         }
                         me.func.mod.Glow.showAllPlaces(player)
                     }

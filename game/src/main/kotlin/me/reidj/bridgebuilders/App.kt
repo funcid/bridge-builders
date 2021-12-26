@@ -46,9 +46,9 @@ var teams = listOf(
         true,
         mutableMapOf(),
         mutableMapOf(
-            1 to RequiredBlock("Камень",1, 2),
-            2 to RequiredBlock("Земля", 0, 5)
-        )
+            1 to RequiredBlock("Камень",0, 2),
+            2 to RequiredBlock("Земля", 0, 5),
+        ),
     )
 }
 
@@ -60,7 +60,7 @@ class App : JavaPlugin() {
         Platforms.set(PlatformDarkPaper())
         teams = teams.dropLast(teams.size - 4)
 
-        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD)
+        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
 
         BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, map, 4)
         realm.readableName = "BridgeBuilders ${realm.realmId.id}"

@@ -9,10 +9,7 @@ import ru.cristalix.uiengine.UIEngine
 import ru.cristalix.uiengine.element.RectangleElement
 import ru.cristalix.uiengine.element.TextElement
 import ru.cristalix.uiengine.eventloop.animate
-import ru.cristalix.uiengine.utility.Color
-import ru.cristalix.uiengine.utility.TOP
-import ru.cristalix.uiengine.utility.V3
-import ru.cristalix.uiengine.utility.rectangle
+import ru.cristalix.uiengine.utility.*
 import kotlin.math.max
 
 object BoardBlocks {
@@ -24,6 +21,29 @@ object BoardBlocks {
         origin = TOP
         align = TOP
         color = Color(0, 0, 0, 0.86)
+        addChild(rectangle {
+            offset = V3(0.0, 23.0)
+            origin = TOP
+            align = TOP
+            size = V3(180.0, 5.0, 0.0)
+            color = Color(0, 0, 0, 0.62)
+            addChild(
+                rectangle {
+                    origin = LEFT
+                    align = LEFT
+                    size = V3(0.0, 5.0, 0.0)
+                    color = Color(42, 102, 189, 1.0)
+                },
+                text {
+                    origin = TOP
+                    align = TOP
+                    color = WHITE
+                    shadow = true
+                    content = "0%"
+                    offset.y -= 15
+                }
+            )
+        })
     }
 
     init {
@@ -37,6 +57,10 @@ object BoardBlocks {
             val collected = readInt()
             val title = NetUtil.readUtf8(this)
             val id = readInt()
+            println(index)
+            println(needTotal)
+            println(title)
+            println(tab.children.size)
             if (tab.children.size <= index)
                 tab + Drop(title, id, needTotal, collected).element
             tab.enabled = true
@@ -46,8 +70,18 @@ object BoardBlocks {
             val index = readInt()
             val needTotal = readInt()
             val collected = readInt()
+            val box = tab.children[0] as RectangleElement
+            val needBlocks = readInt()
+            val sum = readInt()
+
             ((tab.children[index] as RectangleElement).children[2] as TextElement).content = "$collected из $needTotal"
             tab.children[index].animate(0.3) { color.alpha = max(1, collected) / needTotal * 0.8 + 0.2 }
+
+            (box.children[0] as RectangleElement).animate(1) {
+                size.x = 180.0 / needBlocks * sum
+            }
+
+            (box.children[1] as TextElement).content = "${(sum * 1.0 / needBlocks * 100.0).toInt()}%"
         }
 
         registerHandler<GameLoop> {

@@ -23,6 +23,8 @@ import java.util.stream.Collectors
 
 object DefaultListener : Listener {
 
+    var sum = 0
+
     @EventHandler
     fun PlayerInteractEvent.handle() {
         if (activeStatus == Status.STARTING && material == Material.WOOL) {
@@ -67,10 +69,13 @@ object DefaultListener : Listener {
                                 itemHand.setAmount(itemHand.getAmount() - must)
                             }
                             team.players.forEach { uuid ->
+                                sum += 1
                                 ModTransfer()
-                                    .integer(index)
+                                    .integer(index + 1)
                                     .integer(block.value.needTotal)
                                     .integer(block.value.collected)
+                                    .integer(7)
+                                    .integer(sum)
                                     .send("bridge:tabupdate", getByUuid(uuid))
                             }
                             player.updateInventory()

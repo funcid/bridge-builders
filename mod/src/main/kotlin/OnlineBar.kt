@@ -6,7 +6,7 @@ import ru.cristalix.uiengine.element.TextElement
 import ru.cristalix.uiengine.eventloop.animate
 import ru.cristalix.uiengine.utility.*
 
-class OnlineBar {
+object OnlineBar {
 
     private val online = rectangle {
         offset = V3(0.0, 25.0)
