@@ -144,7 +144,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     }),
     END(340, { time ->
         if (GAME.lastSecond * 20 + 10 == time) {
-            // Выдача побед выжившим и выдача всем доп. игр
             Bukkit.getOnlinePlayers().forEach {
                 val user = app.getUser(it)
                 user.stat.games++

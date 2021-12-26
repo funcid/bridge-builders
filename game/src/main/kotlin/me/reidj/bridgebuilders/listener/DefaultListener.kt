@@ -153,6 +153,7 @@ object DefaultListener : Listener {
             .filter { it.players.contains(player.uniqueId) }
             .forEach {
                 if (block.type == Material.BEACON) {
+                    activeStatus = Status.END
                     ModHelper.allNotification("Победила команда ${it.color}")
                     it.players.forEach { uuid ->
                         val user = app.getUser(uuid)
@@ -173,7 +174,6 @@ object DefaultListener : Listener {
                         )
                         meta.power = 0
                         firework.fireworkMeta = meta
-                        user.stat.games++
                     }
                     return@forEach
                 }
