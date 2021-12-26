@@ -79,32 +79,26 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                 .integer(block.value.needTotal)
                                 .integer(block.value.collected)
                                 .string(block.value.title)
-                                .item(org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(
-                                    org.bukkit.inventory.ItemStack(
-                                        block.value.item
+                                .item(
+                                    org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(
+                                        org.bukkit.inventory.ItemStack(
+                                            block.value.item
+                                        )
                                     )
-                                ))
+                                )
                                 .send("bridge:init", user)
                         }
                         map.getLabels("builder").forEach { label ->
                             val npcArgs = label.tag.split(" ")
                             val npc = me.func.mod.Npc.npc {
                                 onClick {
-                                    if (user.armLocked)
-                                        return@onClick
-                                    user.armLocked = true
-                                    clepto.bukkit.B.postpone(5) { user.armLocked = false }
                                     teams.filter { it.players.contains(player.uniqueId) }
                                         .forEach { team ->
                                             team.requiredBlocks.entries.forEachIndexed { index, block ->
                                                 val itemHand = player.itemInHand
-                                                val item =
-                                                    org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(
-                                                        org.bukkit.inventory.ItemStack(block.value.item)
-                                                    )
-                                                item.data = block.value.id
-                                                if (itemHand == item.asBukkitMirror()) {
+                                                if (itemHand.i18NDisplayName == org.bukkit.inventory.ItemStack(block.value.item).i18NDisplayName) {
                                                     val must = block.value.needTotal - block.value.collected
+                                                    println(must)
                                                     if (must == 0) {
                                                         me.reidj.bridgebuilders.mod.ModHelper.notification(
                                                             user,
