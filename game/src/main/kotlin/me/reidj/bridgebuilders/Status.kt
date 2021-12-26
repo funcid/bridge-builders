@@ -1,6 +1,8 @@
 package me.reidj.bridgebuilders
 
 import me.func.mod.Anime
+import me.func.mod.Npc.location
+import me.func.mod.Npc.onClick
 import me.func.protocol.Marker
 import me.reidj.bridgebuilders.data.DefaultKit
 import org.bukkit.Bukkit
@@ -55,8 +57,9 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 }
                 // Телепортация игроков
                 teams.forEach { team ->
-                    team.players.forEach {
+                    team.players.forEach { it ->
                         val player = Bukkit.getPlayer(it) ?: return@forEach
+                        val user = getByPlayer(player)
                         player.gameMode = GameMode.SURVIVAL
                         player.itemOnCursor = null
                         player.teleport(team.spawn)
@@ -71,10 +74,70 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                 .integer(block.value.collected)
                                 .string(block.value.title)
                                 .integer(block.key)
-                                .send("bridge:init", getByUuid(it))
+                                .send("bridge:init", user)
+                        }
+                        map.getLabels("builder").forEach { label ->
+                            val npcArgs = label.tag.split(" ")
+                            val npc = me.func.mod.Npc.npc {
+                                location(label)
+                                onClick {
+                                    if (user.armLocked)
+                                        return@onClick
+                                    user.armLocked = true
+                                    clepto.bukkit.B.postpone(5) { user.armLocked = false }
+                                    teams.filter { it.players.contains(player.uniqueId) }
+                                        .forEach { team ->
+                                            team.requiredBlocks.entries.forEachIndexed { index, block ->
+                                                val itemHand = player.itemInHand
+                                                if (itemHand.getType().getId() == block.key) {
+                                                    val must = block.value.needTotal - block.value.collected
+                                                    if (must == 0) {
+                                                        me.reidj.bridgebuilders.mod.ModHelper.notification(
+                                                            user,
+                                                            ru.cristalix.core.formatting.Formatting.error("Мне больше не нужен этот ресурс")
+                                                        )
+                                                        return@forEachIndexed
+                                                    } else {
+                                                        block.value.collected =
+                                                            block.value.needTotal - maxOf(
+                                                                0,
+                                                                must - itemHand.getAmount()
+                                                            )
+                                                        itemHand.setAmount(itemHand.getAmount() - must)
+                                                    }
+                                                    team.players.forEach { _ ->
+                                                        me.reidj.bridgebuilders.listener.DefaultListener.sum += 1
+                                                        me.reidj.bridgebuilders.mod.ModTransfer()
+                                                            .integer(index + 1)
+                                                            .integer(block.value.needTotal)
+                                                            .integer(block.value.collected)
+                                                            .integer(7)
+                                                            .integer(me.reidj.bridgebuilders.listener.DefaultListener.sum)
+                                                            .send(
+                                                                "bridge:tabupdate",
+                                                                user
+                                                            )
+                                                    }
+                                                    player.updateInventory()
+                                                }
+                                            }
+                                        }
+                                }
+                                behaviour = me.func.protocol.npc.NpcBehaviour.STARE_AT_PLAYER
+                                name = "§bСтроитель Джо"
+                                yaw = npcArgs[0].toFloat()
+                                pitch = npcArgs[1].toFloat()
+                                skinDigest = "4a9df40e-e0ca-11e8-8374-1cb72caa35fd"
+                                skinUrl = "https://webdata.c7x.dev/textures/skin/4a9df40e-e0ca-11e8-8374-1cb72caa35fd"
+                            }.spawn()
+                            npc.show(player)
                         }
 
-                        Anime.alert(player, "Цель", "Принесите нужные блоки строителю, \nчтобы построить мост к центру")
+                        Anime.alert(
+                            player,
+                            "Цель",
+                            "Принесите нужные блоки строителю, \nчтобы построить мост к центру"
+                        )
 
                         markers.add(
                             Anime.marker(
@@ -91,7 +154,12 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         )
 
                         markers.forEach { marker ->
-                            me.func.mod.Glow.addPlace(me.func.protocol.GlowColor.GREEN, marker.x, marker.y - 1.5, marker.z, )
+                            me.func.mod.Glow.addPlace(
+                                me.func.protocol.GlowColor.GREEN,
+                                marker.x,
+                                marker.y - 1.5,
+                                marker.z
+                            )
                             var up = false
                             clepto.bukkit.B.repeat(15) {
                                 up = !up

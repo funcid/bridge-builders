@@ -57,10 +57,6 @@ object BoardBlocks {
             val collected = readInt()
             val title = NetUtil.readUtf8(this)
             val id = readInt()
-            println(index)
-            println(needTotal)
-            println(title)
-            println(tab.children.size)
             if (tab.children.size <= index)
                 tab + Drop(title, id, needTotal, collected).element
             tab.enabled = true

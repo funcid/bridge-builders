@@ -12,7 +12,6 @@ import org.bukkit.Material
 import org.bukkit.entity.Firework
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -50,38 +49,6 @@ object DefaultListener : Listener {
                     .forEach { showTeamList(app.getUser(it)!!) }
                 player.sendMessage(Formatting.fine("Вы выбрали команду: " + team.color.chatFormat + team.color.teamName))
             }
-        }
-        if (action == Action.LEFT_CLICK_AIR) {
-            teams.filter { it.players.contains(player.uniqueId) }
-                .forEach { team ->
-                    team.requiredBlocks.entries.forEachIndexed { index, block ->
-                        val itemHand = player.itemInHand
-                        if (itemHand.getType().getId() == block.key) {
-                            val must = block.value.needTotal - block.value.collected
-                            if (must == 0) {
-                                ModHelper.notification(
-                                    getByUuid(player.uniqueId),
-                                    Formatting.error("Мне больше не нужен этот ресурс")
-                                )
-                                return@forEach
-                            } else {
-                                block.value.collected = block.value.needTotal - maxOf(0, must - itemHand.getAmount())
-                                itemHand.setAmount(itemHand.getAmount() - must)
-                            }
-                            team.players.forEach { uuid ->
-                                sum += 1
-                                ModTransfer()
-                                    .integer(index + 1)
-                                    .integer(block.value.needTotal)
-                                    .integer(block.value.collected)
-                                    .integer(7)
-                                    .integer(sum)
-                                    .send("bridge:tabupdate", getByUuid(uuid))
-                            }
-                            player.updateInventory()
-                        }
-                    }
-                }
         }
     }
 

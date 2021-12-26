@@ -3,23 +3,14 @@ package me.reidj.bridgebuilders.listener
 import clepto.bukkit.B
 import dev.implario.bukkit.item.item
 import dev.xdark.feder.GlobalSerializers
-import io.netty.channel.ChannelDuplexHandler
-import io.netty.channel.ChannelHandlerContext
-import io.netty.channel.ChannelPromise
 import me.func.protocol.packet.PackageWrapper
 import me.reidj.bridgebuilders.Status
 import me.reidj.bridgebuilders.activeStatus
 import me.reidj.bridgebuilders.packet_handler.CameraManager
-import me.reidj.bridgebuilders.packet_handler.ItemChangePacket
-import me.reidj.bridgebuilders.packet_handler.View
 import me.reidj.bridgebuilders.teams
-import net.minecraft.server.v1_12_R1.*
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
-import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer
-import org.bukkit.entity.Pig
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -63,7 +54,7 @@ object ConnectionHandler : Listener {
         player.inventory.clear()
         player.gameMode = GameMode.ADVENTURE
 
-        repeat(300) {
+        /*repeat(300) {
             player.world.spawn(player.location, Pig::class.java)
         }
 
@@ -71,9 +62,9 @@ object ConnectionHandler : Listener {
         player.allowFlight = true
         player.isFlying = true
         player.gameMode = GameMode.CREATIVE
-        B.postpone(100) { View() }
+        B.postpone(100) { View() }*/
 
-        (player as CraftPlayer).handle.playerConnection.networkManager.channel.pipeline()
+        /*(player as CraftPlayer).handle.playerConnection.networkManager.channel.pipeline()
             .addBefore("packet_handler", player.name, object :
                 ChannelDuplexHandler() {
                 override fun write(ctx: ChannelHandlerContext?, msg: Any?, promise: ChannelPromise?) {
@@ -88,7 +79,7 @@ object ConnectionHandler : Listener {
                     }
                     super.write(ctx, msg, promise)
                 }
-            })
+            })*/
 
         if (activeStatus == Status.STARTING) {
             player.inventory.setItem(8, back)

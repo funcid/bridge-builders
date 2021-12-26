@@ -11,6 +11,7 @@ import java.util.*
 class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
 
     var stat: Stat
+    var armLocked = false
 
     private var connection: PlayerConnection? = null
 
