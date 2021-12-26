@@ -2,6 +2,7 @@ package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
 import implario.ListUtils
+import me.func.mod.Anime
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.mod.ModTransfer
@@ -116,15 +117,15 @@ object DefaultListener : Listener {
 
     @EventHandler
     fun BlockBreakEvent.handle() {
-        teams.stream()
-            .filter { it.players.contains(player.uniqueId) }
-            .forEach {
+        teams.stream().forEach { team ->
+            if (team.players.contains(player.uniqueId)) {
                 if (block.type == Material.BEACON) {
                     activeStatus = Status.END
-                    ModHelper.allNotification("Победила команда ${it.color}")
-                    it.players.forEach { uuid ->
+                    ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
+                    team.players.forEach { uuid ->
                         val user = app.getUser(uuid)
                         user.stat.wins++
+                        user.player?.let { player -> Anime.title(player, "§aПОБЕДА\n§aвы выиграли!") }
                         val firework = user.player!!.world!!.spawn(user.player!!.location, Firework::class.java)
                         val meta = firework.fireworkMeta
                         meta.addEffect(
@@ -142,9 +143,14 @@ object DefaultListener : Listener {
                         meta.power = 0
                         firework.fireworkMeta = meta
                     }
-                    return@forEach
                 }
-                it.breakBlocks[block.location] = block.type
+                return@forEach
+            } else {
+                team.players.forEach {
+                    getByUuid(it).player?.let { player -> Anime.title(player, "§aПОРАЖЕНИЕ\n§aвы проиграли!") }
+                }
             }
+            team.breakBlocks[block.location] = block.type
+        }
     }
 }
