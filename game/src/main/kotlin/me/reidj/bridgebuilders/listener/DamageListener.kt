@@ -6,6 +6,7 @@ import me.reidj.bridgebuilders.activeStatus
 import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.teams
+import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -32,6 +33,17 @@ object DamageListener : Listener {
 
         if (player.killer != null)
             ModHelper.allNotification("§a ${player.name} §fбыл убит игроком ${player.killer.name}")
+
+        teams.filter { it.players.contains(player.uniqueId) }.forEach {
+            it.players.forEach { uuid ->
+                Bukkit.getPlayer(uuid).playSound(
+                    player.location,
+                    org.bukkit.Sound.ENTITY_ENDERDRAGON_AMBIENT,
+                    1f,
+                    1f
+                )
+            }
+        }
 
         if (player.gameMode == GameMode.SPECTATOR)
             return

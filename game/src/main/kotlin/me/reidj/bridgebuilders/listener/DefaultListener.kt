@@ -10,6 +10,7 @@ import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.FireworkEffect
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.Firework
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -97,16 +98,26 @@ object DefaultListener : Listener {
                 .forEach {
                     if (it.isActiveTeleport) {
                         it.isActiveTeleport = false
-                        player.teleport(ListUtils.random(teams.stream()
+                        val team = ListUtils.random(teams.stream()
                             .filter { team -> !team.players.contains(player.uniqueId) }
-                            .collect(Collectors.toList())).spawn)
+                            .collect(Collectors.toList()))
+                        player.teleport(team.spawn)
+                        team.players.map { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
+                            enemy.playSound(
+                                player.location,
+                                Sound.ENTITY_ENDERDRAGON_GROWL,
+                                1f,
+                                1f
+                            )
+                        }
                         B.postpone(20 * 180) {
                             it.isActiveTeleport = true
-                            it.players.forEach { uuid ->
+                            it.players.map { uuid -> getByUuid(uuid) }.forEach { user ->
                                 ModHelper.notification(
-                                    getByUuid(uuid),
+                                    user,
                                     "Телепорт на чужие базы теперь §aдоступен"
                                 )
+                                user.player?.playSound(user.player?.location, Sound.BLOCK_PORTAL_AMBIENT, 1.5f, 1.5f)
                             }
                         }
                     }
