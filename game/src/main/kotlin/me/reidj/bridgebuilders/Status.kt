@@ -107,7 +107,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             1f,
                                                             1f
                                                         )
-                                                        return@forEach
+                                                        return@onClick
                                                     } else {
                                                         val subtraction = must - itemHand.getAmount()
                                                         block.value.collected =
