@@ -7,15 +7,13 @@ import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.mod.ModTransfer
 import me.reidj.bridgebuilders.user.User
-import org.bukkit.Bukkit
-import org.bukkit.FireworkEffect
-import org.bukkit.Material
-import org.bukkit.Sound
+import org.bukkit.*
 import org.bukkit.entity.Firework
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.event.player.PlayerMoveEvent
@@ -157,9 +155,9 @@ object DefaultListener : Listener {
                                 .with(FireworkEffect.Type.BALL_LARGE)
                                 .with(FireworkEffect.Type.BALL)
                                 .with(FireworkEffect.Type.BALL_LARGE)
-                                .withColor(org.bukkit.Color.YELLOW)
-                                .withColor(org.bukkit.Color.GREEN)
-                                .withColor(org.bukkit.Color.WHITE)
+                                .withColor(Color.YELLOW)
+                                .withColor(Color.GREEN)
+                                .withColor(Color.WHITE)
                                 .build()
                         )
                         meta.power = 0
@@ -173,6 +171,36 @@ object DefaultListener : Listener {
                 }
             }
             team.breakBlocks[block.location] = block.type
+        }
+    }
+
+    @EventHandler
+    fun AsyncPlayerChatEvent.handle() {
+        if (player.gameMode == GameMode.SPECTATOR) {
+            Bukkit.getOnlinePlayers().forEach {
+                if (it.gameMode == GameMode.SPECTATOR)
+                    it.sendMessage(player.name + " >§7 " + ChatColor.stripColor(message))
+            }
+            cancel = true
+            return
+        }
+        val team = teams.filter { team -> team.players.contains(player.uniqueId) }
+        if (team.isNotEmpty()) {
+            cancel = true
+            if (!message.startsWith("!")) {
+                team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
+                    it.sendMessage("" + team[0].color.chatColor + "${player.name} >§7 $message")
+                }
+            } else {
+                Bukkit.getOnlinePlayers().forEach {
+                    it.sendMessage(
+                        "§f[" + team[0].color.chatColor + team[0].color.teamName.substring(
+                            0,
+                            1
+                        ) + "§f] ${player.name} > " + message.drop(1)
+                    )
+                }
+            }
         }
     }
 }

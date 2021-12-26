@@ -1,22 +1,20 @@
 package me.reidj.bridgebuilders.listener
 
-import clepto.bukkit.B
 import dev.implario.bukkit.item.item
-import dev.xdark.feder.GlobalSerializers
-import me.func.protocol.packet.PackageWrapper
 import me.reidj.bridgebuilders.Status
 import me.reidj.bridgebuilders.activeStatus
 import me.reidj.bridgebuilders.packet_handler.CameraManager
 import me.reidj.bridgebuilders.teams
-import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import ru.cristalix.core.item.Items
-import java.io.File
+import ru.cristalix.core.realm.IRealmService
+import ru.cristalix.core.realm.RealmStatus
 
 object ConnectionHandler : Listener {
 
@@ -29,7 +27,7 @@ object ConnectionHandler : Listener {
         text("§cВернуться")
     }.build()
 
-    init {
+    /*init {
         B.regCommand({ _, args ->
             target = Bukkit.getPlayer(args[0])
             "Съёмка начата"
@@ -47,7 +45,7 @@ object ConnectionHandler : Listener {
             manager.actions.clear()
             "Сохранение в файл"
         }, "save")
-    }
+    }*/
 
     @EventHandler
     fun PlayerJoinEvent.handle() {
@@ -89,6 +87,18 @@ object ConnectionHandler : Listener {
                         .color(it.color)
                         .build()
                 )
+            }
+        }
+    }
+
+    @EventHandler
+    fun AsyncPlayerPreLoginEvent.handle() {
+        playerProfile.properties.forEach { profileProperty ->
+            if (profileProperty.value == "PARTY_WARP") {
+                if (IRealmService.get().currentRealmInfo.status != RealmStatus.WAITING_FOR_PLAYERS) {
+                    disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Сейчас нельзя зайти на этот сервер")
+                    loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
+                }
             }
         }
     }
