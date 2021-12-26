@@ -67,19 +67,12 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         team.team!!.addEntry(player.name)
 
                         team.requiredBlocks.entries.forEachIndexed { index, block ->
-                            val item =
-                                org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(
-                                    org.bukkit.inventory.ItemStack(
-                                        block.value.item
-                                    )
-                                )
-                            item.data = block.value.id
                             me.reidj.bridgebuilders.mod.ModTransfer()
                                 .integer(index + 1)
                                 .integer(block.value.needTotal)
                                 .integer(block.value.collected)
                                 .string(block.value.title)
-                                .item(item)
+                                .item(block.value.getItem(block.value.item, block.value.id))
                                 .send("bridge:init", user)
                         }
                         map.getLabels("builder").forEach { label ->
@@ -90,12 +83,11 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                         .forEach { team ->
                                             team.requiredBlocks.entries.forEachIndexed { index, block ->
                                                 val itemHand = player.itemInHand
-                                                val item =
-                                                    org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(
-                                                        org.bukkit.inventory.ItemStack(block.value.item)
-                                                    )
-                                                item.data = block.value.id
-                                                if (itemHand.i18NDisplayName == item.name) {
+                                                if (itemHand.i18NDisplayName == block.value.getItem(
+                                                        block.value.item,
+                                                        block.value.id
+                                                    ).i18NDisplayName
+                                                ) {
                                                     val must = block.value.needTotal - block.value.collected
                                                     println(must)
                                                     if (must == 0) {
