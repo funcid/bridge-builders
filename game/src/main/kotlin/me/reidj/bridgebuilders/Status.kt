@@ -1,7 +1,6 @@
 package me.reidj.bridgebuilders
 
 import me.func.mod.Anime
-import me.func.mod.Npc.location
 import me.func.mod.Npc.onClick
 import me.func.protocol.Marker
 import me.reidj.bridgebuilders.data.DefaultKit
@@ -68,18 +67,19 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         team.team!!.addEntry(player.name)
 
                         team.requiredBlocks.entries.forEachIndexed { index, block ->
+                            val item = org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(org.bukkit.inventory.ItemStack(block.value.icon))
+                            item.data = block.value.id
                             me.reidj.bridgebuilders.mod.ModTransfer()
                                 .integer(index + 1)
                                 .integer(block.value.needTotal)
                                 .integer(block.value.collected)
                                 .string(block.value.title)
-                                .integer(block.key)
+                                .item(item)
                                 .send("bridge:init", user)
                         }
                         map.getLabels("builder").forEach { label ->
                             val npcArgs = label.tag.split(" ")
                             val npc = me.func.mod.Npc.npc {
-                                location(label)
                                 onClick {
                                     if (user.armLocked)
                                         return@onClick
@@ -123,10 +123,12 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                             }
                                         }
                                 }
+                                x = label.x + 0.5
+                                y = label.y
+                                z = label.z + 0.5
                                 behaviour = me.func.protocol.npc.NpcBehaviour.STARE_AT_PLAYER
                                 name = "§bСтроитель Джо"
                                 yaw = npcArgs[0].toFloat()
-                                pitch = npcArgs[1].toFloat()
                                 skinDigest = "4a9df40e-e0ca-11e8-8374-1cb72caa35fd"
                                 skinUrl = "https://webdata.c7x.dev/textures/skin/4a9df40e-e0ca-11e8-8374-1cb72caa35fd"
                             }.spawn()

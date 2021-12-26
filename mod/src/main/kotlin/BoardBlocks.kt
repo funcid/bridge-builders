@@ -1,6 +1,7 @@
 
 import dev.xdark.clientapi.event.lifecycle.GameLoop
 import dev.xdark.clientapi.event.render.PlayerListRender
+import dev.xdark.clientapi.item.ItemTools
 import dev.xdark.feder.NetUtil
 import org.lwjgl.input.Keyboard
 import ru.cristalix.clientapi.mod
@@ -56,9 +57,10 @@ object BoardBlocks {
             val needTotal = readInt()
             val collected = readInt()
             val title = NetUtil.readUtf8(this)
-            val id = readInt()
+            val item = ItemTools.read(this)
+            println(title)
             if (tab.children.size <= index)
-                tab + Drop(title, id, needTotal, collected).element
+                tab + Drop(title, item, needTotal, collected).element
             tab.enabled = true
         }
 

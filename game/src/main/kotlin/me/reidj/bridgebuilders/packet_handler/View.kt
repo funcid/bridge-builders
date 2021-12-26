@@ -2,19 +2,13 @@ package me.reidj.bridgebuilders.packet_handler
 
 import clepto.bukkit.B
 import dev.xdark.feder.GlobalSerializers
-import me.func.mod.Npc
-import me.func.mod.Npc.onClick
-import me.func.protocol.npc.NpcBehaviour
 import me.func.protocol.packet.PackageWrapper
 import net.minecraft.server.v1_12_R1.Packet
 import net.minecraft.server.v1_12_R1.PacketPlayOutBlockChange
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntityEquipment
-import net.minecraft.server.v1_12_R1.PacketPlayOutEntityTeleport
 import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
-import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import java.io.File
 
@@ -32,7 +26,7 @@ class View {
         }
 
     init {
-        val npc = Npc.npc {
+        /*val npc = Npc.npc {
             x = 12.0
             y = 92.0
             z = -153.0
@@ -75,15 +69,14 @@ class View {
                     f = 0
                     g = false
                 })
-            }
-            movie.forEachIndexed { index, it ->
-                B.postpone(index) {
-                    Bukkit.getOnlinePlayers().forEach { player ->
-                        (player as CraftPlayer).handle.playerConnection.sendPacket(it as Packet<*>)
-                        if (it is PacketPlayOutBlockChange) {
-                            B.bc("" + it.a.x + " " + it.a.y + " " +  it.a.z)
-                            player.world.getBlockAt(it.a.x, it.a.y, it.a.z).setTypeAndDataFast(it.block.block.id, 0)
-                        }
+            }*/
+        movie.forEachIndexed { index, it ->
+            B.postpone(index) {
+                Bukkit.getOnlinePlayers().forEach { player ->
+                    (player as CraftPlayer).handle.playerConnection.sendPacket(it as Packet<*>)
+                    if (it is PacketPlayOutBlockChange) {
+                        B.bc("" + it.a.x + " " + it.a.y + " " + it.a.z)
+                        player.world.getBlockAt(it.a.x, it.a.y, it.a.z).setTypeAndDataFast(it.block.block.id, 0)
                     }
                 }
             }

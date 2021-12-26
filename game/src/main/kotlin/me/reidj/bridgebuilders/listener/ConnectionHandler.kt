@@ -71,10 +71,8 @@ object ConnectionHandler : Listener {
                     if (target != null && player != target) {
                         when (msg) {
                             is PacketPlayOutBlockChange -> manager.actions.add(msg)
-                            is PacketPlayOutEntityHeadRotation -> manager.actions.add(msg)
-                            is PacketPlayOutEntity.PacketPlayOutRelEntityMove -> manager.actions.add(msg)
-                            is PacketPlayOutEntityEquipment -> manager.actions.add(ItemChangePacket(msg.a, msg.b, target!!.itemInHand.typeId))
-                            is PacketPlayOutAnimation -> manager.actions.add(msg)
+                            is PacketPlayOutMultiBlockChange -> manager.actions.add(msg)
+                            is PacketPlayOutMultiPacket -> manager.actions.add(msg)
                         }
                     }
                     super.write(ctx, msg, promise)

@@ -15,6 +15,7 @@ import me.reidj.bridgebuilders.map.MapType
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.util.MapLoader
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import ru.cristalix.core.formatting.Color
@@ -46,8 +47,23 @@ var teams = listOf(
         true,
         mutableMapOf(),
         mutableMapOf(
-            1 to RequiredBlock("Камень",0, 2),
-            2 to RequiredBlock("Земля", 0, 5),
+            1 to RequiredBlock("Песок", 0, 2, Material.SAND, 0),
+            2 to RequiredBlock("Еловая плита", 0, 5, Material.WOOD_STEP, 1),
+            3 to RequiredBlock("Бирюзовый цемент", 0, 10, Material.CONCRETE_POWDER, 9),
+            4 to RequiredBlock("Булыжные ступеньки", 0, 10, Material.COBBLESTONE_STAIRS, 0),
+            5 to RequiredBlock("Бирюзовый бетон", 0, 10, Material.CONCRETE, 9),
+            6 to RequiredBlock("Люк", 0, 10, Material.TRAP_DOOR, 0),
+            7 to RequiredBlock("Песчаниковые ступеньки", 0, 10, Material.SANDSTONE_STAIRS, 0),
+            8 to RequiredBlock("Еловые ступеньки", 0, 10, Material.SPRUCE_WOOD_STAIRS, 0),
+            9 to RequiredBlock("Булыжная ограда", 0, 10, Material.COBBLE_WALL, 0),
+            10 to RequiredBlock("Еловый забор", 0, 10, Material.SPRUCE_FENCE, 0),
+            11 to RequiredBlock("Андезит", 0, 10, Material.STONE, 5),
+            12 to RequiredBlock("Призмарин", 0,10, Material.PRISMARINE, 0),
+            13 to RequiredBlock("Дубовые ступеньки", 0, 10, Material.WOOD_STAIRS,0),
+            14 to RequiredBlock("Дубовая плита", 0, 10, Material.WOOD_STEP, 0),
+            15 to RequiredBlock("Фиолетовая керамика", 0, 10, Material.STAINED_CLAY, 10),
+            16 to RequiredBlock("Еловые доски", 0, 10, Material.WOOD, 1),
+            17 to RequiredBlock("Песчаниковая плита", 0, 10, Material.STEP, 1),
         ),
     )
 }
