@@ -66,6 +66,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
                         team.team!!.addEntry(player.name)
 
+                        // Отправка таба
                         team.requiredBlocks.entries.forEachIndexed { index, block ->
                             me.reidj.bridgebuilders.mod.ModTransfer()
                                 .integer(index + 2)
@@ -75,6 +76,8 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                 .item(block.value.getItem(block.value.item, block.value.id))
                                 .send("bridge:init", user)
                         }
+
+                        // Создание нпс
                         map.getLabels("builder").forEach { label ->
                             val npcArgs = label.tag.split(" ")
                             val npc = me.func.mod.Npc.npc {
@@ -146,8 +149,8 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                 behaviour = me.func.protocol.npc.NpcBehaviour.STARE_AT_PLAYER
                                 name = "§bСтроитель Джо"
                                 yaw = npcArgs[0].toFloat()
-                                skinDigest = "4a9df40e-e0ca-11e8-8374-1cb72caa35fd"
-                                skinUrl = "https://webdata.c7x.dev/textures/skin/4a9df40e-e0ca-11e8-8374-1cb72caa35fd"
+                                skinDigest = "9985b767-6677-11ec-acca-1cb72caa35fd"
+                                skinUrl = "https://webdata.c7x.dev/textures/skin/9985b767-6677-11ec-acca-1cb72caa35fd"
                             }.spawn()
                             npc.show(player)
                         }
