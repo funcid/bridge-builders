@@ -17,16 +17,23 @@ object BoardBlocks {
 
     val tab = rectangle {
         enabled = false
-        size = V3(500.0, 350.0)
+        size = V3(400.0, 230.0)
         offset.y += 50.0
         origin = TOP
         align = TOP
         color = Color(0, 0, 0, 0.86)
+        addChild(text {
+            origin = BOTTOM
+            align = BOTTOM
+            color = WHITE
+            shadow = true
+            content = "www.cristalix.ru"
+        })
         addChild(rectangle {
             offset = V3(0.0, 23.0)
             origin = TOP
             align = TOP
-            size = V3(180.0, 5.0, 0.0)
+            size = V3(380.0, 5.0, 0.0)
             color = Color(0, 0, 0, 0.62)
             addChild(
                 rectangle {
@@ -75,7 +82,7 @@ object BoardBlocks {
             tab.children[index].animate(0.3) { color.alpha = max(1, collected) / needTotal * 0.8 + 0.2 }
 
             (box.children[0] as RectangleElement).animate(1) {
-                size.x = 180.0 / needBlocks * sum
+                size.x = 380.0 / needBlocks * sum
             }
 
             (box.children[1] as TextElement).content = "${(sum * 1.0 / needBlocks * 100.0).toInt()}%"

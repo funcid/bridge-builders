@@ -64,7 +64,6 @@ var teams = listOf(
             15 to RequiredBlock("Бирюзовый цемент", 0, 420, Material.CONCRETE_POWDER, 9),
             16 to RequiredBlock("Еловая плита", 0, 440, Material.WOOD_STEP, 1),
             17 to RequiredBlock("Андезит", 0, 792, Material.STONE, 5),
-            18 to RequiredBlock("Дубовая плита", 0, 10, Material.WOOD_STEP, 0),
         ),
         0
     )
