@@ -47,8 +47,8 @@ var teams = listOf(
         true,
         mutableMapOf(),
         mutableMapOf(
-            1 to RequiredBlock("Песок", 0, 2, Material.SAND, 0),
-            2 to RequiredBlock("Еловая плита", 0, 5, Material.WOOD_STEP, 1),
+            1 to RequiredBlock("Песок", 0, 10, Material.SAND, 0),
+            2 to RequiredBlock("Еловая плита", 0, 10, Material.WOOD_STEP, 1),
             3 to RequiredBlock("Бирюзовый цемент", 0, 10, Material.CONCRETE_POWDER, 9),
             4 to RequiredBlock("Булыжные ступеньки", 0, 10, Material.COBBLESTONE_STAIRS, 0),
             5 to RequiredBlock("Бирюзовый бетон", 0, 10, Material.CONCRETE, 9),

@@ -67,14 +67,23 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         team.team!!.addEntry(player.name)
 
                         team.requiredBlocks.entries.forEachIndexed { index, block ->
-                            val item = org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(org.bukkit.inventory.ItemStack(block.value.icon))
+                            val item =
+                                org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(
+                                    org.bukkit.inventory.ItemStack(
+                                        block.value.item
+                                    )
+                                )
                             item.data = block.value.id
                             me.reidj.bridgebuilders.mod.ModTransfer()
                                 .integer(index + 1)
                                 .integer(block.value.needTotal)
                                 .integer(block.value.collected)
                                 .string(block.value.title)
-                                .item(item)
+                                .item(org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(
+                                    org.bukkit.inventory.ItemStack(
+                                        block.value.item
+                                    )
+                                ))
                                 .send("bridge:init", user)
                         }
                         map.getLabels("builder").forEach { label ->
@@ -89,14 +98,19 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                         .forEach { team ->
                                             team.requiredBlocks.entries.forEachIndexed { index, block ->
                                                 val itemHand = player.itemInHand
-                                                if (itemHand.getType().getId() == block.key) {
+                                                val item =
+                                                    org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asNMSCopy(
+                                                        org.bukkit.inventory.ItemStack(block.value.item)
+                                                    )
+                                                item.data = block.value.id
+                                                if (itemHand == item.asBukkitMirror()) {
                                                     val must = block.value.needTotal - block.value.collected
                                                     if (must == 0) {
                                                         me.reidj.bridgebuilders.mod.ModHelper.notification(
                                                             user,
                                                             ru.cristalix.core.formatting.Formatting.error("Мне больше не нужен этот ресурс")
                                                         )
-                                                        return@forEachIndexed
+                                                        return@forEach
                                                     } else {
                                                         block.value.collected =
                                                             block.value.needTotal - maxOf(
@@ -111,7 +125,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             .integer(index + 1)
                                                             .integer(block.value.needTotal)
                                                             .integer(block.value.collected)
-                                                            .integer(7)
+                                                            .integer(170)
                                                             .integer(me.reidj.bridgebuilders.listener.DefaultListener.sum)
                                                             .send(
                                                                 "bridge:tabupdate",
