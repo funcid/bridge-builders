@@ -2,8 +2,9 @@ package me.reidj.bridgebuilders.content
 
 import clepto.bukkit.B
 import dev.implario.bukkit.item.item
-import me.func.commons.donate.DonatePosition
-import me.func.commons.donate.impl.*
+import me.reidj.bridgebuilders.donate.DonatePosition
+import me.reidj.bridgebuilders.donate.MoneyFormatter
+import me.reidj.bridgebuilders.donate.impl.*
 import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.gold
 import me.reidj.bridgebuilders.mod.ModTransfer
@@ -39,7 +40,7 @@ object Lootbox : Listener {
         nbt("other", "enderchest1")
         text(
             "§bЛутбокс\n\n§7Откройте и получите\n§7псевдоним, частицы ходьбы\n§7следы от стрелы, маски\n§7или скин могилы!\n\n§e > §f㜰 §aОткрыть сейчас за\n${
-                me.func.commons.donate.MoneyFormatter.texted(
+                MoneyFormatter.texted(
                     lootboxPrice
                 )
             }"

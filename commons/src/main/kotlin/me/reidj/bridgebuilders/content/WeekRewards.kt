@@ -1,8 +1,8 @@
 package me.reidj.bridgebuilders.content
 
 import dev.implario.bukkit.item.item
-import me.func.commons.donate.DonatePosition
-import me.func.commons.donate.impl.*
+import me.reidj.bridgebuilders.donate.DonatePosition
+import me.reidj.bridgebuilders.donate.impl.*
 import me.reidj.bridgebuilders.gold
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Material
@@ -31,7 +31,7 @@ enum class WeekRewards(val title: String, val icon: ItemStack, val give: (User) 
     SIX(
         ArrowParticle.SPELL_INSTANT.getRare().with(ArrowParticle.SPELL_INSTANT.getTitle()),
         ArrowParticle.SPELL_INSTANT.getIcon(),
-        { giveWithDuplicate(it, me.func.commons.donate.impl.ArrowParticle.SPELL_INSTANT, 512) }
+        { giveWithDuplicate(it, ArrowParticle.SPELL_INSTANT, 512) }
     ),
     SEVEN(
         "§b5 Лутбоксов",

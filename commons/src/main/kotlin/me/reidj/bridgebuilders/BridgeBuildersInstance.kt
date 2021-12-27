@@ -9,7 +9,7 @@ import dev.implario.kensuke.KensukeSession
 import dev.implario.kensuke.Scope
 import dev.implario.kensuke.impl.bukkit.BukkitKensuke
 import dev.implario.kensuke.impl.bukkit.BukkitUserManager
-import me.func.commons.donate.DonatePosition
+import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.DonateAdapter
 import me.reidj.bridgebuilders.user.Stat
 import me.reidj.bridgebuilders.user.User

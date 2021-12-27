@@ -1,11 +1,11 @@
 package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.Cycle
-import me.reidj.bridgebuilders.Status
-import me.reidj.bridgebuilders.activeStatus
-import me.reidj.bridgebuilders.app
+import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.donate.impl.Corpse
 import me.reidj.bridgebuilders.mod.ModHelper
-import me.reidj.bridgebuilders.teams
+import me.reidj.bridgebuilders.util.StandHelper
+import net.minecraft.server.v1_12_R1.EnumItemSlot
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
@@ -31,8 +31,28 @@ object DamageListener : Listener {
 
         val player = entity as Player
 
-        if (player.killer != null)
-            ModHelper.allNotification("§a ${player.name} §fбыл убит игроком ${player.killer.name}")
+        var location = player.location.clone()
+        var id: Int
+        var counter = 0
+        do {
+            counter++
+            location = location.clone().subtract(0.0, 0.15, 0.0)
+            id = location.block.typeId
+        } while ((id == 0 || id == 171 || id == 96 || id == 167) && counter < 20)
+
+        if (player.killer != null) {
+            val user = getByPlayer(player)
+            teams.forEach {
+                ModHelper.allNotification("" + it.color.chatColor + player.name + "§f" + user.stat.activeKillMessage.getFormat() + " " + it.color.chatColor + player.killer.name)
+            }
+            if (user.stat.activeCorpse != Corpse.NONE)
+                StandHelper(location.clone().subtract(0.0, 1.5, 0.0))
+                    .marker(true)
+                    .invisible(true)
+                    .gravity(false)
+                    .slot(EnumItemSlot.HEAD, user.stat.activeCorpse.getIcon())
+                    .markTrash()
+        }
 
         teams.filter { it.players.contains(player.uniqueId) }.forEach {
             it.players.forEach { uuid ->

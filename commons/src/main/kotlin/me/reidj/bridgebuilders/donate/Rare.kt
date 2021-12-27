@@ -1,4 +1,4 @@
-package me.func.commons.donate
+package me.reidj.bridgebuilders.donate
 
 enum class Rare(val title: String, private val color: String) {
 

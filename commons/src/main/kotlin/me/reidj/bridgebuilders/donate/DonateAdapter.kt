@@ -1,8 +1,7 @@
 package me.reidj.bridgebuilders.donate
 
 import com.google.gson.*
-import me.func.commons.donate.DonatePosition
-import me.func.commons.donate.impl.*
+import me.reidj.bridgebuilders.donate.impl.*
 import java.lang.reflect.Type
 
 class DonateAdapter : JsonDeserializer<DonatePosition>, JsonSerializer<DonatePosition> {

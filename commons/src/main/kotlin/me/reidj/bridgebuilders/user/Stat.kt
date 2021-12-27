@@ -1,8 +1,8 @@
 package me.reidj.bridgebuilders.user
 
-import me.func.commons.donate.DonatePosition
-import me.func.commons.donate.impl.*
+import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.achievement.Achievement
+import me.reidj.bridgebuilders.donate.impl.*
 import java.util.*
 
 data class Stat(

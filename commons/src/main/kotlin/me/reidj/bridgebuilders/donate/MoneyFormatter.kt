@@ -1,4 +1,4 @@
-package me.func.commons.donate
+package me.reidj.bridgebuilders.donate
 
 object MoneyFormatter {
 

@@ -15,6 +15,7 @@ import me.reidj.bridgebuilders.listener.DefaultListener
 import me.reidj.bridgebuilders.listener.GlobalListeners
 import me.reidj.bridgebuilders.map.MapType
 import me.reidj.bridgebuilders.top.TopManager
+import me.reidj.bridgebuilders.util.ArrowEffect
 import me.reidj.bridgebuilders.util.MapLoader
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -98,6 +99,9 @@ class App : JavaPlugin() {
             DamageListener,
             Lootbox
         )
+
+        // Рисую эффект выстрела
+        ArrowEffect().arrowEffect(this)
 
         // Запуск игрового таймера
         timer = Timer()

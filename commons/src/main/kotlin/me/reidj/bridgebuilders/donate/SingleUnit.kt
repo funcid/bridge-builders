@@ -1,4 +1,4 @@
-package me.func.commons.donate
+package me.reidj.bridgebuilders.donate
 
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.enchantments.Enchantment

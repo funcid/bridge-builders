@@ -1,27 +1,28 @@
-package me.func.commons.donate.impl
+package me.reidj.bridgebuilders.donate.impl
 
 import dev.implario.bukkit.item.item
-import me.func.commons.donate.DonatePosition
-import me.func.commons.donate.MoneyFormatter
-import me.func.commons.donate.Rare
+import me.reidj.bridgebuilders.donate.DonatePosition
+import me.reidj.bridgebuilders.donate.MoneyFormatter
+import me.reidj.bridgebuilders.donate.Rare
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import ru.cristalix.core.formatting.Formatting
 
-enum class KillMessage(private val title: String, private val price: Int, private val rare: Rare, private val format: String) : DonatePosition {
+enum class KillMessage(private val title: String, private val price: Int, private val rare: Rare, private val format: String) :
+    DonatePosition {
 
-    NONE("Отсутсвует", 0, Rare.COMMON, "§c§m%s§f был убит."),
-    GLOBAL("Внезапная смерть", 64, Rare.COMMON, "§c§m%s§f внезапно умер."),
-    AHEAD("Гонщик", 128, Rare.COMMON, "§c§m%s§f остался без головы."),
-    DEAD("Смерть", 256, Rare.COMMON, "§c§m%s§f встретил смерть."),
-    END("Конец", 768, Rare.RARE, "§fДля §c§m%s§f настал конец."),
-    SLEEP("Сон", 1024, Rare.RARE, "§c§m%s§f уснул навсегда."),
-    HORNY("На кусочки", 1024, Rare.RARE, "§c§m%s§f разорван на кусочки."),
-    ROOM("Комната", 2048, Rare.EPIC, "§c§m%s§f обнаружен с ножом в голове."),
-    BLACK("Черный кот", 2048, Rare.EPIC, "§c§m%s§f перешел дорогу черному коту."),
-    X("Люди в черном", 8192, Rare.LEGENDARY, "§c§m§fНеизвестный умер."),
-    KIRA("Я Кира", 8192, Rare.LEGENDARY, "§c§m%s умер от сердечного приступа."),;
+    NONE("Отсутсвует", 0, Rare.COMMON, "убит"),
+    GLOBAL("Средневековье", 64, Rare.COMMON, "прибит"),
+    AHEAD("Замемлен", 128, Rare.COMMON, "был замемлен"),
+    DEAD("Кусь", 256, Rare.COMMON, "укушен"),
+    END("Галактический", 768, Rare.RARE, "превращен в космическую пыль"),
+    SLEEP("Барбекю", 1024, Rare.RARE, "измазан в соусе барбекю"),
+    HORNY("Огонь", 1024, Rare.RARE, "превращён в пыль"),
+    ROOM("Насекомое", 2048, Rare.EPIC, "истреблён"),
+    BLACK("Забычен", 2048, Rare.EPIC, "растоптан"),
+    X("Банан", 8192, Rare.LEGENDARY, "очищен от кожуры"),
+    KIRA("Компьютер", 8192, Rare.LEGENDARY, "был удалён"),;
 
     override fun getTitle(): String {
         return title
@@ -33,6 +34,10 @@ enum class KillMessage(private val title: String, private val price: Int, privat
 
     override fun getRare(): Rare {
         return rare
+    }
+
+    fun getFormat(): String {
+        return format
     }
 
     override fun getIcon(): ItemStack {

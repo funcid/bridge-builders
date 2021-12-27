@@ -1,8 +1,8 @@
-package me.func.commons.donate.impl
+package me.reidj.bridgebuilders.donate.impl
 
 import dev.implario.bukkit.item.item
-import me.func.commons.donate.DonatePosition
-import me.func.commons.donate.Rare
+import me.reidj.bridgebuilders.donate.DonatePosition
+import me.reidj.bridgebuilders.donate.Rare
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment

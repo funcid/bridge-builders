@@ -2,7 +2,7 @@ package me.reidj.bridgebuilders.user
 
 import dev.implario.kensuke.KensukeSession
 import dev.implario.kensuke.impl.bukkit.IBukkitKensukeUser
-import me.func.commons.donate.impl.*
+import me.reidj.bridgebuilders.donate.impl.*
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.mod.ModTransfer
 import net.minecraft.server.v1_12_R1.Packet
