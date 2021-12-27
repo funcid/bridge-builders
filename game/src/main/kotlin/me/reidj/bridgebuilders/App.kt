@@ -5,6 +5,8 @@ import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
 import me.func.mod.Kit
+import me.reidj.bridgebuilders.content.CustomizationNPC
+import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.data.RequiredBlock
 import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.listener.ConnectionHandler
@@ -15,6 +17,7 @@ import me.reidj.bridgebuilders.map.MapType
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.util.MapLoader
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
@@ -65,9 +68,13 @@ var teams = listOf(
             16 to RequiredBlock("Еловая плита", 0, 440, Material.WOOD_STEP, 1),
             17 to RequiredBlock("Андезит", 0, 792, Material.STONE, 5),
         ),
-        0
+        0,
+        mutableListOf()
     )
 }
+
+val firstLocation = Location(map.world, 16.0, 101.0, -108.0)
+val secondLocation = Location(map.world, 4.0, 79.0, -25.0)
 
 class App : JavaPlugin() {
 
@@ -88,7 +95,8 @@ class App : JavaPlugin() {
             GlobalListeners,
             ConnectionHandler,
             DefaultListener,
-            DamageListener
+            DamageListener,
+            Lootbox
         )
 
         // Запуск игрового таймера
@@ -96,6 +104,7 @@ class App : JavaPlugin() {
         timer.runTaskTimer(this, 10, 1)
 
         TopManager()
+        CustomizationNPC()
         Npcs.init(this)
 
         // Скорборд команды

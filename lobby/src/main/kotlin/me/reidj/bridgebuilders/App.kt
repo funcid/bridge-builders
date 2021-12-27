@@ -4,6 +4,8 @@ import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
+import me.reidj.bridgebuilders.content.CustomizationNPC
+import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.listener.GlobalListeners
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.util.MapLoader
@@ -46,11 +48,13 @@ class App : JavaPlugin() {
 
         // Создание контента для лобби
         TopManager()
+        CustomizationNPC()
         Npcs.init(bridgeBuildersInstance)
 
         B.events(
             GlobalListeners,
-            LobbyHandler
+            LobbyHandler,
+            Lootbox
         )
 
         // NPC поиска игры

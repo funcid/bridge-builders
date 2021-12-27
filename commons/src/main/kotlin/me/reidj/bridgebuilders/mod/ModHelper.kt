@@ -27,4 +27,10 @@ object ModHelper {
                 .send("bridge:notification", getByPlayer(player))
         }
     }
+
+    fun updateBalance(user: User) {
+        ModTransfer()
+            .integer(user.stat.money)
+            .send("bridge:balance", user)
+    }
 }

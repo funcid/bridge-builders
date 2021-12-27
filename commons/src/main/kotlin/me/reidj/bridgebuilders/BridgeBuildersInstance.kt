@@ -2,14 +2,20 @@ package me.reidj.bridgebuilders
 
 import clepto.bukkit.B
 import clepto.cristalix.WorldMeta
+import com.google.gson.GsonBuilder
+import dev.implario.bukkit.item.item
 import dev.implario.kensuke.Kensuke
 import dev.implario.kensuke.KensukeSession
 import dev.implario.kensuke.Scope
 import dev.implario.kensuke.impl.bukkit.BukkitKensuke
 import dev.implario.kensuke.impl.bukkit.BukkitUserManager
+import me.func.commons.donate.DonatePosition
+import me.reidj.bridgebuilders.donate.DonateAdapter
 import me.reidj.bridgebuilders.user.Stat
 import me.reidj.bridgebuilders.user.User
+import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.inventory.IInventoryService
@@ -35,12 +41,16 @@ lateinit var worldMeta: WorldMeta
 lateinit var realm: RealmInfo
 
 var slots by Delegates.notNull<Int>()
-val statScope = Scope("bridge-builders", Stat::class.java)
+val statScope = Scope("bridge-builderss", Stat::class.java)
 var userManager = BukkitUserManager(
     listOf(statScope),
     { session: KensukeSession, context -> User(session, context.getData(statScope)) },
     { user, context -> context.store(statScope, user.stat) }
 )
+val gold: ItemStack = item {
+    type = Material.GOLD_INGOT
+    text("§eЗолото.")
+}.build()
 
 class BridgeBuildersInstance (
     plugin: JavaPlugin,
@@ -71,6 +81,9 @@ class BridgeBuildersInstance (
         kensuke.addGlobalUserManager(userManager)
         kensuke.globalRealm = IRealmService.get().currentRealmInfo.realmId.realmName
         userManager.isOptional = true
+        kensuke.gson = GsonBuilder()
+            .registerTypeHierarchyAdapter(DonatePosition::class.java, DonateAdapter())
+            .create()
 
         getByPlayer = byPlayer
         getByUuid = byUuid
