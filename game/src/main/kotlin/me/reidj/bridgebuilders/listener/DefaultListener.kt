@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import ru.cristalix.core.formatting.Formatting
+import ru.cristalix.core.permissions.IPermissionService
 import java.util.stream.Collectors
 import kotlin.math.min
 
@@ -174,6 +175,8 @@ object DefaultListener : Listener {
         }
     }
 
+    private val permissionService: IPermissionService = IPermissionService.get()
+
     @EventHandler
     fun AsyncPlayerChatEvent.handle() {
         if (player.gameMode == GameMode.SPECTATOR) {
@@ -189,7 +192,7 @@ object DefaultListener : Listener {
             cancel = true
             if (!message.startsWith("!")) {
                 team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
-                    it.sendMessage("" + team[0].color.chatColor + "${player.name} >§7 $message")
+                    it.sendMessage(getPrefix(getByPlayer(player)) + message)
                 }
             } else {
                 Bukkit.getOnlinePlayers().forEach {
@@ -202,5 +205,14 @@ object DefaultListener : Listener {
                 }
             }
         }
+    }
+
+    private fun getPrefix(user: User): String {
+        var finalPrefix = ""
+        permissionService.getBestGroup(user.stat.id).thenAccept {
+            finalPrefix = user.stat.activeNameTag.getRare().getColor() + user.stat.activeNameTag.getTitle() +
+                    "§8 ┃ " + it.nameColor + it.prefix + "§8 ┃§f " + user.player!!.name + " §8${Formatting.ARROW_SYMBOL} "
+        }
+        return finalPrefix
     }
 }

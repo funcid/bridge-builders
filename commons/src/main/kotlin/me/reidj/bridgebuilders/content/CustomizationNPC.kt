@@ -2,9 +2,9 @@ package me.reidj.bridgebuilders.content
 
 import clepto.bukkit.B
 import dev.implario.bukkit.item.item
+import me.reidj.bridgebuilders.achievement.Achievement
 import me.reidj.bridgebuilders.donate.DonateHelper
 import me.reidj.bridgebuilders.donate.DonatePosition
-import me.reidj.bridgebuilders.achievement.Achievement
 import me.reidj.bridgebuilders.donate.impl.*
 import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.realm
@@ -56,7 +56,7 @@ class CustomizationNPC {
                     "XXXXXXXXX",
                     "XSXCXDXHX",
                     "XXXXXXXXX",
-                    "XLKPXIQXX",
+                    "XXLKPIQXX",
                     "XXXXOXXXX",
                     "XXXXQXXXX",
                 )

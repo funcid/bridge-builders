@@ -5,7 +5,6 @@ import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
 import me.func.mod.Kit
-import me.reidj.bridgebuilders.content.CustomizationNPC
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.data.RequiredBlock
 import me.reidj.bridgebuilders.data.Team
@@ -108,7 +107,6 @@ class App : JavaPlugin() {
         timer.runTaskTimer(this, 10, 1)
 
         TopManager()
-        CustomizationNPC()
         Npcs.init(this)
 
         // Скорборд команды

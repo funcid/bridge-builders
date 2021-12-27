@@ -3,19 +3,17 @@ package me.reidj.bridgebuilders
 import clepto.bukkit.B
 import clepto.cristalix.WorldMeta
 import com.google.gson.GsonBuilder
-import dev.implario.bukkit.item.item
 import dev.implario.kensuke.Kensuke
 import dev.implario.kensuke.KensukeSession
 import dev.implario.kensuke.Scope
 import dev.implario.kensuke.impl.bukkit.BukkitKensuke
 import dev.implario.kensuke.impl.bukkit.BukkitUserManager
-import me.reidj.bridgebuilders.donate.DonatePosition
+import me.func.commons.command.AdminCommand
 import me.reidj.bridgebuilders.donate.DonateAdapter
+import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.user.Stat
 import me.reidj.bridgebuilders.user.User
-import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.inventory.IInventoryService
@@ -47,10 +45,6 @@ var userManager = BukkitUserManager(
     { session: KensukeSession, context -> User(session, context.getData(statScope)) },
     { user, context -> context.store(statScope, user.stat) }
 )
-val gold: ItemStack = item {
-    type = Material.GOLD_INGOT
-    text("§eЗолото.")
-}.build()
 
 class BridgeBuildersInstance (
     plugin: JavaPlugin,
@@ -87,6 +81,9 @@ class BridgeBuildersInstance (
 
         getByPlayer = byPlayer
         getByUuid = byUuid
+
+        // Регистрация админ команд
+        AdminCommand()
 
         val nextGame = PlayerBalancer()
         B.regCommand({ player: Player, _ ->

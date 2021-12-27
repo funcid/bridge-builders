@@ -6,7 +6,6 @@ import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.MoneyFormatter
 import me.reidj.bridgebuilders.donate.impl.*
 import me.reidj.bridgebuilders.getByPlayer
-import me.reidj.bridgebuilders.gold
 import me.reidj.bridgebuilders.mod.ModTransfer
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -82,7 +81,7 @@ object Lootbox : Listener {
                             .item(CraftItemStack.asNMSCopy(drop.getIcon()))
                             .string(drop.getTitle())
                             .string(drop.getRare().name)
-                            .item(CraftItemStack.asNMSCopy(gold))
+                            .item(CraftItemStack.asNMSCopy(ItemStack(Material.GOLD_INGOT)))
                             .string("§e$moneyDrop монет")
                             .string("")
                             .send("lootbox", user)

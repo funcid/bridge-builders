@@ -11,6 +11,10 @@ enum class Rare(val title: String, private val color: String) {
         return "предмет ${getColored()} §7$content"
     }
 
+    fun getColor(): String {
+        return color
+    }
+
     fun getColored(): String {
         return "$color$title"
     }

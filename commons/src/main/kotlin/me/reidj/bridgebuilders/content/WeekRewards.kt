@@ -3,7 +3,6 @@ package me.reidj.bridgebuilders.content
 import dev.implario.bukkit.item.item
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.impl.*
-import me.reidj.bridgebuilders.gold
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -11,7 +10,7 @@ import org.bukkit.inventory.ItemStack
 import ru.cristalix.core.formatting.Formatting
 
 enum class WeekRewards(val title: String, val icon: ItemStack, val give: (User) -> Any) {
-    ONE("§e32 монеты", gold, { it.giveMoney(32) }),
+    ONE("§e32 монеты", ItemStack(Material.GOLD_INGOT), { it.giveMoney(32) }),
     TWO("§b1 Лутбокс", LootboxUnit.getIcon(), { it.stat.lootbox++ }),
     THREE(
         Corpse.G2.getRare().with(Corpse.G2.getTitle()),
