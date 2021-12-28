@@ -137,7 +137,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             .integer(index + 2)
                                                             .integer(block.value.needTotal)
                                                             .integer(block.value.collected)
-                                                            .integer(170)
+                                                            .integer(3644)
                                                             .integer(team.collectedBlocks)
                                                             .send(
                                                                 "bridge:tabupdate",
