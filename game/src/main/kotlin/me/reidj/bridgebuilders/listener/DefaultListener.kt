@@ -200,7 +200,7 @@ object DefaultListener : Listener {
                         "§f[" + team[0].color.chatColor + team[0].color.teamName.substring(
                             0,
                             1
-                        ) + "§f] ${player.name} > " + message.drop(1)
+                        ) + "§f] " + getPrefix(getByPlayer(player)) + message.drop(1)
                     )
                 }
             }
@@ -211,7 +211,7 @@ object DefaultListener : Listener {
         var finalPrefix = ""
         permissionService.getBestGroup(user.stat.id).thenAccept {
             finalPrefix = user.stat.activeNameTag.getRare().getColor() + user.stat.activeNameTag.getTitle() +
-                    "§8 ┃ " + it.nameColor + it.prefix + "§8 ┃§f " + user.player!!.name + " §8${Formatting.ARROW_SYMBOL} "
+                    "§8 ┃ " + it.nameColor + it.prefix + "§8 ┃§f " + user.player!!.name + " §8${Formatting.ARROW_SYMBOL} §f"
         }
         return finalPrefix
     }

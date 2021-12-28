@@ -1,5 +1,6 @@
 package me.reidj.bridgebuilders
 
+import BreakBridge
 import clepto.bukkit.B
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
@@ -17,7 +18,6 @@ import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.util.ArrowEffect
 import me.reidj.bridgebuilders.util.MapLoader
 import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
@@ -69,12 +69,13 @@ var teams = listOf(
             17 to RequiredBlock("Андезит", 0, 792, Material.STONE, 5),
         ),
         0,
+        mutableListOf(
+            map.getLabel(it.name.toLowerCase() + "-x"),
+            map.getLabel(it.name.toLowerCase() + "-z")
+        ),
         mutableListOf()
     )
 }
-
-val firstLocation = Location(map.world, 16.0, 101.0, -108.0)
-val secondLocation = Location(map.world, 4.0, 79.0, -25.0)
 
 class App : JavaPlugin() {
 
@@ -122,6 +123,8 @@ class App : JavaPlugin() {
                 org.bukkit.scoreboard.Team.OptionStatus.NEVER
             )
         }
+
+        BreakBridge()
     }
 
     fun restart() {

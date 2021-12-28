@@ -17,5 +17,6 @@ data class Team(
     var breakBlocks: MutableMap<Location, Material>,
     var requiredBlocks: MutableMap<Int, RequiredBlock>,
     var collectedBlocks: Int,
-    var bridge: MutableList<Block>
+    var bridge: MutableList<Location>,
+    var blocksConstruction: MutableList<Block>
 )
