@@ -54,26 +54,26 @@ var teams = listOf(
             2 to RequiredBlock("Еловый забор", 0, 4, Material.SPRUCE_FENCE, 0),
             3 to RequiredBlock("Песчаник", 0, 5, Material.SANDSTONE, 0),
             4 to RequiredBlock("Призмарин", 0,20, Material.PRISMARINE, 0),
-            5 to RequiredBlock("Еловые доски", 0, 30, Material.WOOD, 1),
-            6 to RequiredBlock("Фиолетовая керамика", 0, 48, Material.STAINED_CLAY, 10),
-            7 to RequiredBlock("Песчаниковые ступеньки", 0, 82, Material.SANDSTONE_STAIRS, 0),
-            8 to RequiredBlock("Бирюзовый бетон", 0, 90, Material.CONCRETE, 9),
-            9 to RequiredBlock("Булыжные ступеньки", 0, 118, Material.COBBLESTONE_STAIRS, 0),
-            10 to RequiredBlock("Дубовые ступеньки", 0, 164, Material.WOOD_STAIRS,0),
+            5 to RequiredBlock("Фиолетовая керамика", 0, 48, Material.STAINED_CLAY, 10),
+            6 to RequiredBlock("Песчаниковые ступеньки", 0, 82, Material.SANDSTONE_STAIRS, 0),
+            7 to RequiredBlock("Бирюзовый бетон", 0, 90, Material.CONCRETE, 9),
+            8 to RequiredBlock("Булыжные ступеньки", 0, 118, Material.COBBLESTONE_STAIRS, 0),
+            9 to RequiredBlock("Дубовые ступеньки", 0, 164, Material.WOOD_STAIRS,0),
+            10 to RequiredBlock("Еловые доски", 0, 168, Material.WOOD, 1),
             11 to RequiredBlock("Еловые ступеньки", 0, 232, Material.SPRUCE_WOOD_STAIRS, 0),
-            12 to RequiredBlock("Люк", 0, 302, Material.TRAP_DOOR, 0),
-            13 to RequiredBlock("Песок", 0, 312, Material.SAND, 0),
-            14 to RequiredBlock("Песчаниковая плита", 0, 317, Material.STEP, 1),
+            12 to RequiredBlock("Песок", 0, 316, Material.SAND, 0),
+            13 to RequiredBlock("Песчаниковая плита", 0, 317, Material.STEP, 1),
+            14 to RequiredBlock("Люк", 0, 398, Material.TRAP_DOOR, 0),
             15 to RequiredBlock("Бирюзовый цемент", 0, 420, Material.CONCRETE_POWDER, 9),
             16 to RequiredBlock("Еловая плита", 0, 440, Material.WOOD_STEP, 1),
-            17 to RequiredBlock("Андезит", 0, 792, Material.STONE, 5),
+            17 to RequiredBlock("Андезит", 0, 820, Material.STONE, 5),
         ),
         0,
         mutableListOf(
             map.getLabel(it.name.toLowerCase() + "-x"),
             map.getLabel(it.name.toLowerCase() + "-z")
         ),
-        mutableListOf()
+        mutableMapOf()
     )
 }
 

@@ -76,7 +76,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                 .item(block.value.getItem(block.value.item, block.value.id))
                                 .send("bridge:init", user)
                         }
-
                         // Создание нпс
                         map.getLabels("builder").forEach { label ->
                             val npcArgs = label.tag.split(" ")
@@ -135,7 +134,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             "§e${player.name} §fпринёс §b${block.value.title}, §fстроительство продолжается"
                                                         )
                                                         me.reidj.bridgebuilders.mod.ModTransfer()
-                                                            .integer(index + 1)
+                                                            .integer(index + 2)
                                                             .integer(block.value.needTotal)
                                                             .integer(block.value.collected)
                                                             .integer(170)
@@ -146,13 +145,15 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             )
                                                     }
                                                     player.updateInventory()
+                                                    return@onClick
                                                 } else {
-                                                    if (block.value.collected != block.value.needTotal)
+                                                    if (block.value.collected != block.value.needTotal) {
                                                         me.reidj.bridgebuilders.mod.ModHelper.notification(
                                                             user,
                                                             "Хей друг! У меня закончился материал §b${block.value.title}§f, принеси его мне"
                                                         )
-                                                    return@onClick
+                                                        return@onClick
+                                                    }
                                                 }
                                             }
                                         }

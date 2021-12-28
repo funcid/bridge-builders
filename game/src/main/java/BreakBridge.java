@@ -1,3 +1,4 @@
+import kotlin.Pair;
 import me.reidj.bridgebuilders.AppKt;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,7 +17,7 @@ public class BreakBridge {
                     for (double x = blockX; x > blockX - 16; x--) {
                         for (double z = blockZ; z > blockZ - 84; z--) {
                             Block block = new Location(AppKt.getMap().getWorld(), x, y, z).getBlock();
-                            it.getBlocksConstruction().add(block);
+                            it.getBlocksConstruction().putIfAbsent(block.getLocation(), new Pair<>(block.getTypeId(), block.getData()));
                             block.setType(Material.AIR);
                         }
                     }
@@ -24,7 +25,7 @@ public class BreakBridge {
                     for (double x = blockX; x < blockX + 16; x++) {
                         for (double z = blockZ; z < blockZ + 84; z++) {
                             Block block = new Location(AppKt.getMap().getWorld(), x, y, z).getBlock();
-                            it.getBlocksConstruction().add(block);
+                            it.getBlocksConstruction().putIfAbsent(block.getLocation(), new Pair<>(block.getTypeId(), block.getData()));
                             block.setType(Material.AIR);
                         }
                     }
@@ -32,7 +33,7 @@ public class BreakBridge {
                     for (double x = blockX; x < blockX + 84; x++) {
                         for (double z = blockZ; z > blockZ - 16; z--) {
                             Block block = new Location(AppKt.getMap().getWorld(), x, y, z).getBlock();
-                            it.getBlocksConstruction().add(block);
+                            it.getBlocksConstruction().putIfAbsent(block.getLocation(), new Pair<>(block.getTypeId(), block.getData()));
                             block.setType(Material.AIR);
                         }
                     }
@@ -40,7 +41,7 @@ public class BreakBridge {
                     for (double x = blockX; x > blockX - 84; x--) {
                         for (double z = blockZ; z < blockZ + 16; z++) {
                             Block block = new Location(AppKt.getMap().getWorld(), x, y, z).getBlock();
-                            it.getBlocksConstruction().add(block);
+                            it.getBlocksConstruction().putIfAbsent(block.getLocation(), new Pair<>(block.getTypeId(), block.getData()));
                             block.setType(Material.AIR);
                         }
                     }
