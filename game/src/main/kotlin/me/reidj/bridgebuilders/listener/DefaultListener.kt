@@ -127,8 +127,8 @@ object DefaultListener : Listener {
     @EventHandler
     fun BlockBreakEvent.handle() {
         teams.stream().forEach { team ->
-            if (team.players.contains(player.uniqueId)) {
-                if (block.type == Material.BEACON) {
+            if (block.type == Material.BEACON) {
+                if (team.players.contains(player.uniqueId)) {
                     activeStatus = Status.END
                     ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
                     B.bc(" ")
@@ -164,11 +164,11 @@ object DefaultListener : Listener {
                         meta.power = 0
                         firework.fireworkMeta = meta
                     }
-                }
-                return@forEach
-            } else {
-                team.players.forEach {
-                    getByUuid(it).player?.let { player -> Anime.title(player, "§aПОРАЖЕНИЕ\n§aвы проиграли!") }
+                } else {
+                    team.players.forEach {
+                        getByUuid(it).player?.let { player -> Anime.title(player, "§aПОРАЖЕНИЕ\n§aвы проиграли!") }
+                    }
+                    return@forEach
                 }
             }
             team.breakBlocks[block.location] = block.type

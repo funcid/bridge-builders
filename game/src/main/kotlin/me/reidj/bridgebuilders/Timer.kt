@@ -11,7 +11,6 @@ import org.bukkit.scheduler.BukkitRunnable
 lateinit var timer: Timer
 
 val toDelete: MutableList<Location> = mutableListOf()
-val deleteBlocks: MutableList<org.bukkit.block.Block> = mutableListOf()
 
 class Timer : BukkitRunnable() {
     var time = 0
@@ -29,7 +28,8 @@ class Timer : BukkitRunnable() {
             teams.forEach { team ->
                 team.requiredBlocks.forEach { required ->
                     team.blocksConstruction.forEach { block ->
-                        map.world.getBlockAt(block.key).setTypeAndDataFast(block.value.first, block.value.second)
+                        if (required.value.collected == required.value.needTotal && Material.getMaterial(block.value.first) == required.value.item)
+                            map.world.getBlockAt(block.key).setTypeAndDataFast(block.value.first, block.value.second)
                     }
                 }
             }
