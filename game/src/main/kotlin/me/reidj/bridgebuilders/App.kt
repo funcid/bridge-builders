@@ -21,6 +21,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import ru.cristalix.core.datasync.EntityDataParameters
 import ru.cristalix.core.formatting.Color
 import ru.cristalix.core.realm.RealmId
 import ru.cristalix.npcs.server.Npcs
@@ -84,6 +85,7 @@ class App : JavaPlugin() {
         app = this
         Platforms.set(PlatformDarkPaper())
         teams = teams.dropLast(teams.size - 4)
+        EntityDataParameters.register()
 
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
 

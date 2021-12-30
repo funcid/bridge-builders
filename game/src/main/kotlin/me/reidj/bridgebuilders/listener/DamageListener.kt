@@ -1,5 +1,6 @@
 package me.reidj.bridgebuilders.listener
 
+import clepto.bukkit.B
 import clepto.bukkit.Cycle
 import me.func.mod.Anime
 import me.reidj.bridgebuilders.Status
@@ -18,6 +19,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.inventory.ItemStack
+import ru.cristalix.core.util.UtilEntity
 
 object DamageListener : Listener {
 
@@ -49,13 +51,26 @@ object DamageListener : Listener {
             val victim = teams.filter { team -> team.players.contains(player.uniqueId) }
             val killer = teams.filter { team -> team.players.contains(player.killer.uniqueId) }
             ModHelper.allNotification("" + victim[0].color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " " + killer[0].color.chatColor + player.killer.name)
-            if (user.stat.activeCorpse != Corpse.NONE)
-                StandHelper(location.clone().subtract(0.0, 1.5, 0.0))
+            if (user.stat.activeCorpse != Corpse.NONE) {
+                val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
                     .marker(true)
                     .invisible(true)
                     .gravity(false)
                     .slot(EnumItemSlot.HEAD, user.stat.activeCorpse.getIcon())
                     .markTrash()
+                    .build()
+                val name = StandHelper(location.clone().add(0.0, 1.0, 0.0))
+                    .marker(true)
+                    .invisible(true)
+                    .gravity(false)
+                    .name("§e${player.name}")
+                    .build()
+                UtilEntity.setScale(grave, 2.0, 2.0, 2.0)
+                B.postpone(120 * 20) {
+                    grave.remove()
+                    name.remove()
+                }
+            }
         }
 
         teams.filter { it.players.contains(player.uniqueId) }.forEach {
