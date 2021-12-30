@@ -1,9 +1,13 @@
 package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.Cycle
-import me.reidj.bridgebuilders.*
+import me.func.mod.Anime
+import me.reidj.bridgebuilders.Status
+import me.reidj.bridgebuilders.activeStatus
 import me.reidj.bridgebuilders.donate.impl.Corpse
+import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.mod.ModHelper
+import me.reidj.bridgebuilders.teams
 import me.reidj.bridgebuilders.util.StandHelper
 import net.minecraft.server.v1_12_R1.EnumItemSlot
 import org.bukkit.Bukkit
@@ -42,9 +46,9 @@ object DamageListener : Listener {
 
         if (player.killer != null) {
             val user = getByPlayer(player)
-            teams.forEach {
-                ModHelper.allNotification("" + it.color.chatColor + player.name + "§f" + user.stat.activeKillMessage.getFormat() + " " + it.color.chatColor + player.killer.name)
-            }
+            val victim = teams.filter { team -> team.players.contains(player.uniqueId) }
+            val killer = teams.filter { team -> team.players.contains(player.killer.uniqueId) }
+            ModHelper.allNotification("" + victim[0].color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " " + killer[0].color.chatColor + player.killer.name)
             if (user.stat.activeCorpse != Corpse.NONE)
                 StandHelper(location.clone().subtract(0.0, 1.5, 0.0))
                     .marker(true)
@@ -97,8 +101,11 @@ object DamageListener : Listener {
                     .filter { team -> team.players.contains(player.uniqueId) }
                     .forEach { team -> player.teleport(team.spawn) }
                 Cycle.exit()
+            } else if (it < 2) {
+                Anime.title(player, "Возрождение...")
+            } else if (it == 2) {
+                Anime.counting321(player)
             }
-            ModHelper.sendTitle(app.getUser(player), "До возрождения ${5 - it}")
         }
     }
 }

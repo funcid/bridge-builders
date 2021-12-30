@@ -106,6 +106,10 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             1f,
                                                             1f
                                                         )
+                                                        me.reidj.bridgebuilders.mod.ModHelper.notification(
+                                                            user,
+                                                            "У меня закончился материал §b${block.value.title}§f, принеси его мне"
+                                                        )
                                                         return@onClick
                                                     } else {
                                                         val subtraction = must - itemHand.getAmount()
@@ -146,14 +150,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                     }
                                                     player.updateInventory()
                                                     return@onClick
-                                                } else {
-                                                    if (block.value.collected != block.value.needTotal) {
-                                                        me.reidj.bridgebuilders.mod.ModHelper.notification(
-                                                            user,
-                                                            "Хей друг! У меня закончился материал §b${block.value.title}§f, принеси его мне"
-                                                        )
-                                                        return@onClick
-                                                    }
                                                 }
                                             }
                                         }
