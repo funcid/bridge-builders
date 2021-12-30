@@ -4,6 +4,7 @@ import clepto.bukkit.B
 import implario.ListUtils
 import me.func.mod.Anime
 import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.donate.impl.NameTag
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.mod.ModTransfer
 import me.reidj.bridgebuilders.user.User
@@ -210,8 +211,8 @@ object DefaultListener : Listener {
     private fun getPrefix(user: User): String {
         var finalPrefix = ""
         permissionService.getBestGroup(user.stat.id).thenAccept {
-            finalPrefix = user.stat.activeNameTag.getRare().getColor() + user.stat.activeNameTag.getTitle() +
-                    "§8 ┃ " + it.nameColor + it.prefix + "§8 ┃§f " + user.player!!.name + " §8${Formatting.ARROW_SYMBOL} §f"
+            finalPrefix = (if (user.stat.activeNameTag == NameTag.NONE) "" else user.stat.activeNameTag.getRare().getColor()+user.stat.activeNameTag.getTitle() +
+                    "§8 ┃ " + it.nameColor + it.prefix + "§8 ┃§f ") + user.player!!.name + " §8${Formatting.ARROW_SYMBOL} §f"
         }
         return finalPrefix
     }
