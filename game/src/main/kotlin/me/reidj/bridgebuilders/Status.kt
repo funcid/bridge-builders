@@ -106,10 +106,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             1f,
                                                             1f
                                                         )
-                                                        me.reidj.bridgebuilders.mod.ModHelper.notification(
-                                                            user,
-                                                            "У меня закончился материал §b${block.value.title}§f, принеси его мне"
-                                                        )
                                                         return@onClick
                                                     } else {
                                                         val subtraction = must - itemHand.getAmount()
@@ -248,6 +244,10 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             Bukkit.getOnlinePlayers().forEach {
                 val user = app.getUser(it)
                 user.stat.games++
+                if (java.lang.Math.random() < 0.11) {
+                    user.stat.lootbox++
+                    clepto.bukkit.B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${user.player!!.name} §fполучил §bлутбокс§f!"))
+                }
             }
         }
         teams.forEach {
