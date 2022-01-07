@@ -51,10 +51,10 @@ object CommandChoose {
         }
 
         val teams = mapOf(
-            0 to ("§cКрасных" to Color(149, 21, 13, 0.44)),
-            1 to ("§9Синих" to Color(17, 42, 168, 0.44)),
+            0 to ("§eЖелтых" to Color(202, 148, 15, 0.44)),
+            1 to ("§cКрасных" to Color(149, 21, 13, 0.44)),
             2 to ("§aЗеленых" to Color(69, 146, 10, 0.44)),
-            3 to ("§eЖелтых" to Color(202, 148, 15, 0.44))
+            3 to ("§9Синих" to Color(17, 42, 168, 0.44))
         )
 
         val playerName = UIEngine.clientApi.minecraft().player.name
