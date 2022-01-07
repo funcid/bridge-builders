@@ -139,32 +139,42 @@ class App : JavaPlugin() {
     private fun generateBridge(team: Team): Bridge {
         val vector = Vector(1, 0, 0)
         val bridge = Bridge(vector, team.bridge.start, team.bridge.end, team.bridge.blocks)
+
+        getBridge(team).forEach { current ->
+            if (current.block.type == AIR)
+                return@forEach
+            val currentBlock = current.block.type.id to current.block.data
+            val blockList = bridge.blocks[currentBlock]
+            if (blockList != null) {
+                blockList.add(current)
+            } else {
+                bridge.blocks[currentBlock] = mutableListOf(current)
+            }
+            current.block.setTypeAndDataFast(0, 0)
+        }
+        return bridge
+    }
+
+    fun getBridge(team: Team): MutableList<Location> {
+        val vector = Vector(1, 0, 0)
+        val bridge = Bridge(vector, team.bridge.start, team.bridge.end, team.bridge.blocks)
         val length = 84
         val width = 16
         val height = 30
+        val blockLocation = mutableListOf<Location>()
 
         repeat(length) { len ->
             repeat(width) { xOrZ ->
                 repeat(height) { y ->
-                    val current = Location(
+                    blockLocation.add(Location(
                         map.world,
                         bridge.start.x + len * vector.x + xOrZ * vector.z,
                         bridge.start.y + y,
                         bridge.start.z + len * vector.z + xOrZ * vector.x,
-                    )
-                    if (current.block.type == AIR)
-                        return@repeat
-                    val currentBlock = current.block.type.id to current.block.data
-                    val blockList = bridge.blocks[currentBlock]
-                    if (blockList != null) {
-                        blockList.add(current)
-                    } else {
-                        bridge.blocks[currentBlock] = mutableListOf(current)
-                    }
-                    current.block.setTypeAndDataFast(0, 0)
+                    ))
                 }
             }
         }
-        return bridge
+        return blockLocation
     }
 }

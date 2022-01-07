@@ -49,10 +49,7 @@ object ConnectionHandler : Listener {
     @EventHandler
     fun PlayerQuitEvent.handle() {
         val user = getByPlayer(player)
-
         user.stat.timePlayedTotal += System.currentTimeMillis() - user.stat.lastEnter
-
-        player.scoreboard.teams.forEach { it.unregister() }
     }
 
     @EventHandler
