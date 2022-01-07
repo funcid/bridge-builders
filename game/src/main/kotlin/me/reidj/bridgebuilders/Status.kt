@@ -4,6 +4,7 @@ import me.func.mod.Anime
 import me.func.mod.Npc.onClick
 import me.func.protocol.Marker
 import me.reidj.bridgebuilders.data.DefaultKit
+import me.reidj.bridgebuilders.mod.ModHelper
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_JOIN
@@ -15,7 +16,7 @@ val kit = DefaultKit
 val markers: MutableList<Marker> = mutableListOf()
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(5, { it ->
+    STARTING(30, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 40)
             realm.status = GAME_STARTED_CAN_JOIN
@@ -117,8 +118,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             1f
                                                         )
                                                     }
-                                                    val collected =
-                                                        team.players.map { getByUuid(it) }.sumOf { it.collectedBlocks }
                                                     team.players.forEach { uuid ->
                                                         me.reidj.bridgebuilders.mod.ModHelper.notification(
                                                             getByUuid(
@@ -131,7 +130,8 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             .integer(block.key.needTotal)
                                                             .integer(block.value)
                                                             .integer(3644)
-                                                            .integer(collected)
+                                                            .integer(team.players.map { getByUuid(it) }
+                                                                .sumOf { it.collectedBlocks })
                                                             .send(
                                                                 "bridge:tabupdate",
                                                                 user
@@ -213,7 +213,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             actualTime = (STARTING.lastSecond - 10) * 20
         actualTime
     }),
-    GAME(330, { time ->
+    GAME(1200, { time ->
         // Обновление шкалы времени
         if (time % 20 == 0) {
             Bukkit.getOnlinePlayers().forEach {
@@ -223,8 +223,10 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     .boolean(false)
                     .send("bridge:online", app.getUser(it))
             }
-            if (time == 180)
+            if (time == 1580) {
+                teams.forEach { it.isActiveTeleport = true }
                 me.reidj.bridgebuilders.mod.ModHelper.allNotification("Телепорт на чужие базы теперь §aдоступен")
+            }
         }
         // Проверка на победу
         if (me.reidj.bridgebuilders.util.WinUtil.check4win()) {

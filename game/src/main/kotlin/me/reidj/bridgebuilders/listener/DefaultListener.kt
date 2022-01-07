@@ -93,32 +93,46 @@ object DefaultListener : Listener {
 
     @EventHandler
     fun PlayerMoveEvent.handle() {
-        if (player.location.subtract(0.0, 1.0, 0.0).block.type == Material.EMERALD_BLOCK && timer.time / 20 >= 180) {
-            teams.filter { it.players.contains(player.uniqueId) }
-                .forEach {
-                    if (it.isActiveTeleport) {
-                        it.isActiveTeleport = false
-                        val team = ListUtils.random(teams.stream()
-                            .filter { team -> !team.players.contains(player.uniqueId) }
-                            .collect(Collectors.toList()))
-                        player.teleport(team.spawn)
-                        team.players.map { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
-                            enemy.playSound(
-                                player.location,
-                                Sound.ENTITY_ENDERDRAGON_GROWL,
-                                1f,
-                                1f
-                            )
-                        }
-                        B.postpone(20 * 180) {
-                            it.isActiveTeleport = true
-                            it.players.map { uuid -> getByUuid(uuid) }.forEach { user ->
-                                ModHelper.notification(
-                                    user,
-                                    "Телепорт на чужие базы теперь §aдоступен"
+        if (player.location.subtract(0.0, 1.0, 0.0).block.type == Material.EMERALD_BLOCK) {
+            teams.filter { it.isActiveTeleport }
+                .forEach { team ->
+                    team.players.forEach {
+                        if (player.uniqueId == it) {
+                            team.isActiveTeleport = false
+                            val enemyTeam = ListUtils.random(teams.stream()
+                                .filter { team -> !team.players.contains(player.uniqueId) }
+                                .collect(Collectors.toList()))
+                            player.teleport(enemyTeam.spawn)
+                            enemyTeam.players.map { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
+                                enemy.playSound(
+                                    player.location,
+                                    Sound.ENTITY_ENDERDRAGON_GROWL,
+                                    1f,
+                                    1f
                                 )
-                                user.player?.playSound(user.player?.location, Sound.BLOCK_PORTAL_AMBIENT, 1.5f, 1.5f)
                             }
+                        } else {
+                            team.players
+                                .filter { uuid -> uuid == player.uniqueId }
+                                .forEach { _ ->
+                                    player.teleport(team.spawn)
+                                    team.isActiveTeleport = false
+                                }
+                        }
+                    }
+                    B.postpone(20 * 180) {
+                        team.isActiveTeleport = true
+                        team.players.map { uuid -> getByUuid(uuid) }.forEach { user ->
+                            ModHelper.notification(
+                                user,
+                                "Телепорт на чужие базы теперь §aдоступен"
+                            )
+                            user.player?.playSound(
+                                user.player?.location,
+                                Sound.BLOCK_PORTAL_AMBIENT,
+                                1.5f,
+                                1.5f
+                            )
                         }
                     }
                 }
@@ -211,7 +225,8 @@ object DefaultListener : Listener {
     private fun getPrefix(user: User): String {
         var finalPrefix = ""
         permissionService.getBestGroup(user.stat.id).thenAccept {
-            finalPrefix = (if (user.stat.activeNameTag == NameTag.NONE) "" else user.stat.activeNameTag.getRare().getColor()+user.stat.activeNameTag.getTitle() +
+            finalPrefix = (if (user.stat.activeNameTag == NameTag.NONE) "" else user.stat.activeNameTag.getRare()
+                .getColor() + user.stat.activeNameTag.getTitle() +
                     "§8 ┃ " + it.nameColor + it.prefix + "§8 ┃§f ") + user.player!!.name + " §8${Formatting.ARROW_SYMBOL} §f"
         }
         return finalPrefix

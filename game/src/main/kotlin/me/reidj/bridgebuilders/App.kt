@@ -15,6 +15,7 @@ import me.reidj.bridgebuilders.listener.DefaultListener
 import me.reidj.bridgebuilders.listener.GlobalListeners
 import me.reidj.bridgebuilders.map.MapType
 import me.reidj.bridgebuilders.top.TopManager
+import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.ArrowEffect
 import me.reidj.bridgebuilders.util.MapLoader
 import org.bukkit.Bukkit
@@ -45,7 +46,7 @@ val teams = map.getLabels("team").map {
         Color.valueOf(data.first().uppercase()),
         it,
         map.getLabel("$team-teleport"),
-        true,
+        false,
         mutableMapOf(),
         Bridge(
             Vector(data[1].toInt(), 0, data[2].toInt()),
@@ -103,9 +104,9 @@ class App : JavaPlugin() {
             Bukkit.shutdown()
     }
 
-    fun getUser(player: Player) = getUser(player.uniqueId)
+    fun getUser(player: Player): User = getUser(player.uniqueId)
 
-    fun getUser(uuid: UUID) = userManager.getUser(uuid)
+    fun getUser(uuid: UUID): User = userManager.getUser(uuid)
 
     fun addBlock(team: Team) {
         val toPlace = team.collected.filter {
