@@ -3,6 +3,7 @@ import dev.xdark.clientapi.event.render.ArmorRender
 import dev.xdark.clientapi.event.render.ExpBarRender
 import dev.xdark.clientapi.event.render.HealthRender
 import dev.xdark.clientapi.event.render.HungerRender
+import implario.humanize.Humanize
 import ru.cristalix.clientapi.KotlinMod
 import ru.cristalix.uiengine.UIEngine
 import ru.cristalix.uiengine.utility.BOTTOM_RIGHT
@@ -33,7 +34,8 @@ class App : KotlinMod() {
 
         registerHandler<PluginMessage> {
             if (channel == "bridge:balance") {
-                balanceText.content = "§e${data.readInt()} монет"
+                val money = data.readInt()
+                balanceText.content = "§e${money} ${Humanize.plurals("монета", "монеты", "монет", money)}"
             }
         }
     }
