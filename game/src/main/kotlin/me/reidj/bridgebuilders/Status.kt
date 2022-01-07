@@ -225,7 +225,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             }
             if (time == 1580) {
                 teams.forEach { it.isActiveTeleport = true }
-                me.reidj.bridgebuilders.mod.ModHelper.allNotification("Телепорт на чужие базы теперь §aдоступен")
+                ModHelper.allNotification("Телепорт на чужие базы теперь §aдоступен")
             }
         }
         // Проверка на победу
