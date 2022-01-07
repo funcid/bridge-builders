@@ -12,6 +12,7 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutCustomPayload
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.*
+import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -95,6 +96,12 @@ object GlobalListeners : Listener {
     @EventHandler
     fun BlockSpreadEvent.handle() {
         isCancelled = true
+    }
+
+    @EventHandler
+    fun EntityChangeBlockEvent.handle() {
+        isCancelled = true
+        block.state.update(false, false)
     }
 
     @EventHandler

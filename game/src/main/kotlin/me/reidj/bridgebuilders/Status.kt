@@ -64,16 +64,15 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         player.teleport(team.spawn)
                         player.inventory.armorContents = kit.armor
                         player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
-                        team.team!!.addEntry(player.name)
 
                         // Отправка таба
-                        team.requiredBlocks.entries.forEachIndexed { index, block ->
+                        team.collected.entries.forEachIndexed { index, block ->
                             me.reidj.bridgebuilders.mod.ModTransfer()
                                 .integer(index + 2)
-                                .integer(block.value.needTotal)
-                                .integer(block.value.collected)
-                                .string(block.value.title)
-                                .item(block.value.getItem(block.value.item, block.value.id))
+                                .integer(block.key.needTotal)
+                                .integer(block.value)
+                                .string(block.key.title)
+                                .item(block.key.getItem())
                                 .send("bridge:init", user)
                         }
                         // Создание нпс
@@ -87,14 +86,10 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                     clepto.bukkit.B.postpone(5) { user.activeHand = false }
                                     teams.filter { it.players.contains(player.uniqueId) }
                                         .forEach { team ->
-                                            team.requiredBlocks.entries.forEachIndexed { index, block ->
+                                            team.collected.entries.forEachIndexed { index, block ->
                                                 val itemHand = player.itemInHand
-                                                if (itemHand.i18NDisplayName == block.value.getItem(
-                                                        block.value.item,
-                                                        block.value.id
-                                                    ).i18NDisplayName
-                                                ) {
-                                                    val must = block.value.needTotal - block.value.collected
+                                                if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
+                                                    val must = block.key.needTotal - block.value
                                                     if (must == 0) {
                                                         me.reidj.bridgebuilders.mod.ModHelper.notification(
                                                             user,
@@ -109,16 +104,12 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                         return@onClick
                                                     } else {
                                                         val subtraction = must - itemHand.getAmount()
-                                                        block.value.collected =
-                                                            block.value.needTotal - maxOf(
-                                                                0,
-                                                                subtraction
-                                                            )
+                                                        team.collected[block.key] =
+                                                            block.key.needTotal - maxOf(0, subtraction)
                                                         val brought = must - subtraction
                                                         itemHand.setAmount(itemHand.getAmount() - must)
 
                                                         user.collectedBlocks += brought
-                                                        team.collectedBlocks += brought
                                                         player.playSound(
                                                             player.location,
                                                             org.bukkit.Sound.ENTITY_PLAYER_LEVELUP,
@@ -126,19 +117,21 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             1f
                                                         )
                                                     }
+                                                    val collected =
+                                                        team.players.map { getByUuid(it) }.sumOf { it.collectedBlocks }
                                                     team.players.forEach { uuid ->
                                                         me.reidj.bridgebuilders.mod.ModHelper.notification(
                                                             getByUuid(
                                                                 uuid
                                                             ),
-                                                            "§e${player.name} §fпринёс §b${block.value.title}, §fстроительство продолжается"
+                                                            "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
                                                         )
                                                         me.reidj.bridgebuilders.mod.ModTransfer()
                                                             .integer(index + 2)
-                                                            .integer(block.value.needTotal)
-                                                            .integer(block.value.collected)
+                                                            .integer(block.key.needTotal)
+                                                            .integer(block.value)
                                                             .integer(3644)
-                                                            .integer(team.collectedBlocks)
+                                                            .integer(collected)
                                                             .send(
                                                                 "bridge:tabupdate",
                                                                 user
@@ -244,7 +237,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             Bukkit.getOnlinePlayers().forEach {
                 val user = app.getUser(it)
                 user.stat.games++
-                if (java.lang.Math.random() < 0.11) {
+                if (Math.random() < 0.11) {
                     user.stat.lootbox++
                     clepto.bukkit.B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${user.player!!.name} §fполучил §bлутбокс§f!"))
                 }
@@ -254,8 +247,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             it.players.forEach { player ->
                 try {
                     val find = Bukkit.getPlayer(player)
-                    if (find != null)
-                        it.team!!.removePlayer(find)
                 } catch (ignored: Exception) {
                 }
             }

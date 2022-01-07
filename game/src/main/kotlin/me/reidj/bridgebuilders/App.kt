@@ -1,13 +1,13 @@
 package me.reidj.bridgebuilders
 
-import BreakBridge
 import clepto.bukkit.B
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
 import me.func.mod.Kit
 import me.reidj.bridgebuilders.content.Lootbox
-import me.reidj.bridgebuilders.data.RequiredBlock
+import me.reidj.bridgebuilders.data.BlockPlan
+import me.reidj.bridgebuilders.data.Bridge
 import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.listener.ConnectionHandler
 import me.reidj.bridgebuilders.listener.DamageListener
@@ -18,13 +18,14 @@ import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.util.ArrowEffect
 import me.reidj.bridgebuilders.util.MapLoader
 import org.bukkit.Bukkit
-import org.bukkit.Material
+import org.bukkit.Location
+import org.bukkit.Material.AIR
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.util.Vector
 import ru.cristalix.core.datasync.EntityDataParameters
 import ru.cristalix.core.formatting.Color
 import ru.cristalix.core.realm.RealmId
-import ru.cristalix.npcs.server.Npcs
 import java.util.*
 
 const val GAMES_STREAK_RESTART = 6
@@ -36,43 +37,20 @@ val LOBBY_SERVER: RealmId = RealmId.of("BRIL-1")
 var activeStatus = Status.STARTING
 var games = 0
 
-var teams = listOf(
-    Color.RED,
-    Color.BLUE,
-    Color.GREEN,
-    Color.YELLOW
-).map {
+val teams = map.getLabels("team").map {
+    val data = it.tag.split(" ")
+    val team = data[0]
     Team(
         mutableListOf(),
+        Color.valueOf(data.first().uppercase()),
         it,
-        map.getLabel(it.name.toLowerCase() + "-team"),
-        map.getLabel(it.name.toLowerCase() + "-teleport"),
-        null,
+        map.getLabel("$team-teleport"),
         true,
         mutableMapOf(),
-        mutableMapOf(
-            1 to RequiredBlock("Булыжная ограда", 0, 2, Material.COBBLE_WALL, 0),
-            2 to RequiredBlock("Еловый забор", 0, 4, Material.SPRUCE_FENCE, 0),
-            3 to RequiredBlock("Песчаник", 0, 5, Material.SANDSTONE, 0),
-            4 to RequiredBlock("Призмарин", 0,20, Material.PRISMARINE, 0),
-            5 to RequiredBlock("Фиолетовая керамика", 0, 48, Material.STAINED_CLAY, 10),
-            6 to RequiredBlock("Песчаниковые ступеньки", 0, 82, Material.SANDSTONE_STAIRS, 0),
-            7 to RequiredBlock("Бирюзовый бетон", 0, 90, Material.CONCRETE, 9),
-            8 to RequiredBlock("Булыжные ступеньки", 0, 118, Material.COBBLESTONE_STAIRS, 0),
-            9 to RequiredBlock("Дубовые ступеньки", 0, 164, Material.WOOD_STAIRS,0),
-            10 to RequiredBlock("Еловые доски", 0, 168, Material.WOOD, 1),
-            11 to RequiredBlock("Еловые ступеньки", 0, 232, Material.SPRUCE_WOOD_STAIRS, 0),
-            12 to RequiredBlock("Песок", 0, 316, Material.SAND, 0),
-            13 to RequiredBlock("Песчаниковая плита", 0, 317, Material.STEP, 1),
-            14 to RequiredBlock("Люк", 0, 398, Material.TRAP_DOOR, 0),
-            15 to RequiredBlock("Бирюзовый цемент", 0, 420, Material.CONCRETE_POWDER, 9),
-            16 to RequiredBlock("Еловая плита", 0, 440, Material.WOOD_STEP, 1),
-            17 to RequiredBlock("Андезит", 0, 820, Material.STONE, 5),
-        ),
-        0,
-        mutableListOf(
-            map.getLabel(it.name.toLowerCase() + "-x"),
-            map.getLabel(it.name.toLowerCase() + "-z")
+        Bridge(
+            Vector(data[1].toInt(), 0, data[2].toInt()),
+            map.getLabel("$team-x"),
+            map.getLabel("$team-z"),
         ),
         mutableMapOf()
     )
@@ -84,7 +62,6 @@ class App : JavaPlugin() {
         B.plugin = this
         app = this
         Platforms.set(PlatformDarkPaper())
-        teams = teams.dropLast(teams.size - 4)
         EntityDataParameters.register()
 
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
@@ -92,6 +69,8 @@ class App : JavaPlugin() {
         BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, map, 4)
         realm.readableName = "BridgeBuilders ${realm.realmId.id}"
         realm.lobbyFallback = LOBBY_SERVER
+
+        teams.forEach { team -> BlockPlan.values().forEach { team.collected[it] = 0 } }
 
         // Регистрация обработчиков событий
         B.events(
@@ -110,23 +89,8 @@ class App : JavaPlugin() {
         timer.runTaskTimer(this, 10, 1)
 
         TopManager()
-        Npcs.init(this)
 
-        // Скорборд команды
-        val manager = Bukkit.getScoreboardManager()
-        val board = manager.newScoreboard
-        teams.forEach {
-            it.team = board.registerNewTeam(it.color.teamName)
-            it.team!!.color = org.bukkit.ChatColor.valueOf(it.color.name)
-            it.team!!.setAllowFriendlyFire(false)
-            it.team!!.prefix = "" + it.color.chatColor
-            it.team!!.setOption(
-                org.bukkit.scoreboard.Team.Option.COLLISION_RULE,
-                org.bukkit.scoreboard.Team.OptionStatus.NEVER
-            )
-        }
-
-        BreakBridge()
+        teams.forEach { generateBridge(it) }
     }
 
     fun restart() {
@@ -142,4 +106,64 @@ class App : JavaPlugin() {
     fun getUser(player: Player) = getUser(player.uniqueId)
 
     fun getUser(uuid: UUID) = userManager.getUser(uuid)
+
+    fun addBlock(team: Team) {
+        val toPlace = team.collected.filter {
+            (team.bridge.blocks[it.key.material.id to it.key.blockData] ?: listOf()).size > it.key.needTotal - it.value
+        }
+        var nearest: Location? = null
+        var data: Pair<Int, Byte>? = null
+        team.bridge.blocks.filter { (key, location) -> toPlace.keys.any { it.material.id == key.first && it.blockData == key.second }
+                && location.any { it.block.type == AIR }}
+            .forEach { (key, value) ->
+                val tempNearest = value.minByOrNull { it.distanceSquared(team.spawn) }
+                if (nearest == null || (tempNearest != null && nearest != null && tempNearest.block.type == AIR &&
+                            tempNearest.distanceSquared(team.spawn) < nearest!!.distanceSquared(team.spawn))
+                ) {
+                    nearest = tempNearest
+                    data = key
+                }
+            }
+        if (nearest != null && data != null) {
+            nearest?.block?.setTypeIdAndData(data!!.first, data!!.second, false)
+            team.bridge.blocks[data]?.let {
+                if (it.size <= 1)
+                    team.bridge.blocks.remove(data)
+                 else
+                    it.remove(nearest)
+            }
+        }
+    }
+
+    private fun generateBridge(team: Team): Bridge {
+        val vector = Vector(1, 0, 0)
+        val bridge = Bridge(vector, team.bridge.start, team.bridge.end, team.bridge.blocks)
+        val length = 84
+        val width = 16
+        val height = 30
+
+        repeat(length) { len ->
+            repeat(width) { xOrZ ->
+                repeat(height) { y ->
+                    val current = Location(
+                        map.world,
+                        bridge.start.x + len * vector.x + xOrZ * vector.z,
+                        bridge.start.y + y,
+                        bridge.start.z + len * vector.z + xOrZ * vector.x,
+                    )
+                    if (current.block.type == AIR)
+                        return@repeat
+                    val currentBlock = current.block.type.id to current.block.data
+                    val blockList = bridge.blocks[currentBlock]
+                    if (blockList != null) {
+                        blockList.add(current)
+                    } else {
+                        bridge.blocks[currentBlock] = mutableListOf(current)
+                    }
+                    current.block.setTypeAndDataFast(0, 0)
+                }
+            }
+        }
+        return bridge
+    }
 }
