@@ -41,8 +41,6 @@ var games = 0
 val teams = map.getLabels("team").map {
     val data = it.tag.split(" ")
     val team = data[0]
-    println(map.getLabel("$team-x"))
-    println(map.getLabel("$team-z"))
     Team(
         mutableListOf(),
         Color.valueOf(data.first().uppercase()),
@@ -141,8 +139,7 @@ class App : JavaPlugin() {
     }
 
     private fun generateBridge(team: Team): Bridge {
-        val vector = Vector(1, 0, 0)
-        val bridge = Bridge(vector, team.bridge.start, team.bridge.end, team.bridge.blocks)
+        val bridge = Bridge(team.bridge.toCenter, team.bridge.start, team.bridge.end, team.bridge.blocks)
 
         getBridge(team).forEach { current ->
             if (current.block.type == AIR)
@@ -160,7 +157,7 @@ class App : JavaPlugin() {
     }
 
     fun getBridge(team: Team): MutableList<Location> {
-        val vector = Vector(1, 0, 0)
+        val vector = team.bridge.toCenter
         val bridge = Bridge(vector, team.bridge.start, team.bridge.end, team.bridge.blocks)
         val length = 84
         val width = 16

@@ -125,8 +125,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                             ),
                                                             "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
                                                         )
-                                                        println(team.players.map { getByUuid(it) }
-                                                            .sumOf { it.collectedBlocks })
                                                         me.reidj.bridgebuilders.mod.ModTransfer()
                                                             .integer(index + 2)
                                                             .integer(block.key.needTotal)
