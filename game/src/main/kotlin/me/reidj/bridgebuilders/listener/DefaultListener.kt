@@ -13,6 +13,7 @@ import org.bukkit.entity.Firework
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -134,6 +135,16 @@ object DefaultListener : Listener {
                         )
                     }
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    fun BlockPlaceEvent.handle() {
+        teams.forEach { team ->
+            app.getBridge(team).forEach {
+                if (it == block.location)
+                    isCancelled = true
             }
         }
     }
