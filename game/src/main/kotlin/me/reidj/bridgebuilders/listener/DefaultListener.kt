@@ -47,7 +47,7 @@ object DefaultListener : Listener {
                             team
                         )
                     }
-                    .forEach { showTeamList(app.getUser(it)!!) }
+                    .forEach { showTeamList(app.getUser(it)) }
                 player.sendMessage(Formatting.fine("Вы выбрали команду: " + team.color.chatFormat + team.color.teamName))
             }
         }
@@ -59,7 +59,7 @@ object DefaultListener : Listener {
             return
         val newItem = player.inventory.getItem(newSlot)
         if (newItem != player.inventory.getItem(previousSlot))
-            B.postpone(1) { showTeamList(app.getUser(player)!!) }
+            B.postpone(1) { showTeamList(app.getUser(player)) }
     }
 
     @EventHandler

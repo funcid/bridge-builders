@@ -115,22 +115,20 @@ class App : JavaPlugin() {
         var nearest: Location? = null
         var data: Pair<Int, Byte>? = null
         team.bridge.blocks.filter { (key, location) ->
-            toPlace.keys.any { it.material.id == key.first && it.blockData == key.second }
-                    && location.any { it.block.type == AIR }
-        }
-            .forEach { (key, value) ->
-                val tempNearest = value.minByOrNull { it.distanceSquared(team.spawn) }
-                if (nearest == null || (tempNearest != null && nearest != null && tempNearest.block.type == AIR &&
-                            tempNearest.distanceSquared(team.spawn) < nearest!!.distanceSquared(team.spawn))
-                ) {
-                    nearest = tempNearest
-                    data = key
-                }
+            toPlace.keys.any { it.material.id == key.first } && location.any { it.block.type == AIR }
+        }.forEach { (key, value) ->
+            val tempNearest = value.minByOrNull { it.distanceSquared(team.spawn) }
+            if (nearest == null || (tempNearest != null && tempNearest.block.type == AIR &&
+                        tempNearest.distanceSquared(team.spawn) < nearest!!.distanceSquared(team.spawn))
+            ) {
+                nearest = tempNearest
+                data = key
             }
-        if (nearest != null && data != null) {
+        }
+        if (nearest != null) {
             nearest?.block?.setTypeIdAndData(data!!.first, data!!.second, false)
             team.bridge.blocks[data]?.let {
-                if (it.size <= 1)
+                if (it.isEmpty())
                     team.bridge.blocks.remove(data)
                 else
                     it.remove(nearest)
@@ -140,17 +138,14 @@ class App : JavaPlugin() {
 
     private fun generateBridge(team: Team): Bridge {
         val bridge = Bridge(team.bridge.toCenter, team.bridge.start, team.bridge.end, team.bridge.blocks)
-
         getBridge(team).forEach { current ->
-            if (current.block.type == AIR)
-                return@forEach
             val currentBlock = current.block.type.id to current.block.data
             val blockList = bridge.blocks[currentBlock]
-            if (blockList != null) {
+            if (blockList != null)
                 blockList.add(current)
-            } else {
+            else
                 bridge.blocks[currentBlock] = mutableListOf(current)
-            }
+
             current.block.setTypeAndDataFast(0, 0)
         }
         return bridge
