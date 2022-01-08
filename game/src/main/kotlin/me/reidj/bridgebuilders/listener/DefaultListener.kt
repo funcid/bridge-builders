@@ -87,14 +87,16 @@ object DefaultListener : Listener {
                 template.string(if (it < slots / teams.size - players.size) " §7..." else "")
             }
         }
-
         template.send("bridge:team", user)
     }
 
     @EventHandler
     fun PlayerMoveEvent.handle() {
-        if (player.location.subtract(0.0, 1.0, 0.0).block.type == Material.EMERALD_BLOCK) {
-            teams.forEach { team ->
+        teams.forEach { team ->
+            if (team.players.map { getByUuid(it) }
+                    .sumOf { it.collectedBlocks } < 4096 && team.bridge.end.distanceSquared(player.location) < 42 * 42)
+                player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
+            if (player.location.subtract(0.0, 1.0, 0.0).block.type == Material.EMERALD_BLOCK) {
                 if (!team.isActiveTeleport)
                     return@forEach
                 if (team.players.contains(player.uniqueId) && player.location.distance(team.teleport) < 1) {

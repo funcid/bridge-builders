@@ -16,7 +16,7 @@ val kit = DefaultKit
 val markers: MutableList<Marker> = mutableListOf()
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(30, { it ->
+    STARTING(3, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 40)
             realm.status = GAME_STARTED_CAN_JOIN
@@ -92,7 +92,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                 if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
                                                     val must = block.key.needTotal - block.value
                                                     if (must == 0) {
-                                                        me.reidj.bridgebuilders.mod.ModHelper.notification(
+                                                        ModHelper.notification(
                                                             user,
                                                             ru.cristalix.core.formatting.Formatting.error("Мне больше не нужен этот ресурс")
                                                         )
@@ -119,17 +119,19 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                                         )
                                                     }
                                                     team.players.forEach { uuid ->
-                                                        me.reidj.bridgebuilders.mod.ModHelper.notification(
+                                                        ModHelper.notification(
                                                             getByUuid(
                                                                 uuid
                                                             ),
                                                             "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
                                                         )
+                                                        println(team.players.map { getByUuid(it) }
+                                                            .sumOf { it.collectedBlocks })
                                                         me.reidj.bridgebuilders.mod.ModTransfer()
                                                             .integer(index + 2)
                                                             .integer(block.key.needTotal)
                                                             .integer(block.value)
-                                                            .integer(3644)
+                                                            .integer(4096)
                                                             .integer(team.players.map { getByUuid(it) }
                                                                 .sumOf { it.collectedBlocks })
                                                             .send(
@@ -245,15 +247,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 }
             }
         }
-        teams.forEach {
-            it.players.forEach { player ->
-                try {
-                    val find = Bukkit.getPlayer(player)
-                } catch (ignored: Exception) {
-                }
-            }
-            it.players.clear()
-        }
+        teams.forEach { it.players.clear() }
         when {
             time == GAME.lastSecond * 20 + 20 * 10 -> {
                 app.restart()

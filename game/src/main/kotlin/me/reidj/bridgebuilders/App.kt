@@ -41,6 +41,8 @@ var games = 0
 val teams = map.getLabels("team").map {
     val data = it.tag.split(" ")
     val team = data[0]
+    println(map.getLabel("$team-x"))
+    println(map.getLabel("$team-z"))
     Team(
         mutableListOf(),
         Color.valueOf(data.first().uppercase()),
@@ -114,8 +116,10 @@ class App : JavaPlugin() {
         }
         var nearest: Location? = null
         var data: Pair<Int, Byte>? = null
-        team.bridge.blocks.filter { (key, location) -> toPlace.keys.any { it.material.id == key.first && it.blockData == key.second }
-                && location.any { it.block.type == AIR }}
+        team.bridge.blocks.filter { (key, location) ->
+            toPlace.keys.any { it.material.id == key.first && it.blockData == key.second }
+                    && location.any { it.block.type == AIR }
+        }
             .forEach { (key, value) ->
                 val tempNearest = value.minByOrNull { it.distanceSquared(team.spawn) }
                 if (nearest == null || (tempNearest != null && nearest != null && tempNearest.block.type == AIR &&
@@ -130,7 +134,7 @@ class App : JavaPlugin() {
             team.bridge.blocks[data]?.let {
                 if (it.size <= 1)
                     team.bridge.blocks.remove(data)
-                 else
+                else
                     it.remove(nearest)
             }
         }
@@ -166,12 +170,14 @@ class App : JavaPlugin() {
         repeat(length) { len ->
             repeat(width) { xOrZ ->
                 repeat(height) { y ->
-                    blockLocation.add(Location(
-                        map.world,
-                        bridge.start.x + len * vector.x + xOrZ * vector.z,
-                        bridge.start.y + y,
-                        bridge.start.z + len * vector.z + xOrZ * vector.x,
-                    ))
+                    blockLocation.add(
+                        Location(
+                            map.world,
+                            bridge.start.x + len * vector.x + xOrZ * vector.z,
+                            bridge.start.y + y,
+                            bridge.start.z + len * vector.z + xOrZ * vector.x,
+                        )
+                    )
                 }
             }
         }

@@ -24,9 +24,8 @@ class Timer : BukkitRunnable() {
                         it.world.spawnParticle(particle.type, it.location.clone().add(0.0, 0.2, 0.0), 1)
                 }
         }
-        if (time % 10 == 0) {
+        if (time % 5 == 0)
             teams.forEach { app.addBlock(it) }
-        }
         if (time % 20 == 0 && activeStatus == Status.GAME) {
             teams.forEach {
                 it.breakBlocks.forEach { block ->

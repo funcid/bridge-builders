@@ -6,7 +6,6 @@ import org.bukkit.inventory.ItemStack
 enum class BlockPlan(val title: String, val needTotal: Int, val material: Material, val blockData: Byte = 0) {
     COBBLE_WALL("Булыжная ограда", 2, Material.COBBLE_WALL),
     SPRUCE_FENCE("Еловый забор", 4, Material.SPRUCE_FENCE),
-    SANDSTONE("Песчаник", 5, Material.SANDSTONE),
     PRISMARINE("Призмарин", 20, Material.PRISMARINE),
     STAINED_CLAY("Фиолетовая керамика", 48, Material.STAINED_CLAY, 10),
     SANDSTONE_STAIRS("Песчаниковые ступеньки", 82, Material.SANDSTONE_STAIRS ),
