@@ -30,19 +30,19 @@ class Timer : BukkitRunnable() {
             teams.forEach {
                 it.breakBlocks.forEach { block ->
                     when (block.value) {
-                        Material.IRON_ORE -> B.postpone(20 * 50) {
+                        Material.IRON_ORE -> B.postpone(20 * 300) {
                             block.key.block.type = Material.IRON_ORE
                             toDelete.add(block.key)
                         }
-                        Material.DIAMOND_ORE -> B.postpone(20 * 60) {
+                        Material.DIAMOND_ORE -> B.postpone(20 * 600) {
                             block.key.block.type = Material.DIAMOND_ORE
                             toDelete.add(block.key)
                         }
-                        Material.COAL_ORE -> B.postpone(20 * 30) {
+                        Material.COAL_ORE -> B.postpone(20 * 180) {
                             block.key.block.type = Material.COAL_ORE
                             toDelete.add(block.key)
                         }
-                        Material.GOLD_ORE -> B.postpone(20 * 40) {
+                        Material.GOLD_ORE -> B.postpone(20 * 400) {
                             block.key.block.type = Material.GOLD_ORE
                             toDelete.add(block.key)
                         }
