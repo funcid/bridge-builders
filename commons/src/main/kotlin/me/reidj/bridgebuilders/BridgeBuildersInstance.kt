@@ -39,7 +39,7 @@ lateinit var worldMeta: WorldMeta
 lateinit var realm: RealmInfo
 
 var slots by Delegates.notNull<Int>()
-val statScope = Scope("bridge-builderss", Stat::class.java)
+val statScope = Scope("bridge-buildersss", Stat::class.java)
 var userManager = BukkitUserManager(
     listOf(statScope),
     { session: KensukeSession, context -> User(session, context.getData(statScope)) },

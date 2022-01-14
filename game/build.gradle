@@ -35,7 +35,7 @@ dependencies {
     implementation 'clepto:clepto-bukkit:3.4.2'
     implementation 'clepto:clepto-cristalix:3.0.2'
     implementation 'dev.implario:kensuke-client-bukkit:2.1.4'
-    implementation 'me.func:animation-api:1.1.38'
+    implementation 'me.func:animation-api:1.1.50'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.0'
 
     implementation 'dev.implario.bukkit:kotlin-api:1.0.0'

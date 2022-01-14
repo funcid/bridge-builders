@@ -4,6 +4,7 @@ import clepto.bukkit.B
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
+import me.func.mod.Banners
 import me.func.mod.Kit
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.data.BlockPlan
@@ -80,6 +81,17 @@ class App : JavaPlugin() {
             DamageListener,
             Lootbox
         )
+
+        Banners.new {
+            x = 6.0
+            y = 95.0
+            z = -1.2
+            opacity = 0.0
+            content = "Сломай меня"
+            height = 10
+            weight = 10
+            watchingOnPlayer = true
+        }
 
         // Рисую эффект выстрела
         ArrowEffect().arrowEffect(this)

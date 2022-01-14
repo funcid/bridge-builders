@@ -18,9 +18,9 @@ enum class WeekRewards(val title: String, val icon: ItemStack, val give: (User) 
         { giveWithDuplicate(it, Corpse.G2, 64) }
     ),
     FOUR(
-        StepParticle.FALLING_DUST.getRare().with(StepParticle.FALLING_DUST.getTitle()),
-        StepParticle.FALLING_DUST.getIcon(),
-        { giveWithDuplicate(it, StepParticle.FALLING_DUST, 128) }
+        StepParticle.SPELL_INSTANT.getRare().with(StepParticle.SPELL_INSTANT.getTitle()),
+        StepParticle.SPELL_INSTANT.getIcon(),
+        { giveWithDuplicate(it, StepParticle.SPELL_INSTANT, 128) }
     ),
     FIVE(
         NameTag.NINJA.getRare().with(NameTag.NINJA.getTitle()),

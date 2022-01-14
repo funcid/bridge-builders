@@ -151,7 +151,7 @@ class CustomizationNPC {
                 }.build()) {
                     subInventory(player, 1) { _: Player, currentContent: InventoryContents ->
                         currentContent.setLayout("XIIIIXXBX")
-                        pasteItems(user, true, currentContent, MoneyKit.values().filter { it != MoneyKit.NONE }) {}
+                        //pasteItems(user, true, currentContent, MoneyKit.values().filter { it != MoneyKit.NONE }) {}
                     }
                 })
                 contents.add('O', ClickableItem.of(LootboxUnit.getIcon()) {
@@ -175,7 +175,7 @@ class CustomizationNPC {
                 })
 
                 contents.add('D', ClickableItem.of(StarterPack.getIcon()) {
-                    donateMenu(player, StarterPack, true)
+                    //donateMenu(player, StarterPack, true)
                 })
                 val countHaveAchievement =
                     Achievement.values().count { it.predicate(user) && !stat.achievement.contains(it) }
@@ -285,7 +285,7 @@ class CustomizationNPC {
 
     fun subInventory(player: Player, rows: Int, inventory: (Player, InventoryContents) -> Any) {
         ControlledInventory.builder()
-            .title("MurderMystery")
+            .title("BridgeBuilders")
             .rows(rows)
             .columns(9)
             .provider(object : InventoryProvider {

@@ -88,7 +88,7 @@ class App : JavaPlugin() {
                     DataDrawData.builder()
                         .strings(
                             listOf(
-                                StringDrawData.builder().align(1).scale(2).position(V2(115.0, 0.0))
+                                StringDrawData.builder().align(1).scale(2).position(V2(100.0, 0.0))
                                     .string("㗬㗬㗬")
                                     .build(),
                                 StringDrawData.builder().align(1).scale(2).position(V2(115.0, 40.0))

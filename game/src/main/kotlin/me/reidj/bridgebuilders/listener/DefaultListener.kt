@@ -143,7 +143,7 @@ object DefaultListener : Listener {
     fun BlockPlaceEvent.handle() {
         teams.forEach { team ->
             app.getBridge(team).forEach {
-                if (it == block.location)
+                if (it == block.location || team.spawn.distanceSquared(block.location) < 100 * 100)
                     isCancelled = true
             }
         }

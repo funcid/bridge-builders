@@ -23,7 +23,6 @@ enum class ArrowParticle(
     NONE("Отсутсвует", 0, Rare.COMMON, null, Material.BARRIER),
     SLIME("Слизь", 192, Rare.COMMON, Particle.SLIME, Material.SLIME_BALL),
     WATER_DROP("Капли воды", 256, Rare.COMMON, Particle.DRIP_WATER, Material.WATER_BUCKET),
-    FALLING_DUST("Падающая пыль", 512, Rare.RARE, Particle.FALLING_DUST, Material.FLINT),
     SPELL_INSTANT("Феерверк", 512, Rare.RARE, Particle.SPELL_INSTANT, Material.FIREWORK),
     REDSTONE("Красный камень", 768, Rare.RARE, Particle.REDSTONE, Material.REDSTONE),
     VILLAGER_ANGRY("Злой житель", 1024, Rare.EPIC, Particle.VILLAGER_ANGRY, Material.FIREWORK_CHARGE),
