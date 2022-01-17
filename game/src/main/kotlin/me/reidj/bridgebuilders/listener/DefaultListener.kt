@@ -1,6 +1,7 @@
 package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
+import clepto.cristalix.Cristalix
 import implario.ListUtils
 import me.func.mod.Anime
 import me.reidj.bridgebuilders.*
@@ -28,29 +29,32 @@ object DefaultListener : Listener {
 
     @EventHandler
     fun PlayerInteractEvent.handle() {
-        if (activeStatus == Status.STARTING && material == Material.WOOL) {
-            teams.filter {
-                !it.players.contains(player.uniqueId) && it.color.woolData.toByte() == player.itemInHand.getData().data
-            }.forEach { team ->
-                if (team.players.size >= slots / teams.size) {
-                    player.sendMessage(Formatting.error("Ошибка! Команда заполнена."))
-                    return@forEach
-                }
-                val prevTeam = teams.firstOrNull { it.players.contains(player.uniqueId) }
-                prevTeam?.players?.remove(player.uniqueId)
-                team.players.add(player.uniqueId)
-
-                // Удаляем у всех игрока из команды и добавляем в другую
-                val prevTeamIndex = teams.indexOf(prevTeam)
-                Bukkit.getOnlinePlayers()
-                    .filter {
-                        it.inventory.heldItemSlot == prevTeamIndex || it.inventory.heldItemSlot == teams.indexOf(
-                            team
-                        )
+        if (activeStatus == Status.STARTING) {
+            if (material == Material.WOOL) {
+                teams.filter {
+                    !it.players.contains(player.uniqueId) && it.color.woolData.toByte() == player.itemInHand.getData().data
+                }.forEach { team ->
+                    if (team.players.size >= slots / teams.size) {
+                        player.sendMessage(Formatting.error("Ошибка! Команда заполнена."))
+                        return@forEach
                     }
-                    .forEach { showTeamList(app.getUser(it)) }
-                player.sendMessage(Formatting.fine("Вы выбрали команду: " + team.color.chatFormat + team.color.teamName))
-            }
+                    val prevTeam = teams.firstOrNull { it.players.contains(player.uniqueId) }
+                    prevTeam?.players?.remove(player.uniqueId)
+                    team.players.add(player.uniqueId)
+
+                    // Удаляем у всех игрока из команды и добавляем в другую
+                    val prevTeamIndex = teams.indexOf(prevTeam)
+                    Bukkit.getOnlinePlayers()
+                        .filter {
+                            it.inventory.heldItemSlot == prevTeamIndex || it.inventory.heldItemSlot == teams.indexOf(
+                                team
+                            )
+                        }
+                        .forEach { showTeamList(app.getUser(it)) }
+                    player.sendMessage(Formatting.fine("Вы выбрали команду: " + team.color.chatFormat + team.color.teamName))
+                }
+            } else if (material == Material.CLAY_BALL)
+                Cristalix.transfer(listOf(player.uniqueId), LOBBY_SERVER)
         }
     }
 

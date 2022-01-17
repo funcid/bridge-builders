@@ -10,7 +10,6 @@ import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_JOIN
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_RESTRICTED
 
 lateinit var winMessage: String
-const val needPlayers: Int = 3
 val kit = DefaultKit
 val markers: MutableList<Marker> = mutableListOf()
 
@@ -34,7 +33,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size + needPlayers < slots)
+            if (players.size < slots)
                 actualTime = 1
             else {
                 // Обновление статуса реалма, чтобы нельзя было войти

@@ -42,7 +42,7 @@ class App : JavaPlugin() {
         CoreApi.get().registerService(IRenderService::class.java, BukkitRenderService(getServer()))
 
         // Конфигурация реалма
-        realm.isLobbyServer = true
+        realm.isLobbyServer = false
         realm.readableName = "BridgeBuilders Lobby"
         realm.servicedServers = arrayOf("BridgeBuilders ${realm.realmId.id}")
 

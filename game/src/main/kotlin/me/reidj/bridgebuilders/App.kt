@@ -6,7 +6,6 @@ import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
 import me.func.mod.Banners
 import me.func.mod.Kit
-import me.func.mod.data.NpcSmart
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.data.BlockPlan
 import me.reidj.bridgebuilders.data.Bridge
@@ -35,7 +34,7 @@ const val GAMES_STREAK_RESTART = 6
 lateinit var app: App
 
 val map = MapLoader.load(MapType.AQUAMARINE.data.title)
-val LOBBY_SERVER: RealmId = RealmId.of("BRIL-1")
+val LOBBY_SERVER: RealmId = RealmId.of("TEST-56")
 var activeStatus = Status.STARTING
 var games = 0
 
@@ -70,7 +69,7 @@ class App : JavaPlugin() {
 
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
 
-        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, map, 4)
+        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, map, 16)
         realm.readableName = "BridgeBuilders ${realm.realmId.id}"
         realm.lobbyFallback = LOBBY_SERVER
 
