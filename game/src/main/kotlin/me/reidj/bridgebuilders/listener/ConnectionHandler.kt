@@ -32,82 +32,86 @@ object ConnectionHandler : Listener {
 
         val user = getByPlayer(player)
 
-        // Создание нпс
-        map.getLabels("builder").forEach { label ->
-            val npcArgs = label.tag.split(" ")
-            Npc.npc {
-                onClick { _ ->
-                    if (user.activeHand)
-                        return@onClick
-                    user.activeHand = true
-                    B.postpone(5) { user.activeHand = false }
-                    teams.filter { it.players.contains(player.uniqueId) }
-                        .forEach { team ->
-                            team.collected.entries.forEachIndexed { index, block ->
-                                val itemHand = player.itemInHand
-                                if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
-                                    val must = block.key.needTotal - block.value
-                                    if (must == 0) {
-                                        ModHelper.notification(
-                                            user,
-                                            ru.cristalix.core.formatting.Formatting.error("Мне больше не нужен этот ресурс")
-                                        )
-                                        player.playSound(
-                                            player.location,
-                                            org.bukkit.Sound.ENTITY_ARMORSTAND_HIT,
-                                            1f,
-                                            1f
-                                        )
-                                        return@onClick
-                                    } else {
-                                        val subtraction = must - itemHand.getAmount()
-                                        team.collected[block.key] =
-                                            block.key.needTotal - maxOf(0, subtraction)
-                                        val brought = must - subtraction
-                                        itemHand.setAmount(itemHand.getAmount() - must)
-
-                                        user.collectedBlocks += brought
-                                        player.playSound(
-                                            player.location,
-                                            org.bukkit.Sound.ENTITY_PLAYER_LEVELUP,
-                                            1f,
-                                            1f
-                                        )
-                                    }
-                                    team.players.forEach { uuid ->
-                                        ModHelper.notification(
-                                            getByUuid(
-                                                uuid
-                                            ),
-                                            "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
-                                        )
-                                        me.reidj.bridgebuilders.mod.ModTransfer()
-                                            .integer(index + 2)
-                                            .integer(block.key.needTotal)
-                                            .integer(block.value)
-                                            .integer(4096)
-                                            .integer(team.players.map { getByUuid(it) }
-                                                .sumOf { it.collectedBlocks })
-                                            .send(
-                                                "bridge:tabupdate",
-                                                user
+        B.postpone(5) {
+            // Спавню нпс
+            map.getLabels("builder").forEach { label ->
+                val npcArgs = label.tag.split(" ")
+                Npc.npc {
+                    onClick { event ->
+                        val player = event.player
+                        if (user.activeHand)
+                            return@onClick
+                        user.activeHand = true
+                        B.postpone(5) { user.activeHand = false }
+                        teams.filter { it.players.contains(player.uniqueId) }
+                            .forEach { team ->
+                                team.collected.entries.forEachIndexed { index, block ->
+                                    val itemHand = player.itemInHand
+                                    if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
+                                        val must = block.key.needTotal - block.value
+                                        if (must == 0) {
+                                            ModHelper.notification(
+                                                user,
+                                                ru.cristalix.core.formatting.Formatting.error("Мне больше не нужен этот ресурс")
                                             )
+                                            player.playSound(
+                                                player.location,
+                                                org.bukkit.Sound.ENTITY_ARMORSTAND_HIT,
+                                                1f,
+                                                1f
+                                            )
+                                            return@onClick
+                                        } else {
+                                            val subtraction = must - itemHand.getAmount()
+                                            team.collected[block.key] =
+                                                block.key.needTotal - maxOf(0, subtraction)
+                                            val brought = must - subtraction
+                                            itemHand.setAmount(itemHand.getAmount() - must)
+
+                                            user.collectedBlocks += brought
+                                            player.playSound(
+                                                player.location,
+                                                org.bukkit.Sound.ENTITY_PLAYER_LEVELUP,
+                                                1f,
+                                                1f
+                                            )
+                                        }
+                                        team.players.forEach { uuid ->
+                                            ModHelper.notification(
+                                                getByUuid(
+                                                    uuid
+                                                ),
+                                                "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
+                                            )
+                                            me.reidj.bridgebuilders.mod.ModTransfer()
+                                                .integer(index + 2)
+                                                .integer(block.key.needTotal)
+                                                .integer(block.value)
+                                                .integer(4096)
+                                                .integer(team.players.map { getByUuid(it) }
+                                                    .sumOf { it.collectedBlocks })
+                                                .send(
+                                                    "bridge:tabupdate",
+                                                    user
+                                                )
+                                        }
+                                        player.updateInventory()
+                                        return@onClick
                                     }
-                                    player.updateInventory()
-                                    return@onClick
                                 }
                             }
-                        }
-                }
-                x = label.x + 0.5
-                y = label.y
-                z = label.z + 0.5
-                behaviour = me.func.protocol.npc.NpcBehaviour.STARE_AT_PLAYER
-                name = "§bСтроитель Джо"
-                yaw = npcArgs[0].toFloat()
-                skinDigest = "9985b767-6677-11ec-acca-1cb72caa35fd"
-                skinUrl = "https://webdata.c7x.dev/textures/skin/9985b767-6677-11ec-acca-1cb72caa35fd"
-            }.spawn(player)
+                    }
+                    x = label.x + 0.5
+                    y = label.y
+                    z = label.z + 0.5
+                    behaviour = me.func.protocol.npc.NpcBehaviour.STARE_AT_PLAYER
+                    name = "§bСтроитель Джо"
+                    pitch = npcArgs[0].toFloat()
+                    yaw = 0f
+                    skinDigest = "9985b767-6677-11ec-acca-1cb72caa35fd"
+                    skinUrl = "https://webdata.c7x.dev/textures/skin/9985b767-6677-11ec-acca-1cb72caa35fd"
+                }.spawn(player)
+            }
         }
 
         user.stat.lastEnter = System.currentTimeMillis()

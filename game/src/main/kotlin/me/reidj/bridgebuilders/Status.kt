@@ -59,9 +59,15 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     team.players.forEach { it ->
                         val player = Bukkit.getPlayer(it) ?: return@forEach
                         val user = getByPlayer(player)
+                        val spawn = team.spawn
+
                         player.gameMode = GameMode.SURVIVAL
                         player.itemOnCursor = null
-                        player.teleport(team.spawn)
+
+                        spawn.pitch = team.pitch
+                        spawn.yaw = team.yaw
+                        player.teleport(spawn)
+
                         player.inventory.armorContents = kit.armor
                         player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
 

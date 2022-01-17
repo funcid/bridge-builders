@@ -114,7 +114,14 @@ object DamageListener : Listener {
                 player.gameMode = GameMode.SURVIVAL
                 teams.stream()
                     .filter { team -> team.players.contains(player.uniqueId) }
-                    .forEach { team -> player.teleport(team.spawn) }
+                    .forEach { team ->
+                        run {
+                            val spawn = team.spawn
+                            spawn.pitch = team.pitch
+                            spawn.yaw = team.yaw
+                            player.teleport(spawn)
+                        }
+                    }
                 Cycle.exit()
             } else if (it < 2) {
                 Anime.title(player, "Возрождение...")

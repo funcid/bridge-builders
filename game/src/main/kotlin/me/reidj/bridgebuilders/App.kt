@@ -6,6 +6,7 @@ import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
 import me.func.mod.Banners
 import me.func.mod.Kit
+import me.func.mod.data.NpcSmart
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.data.BlockPlan
 import me.reidj.bridgebuilders.data.Bridge
@@ -46,6 +47,8 @@ val teams = map.getLabels("team").map {
         Color.valueOf(data.first().uppercase()),
         it,
         map.getLabel("$team-teleport"),
+        data[3].toFloat(),
+        data[4].toFloat(),
         false,
         mutableMapOf(),
         Bridge(
