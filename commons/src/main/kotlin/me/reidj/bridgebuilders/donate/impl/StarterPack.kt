@@ -28,7 +28,7 @@ object StarterPack : DonatePosition {
             nbt("other", "unique")
             nbt("HideFlags", 63)
             text("§bСтартовый набор\n\n§7Вы получите §b3 лутбокса\n§7и §e512 монет§7.\n\n§7Купить за §b89 кристаликов")
-        }.build()
+        }
     }
 
     override fun give(user: User) {

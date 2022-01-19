@@ -25,7 +25,7 @@ object LootboxUnit : DonatePosition {
             type = Material.CLAY_BALL
             nbt("other", "enderchest1")
             text("§bЛутбокс\n\n§7Получить лутбокс,\n§7за §e10 стаков монет§7.")
-        }.build()
+        }
     }
 
     override fun give(user: User) {

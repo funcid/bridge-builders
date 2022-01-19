@@ -45,7 +45,7 @@ enum class StepParticle(
         return item {
             type = icon
             text(rare.with(title) + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}")
-        }.build()
+        }
     }
 
     override fun give(user: User) {

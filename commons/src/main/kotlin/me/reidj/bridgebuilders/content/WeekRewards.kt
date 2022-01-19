@@ -38,7 +38,7 @@ enum class WeekRewards(val title: String, val icon: ItemStack, val give: (User) 
             type = Material.CLAY_BALL
             enchant(Enchantment.DAMAGE_ALL, 1)
             nbt("other", "enderchest1")
-        }.build(), { repeat(5) { _ -> it.stat.lootbox++ } }
+        }, { repeat(5) { _ -> it.stat.lootbox++ } }
     )
     ;
 

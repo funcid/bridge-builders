@@ -45,7 +45,7 @@ enum class KillMessage(private val title: String, private val price: Int, privat
             type = Material.CLAY_BALL
             nbt("other", "pets1")
             text(rare.with(title) + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}\n§fПример: ${texted("func")}")
-        }.build()
+        }
     }
 
     override fun give(user: User) {

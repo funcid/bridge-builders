@@ -34,7 +34,7 @@ enum class Corpse(private val title: String, private val price: Int, private val
             type = Material.CLAY_BALL
             nbt("other", name.toLowerCase())
             text(rare.with(title) + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}")
-        }.build()
+        }
     }
 
     override fun give(user: User) {

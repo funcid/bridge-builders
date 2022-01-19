@@ -37,14 +37,14 @@ class CustomizationNPC {
         type = Material.CLAY_BALL
         text("§cНазад")
         nbt("other", "cancel")
-    }.build()
+    }
 
     private val accessItem = item {
         text("§aКупить\n\n§7Это кнопка подтверждения\n§7покупки.")
         nbt("other", "access")
         enchant(Enchantment.LUCK, 1)
         type = Material.CLAY_BALL
-    }.build()
+    }
 
     private val menu = ControlledInventory.builder()
         .title("BridgeBuilders")
@@ -68,7 +68,7 @@ class CustomizationNPC {
                     type = Material.CLAY_BALL
                     nbt("marioparty", "bowspleef")
                     text("§bЭффекты выстрела НОВОЕ!\n\n§7Выберите эффект, который\n§7останется после выстрела.")
-                }.build()) {
+                }) {
                     subInventory(player, 3) { _: Player, currentContent: InventoryContents ->
                         currentContent.setLayout(
                             "XIIIIIIIX",
@@ -96,13 +96,13 @@ class CustomizationNPC {
                                 "§7    Сыграно: §f${stat.games} §7игр(ы)\n" +
                                 "§7    Наиграно §f${(stat.timePlayedTotal / 1000 / 360).toInt() / 10.0} §7часов\n\n"
                     )
-                }.build()))
+                }))
 
                 contents.add('P', ClickableItem.of(item {
                     type = Material.CLAY_BALL
                     nbt("other", "g2")
                     text("§bМогилы\n\n§7Выберите могилу, которая\n§7появится на месте\n§7вашей смерти.")
-                }.build()) {
+                }) {
                     subInventory(player, 1) { _: Player, currentContent: InventoryContents ->
                         currentContent.setLayout("XIIIIIXBX")
                         pasteItems(user, false, currentContent, Corpse.values().filter { it != Corpse.NONE }) {
@@ -114,7 +114,7 @@ class CustomizationNPC {
                     type = Material.CLAY_BALL
                     nbt("other", "guild_members_add")
                     text("§bЧастицы ходьбы\n\n§7Выберите тип частиц,\n§7которые будут появлять\n§7следом за вами.")
-                }.build()) {
+                }) {
                     subInventory(player, 3) { _: Player, currentContent: InventoryContents ->
                         currentContent.setLayout(
                             "XIIIIIIIX",
@@ -130,7 +130,7 @@ class CustomizationNPC {
                     type = Material.CLAY_BALL
                     nbt("other", "new_booster_2")
                     text("§bПсевдонимы\n\n§7Выберите псевдоним,\n§7который появится в\n§7табе.")
-                }.build()) {
+                }) {
                     subInventory(player, 3) { _: Player, currentContent: InventoryContents ->
                         currentContent.setLayout(
                             "XIIIIIIIX",
@@ -148,7 +148,7 @@ class CustomizationNPC {
                     nbt("HideFlags", 63)
                     nbt("other", "new_lvl_rare_close")
                     text("§bМонеты\n\n§7Приобретите монеты,\n§7и ни в чем себе\n§7не отказывайте.")
-                }.build()) {
+                }) {
                     subInventory(player, 1) { _: Player, currentContent: InventoryContents ->
                         currentContent.setLayout("XIIIIXXBX")
                         //pasteItems(user, true, currentContent, MoneyKit.values().filter { it != MoneyKit.NONE }) {}
@@ -161,7 +161,7 @@ class CustomizationNPC {
                     type = Material.IRON_SPADE
                     nbt("simulators", "luck_shovel")
                     text("§bСообщения убийства\n\n§7Выберите сообщение,\n§7которое будет написано\n§7с 35% шансом, когда\n§7вы убьете кого-то.")
-                }.build()) {
+                }) {
                     subInventory(player, 3) { _: Player, currentContent: InventoryContents ->
                         currentContent.setLayout(
                             "XIIIIIIIX",
@@ -186,7 +186,7 @@ class CustomizationNPC {
                         text("§bДостижения §eНОВОЕ!\n\n§aВы можете собрать $countHaveAchievement наград!")
                     else
                         text("§bДостижения\n\n§7Посмотреть список достижений.")
-                }.build()) {
+                }) {
                     subInventory(player, 5) { _: Player, currentContent: InventoryContents ->
                         currentContent.setLayout(
                             "XIIIIIIIX",
@@ -215,7 +215,7 @@ class CustomizationNPC {
                                             text("§b${achievement.title}\n\n${achievement.lore}")
                                         }
                                     }
-                                }.build()) {
+                                }) {
                                     if (!canGet || playerHas)
                                         return@of
                                     player.closeInventory()

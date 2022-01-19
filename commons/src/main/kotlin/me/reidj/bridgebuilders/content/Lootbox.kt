@@ -44,7 +44,7 @@ object Lootbox : Listener {
                 )
             }"
         )
-    }.build()
+    }
 
     private val lootbox = ControlledInventory.builder()
         .title("Ваши лутбоксы")
@@ -102,7 +102,7 @@ object Lootbox : Listener {
                     type = Material.CLAY_BALL
                     nbt("other", "anvil")
                     text("§bКак их получить?\n\n§7Побеждайте в игре,\n§7и с шансом §a5%\n§7вы получите §bлутбокс§7.")
-                }.build()))
+                }))
                 contents.fillMask('X', ClickableItem.empty(ItemStack(Material.AIR)))
             }
         }).build()

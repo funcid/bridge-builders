@@ -1,3 +1,11 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+
 plugins {
     id 'dev.implario.mcgradle' version '1.0.4'
 }
@@ -11,6 +19,14 @@ bukkitPlugin {
 
 group = 'me.reidj'
 version = '1.0-SNAPSHOT'
+
+afterEvaluate {
+    jar {
+        archiveBaseName.set 'bridgebuilders'
+        from configurations.runtimeClasspath.collect { it.directory ? it : zipTree(it) }
+        duplicatesStrategy DuplicatesStrategy.EXCLUDE
+    }
+}
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -32,14 +48,17 @@ dependencies {
     compileOnly 'cristalix:dark-paper:21.02.03'
     compileOnly 'dev.xdark:feder:1.0-SNAPSHOT'
 
+    implementation 'dev.implario:kensuke-client-bukkit:2.1.9'
+
+    implementation 'dev.implario.bukkit:kotlin-api:1.1.1'
+    implementation 'dev.implario.bukkit:dark-paper:1.0.0'
+
+    implementation 'dev.implario.bukkit:bukkit-tools:4.4.12'
     implementation 'clepto:clepto-bukkit:3.4.2'
     implementation 'clepto:clepto-cristalix:3.0.2'
-    implementation 'dev.implario:kensuke-client-bukkit:2.1.4'
+
     implementation 'me.func:animation-api:1.1.50'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.0'
-
-    implementation 'dev.implario.bukkit:kotlin-api:1.0.0'
-    implementation 'dev.implario.bukkit:dark-paper:1.0.0'
 
     implementation 'ru.cristalix:boards-bukkit-api:3.0.0'
     implementation project(':commons')

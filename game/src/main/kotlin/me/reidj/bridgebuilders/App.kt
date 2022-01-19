@@ -117,9 +117,13 @@ class App : JavaPlugin() {
             Bukkit.shutdown()
     }
 
-    fun getUser(player: Player): User = getUser(player.uniqueId)
+    fun getUser(player: Player): User {
+        return getUser(player.uniqueId)
+    }
 
-    fun getUser(uuid: UUID): User = userManager.getUser(uuid)
+    fun getUser(uuid: UUID): User {
+        return userManager.getUser(uuid)
+    }
 
     fun addBlock(team: Team) {
         val toPlace = team.collected.filter {
