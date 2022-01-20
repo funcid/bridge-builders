@@ -2,8 +2,6 @@ package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
 import io.netty.buffer.Unpooled
-import me.reidj.bridgebuilders.content.DailyRewardManager
-import me.reidj.bridgebuilders.content.WeekRewards
 import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.worldMeta
@@ -57,22 +55,6 @@ object GlobalListeners : Listener {
             )
         }
         ModHelper.updateBalance(user)
-        B.postpone(10) {
-            val now = System.currentTimeMillis()
-            // Обнулить комбо сбора наград если прошло больше суток или комбо >7
-            if ((user.stat.rewardStreak > 0 && now - user.stat.lastEnter > 24 * 60 * 60 * 1000) || user.stat.rewardStreak > 6) {
-                user.stat.rewardStreak = 0
-            }
-            if (now - user.stat.dailyClaimTimestamp > 14 * 60 * 60 * 1000) {
-                user.stat.dailyClaimTimestamp = now
-                DailyRewardManager.open(user)
-
-                val dailyReward = WeekRewards.values()[user.stat.rewardStreak]
-                player.sendMessage(Formatting.fine("Ваша ежедневная награда: " + dailyReward.title))
-                dailyReward.give(user)
-                user.stat.rewardStreak++
-            }
-        }
 
         // Заполнение имени для топа
         if (user.stat.lastSeenName == null || (user.stat.lastSeenName != null && user.stat.lastSeenName!!.isEmpty()))
