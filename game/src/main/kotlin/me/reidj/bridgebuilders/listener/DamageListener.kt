@@ -16,6 +16,7 @@ import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.inventory.ItemStack
@@ -129,5 +130,12 @@ object DamageListener : Listener {
                 Anime.counting321(player)
             }
         }
+    }
+
+    @EventHandler
+    fun EntityDamageByEntityEvent.handle() {
+        teams.filter { team -> team.players.contains(damager.uniqueId) }
+            .filter { it.players.contains(entity.uniqueId) }
+            .forEach { _ -> isCancelled = true }
     }
 }
