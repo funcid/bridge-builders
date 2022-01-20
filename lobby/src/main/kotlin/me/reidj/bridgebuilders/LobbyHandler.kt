@@ -5,6 +5,7 @@ import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPhysicsEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
@@ -19,19 +20,19 @@ object LobbyHandler : Listener {
         text("§aПерсонаж")
         nbt("other", "clothes")
         nbt("click", "menu")
-    }.build()
+    }
     private var startItem: ItemStack = item {
         type = Material.CLAY_BALL
         text("§bИграть")
         nbt("other", "guild_members")
         nbt("click", "next")
-    }.build()
+    }
     private var backItem: ItemStack = item {
         type = Material.CLAY_BALL
         text("§cВыйти")
         nbt("other", "cancel")
         nbt("click", "leave")
-    }.build()
+    }
 
     @EventHandler
     fun PlayerInteractEvent.handle() {
@@ -62,5 +63,10 @@ object LobbyHandler : Listener {
     @EventHandler
     fun FoodLevelChangeEvent.handle() {
         isCancelled = true
+    }
+
+    @EventHandler
+    fun BlockBreakEvent.handle() {
+        cancel = true
     }
 }
