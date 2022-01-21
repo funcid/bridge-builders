@@ -147,6 +147,8 @@ object DefaultListener : Listener {
 
     @EventHandler
     fun BlockPlaceEvent.handle() {
+        if (block.type == Material.WORKBENCH)
+            return
         teams.forEach { team ->
             app.getBridge(team).forEach {
                 if (it == block.location || team.spawn.distanceSquared(block.location) < 100 * 100)
