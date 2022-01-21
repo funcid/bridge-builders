@@ -3,7 +3,6 @@ package me.reidj.bridgebuilders
 import me.func.mod.Anime
 import me.func.protocol.Marker
 import me.reidj.bridgebuilders.data.DefaultKit
-import me.reidj.bridgebuilders.mod.ModHelper
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_JOIN
@@ -14,7 +13,7 @@ val kit = DefaultKit
 val markers: MutableList<Marker> = mutableListOf()
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(30, { it ->
+    STARTING(15, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 40)
             realm.status = GAME_STARTED_CAN_JOIN
@@ -33,7 +32,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size < slots)
+            if (players.size + 15 < slots)
                 actualTime = 1
             else {
                 // Обновление статуса реалма, чтобы нельзя было войти
@@ -55,7 +54,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 }
                 // Телепортация игроков
                 teams.forEach { team ->
-                    team.players.forEach { it ->
+                    team.players.forEach {
                         val player = Bukkit.getPlayer(it) ?: return@forEach
                         val user = getByPlayer(player)
                         val spawn = team.spawn
@@ -86,6 +85,8 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                             "Цель",
                             "Принесите нужные блоки строителю, \nчтобы построить мост к центру"
                         )
+
+                        println("123")
 
                         markers.add(
                             Anime.marker(
@@ -148,10 +149,10 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     .integer(time)
                     .boolean(false)
                     .send("bridge:online", app.getUser(it))
-            }
-            if (time == 1580) {
-                teams.forEach { it.isActiveTeleport = true }
-                ModHelper.allNotification("Телепорт на чужие базы теперь §aдоступен")
+                if (time == 1580) {
+                    teams.forEach { team -> team.isActiveTeleport = true }
+                    Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
+                }
             }
         }
         // Проверка на победу
