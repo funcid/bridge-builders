@@ -24,8 +24,6 @@ import ru.cristalix.core.util.UtilEntity
 
 object DamageListener : Listener {
 
-    private var toDelete: MutableList<ItemStack> = mutableListOf()
-
     @EventHandler
     fun EntityDamageEvent.handle() {
         if (activeStatus != Status.GAME || (entity as Player).gameMode == GameMode.SPECTATOR)
@@ -88,25 +86,15 @@ object DamageListener : Listener {
         if (player.gameMode == GameMode.SPECTATOR)
             return
 
+        // Удаление вещей
         player.inventory
             .filterNotNull()
-            .forEach {
-                if (it.getAmount() > 4) {
-                    it.setAmount(it.getAmount() - 2)
-                } else {
-                    val name = it.getType().name
-                    if (name.endsWith("SWORD") || name.endsWith("AXE") || name.endsWith("PICKAXE")) {
-                        if (it.getDurability() >= 0)
-                            it.setDurability((it.getDurability() + 20).toShort())
-                        else
-                            toDelete.add(it)
-                    } else {
-                        toDelete.add(it)
-                    }
-                }
-            }
-        toDelete.forEach { player.inventory.remove(it) }
-        toDelete.clear()
+            .forEach { removeItems(it) }
+        removeItems(player.itemOnCursor)
+        removeItems(player.inventory.itemInOffHand)
+        player.openInventory.topInventory.filterNotNull().forEach { removeItems(it) }
+
+        player.updateInventory()
 
         player.gameMode = GameMode.SPECTATOR
 
@@ -138,5 +126,24 @@ object DamageListener : Listener {
         teams.filter { team -> team.players.contains(damager.uniqueId) }
             .filter { it.players.contains(entity.uniqueId) }
             .forEach { _ -> isCancelled = true }
+    }
+
+    private fun removeItems(itemStack: ItemStack) {
+        val toDelete = mutableListOf<ItemStack>()
+        if (itemStack.getAmount() > 4) {
+            itemStack.setAmount(itemStack.getAmount() - 2)
+        } else {
+            val name = itemStack.getType().name
+            if (name.endsWith("SWORD") || name.endsWith("AXE") || name.endsWith("PICKAXE")) {
+                if (itemStack.getDurability() >= 0)
+                    itemStack.setDurability((itemStack.getDurability() + 20).toShort())
+                else
+                    toDelete.add(itemStack)
+            } else {
+                toDelete.add(itemStack)
+            }
+        }
+        toDelete.forEach { it.setAmount(0) }
+        toDelete.clear()
     }
 }

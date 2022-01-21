@@ -147,7 +147,7 @@ object DefaultListener : Listener {
 
     @EventHandler
     fun BlockPlaceEvent.handle() {
-        if (block.type == Material.WORKBENCH)
+        if (block.type == Material.WORKBENCH || block.type == Material.FURNACE)
             return
         teams.forEach { team ->
             app.getBridge(team).forEach {
