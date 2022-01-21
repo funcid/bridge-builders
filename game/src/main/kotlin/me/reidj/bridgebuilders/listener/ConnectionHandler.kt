@@ -140,11 +140,13 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun AsyncPlayerPreLoginEvent.handle() {
-        playerProfile.properties.forEach { profileProperty ->
-            if (profileProperty.value == "PARTY_WARP") {
-                if (IRealmService.get().currentRealmInfo.status != RealmStatus.WAITING_FOR_PLAYERS) {
-                    disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Сейчас нельзя зайти на этот сервер")
-                    loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
+        if (activeStatus != Status.STARTING) {
+            playerProfile.properties.forEach { profileProperty ->
+                if (profileProperty.value == "PARTY_WARP") {
+                    if (IRealmService.get().currentRealmInfo.status != RealmStatus.WAITING_FOR_PLAYERS) {
+                        disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Сейчас нельзя зайти на этот сервер")
+                        loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
+                    }
                 }
             }
         }
