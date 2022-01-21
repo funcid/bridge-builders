@@ -4,6 +4,8 @@ import me.func.mod.Anime
 import me.func.protocol.Marker
 import me.reidj.bridgebuilders.data.DefaultKit
 import org.bukkit.Bukkit
+import org.bukkit.Color
+import org.bukkit.Color.*
 import org.bukkit.GameMode
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_JOIN
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_RESTRICTED
@@ -66,7 +68,14 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         spawn.yaw = team.yaw
                         player.teleport(spawn)
 
-                        player.inventory.armorContents = kit.armor
+
+                        player.inventory.armorContents = kit.armor.map { armor ->
+                            val meta = armor.itemMeta as org.bukkit.inventory.meta.LeatherArmorMeta
+                            meta.color = checkColor(team.color)
+                            armor.itemMeta = meta
+                            armor
+                        }.toTypedArray()
+
                         player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
 
                         // Отправка таба
@@ -85,8 +94,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                             "Цель",
                             "Принесите нужные блоки строителю, \nчтобы построить мост к центру"
                         )
-
-                        println("123")
 
                         markers.add(
                             Anime.marker(
@@ -182,4 +189,15 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             else -> time
         }
     }),
+    ;
+}
+
+fun checkColor(color: ru.cristalix.core.formatting.Color): Color {
+    return when (color) {
+        ru.cristalix.core.formatting.Color.YELLOW -> YELLOW
+        ru.cristalix.core.formatting.Color.RED -> RED
+        ru.cristalix.core.formatting.Color.GREEN -> GREEN
+        ru.cristalix.core.formatting.Color.BLUE -> BLUE
+        else -> throw NullPointerException("Color is null.")
+    }
 }
