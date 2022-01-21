@@ -6,12 +6,6 @@ import org.bukkit.Bukkit
 
 object ModHelper {
 
-    fun sendTitle(user: User, text: String) {
-        ModTransfer()
-            .string(text)
-            .send("func:title", user)
-    }
-
     fun notification(user: User?, message: String?) {
         if (user != null) {
             ModTransfer()
