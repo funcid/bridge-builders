@@ -121,6 +121,7 @@ object DamageListener : Listener {
                             spawn.pitch = team.pitch
                             spawn.yaw = team.yaw
                             player.teleport(spawn)
+                            player.foodLevel = 20
                         }
                     }
                 Cycle.exit()
