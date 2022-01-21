@@ -92,7 +92,7 @@ object ConnectionHandler : Listener {
                                                     .sumOf { it.collectedBlocks })
                                                 .send(
                                                     "bridge:tabupdate",
-                                                    user
+                                                    getByUuid(uuid)
                                                 )
                                         }
                                         player.updateInventory()

@@ -13,7 +13,7 @@ val kit = DefaultKit
 val markers: MutableList<Marker> = mutableListOf()
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(15, { it ->
+    STARTING(10, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 40)
             realm.status = GAME_STARTED_CAN_JOIN
