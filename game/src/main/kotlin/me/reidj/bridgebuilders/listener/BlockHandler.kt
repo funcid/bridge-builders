@@ -29,7 +29,7 @@ object BlockHandler : Listener {
                 if (it == block.location)
                     isCancelled = true
             }
-            if (block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
+            if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
                 if (team.players.contains(player.uniqueId)) {
                     activeStatus = Status.END
                     ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
@@ -72,9 +72,8 @@ object BlockHandler : Listener {
                     }
                     return@forEach
                 }
-            } else {
-                isCancelled = true
             }
+            isCancelled = block.type == Material.BEACON && app.getCountBlocksTeam(team)
             team.breakBlocks[block.location] = block.type
         }
     }
