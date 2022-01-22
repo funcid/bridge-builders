@@ -5,7 +5,7 @@ import clepto.cristalix.WorldMeta
 import me.reidj.bridgebuilders.worldMeta
 import ru.cristalix.core.map.BukkitWorldLoader
 
-object MapLoader {
+class MapLoader {
 
     fun load(name: String): WorldMeta {
         // Загрузка карты с сервера BUIL-1

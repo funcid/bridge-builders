@@ -13,5 +13,5 @@ object DefaultKit {
     )
     val sword: ItemStack = ItemStack(Material.WOOD_SWORD)
     val pickaxe = ItemStack(Material.WOOD_PICKAXE)
-    val bread = ItemStack(Material.BREAD, 8)
+    val bread = ItemStack(Material.BREAD, 16)
 }

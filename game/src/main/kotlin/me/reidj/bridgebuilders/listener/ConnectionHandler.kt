@@ -71,7 +71,7 @@ object ConnectionHandler : Listener {
                 }
             }
             // Спавню нпс
-            map.getLabels("builder").forEach { label ->
+            worldMeta.getLabels("builder").forEach { label ->
                 val npcArgs = label.tag.split(" ")
                 Npc.npc {
                     onClick { event ->

@@ -34,44 +34,24 @@ const val GAMES_STREAK_RESTART = 6
 
 lateinit var app: App
 
-val map = MapLoader.load(MapType.AQUAMARINE.data.title)
 val LOBBY_SERVER: RealmId = RealmId.of("TEST-56")
 var activeStatus = Status.STARTING
 var games = 0
-val blocks = mutableMapOf<Location, Pair<Int, Byte>>()
 
-val teams = map.getLabels("team").map {
-    val data = it.tag.split(" ")
-    val team = data[0]
-    Team(
-        mutableListOf(),
-        Color.valueOf(data.first().uppercase()),
-        it,
-        map.getLabel("$team-teleport"),
-        data[3].toFloat(),
-        data[4].toFloat(),
-        false,
-        mutableMapOf(),
-        Bridge(
-            Vector(data[1].toInt(), 0, data[2].toInt()),
-            map.getLabel("$team-x"),
-            map.getLabel("$team-z"),
-        ),
-        mutableMapOf()
-    )
-}
+lateinit var teams: List<Team>
 
 class App : JavaPlugin() {
 
     override fun onEnable() {
         B.plugin = this
         app = this
+        loadMap()
         Platforms.set(PlatformDarkPaper())
         EntityDataParameters.register()
 
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
 
-        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, map, 16)
+        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, worldMeta, 16)
         realm.readableName = "BridgeBuilders ${realm.realmId.id}"
         realm.lobbyFallback = LOBBY_SERVER
 
@@ -156,15 +136,11 @@ class App : JavaPlugin() {
         // Создание менеджера топа
         TopManager()
 
+        // Ломаю мосты
         teams.forEach { generateBridge(it) }
     }
 
     fun restart() {
-        teams.forEach {
-            it.players.clear()
-            it.breakBlocks.clear()
-            it.collected.clear()
-        }
         Bukkit.getOnlinePlayers().forEach {
             val user = app.getUser(it)
             user.stat.games++
@@ -173,9 +149,19 @@ class App : JavaPlugin() {
                 B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${user.player!!.name} §fполучил §bлутбокс§f!"))
             }
         }
+        teams.forEach { team ->
+            team.players.clear()
+            team.breakBlocks.clear()
+            team.collected.clear()
+            team.isActiveTeleport = false
+            BlockPlan.values().forEach { team.collected[it] = 0 }
+        }
         activeStatus = Status.STARTING
+        timer.time = 0
         Bukkit.getOnlinePlayers().forEach { it.kickPlayer("Выключение сервера.") }
-        Bukkit.unloadWorld(map.name, false)
+        Bukkit.unloadWorld(worldMeta.world, false)
+        loadMap()
+        teams.forEach { generateBridge(it) }
 
         // Полная перезагрузка если много игр наиграно
         if (games > GAMES_STREAK_RESTART)
@@ -247,7 +233,7 @@ class App : JavaPlugin() {
                 repeat(height) { y ->
                     blockLocation.add(
                         Location(
-                            map.world,
+                            worldMeta.world,
                             bridge.start.x + len * vector.x + xOrZ * vector.z,
                             bridge.start.y + y,
                             bridge.start.z + len * vector.z + xOrZ * vector.x,
@@ -264,5 +250,29 @@ class App : JavaPlugin() {
                 .sumOf { it.collectedBlocks } < 4096)
             return true
         return false
+    }
+
+    private fun loadMap() {
+        worldMeta = MapLoader().load(MapType.AQUAMARINE.data.title)
+        teams = worldMeta.getLabels("team").map {
+            val data = it.tag.split(" ")
+            val team = data[0]
+            Team(
+                mutableListOf(),
+                Color.valueOf(data.first().uppercase()),
+                it,
+                worldMeta.getLabel("$team-teleport"),
+                data[3].toFloat(),
+                data[4].toFloat(),
+                false,
+                mutableMapOf(),
+                Bridge(
+                    Vector(data[1].toInt(), 0, data[2].toInt()),
+                    worldMeta.getLabel("$team-x"),
+                    worldMeta.getLabel("$team-z"),
+                ),
+                mutableMapOf()
+            )
+        }
     }
 }

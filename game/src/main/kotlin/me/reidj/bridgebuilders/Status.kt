@@ -12,7 +12,7 @@ import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_RESTRICTED
 lateinit var winMessage: String
 val kit = DefaultKit
 
-enum class Status(val lastSecond: Int, var now: (Int) -> Int) {
+enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     STARTING(10, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 40)
@@ -32,9 +32,9 @@ enum class Status(val lastSecond: Int, var now: (Int) -> Int) {
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size + 15 < slots)
+            if (players.size + 8 < slots) {
                 actualTime = 1
-            else {
+            } else {
                 // Обновление статуса реалма, чтобы нельзя было войти
                 realm.status = GAME_STARTED_RESTRICTED
                 games++
