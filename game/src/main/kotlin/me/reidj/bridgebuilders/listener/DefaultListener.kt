@@ -15,10 +15,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.player.AsyncPlayerChatEvent
-import org.bukkit.event.player.PlayerDropItemEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerItemHeldEvent
+import org.bukkit.event.player.*
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.permissions.IPermissionService
 import kotlin.math.min
@@ -91,6 +88,16 @@ object DefaultListener : Listener {
             }
         }
         template.send("bridge:team", user)
+    }
+
+    @EventHandler
+    fun PlayerMoveEvent.handle() {
+        // Если мост не достроен откидывать от него игрока
+        teams.forEach { team ->
+            if (team.players.map { getByUuid(it) }
+                    .sumOf { it.collectedBlocks } < 4096 && team.bridge.end.distanceSquared(player.location) < 42 * 42)
+                player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
+        }
     }
 
     @EventHandler

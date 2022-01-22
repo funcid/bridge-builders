@@ -23,7 +23,6 @@ import me.reidj.bridgebuilders.util.ArrowEffect
 import me.reidj.bridgebuilders.util.MapLoader
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
@@ -96,47 +95,40 @@ class App : JavaPlugin() {
                 team.teleport.x + 0.5,
                 team.teleport.y,
                 team.teleport.z + 0.5
-            ) {
-                if (team.players.map { getByUuid(it) }
-                        .sumOf { it.collectedBlocks } < 4096 && team.bridge.end.distanceSquared(it.location) < 42 * 42)
-                    it.velocity = team.spawn.toVector().subtract(it.location.toVector()).normalize()
-                if (it.location.subtract(0.0, 1.0, 0.0).block.type == Material.EMERALD_BLOCK) {
-                    if (!team.isActiveTeleport)
-                        return@addPlace
-                    if (team.players.contains(it.uniqueId) && it.location.distance(team.teleport) < 1) {
-                        team.isActiveTeleport = false
-                        val enemyTeam = ListUtils.random(teams.stream()
-                            .filter { enemy -> !enemy.players.contains(it.uniqueId) }
-                            .collect(Collectors.toList()))
-                        it.teleport(enemyTeam.spawn)
-                        enemyTeam.players.map { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
-                            enemy.playSound(
-                                it.location,
-                                Sound.ENTITY_ENDERDRAGON_GROWL,
-                                1f,
-                                1f
-                            )
-                        }
-                    } else {
-                        if (team.players.contains(it.uniqueId)) {
-                            it.teleport(team.spawn)
-                            team.isActiveTeleport = false
-                        }
+            ) { player ->
+                if (!team.isActiveTeleport)
+                    return@addPlace
+                val playerTeam = teams.filter { team -> team.players.contains(player.uniqueId) }
+                if (player.location.distanceSquared(playerTeam[0].teleport) < 4 * 4) {
+                    val enemyTeam = ListUtils.random(teams.stream()
+                        .filter { enemy -> !enemy.players.contains(player.uniqueId) }
+                        .collect(Collectors.toList()))
+                    player.teleport(enemyTeam.spawn)
+                    enemyTeam.players.map { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
+                        enemy.playSound(
+                            player.location,
+                            Sound.ENTITY_ENDERDRAGON_GROWL,
+                            1f,
+                            1f
+                        )
                     }
-                    B.postpone(20 * 180) {
-                        team.isActiveTeleport = true
-                        team.players.map { uuid -> getByUuid(uuid) }.forEach { user ->
-                            ModHelper.notification(
-                                user,
-                                "Телепорт на чужие базы теперь §aдоступен"
-                            )
-                            user.player?.playSound(
-                                user.player?.location,
-                                Sound.BLOCK_PORTAL_AMBIENT,
-                                1.5f,
-                                1.5f
-                            )
-                        }
+                } else {
+                    player.teleport(playerTeam[0].spawn)
+                }
+                team.isActiveTeleport = false
+                B.postpone(20 * 180) {
+                    team.isActiveTeleport = true
+                    team.players.map { uuid -> getByUuid(uuid) }.forEach { user ->
+                        ModHelper.notification(
+                            user,
+                            "Телепорт на чужие базы теперь §aдоступен"
+                        )
+                        user.player!!.playSound(
+                            user.player!!.location,
+                            Sound.BLOCK_PORTAL_AMBIENT,
+                            1.5f,
+                            1.5f
+                        )
                     }
                 }
             }
@@ -186,7 +178,8 @@ class App : JavaPlugin() {
 
     fun addBlock(team: Team) {
         val toPlace = team.collected.filter {
-            (team.bridge.blocks[it.key.material.id to it.key.blockData] ?: listOf()).size > it.key.needTotal - it.value
+            (team.bridge.blocks[it.key.material.id to it.key.blockData]
+                ?: listOf()).size > it.key.needTotal - it.value
         }
         var nearest: Location? = null
         var data: Pair<Int, Byte>? = null
