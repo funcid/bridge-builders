@@ -244,4 +244,11 @@ class App : JavaPlugin() {
         }
         return blockLocation
     }
+
+    fun getCountBlocksTeam(team: Team): Boolean {
+        if (team.players.map { getByUuid(it) }
+                .sumOf { it.collectedBlocks } < 4096)
+            return true
+        return false
+    }
 }

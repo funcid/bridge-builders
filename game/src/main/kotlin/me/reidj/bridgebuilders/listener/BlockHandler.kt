@@ -29,8 +29,7 @@ object BlockHandler : Listener {
                 if (it == block.location)
                     isCancelled = true
             }
-            if (block.type == Material.BEACON && team.players.map { getByUuid(it) }
-                    .sumOf { it.collectedBlocks } == 4096) {
+            if (block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
                 if (team.players.contains(player.uniqueId)) {
                     activeStatus = Status.END
                     ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
