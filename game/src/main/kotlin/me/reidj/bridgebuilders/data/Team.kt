@@ -13,7 +13,6 @@ data class Team(
     var yaw: Float,
     var pitch: Float,
     var isActiveTeleport: Boolean,
-    var breakBlocks: MutableMap<Location, Material>,
     var bridge: Bridge,
     var collected: MutableMap<BlockPlan, Int>
 )

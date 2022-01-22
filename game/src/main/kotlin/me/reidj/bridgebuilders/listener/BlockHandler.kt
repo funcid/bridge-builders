@@ -8,6 +8,7 @@ import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.teams
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Firework
 import org.bukkit.event.EventHandler
@@ -18,20 +19,24 @@ import kotlin.math.min
 
 object BlockHandler : Listener {
 
+    private val toDelete: MutableList<Location> = mutableListOf()
+
     @EventHandler
     fun BlockPlaceEvent.handle() {
-        if (block.location.distanceSquared(teams.filter { it.players.contains(player.uniqueId) }[0].spawn) > 50 * 50)
-            isCancelled = true
+        teams.forEach { team ->
+            if (block.location.distanceSquared(teams.filter { it.players.contains(player.uniqueId) }[0].spawn) > 50 * 50
+                || app.getBridge(team).contains(block.location)
+            )
+                isCancelled = true
+        }
     }
 
     @EventHandler
     fun BlockBreakEvent.handle() {
         teams.stream().forEach { team ->
-            app.getBridge(team).forEach {
-                if (it == block.location)
-                    isCancelled = true
-            }
-            if (block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
+            if (app.getBridge(team).contains(block.location))
+                isCancelled = true
+            if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
                 if (team.players.contains(player.uniqueId)) {
                     ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
                     B.bc(" ")
@@ -76,7 +81,28 @@ object BlockHandler : Listener {
                 }
             }
             isCancelled = block.type == Material.BEACON && app.getCountBlocksTeam(team)
-            team.breakBlocks[block.location] = block.type
+            /*blocks[block.location] = block.typeId to block.data
+            blocks.forEach {
+                when (it.value.first) {
+                    15 -> B.postpone(300 * 20) {
+                        it.key.block.setTypeAndDataFast(it.value.first, it.value.second)
+                        toDelete.add(it.key)
+                    }
+                    56 -> B.postpone(600 * 20) {
+                        it.key.block.setTypeAndDataFast(it.value.first, it.value.second)
+                        toDelete.add(it.key)
+                    }
+                    16 -> B.postpone(180 * 20) {
+                        it.key.block.setTypeAndDataFast(it.value.first, it.value.second)
+                        toDelete.add(it.key)
+                    }
+                    14 -> B.postpone(400 * 20) {
+                        it.key.block.setTypeAndDataFast(it.value.first, it.value.second)
+                        toDelete.add(it.key)
+                    }
+                }
+            }
+            toDelete.forEach { blocks.remove(it) }*/
         }
     }
 }

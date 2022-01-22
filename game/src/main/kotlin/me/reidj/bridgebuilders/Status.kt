@@ -111,7 +111,7 @@ enum class Status(val lastSecond: Int, var now: (Int) -> Int) {
             actualTime = (STARTING.lastSecond - 10) * 20
         actualTime
     }),
-    GAME(1200, { time ->
+    GAME(2100, { time ->
         // Обновление шкалы времени
         if (time % 20 == 0) {
             Bukkit.getOnlinePlayers().forEach {

@@ -1,6 +1,5 @@
 
 import dev.xdark.clientapi.event.lifecycle.GameLoop
-import dev.xdark.clientapi.event.render.PlayerListRender
 import dev.xdark.clientapi.item.ItemTools
 import dev.xdark.feder.NetUtil
 import org.lwjgl.input.Keyboard
@@ -55,8 +54,6 @@ object BoardBlocks {
     }
 
     init {
-        registerHandler<PlayerListRender> { isCancelled = true }
-
         UIEngine.overlayContext + tab
 
         App::class.mod.registerChannel("bridge:init") {

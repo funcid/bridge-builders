@@ -38,6 +38,7 @@ val map = MapLoader.load(MapType.AQUAMARINE.data.title)
 val LOBBY_SERVER: RealmId = RealmId.of("TEST-56")
 var activeStatus = Status.STARTING
 var games = 0
+val blocks = mutableMapOf<Location, Pair<Int, Byte>>()
 
 val teams = map.getLabels("team").map {
     val data = it.tag.split(" ")
@@ -50,7 +51,6 @@ val teams = map.getLabels("team").map {
         data[3].toFloat(),
         data[4].toFloat(),
         false,
-        mutableMapOf(),
         Bridge(
             Vector(data[1].toInt(), 0, data[2].toInt()),
             map.getLabel("$team-x"),
