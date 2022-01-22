@@ -2,8 +2,10 @@ package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
 import me.func.mod.Anime
-import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.app
+import me.reidj.bridgebuilders.getByUuid
 import me.reidj.bridgebuilders.mod.ModHelper
+import me.reidj.bridgebuilders.teams
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Material
@@ -29,9 +31,8 @@ object BlockHandler : Listener {
                 if (it == block.location)
                     isCancelled = true
             }
-            if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
+            if (block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
                 if (team.players.contains(player.uniqueId)) {
-                    activeStatus = Status.END
                     ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
                     B.bc(" ")
                     B.bc("§b―――――――――――――――――")
@@ -66,6 +67,7 @@ object BlockHandler : Listener {
                         meta.power = 0
                         firework.fireworkMeta = meta
                     }
+                    B.postpone(5 * 20) { app.restart() }
                 } else {
                     team.players.forEach {
                         getByUuid(it).player?.let { player -> Anime.title(player, "§aПОРАЖЕНИЕ\n§aвы проиграли!") }

@@ -12,7 +12,7 @@ import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_RESTRICTED
 lateinit var winMessage: String
 val kit = DefaultKit
 
-enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
+enum class Status(val lastSecond: Int, var now: (Int) -> Int) {
     STARTING(10, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 40)
@@ -133,17 +133,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         time
     }),
     END(340, { time ->
-        if (GAME.lastSecond * 20 + 10 == time) {
-            Bukkit.getOnlinePlayers().forEach {
-                val user = app.getUser(it)
-                user.stat.games++
-                if (Math.random() < 0.11) {
-                    user.stat.lootbox++
-                    clepto.bukkit.B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${user.player!!.name} §fполучил §bлутбокс§f!"))
-                }
-            }
-        }
-        teams.forEach { it.players.clear() }
         when {
             time == GAME.lastSecond * 20 + 20 * 10 -> {
                 app.restart()

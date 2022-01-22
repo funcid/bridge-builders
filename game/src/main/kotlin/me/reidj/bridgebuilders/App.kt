@@ -159,6 +159,15 @@ class App : JavaPlugin() {
     }
 
     fun restart() {
+        teams.forEach { it.players.clear() }
+        Bukkit.getOnlinePlayers().forEach {
+            val user = app.getUser(it)
+            user.stat.games++
+            if (Math.random() < 0.11) {
+                user.stat.lootbox++
+                B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${user.player!!.name} §fполучил §bлутбокс§f!"))
+            }
+        }
         activeStatus = Status.STARTING
         Bukkit.getOnlinePlayers().forEach { it.kickPlayer("Выключение сервера.") }
         Bukkit.unloadWorld(map.name, false)
