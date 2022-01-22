@@ -24,6 +24,7 @@ class App : KotlinMod() {
         registerHandler<VehicleHealthRender> { isCancelled = true }
 
         registerChannel("bridge:start") {
+            registerHandler<ArmorRender> { isCancelled = false }
             registerHandler<HealthRender> { isCancelled = false }
             registerHandler<HungerRender> { isCancelled = false }
         }

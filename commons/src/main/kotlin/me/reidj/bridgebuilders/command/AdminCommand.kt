@@ -16,8 +16,19 @@ class AdminCommand {
 
     init {
         B.regCommand(adminConsume { _, args -> slots = args[0].toInt() }, "slot", "slots")
-        B.regCommand(adminConsume { _, args -> getByPlayer(Bukkit.getPlayer(args[0])).stat.lootbox += args[1].toInt() }, "give", "loot")
-        B.regCommand(adminConsume { user, _ -> user.player!!.isOp = true }, "op")
+        B.regCommand(
+            adminConsume { _, args -> getByPlayer(Bukkit.getPlayer(args[0])).stat.lootbox += args[1].toInt() },
+            "give",
+            "loot"
+        )
+        B.regCommand(adminConsume { user, args ->
+            if (args.size == 1) {
+                val whoOp = Bukkit.getPlayer(args[0])
+                whoOp.isOp = true
+            } else {
+                user.player!!.isOp = true
+            }
+        }, "op")
         B.regCommand(
             adminConsume { _, args -> getByPlayer(Bukkit.getPlayer(args[0])).giveMoney(args[1].toInt()) }, "money"
         )
