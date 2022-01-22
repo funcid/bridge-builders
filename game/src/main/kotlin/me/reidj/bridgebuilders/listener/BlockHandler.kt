@@ -36,6 +36,8 @@ object BlockHandler : Listener {
         teams.stream().forEach { team ->
             if (app.getBridge(team).contains(block.location))
                 isCancelled = true
+            else if (block.type == Material.BEACON && app.getCountBlocksTeam(team))
+                isCancelled = true
             if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
                 if (team.players.contains(player.uniqueId)) {
                     ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
@@ -80,7 +82,6 @@ object BlockHandler : Listener {
                     return@forEach
                 }
             }
-            isCancelled = block.type == Material.BEACON && app.getCountBlocksTeam(team)
             /*blocks[block.location] = block.typeId to block.data
             blocks.forEach {
                 when (it.value.first) {
