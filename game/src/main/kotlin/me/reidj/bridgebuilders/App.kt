@@ -84,6 +84,17 @@ class App : JavaPlugin() {
             Lootbox
         )
 
+        // Создаю полигон
+        teams.forEach {
+            me.func.mod.Glow.addPlace(
+                me.func.protocol.GlowColor.GREEN,
+                it.teleport.x + 0.5,
+                it.teleport.y,
+                it.teleport.z + 0.5
+            )
+        }
+
+        // Создание баннера
         Banners.new {
             x = 6.0
             y = 95.0

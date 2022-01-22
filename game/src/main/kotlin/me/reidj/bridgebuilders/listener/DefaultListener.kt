@@ -2,7 +2,6 @@ package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
 import clepto.cristalix.Cristalix
-import implario.ListUtils
 import me.func.mod.Anime
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.donate.impl.NameTag
@@ -16,10 +15,12 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.player.*
+import org.bukkit.event.player.AsyncPlayerChatEvent
+import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerItemHeldEvent
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.permissions.IPermissionService
-import java.util.stream.Collectors
 import kotlin.math.min
 
 object DefaultListener : Listener {
@@ -90,54 +91,6 @@ object DefaultListener : Listener {
             }
         }
         template.send("bridge:team", user)
-    }
-
-    @EventHandler
-    fun PlayerMoveEvent.handle() {
-        teams.forEach { team ->
-            if (team.players.map { getByUuid(it) }
-                    .sumOf { it.collectedBlocks } < 4096 && team.bridge.end.distanceSquared(player.location) < 42 * 42)
-                player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
-            if (player.location.subtract(0.0, 1.0, 0.0).block.type == Material.EMERALD_BLOCK) {
-                if (!team.isActiveTeleport)
-                    return@forEach
-                if (team.players.contains(player.uniqueId) && player.location.distance(team.teleport) < 1) {
-                    team.isActiveTeleport = false
-                    val enemyTeam = ListUtils.random(teams.stream()
-                        .filter { enemy -> !enemy.players.contains(player.uniqueId) }
-                        .collect(Collectors.toList()))
-                    player.teleport(enemyTeam.spawn)
-                    enemyTeam.players.map { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
-                        enemy.playSound(
-                            player.location,
-                            Sound.ENTITY_ENDERDRAGON_GROWL,
-                            1f,
-                            1f
-                        )
-                    }
-                } else {
-                    if (team.players.contains(player.uniqueId)) {
-                        player.teleport(team.spawn)
-                        team.isActiveTeleport = false
-                    }
-                }
-                B.postpone(20 * 180) {
-                    team.isActiveTeleport = true
-                    team.players.map { uuid -> getByUuid(uuid) }.forEach { user ->
-                        ModHelper.notification(
-                            user,
-                            "Телепорт на чужие базы теперь §aдоступен"
-                        )
-                        user.player?.playSound(
-                            user.player?.location,
-                            Sound.BLOCK_PORTAL_AMBIENT,
-                            1.5f,
-                            1.5f
-                        )
-                    }
-                }
-            }
-        }
     }
 
     @EventHandler

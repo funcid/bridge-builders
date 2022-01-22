@@ -2,8 +2,11 @@ package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
 import dev.implario.bukkit.item.item
+import me.func.mod.Anime
 import me.func.mod.Npc
 import me.func.mod.Npc.onClick
+import me.func.protocol.Marker
+import me.func.protocol.MarkerSign
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.mod.ModHelper
 import org.bukkit.GameMode
@@ -16,6 +19,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import ru.cristalix.core.item.Items
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmStatus
+import java.util.*
 
 object ConnectionHandler : Listener {
 
@@ -25,6 +29,8 @@ object ConnectionHandler : Listener {
         text("§cВернуться")
     }
 
+    private val markers = mutableListOf<Marker>()
+
     @EventHandler
     fun PlayerJoinEvent.handle() {
         player.inventory.clear()
@@ -33,6 +39,37 @@ object ConnectionHandler : Listener {
         val user = getByPlayer(player)
 
         B.postpone(5) {
+            // Создание маркера
+            teams.forEach {
+                markers.add(
+                    Anime.marker(
+                        player,
+                        Marker(
+                            UUID.randomUUID(),
+                            it.teleport.x + 0.5,
+                            it.teleport.y + 1.5,
+                            it.teleport.z + 0.5,
+                            16.0,
+                            MarkerSign.ARROW_DOWN.texture
+                        )
+                    )
+                )
+            }
+            // Движение маркера
+            markers.forEach { marker ->
+                var up = false
+                B.repeat(15) {
+                    up = !up
+                    Anime.moveMarker(
+                        player,
+                        marker.uuid,
+                        marker.x,
+                        marker.y - if (up) 0.0 else 0.7,
+                        marker.z,
+                        0.75
+                    )
+                }
+            }
             // Спавню нпс
             map.getLabels("builder").forEach { label ->
                 val npcArgs = label.tag.split(" ")
