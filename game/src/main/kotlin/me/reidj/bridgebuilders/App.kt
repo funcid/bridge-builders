@@ -11,10 +11,7 @@ import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.data.BlockPlan
 import me.reidj.bridgebuilders.data.Bridge
 import me.reidj.bridgebuilders.data.Team
-import me.reidj.bridgebuilders.listener.ConnectionHandler
-import me.reidj.bridgebuilders.listener.DamageListener
-import me.reidj.bridgebuilders.listener.DefaultListener
-import me.reidj.bridgebuilders.listener.GlobalListeners
+import me.reidj.bridgebuilders.listener.*
 import me.reidj.bridgebuilders.map.MapType
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.top.TopManager
@@ -85,6 +82,7 @@ class App : JavaPlugin() {
             ConnectionHandler,
             DefaultListener,
             DamageListener,
+            ChatHandler,
             Lootbox
         )
 
@@ -153,6 +151,7 @@ class App : JavaPlugin() {
         timer = Timer()
         timer.runTaskTimer(this, 10, 1)
 
+        // Создание менеджера топа
         TopManager()
 
         teams.forEach { generateBridge(it) }

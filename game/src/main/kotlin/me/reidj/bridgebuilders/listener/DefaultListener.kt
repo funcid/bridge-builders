@@ -8,7 +8,10 @@ import me.reidj.bridgebuilders.donate.impl.NameTag
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.mod.ModTransfer
 import me.reidj.bridgebuilders.user.User
-import org.bukkit.*
+import org.bukkit.Bukkit
+import org.bukkit.Color
+import org.bukkit.FireworkEffect
+import org.bukkit.Material
 import org.bukkit.entity.Firework
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -16,8 +19,11 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.*
+import ru.cristalix.core.chat.IChatService
+import ru.cristalix.core.chat.IChatView
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.permissions.IPermissionService
+import java.util.concurrent.ExecutionException
 import kotlin.math.min
 
 object DefaultListener : Listener {
@@ -170,47 +176,5 @@ object DefaultListener : Listener {
             }
             team.breakBlocks[block.location] = block.type
         }
-    }
-
-    private val permissionService: IPermissionService = IPermissionService.get()
-
-    @EventHandler
-    fun AsyncPlayerChatEvent.handle() {
-        if (player.gameMode == GameMode.SPECTATOR) {
-            Bukkit.getOnlinePlayers().forEach {
-                if (it.gameMode == GameMode.SPECTATOR)
-                    it.sendMessage(player.name + " >§7 " + ChatColor.stripColor(message))
-            }
-            cancel = true
-            return
-        }
-        val team = teams.filter { team -> team.players.contains(player.uniqueId) }
-        if (team.isNotEmpty()) {
-            cancel = true
-            if (!message.startsWith("!")) {
-                team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
-                    it.sendMessage(getPrefix(getByPlayer(player)) + message)
-                }
-            } else {
-                Bukkit.getOnlinePlayers().forEach {
-                    it.sendMessage(
-                        "§f[" + team[0].color.chatColor + team[0].color.teamName.substring(
-                            0,
-                            1
-                        ) + "§f] " + getPrefix(getByPlayer(player)) + message.drop(1)
-                    )
-                }
-            }
-        }
-    }
-
-    private fun getPrefix(user: User): String {
-        var finalPrefix = ""
-        permissionService.getBestGroup(user.stat.id).thenAccept {
-            finalPrefix = (if (user.stat.activeNameTag == NameTag.NONE) "" else user.stat.activeNameTag.getRare()
-                .getColor() + user.stat.activeNameTag.getTitle() +
-                    "§8 ┃ " + it.nameColor + it.prefix + "§8 ┃§f ") + user.player!!.name + " §8${Formatting.ARROW_SYMBOL} §f"
-        }
-        return finalPrefix
     }
 }
