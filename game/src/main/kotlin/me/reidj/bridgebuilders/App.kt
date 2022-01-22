@@ -136,7 +136,7 @@ class App : JavaPlugin() {
         // Создание баннера
         Banners.new {
             x = 6.0
-            y = 95.0
+            y = 97.0
             z = -1.2
             opacity = 0.0
             content = "Сломай меня"

@@ -91,7 +91,7 @@ object DefaultListener : Listener {
         // Если мост не достроен откидывать от него игрока
         teams.forEach { team ->
             if (team.players.map { getByUuid(it) }
-                    .sumOf { it.collectedBlocks } < 4096 && team.bridge.end.distanceSquared(player.location) < 42 * 42)
+                    .sumOf { it.collectedBlocks } < 4096 && team.bridge.end.distanceSquared(player.location) < 34 * 34)
                 player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
         }
     }

@@ -50,15 +50,15 @@ object ChatHandler : Listener {
             cancel = true
             if (!message.startsWith("!")) {
                 team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
-                    it.sendMessage(getPrefix(getByPlayer(player)) + message)
+                    it.sendMessage("§8КОМАНДА ${getPrefix(getByPlayer(player)) + message}")
                 }
             } else {
                 Bukkit.getOnlinePlayers().forEach {
                     it.sendMessage(
-                        "§f[" + team[0].color.chatColor + team[0].color.teamName.substring(
+                        "" + team[0].color.chatColor + team[0].color.teamName.substring(
                             0,
                             1
-                        ) + "§f] " + getPrefix(getByPlayer(player)) + message.drop(1)
+                        ) + getPrefix(getByPlayer(player)) + message.drop(1)
                     )
                 }
             }
@@ -68,10 +68,13 @@ object ChatHandler : Listener {
     private fun getPrefix(user: User): String {
         var finalPrefix = ""
 
-        permissionService.getBestGroup(user.stat.id).thenAccept {
-            finalPrefix = (if (user.stat.activeNameTag == NameTag.NONE) "" else user.stat.activeNameTag.getRare()
-                .getColor() + user.stat.activeNameTag.getTitle() +
-                    "§8 ┃ " + it.nameColor + it.prefix + "§8 ┃§f ") + user.player!!.name + " §8${Formatting.ARROW_SYMBOL} §f"
+        permissionService.getBestGroup(user.stat.id).thenAccept { group ->
+            permissionService.getNameColor(user.stat.id).thenApply {
+                finalPrefix = (if (user.stat.activeNameTag == NameTag.NONE) "" else user.stat.activeNameTag.getRare()
+                    .getColor() + user.stat.activeNameTag.getTitle()) + "§8 ┃ " + group.nameColor + group.prefix + "§8 ┃ §f" +
+                        (it ?: group.nameColor) + user.player!!.name + " §8${Formatting.ARROW_SYMBOL + group.chatMessageColor} "
+            }
+
         }
         return finalPrefix
     }
