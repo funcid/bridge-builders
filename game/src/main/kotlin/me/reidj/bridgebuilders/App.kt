@@ -3,6 +3,7 @@ package me.reidj.bridgebuilders
 import clepto.bukkit.B
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
+import implario.ListUtils
 import me.func.mod.Anime
 import me.func.mod.Banners
 import me.func.mod.Kit
@@ -15,12 +16,15 @@ import me.reidj.bridgebuilders.listener.DamageListener
 import me.reidj.bridgebuilders.listener.DefaultListener
 import me.reidj.bridgebuilders.listener.GlobalListeners
 import me.reidj.bridgebuilders.map.MapType
+import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.ArrowEffect
 import me.reidj.bridgebuilders.util.MapLoader
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
@@ -28,6 +32,7 @@ import ru.cristalix.core.datasync.EntityDataParameters
 import ru.cristalix.core.formatting.Color
 import ru.cristalix.core.realm.RealmId
 import java.util.*
+import java.util.stream.Collectors
 
 const val GAMES_STREAK_RESTART = 6
 
@@ -85,13 +90,56 @@ class App : JavaPlugin() {
         )
 
         // Создаю полигон
-        teams.forEach {
+        teams.forEach { team ->
             me.func.mod.Glow.addPlace(
                 me.func.protocol.GlowColor.GREEN,
-                it.teleport.x + 0.5,
-                it.teleport.y,
-                it.teleport.z + 0.5
-            )
+                team.teleport.x + 0.5,
+                team.teleport.y,
+                team.teleport.z + 0.5
+            ) {
+                if (team.players.map { getByUuid(it) }
+                        .sumOf { it.collectedBlocks } < 4096 && team.bridge.end.distanceSquared(it.location) < 42 * 42)
+                    it.velocity = team.spawn.toVector().subtract(it.location.toVector()).normalize()
+                if (it.location.subtract(0.0, 1.0, 0.0).block.type == Material.EMERALD_BLOCK) {
+                    if (!team.isActiveTeleport)
+                        return@addPlace
+                    if (team.players.contains(it.uniqueId) && it.location.distance(team.teleport) < 1) {
+                        team.isActiveTeleport = false
+                        val enemyTeam = ListUtils.random(teams.stream()
+                            .filter { enemy -> !enemy.players.contains(it.uniqueId) }
+                            .collect(Collectors.toList()))
+                        it.teleport(enemyTeam.spawn)
+                        enemyTeam.players.map { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
+                            enemy.playSound(
+                                it.location,
+                                Sound.ENTITY_ENDERDRAGON_GROWL,
+                                1f,
+                                1f
+                            )
+                        }
+                    } else {
+                        if (team.players.contains(it.uniqueId)) {
+                            it.teleport(team.spawn)
+                            team.isActiveTeleport = false
+                        }
+                    }
+                    B.postpone(20 * 180) {
+                        team.isActiveTeleport = true
+                        team.players.map { uuid -> getByUuid(uuid) }.forEach { user ->
+                            ModHelper.notification(
+                                user,
+                                "Телепорт на чужие базы теперь §aдоступен"
+                            )
+                            user.player?.playSound(
+                                user.player?.location,
+                                Sound.BLOCK_PORTAL_AMBIENT,
+                                1.5f,
+                                1.5f
+                            )
+                        }
+                    }
+                }
+            }
         }
 
         // Создание баннера
