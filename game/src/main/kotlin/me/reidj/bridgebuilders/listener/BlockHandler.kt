@@ -18,14 +18,8 @@ object BlockHandler : Listener {
 
     @EventHandler
     fun BlockPlaceEvent.handle() {
-        if (block.type == Material.WORKBENCH || block.type == Material.FURNACE)
-            return
-        teams.forEach { team ->
-            app.getBridge(team).forEach {
-                if (it == block.location || team.spawn.distanceSquared(block.location) < 100 * 100)
-                    isCancelled = true
-            }
-        }
+        if (block.location.distanceSquared(teams.filter { it.players.contains(player.uniqueId) }[0].spawn) > 50 * 50)
+            isCancelled = true
     }
 
     @EventHandler
