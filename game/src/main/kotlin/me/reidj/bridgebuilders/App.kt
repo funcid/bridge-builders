@@ -51,6 +51,7 @@ val teams = map.getLabels("team").map {
         data[3].toFloat(),
         data[4].toFloat(),
         false,
+        mutableMapOf(),
         Bridge(
             Vector(data[1].toInt(), 0, data[2].toInt()),
             map.getLabel("$team-x"),
@@ -159,7 +160,11 @@ class App : JavaPlugin() {
     }
 
     fun restart() {
-        teams.forEach { it.players.clear() }
+        teams.forEach {
+            it.players.clear()
+            it.breakBlocks.clear()
+            it.collected.clear()
+        }
         Bukkit.getOnlinePlayers().forEach {
             val user = app.getUser(it)
             user.stat.games++

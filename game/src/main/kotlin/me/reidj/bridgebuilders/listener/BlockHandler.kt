@@ -38,7 +38,7 @@ object BlockHandler : Listener {
                 isCancelled = true
             else if (block.type == Material.BEACON && app.getCountBlocksTeam(team))
                 isCancelled = true
-            if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
+            if (block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
                 if (team.players.contains(player.uniqueId)) {
                     ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
                     B.bc(" ")
@@ -82,28 +82,26 @@ object BlockHandler : Listener {
                     return@forEach
                 }
             }
-            /*blocks[block.location] = block.typeId to block.data
-            blocks.forEach {
-                when (it.value.first) {
-                    15 -> B.postpone(300 * 20) {
-                        it.key.block.setTypeAndDataFast(it.value.first, it.value.second)
-                        toDelete.add(it.key)
-                    }
-                    56 -> B.postpone(600 * 20) {
-                        it.key.block.setTypeAndDataFast(it.value.first, it.value.second)
-                        toDelete.add(it.key)
-                    }
-                    16 -> B.postpone(180 * 20) {
-                        it.key.block.setTypeAndDataFast(it.value.first, it.value.second)
-                        toDelete.add(it.key)
-                    }
-                    14 -> B.postpone(400 * 20) {
-                        it.key.block.setTypeAndDataFast(it.value.first, it.value.second)
-                        toDelete.add(it.key)
-                    }
+            team.breakBlocks[block.location] = block.typeId to block.data
+            team.breakBlocks.forEach {
+                when (it.value) {
+                    15 to 0.toByte() -> blockPlace(300, it)
+                    56 to 0.toByte() -> blockPlace(600, it)
+                    16 to 0.toByte() -> blockPlace(180, it)
+                    14 to 0.toByte() -> blockPlace(400, it)
+                    17 to 1.toByte() -> blockPlace(120, it)
+                    5 to 1.toByte() -> blockPlace(120, it)
+                    17 to 2.toByte() -> blockPlace(120, it)
                 }
             }
-            toDelete.forEach { blocks.remove(it) }*/
+            toDelete.forEach { team.breakBlocks.remove(it) }
+        }
+    }
+
+    private fun blockPlace(seconds: Int, block: Map.Entry<Location, Pair<Int, Byte>>) {
+        B.postpone(seconds * 20) {
+            block.key.block.setTypeAndDataFast(block.value.first, block.value.second)
+            toDelete.add(block.key)
         }
     }
 }
