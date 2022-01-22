@@ -83,6 +83,7 @@ class App : JavaPlugin() {
             DefaultListener,
             DamageListener,
             ChatHandler,
+            BlockHandler,
             Lootbox
         )
 

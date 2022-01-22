@@ -49,6 +49,7 @@ object DamageListener : Listener {
             val user = getByPlayer(player)
             val victim = teams.filter { team -> team.players.contains(player.uniqueId) }
             val killer = teams.filter { team -> team.players.contains(player.killer.uniqueId) }
+            drops.filter { it.getType().isBlock }.forEach { player.killer.inventory.addItem(it) }
             ModHelper.allNotification("" + victim[0].color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " " + killer[0].color.chatColor + player.killer.name)
             if (user.stat.activeCorpse != Corpse.NONE) {
                 val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
