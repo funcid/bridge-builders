@@ -10,6 +10,7 @@ import me.reidj.bridgebuilders.util.StandHelper
 import net.minecraft.server.v1_12_R1.EnumItemSlot
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -53,7 +54,14 @@ object DamageListener : Listener {
         if (player.killer != null) {
             val user = getByPlayer(player)
             val killer = teams.filter { team -> team.players.contains(player.killer.uniqueId) }
-            drops.filter { it.getType().isBlock }.forEach { player.killer.inventory.addItem(it) }
+            drops.filter {
+                it.getType().isBlock || it.getType() == Material.DIAMOND || it.getType() == Material.IRON_INGOT
+                        || it.getType() == Material.COAL || it.getType() == Material.GOLD_INGOT
+            }
+                .forEach {
+                    player.killer.inventory.addItem(it)
+                    it.setAmount(0)
+                }
             ModHelper.allNotification("" + victim.color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " " + killer[0].color.chatColor + player.killer.name)
             if (user.stat.activeCorpse != Corpse.NONE) {
                 val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
