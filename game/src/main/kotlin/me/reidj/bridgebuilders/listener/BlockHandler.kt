@@ -7,6 +7,7 @@ import me.reidj.bridgebuilders.getByUuid
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.teams
 import me.reidj.bridgebuilders.timer
+import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Material
@@ -15,6 +16,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.inventory.ItemStack
 import kotlin.math.min
 
 object BlockHandler : Listener {
@@ -29,11 +31,27 @@ object BlockHandler : Listener {
         }
     }
 
+    private val has = timer.time / 20 >= 900
+
     @EventHandler
     fun BlockBreakEvent.handle() {
+        if (block.type == Material.IRON_ORE) {
+            block.type = Material.AIR
+            player.inventory.addItem(ItemStack(Material.IRON_INGOT, if (has) 2 else 1))
+        } else if (block.type == Material.GOLD_ORE) {
+            block.type = Material.AIR
+            player.inventory.addItem(ItemStack(Material.GOLD_ORE, if (has) 2 else 1))
+        }
         // Если прошло 15 минут с начала игры будет выпадать больше предметов
-        if (timer.time / 20 >= 900) {
+        if (has) {
             block.drops.forEach {
+                Bukkit.getOnlinePlayers().forEach { player ->
+                    Anime.alert(
+                        player,
+                        "Ускорение",
+                        "Увеличено выпадение ресурсов"
+                    )
+                }
                 it.setAmount(it.getAmount() + 1)
                 block.world.dropItemNaturally(block.location, it)
             }

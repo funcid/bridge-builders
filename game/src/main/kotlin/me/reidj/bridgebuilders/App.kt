@@ -56,6 +56,10 @@ class App : JavaPlugin() {
 
         teams.forEach { team -> BlockPlan.values().forEach { team.collected[it] = 0 } }
 
+        // Запуск игрового таймера
+        timer = Timer()
+        timer.runTaskTimer(this, 10, 1)
+
         // Регистрация обработчиков событий
         B.events(
             GlobalListeners,
@@ -129,10 +133,6 @@ class App : JavaPlugin() {
 
         // Рисую эффект выстрела
         ArrowEffect().arrowEffect(this)
-
-        // Запуск игрового таймера
-        timer = Timer()
-        timer.runTaskTimer(this, 10, 1)
 
         // Создание менеджера топа
         TopManager()
