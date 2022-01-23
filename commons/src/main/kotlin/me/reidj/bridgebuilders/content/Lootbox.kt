@@ -112,10 +112,6 @@ object Lootbox : Listener {
             player.playSound(player.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 1f, 2f)
             null
         }, "lootboxsound")
-        B.regCommand({ player, _ ->
-            DailyRewardManager.open(getByPlayer(player))
-            null
-        }, "secrethook")
     }
 
     @EventHandler

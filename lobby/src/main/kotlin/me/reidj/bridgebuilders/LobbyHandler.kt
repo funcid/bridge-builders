@@ -71,7 +71,7 @@ object LobbyHandler : Listener {
                     name = "§e§lНАЖМИТЕ ЧТОБЫ ИГРАТЬ"
                     behaviour = NpcBehaviour.STARE_AT_PLAYER
                     skinUrl = "https://webdata.c7x.dev/textures/skin/$SKIN"
-                    skinDigest = "bf30a1df-85de-11e8-a6de-1cb72caa35fd"
+                    skinDigest = SKIN
                     location(npcLabel.clone().add(0.5, 0.0, 0.5))
                     yaw = npcArgs[0].toFloat()
                     pitch = npcArgs[1].toFloat()
@@ -85,8 +85,8 @@ object LobbyHandler : Listener {
                 location(npcLabel.add(0.5, 0.0, 0.5))
                 name = "§dПерсонализация"
                 behaviour = NpcBehaviour.STARE_AT_PLAYER
-                skinUrl = "https://webdata.c7x.dev/textures/skin/bf30a1df-85de-11e8-a6de-1cb72caa35fd"
-                skinDigest = "bf30a1df-85de-11e8-a6de-1cb72caa35fd"
+                skinUrl = "https://webdata.c7x.dev/textures/skin/$SKIN"
+                skinDigest = SKIN
                 yaw = npcArgs[0].toFloat()
                 pitch = npcArgs[1].toFloat()
             }.spawn(player)

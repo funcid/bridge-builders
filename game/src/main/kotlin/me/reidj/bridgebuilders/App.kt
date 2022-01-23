@@ -102,8 +102,6 @@ class App : JavaPlugin() {
                 enemyTeam?.isActiveTeleport = false
                 playerTeam[0].isActiveTeleport = false
 
-                println(playerTeam[0].isActiveTeleport)
-
                 // Ставлю полоску куллдауна
                 enemyTeam?.let { displayCoolDownBar(it) }
                 displayCoolDownBar(playerTeam[0])

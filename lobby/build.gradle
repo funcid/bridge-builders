@@ -1,13 +1,4 @@
-plugins {
-    id 'dev.implario.mcgradle' version '1.0.4'
-}
-
 apply plugin: 'org.jetbrains.kotlin.jvm'
-
-bukkitPlugin {
-    main = 'me.reidj.bridgebuilders.App'
-    depend << 'CoreAPI'
-}
 
 group = 'me.reidj'
 version = '1.0-SNAPSHOT'

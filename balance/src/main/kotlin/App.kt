@@ -19,8 +19,6 @@ class App : KotlinMod() {
         registerHandler<HungerRender> { isCancelled = true }
         registerHandler<ArmorRender> { isCancelled = true }
 
-        RewardManager()
-
         val balanceText = text {
             content = "§aЗагрузка..."
             origin = BOTTOM_RIGHT
