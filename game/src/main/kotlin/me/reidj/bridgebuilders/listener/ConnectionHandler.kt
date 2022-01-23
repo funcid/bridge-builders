@@ -140,6 +140,7 @@ object ConnectionHandler : Listener {
                                                     "bridge:tabupdate",
                                                     getByUuid(uuid)
                                                 )
+                                            return@onClick
                                         }
                                         player.updateInventory()
                                         return@onClick

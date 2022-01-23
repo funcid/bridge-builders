@@ -119,7 +119,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 if (time == 800) {
                     teams.forEach { team -> team.isActiveTeleport = true }
                     Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
-                } else if (time == 15000) {
+                } else if (time / 20 == 900) {
                     Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
                     teams.forEach { team ->
                         team.breakBlocks.forEach { block ->
@@ -137,6 +137,14 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         }
                     }
 
+                } else if (time / 20 == 960) {
+                    Bukkit.getOnlinePlayers().forEach { player ->
+                        Anime.alert(
+                            player,
+                            "Ускорение",
+                            "Увеличено выпадение ресурсов"
+                        )
+                    }
                 }
             }
 
@@ -144,6 +152,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Проверка на победу
         if (me.reidj.bridgebuilders.util.WinUtil.check4win()) {
             activeStatus = END
+            clepto.bukkit.B.bc(winMessage)
         }
         time
     }),

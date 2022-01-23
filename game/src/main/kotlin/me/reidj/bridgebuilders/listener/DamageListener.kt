@@ -39,7 +39,7 @@ object DamageListener : Listener {
         if (cause.cause == EntityDamageEvent.DamageCause.FALL)
             printDeathMessage("Игрок ${victim.color.chatFormat + player.name} §fприземлился с большой высоты")
         else if (cause.cause == EntityDamageEvent.DamageCause.VOID)
-            printDeathMessage("Игрок ${victim.color.chatFormat + player.name} §fприземлился с большой высоты")
+            printDeathMessage("Игрока ${victim.color.chatFormat + player.name} §fпоглотила бездна")
 
         var location = player.location.clone()
         var id: Int

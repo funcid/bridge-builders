@@ -2,12 +2,8 @@ package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
 import me.func.mod.Anime
-import me.reidj.bridgebuilders.app
-import me.reidj.bridgebuilders.getByUuid
+import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.mod.ModHelper
-import me.reidj.bridgebuilders.teams
-import me.reidj.bridgebuilders.timer
-import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Material
@@ -31,10 +27,9 @@ object BlockHandler : Listener {
         }
     }
 
-    private val has = timer.time / 20 >= 900
-
     @EventHandler
     fun BlockBreakEvent.handle() {
+        val has = activeStatus.now(timer.time) / 20 >= 900
         if (block.type == Material.IRON_ORE) {
             block.type = Material.AIR
             player.inventory.addItem(ItemStack(Material.IRON_INGOT, if (has) 2 else 1))
@@ -45,13 +40,6 @@ object BlockHandler : Listener {
         // Если прошло 15 минут с начала игры будет выпадать больше предметов
         if (has) {
             block.drops.forEach {
-                Bukkit.getOnlinePlayers().forEach { player ->
-                    Anime.alert(
-                        player,
-                        "Ускорение",
-                        "Увеличено выпадение ресурсов"
-                    )
-                }
                 it.setAmount(it.getAmount() + 1)
                 block.world.dropItemNaturally(block.location, it)
             }
@@ -62,7 +50,7 @@ object BlockHandler : Listener {
                 isCancelled = true
             else if (block.type == Material.BEACON && app.getCountBlocksTeam(team))
                 isCancelled = true
-            if (block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
+            if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
                 if (team.players.contains(player.uniqueId)) {
                     ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
                     B.bc(" ")
