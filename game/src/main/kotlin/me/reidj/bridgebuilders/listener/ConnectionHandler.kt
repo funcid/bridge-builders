@@ -109,8 +109,6 @@ object ConnectionHandler : Listener {
                                             )
                                             return@onClick
                                         } else {
-                                            if (must > 100)
-                                                itemHand.setAmount(itemHand.getAmount() * 2)
                                             val subtraction = must - itemHand.getAmount()
                                             val brought = must - subtraction
 

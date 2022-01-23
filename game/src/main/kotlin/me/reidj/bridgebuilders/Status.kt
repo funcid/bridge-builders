@@ -121,7 +121,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 if (time == 800) {
                     teams.forEach { team -> team.isActiveTeleport = true }
                     Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
-                } else if (time == 700) {
+                } else if (time == 4000) {
                     Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
                     teams.forEach { team ->
                         team.breakBlocks.forEach { block ->

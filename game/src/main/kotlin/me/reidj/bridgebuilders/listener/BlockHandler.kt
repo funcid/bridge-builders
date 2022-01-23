@@ -6,6 +6,7 @@ import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.getByUuid
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.teams
+import me.reidj.bridgebuilders.timer
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Material
@@ -30,6 +31,14 @@ object BlockHandler : Listener {
 
     @EventHandler
     fun BlockBreakEvent.handle() {
+        // Если прошло 15 минут с начала игры будет выпадать больше предметов
+        if (timer.time / 20 >= 900) {
+            block.drops.forEach {
+                it.setAmount(it.getAmount() + 1)
+                block.world.dropItemNaturally(block.location, it)
+            }
+            dropItems = false
+        }
         teams.stream().forEach { team ->
             if (app.getBridge(team).contains(block.location))
                 isCancelled = true
