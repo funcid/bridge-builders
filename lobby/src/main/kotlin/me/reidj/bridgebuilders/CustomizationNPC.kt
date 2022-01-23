@@ -1,4 +1,4 @@
-package me.reidj.bridgebuilders.content
+package me.reidj.bridgebuilders
 
 import clepto.bukkit.B
 import dev.implario.bukkit.item.item
@@ -6,15 +6,11 @@ import me.reidj.bridgebuilders.achievement.Achievement
 import me.reidj.bridgebuilders.donate.DonateHelper
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.impl.*
-import me.reidj.bridgebuilders.getByPlayer
-import me.reidj.bridgebuilders.realm
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.ParticleHelper
-import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import ru.cristalix.core.formatting.Formatting
@@ -26,9 +22,6 @@ import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.network.packages.MoneyTransactionRequestPackage
 import ru.cristalix.core.network.packages.MoneyTransactionResponsePackage
 import ru.cristalix.core.realm.RealmStatus
-import ru.cristalix.npcs.data.NpcBehaviour
-import ru.cristalix.npcs.server.Npc
-import ru.cristalix.npcs.server.Npcs
 import java.util.function.Consumer
 
 class CustomizationNPC {
@@ -233,23 +226,7 @@ class CustomizationNPC {
         }).build()
 
     init {
-        // Создание NPC
         val npcLabel = worldMeta.getLabel("guide")
-        val npcArgs = npcLabel.tag.split(" ")
-        npcLabel.setYaw(npcArgs[0].toFloat())
-        npcLabel.setPitch(npcArgs[1].toFloat())
-        Npcs.spawn(
-            Npc.builder()
-                .location(npcLabel.add(0.5, 0.0, 0.5))
-                .name("§dПерсонализация")
-                .behaviour(NpcBehaviour.STARE_AT_PLAYER)
-                .skinUrl("https://webdata.c7x.dev/textures/skin/bf30a1df-85de-11e8-a6de-1cb72caa35fd")
-                .skinDigest("bf30a1df-85de-11e8-a6de-1cb72caa35fd")
-                .type(EntityType.PLAYER)
-                .onClick { it.performCommand("menu") }
-                .build()
-        )
-
         // Создание подсветки NPC
         B.repeat(5) {
             if (realm.status == RealmStatus.GAME_STARTED_RESTRICTED)

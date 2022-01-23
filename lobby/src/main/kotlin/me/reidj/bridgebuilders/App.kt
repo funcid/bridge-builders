@@ -4,12 +4,12 @@ import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
-import me.reidj.bridgebuilders.content.CustomizationNPC
+import me.func.mod.Anime
+import me.func.mod.Kit
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.listener.GlobalListeners
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.util.MapLoader
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import ru.cristalix.core.CoreApi
@@ -22,9 +22,6 @@ import ru.cristalix.core.render.BukkitRenderService
 import ru.cristalix.core.render.IRenderService
 import ru.cristalix.core.render.VisibilityTarget
 import ru.cristalix.core.render.WorldRenderData
-import ru.cristalix.npcs.data.NpcBehaviour
-import ru.cristalix.npcs.server.Npc
-import ru.cristalix.npcs.server.Npcs
 import java.util.*
 
 lateinit var app: App
@@ -37,19 +34,20 @@ class App : JavaPlugin() {
         app = this
         Platforms.set(PlatformDarkPaper())
 
-        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, MapLoader.load("prod"), 200)
+        Anime.include(Kit.NPC)
+
+        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, MapLoader().load("prod"), 200)
 
         CoreApi.get().registerService(IRenderService::class.java, BukkitRenderService(getServer()))
 
         // Конфигурация реалма
         realm.isLobbyServer = false
         realm.readableName = "BridgeBuilders Lobby"
-        realm.servicedServers = arrayOf("BridgeBuilders ${realm.realmId.id}")
+        realm.servicedServers = arrayOf("BridgeBuilders Lobby ${realm.realmId.id}")
 
         // Создание контента для лобби
         TopManager()
         CustomizationNPC()
-        Npcs.init(bridgeBuildersInstance)
 
         B.events(
             GlobalListeners,
@@ -57,29 +55,7 @@ class App : JavaPlugin() {
             Lootbox
         )
 
-        // NPC поиска игры
-        val balancer = PlayerBalancer()
-        var fixDoubleClick: Player? = null
-
         worldMeta.getLabels("play").forEach { npcLabel ->
-            val npcArgs = npcLabel.tag.split(" ")
-            npcLabel.setYaw(npcArgs[0].toFloat())
-            npcLabel.setPitch(npcArgs[1].toFloat())
-            Npcs.spawn(
-                Npc.builder()
-                    .location(npcLabel.clone().add(0.5, 0.0, 0.5))
-                    .name("§e§lНАЖМИТЕ ЧТОБЫ ИГРАТЬ")
-                    .behaviour(NpcBehaviour.STARE_AT_PLAYER)
-                    .skinUrl("https://webdata.c7x.dev/textures/skin/$SKIN")
-                    .skinDigest("bf30a1df-85de-11e8-a6de-1cb72caa35fd")
-                    .type(EntityType.PLAYER)
-                    .onClick {
-                        if (fixDoubleClick != null && fixDoubleClick == it)
-                            return@onClick
-                        balancer.accept(it)
-                        fixDoubleClick = it
-                    }.build()
-            )
             val textDataName = UUID.randomUUID().toString()
             IRenderService.get().createGlobalWorldRenderData(
                 worldMeta.world.uid,

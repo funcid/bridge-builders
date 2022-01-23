@@ -1,4 +1,4 @@
-package me.func.commons.command
+package me.reidj.bridgebuilders.command
 
 import clepto.bukkit.B
 import me.reidj.bridgebuilders.getByPlayer
