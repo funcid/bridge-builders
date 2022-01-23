@@ -110,10 +110,9 @@ object ConnectionHandler : Listener {
                                             return@onClick
                                         } else {
                                             val subtraction = must - itemHand.getAmount()
-                                            val brought = must - subtraction
-
                                             team.collected[block.key] =
                                                 block.key.needTotal - maxOf(0, subtraction)
+                                            val brought = must - subtraction
                                             itemHand.setAmount(itemHand.getAmount() - must)
 
                                             user.collectedBlocks += brought
@@ -124,9 +123,9 @@ object ConnectionHandler : Listener {
                                                 1f
                                             )
                                         }
-                                        team.players.forEach { uuid ->
-                                            ModHelper.notification(
-                                                user,
+                                        team.players.map(getByUuid).forEach { user ->
+                                            Anime.killboardMessage(
+                                                user.player!!,
                                                 "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
                                             )
                                             me.reidj.bridgebuilders.mod.ModTransfer()
@@ -138,9 +137,9 @@ object ConnectionHandler : Listener {
                                                     .sumOf { it.collectedBlocks })
                                                 .send(
                                                     "bridge:tabupdate",
-                                                    getByUuid(uuid)
+                                                    user
                                                 )
-                                            return@onClick
+                                            return@forEach
                                         }
                                         player.updateInventory()
                                         return@onClick
