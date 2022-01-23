@@ -39,6 +39,17 @@ object ConnectionHandler : Listener {
         val user = getByPlayer(player)
 
         B.postpone(5) {
+            /*BattlePass.new(300) {
+                pages = arrayListOf(
+                    BattlePassPageAdvanced(
+                        300,
+                        listOf(ItemStack(Material.STICK)),
+                        listOf(ItemStack(Material.CLAY_BALL))
+                    )
+                )
+
+                quests.add("Типо квест")
+            }*/
             // Создание маркера
             teams.forEach {
                 markers.add(

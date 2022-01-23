@@ -149,6 +149,9 @@ class App : JavaPlugin() {
                 B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${user.player!!.name} §fполучил §bлутбокс§f!"))
             }
         }
+        Bukkit.getOnlinePlayers().forEach { it.kickPlayer("Выключение сервера.") }
+        Bukkit.unloadWorld(worldMeta.world, false)
+        loadMap()
         teams.forEach { team ->
             team.players.clear()
             team.breakBlocks.clear()
@@ -158,9 +161,6 @@ class App : JavaPlugin() {
         }
         activeStatus = Status.STARTING
         timer.time = 0
-        Bukkit.getOnlinePlayers().forEach { it.kickPlayer("Выключение сервера.") }
-        Bukkit.unloadWorld(worldMeta.world, false)
-        loadMap()
         teams.forEach { generateBridge(it) }
 
         // Полная перезагрузка если много игр наиграно
