@@ -41,7 +41,6 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                 0,
                 0,
                 0,
-                0,
                 mutableListOf(),
                 arrayListOf(
                     KillMessage.NONE,
@@ -57,7 +56,6 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                 ArrowParticle.NONE,
                 0,
                 0,
-                0,
                 ""
             )
         } else {
@@ -69,8 +67,6 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                 stat.lootbox = 0
             if (stat.lootboxOpenned == null)
                 stat.lootboxOpenned = 0
-            if (stat.rewardStreak == null)
-                stat.rewardStreak = 0
             if (stat.achievement == null || stat.achievement.isEmpty())
                 stat.achievement = mutableListOf()
             if (stat.donate == null || stat.donate.isEmpty())
@@ -95,8 +91,6 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                 stat.timePlayedTotal = 0
             if (stat.lastEnter == null)
                 stat.lastEnter = 0
-            if (stat.dailyClaimTimestamp == null)
-                stat.dailyClaimTimestamp = 0
             this.stat = stat
         }
         this.session = session

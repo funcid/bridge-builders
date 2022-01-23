@@ -83,7 +83,6 @@ class CustomizationNPC {
                                 "§7    Лутбоксов: §b${stat.lootbox}\n" +
                                 "§7    Награды: §f${stat.achievement.size}§7/${Achievement.values().size}\n" +
                                 "§7    Лутбоксов открыто: §f${stat.lootboxOpenned}\n" +
-                                "§7    Streak Daily: §e${stat.rewardStreak}\n" +
                                 "§7    Победы: §b${stat.wins}\n" +
                                 "§7    Убийств: §c${stat.kills}\n" +
                                 "§7    Сыграно: §f${stat.games} §7игр(ы)\n" +

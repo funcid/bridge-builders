@@ -1,7 +1,7 @@
 package me.reidj.bridgebuilders.user
 
-import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.achievement.Achievement
+import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.impl.*
 import java.util.*
 
@@ -14,7 +14,6 @@ data class Stat(
     var games: Int,
     var lootbox: Int,
     var lootboxOpenned: Int,
-    var rewardStreak: Int,
 
     var achievement: MutableList<Achievement>,
 
@@ -27,7 +26,6 @@ data class Stat(
 
     var timePlayedTotal: Long,
     var lastEnter: Long,
-    var dailyClaimTimestamp: Long,
 
     var lastSeenName: String?,
 )
