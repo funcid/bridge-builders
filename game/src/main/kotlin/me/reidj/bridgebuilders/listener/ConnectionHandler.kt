@@ -36,8 +36,6 @@ object ConnectionHandler : Listener {
         player.inventory.clear()
         player.gameMode = GameMode.ADVENTURE
 
-        val user = getByPlayer(player)
-
         B.postpone(5) {
             /*BattlePass.new(300) {
                 pages = arrayListOf(
@@ -87,6 +85,7 @@ object ConnectionHandler : Listener {
                 Npc.npc {
                     onClick { event ->
                         val player = event.player
+                        val user = getByPlayer(player)
                         if (user.activeHand)
                             return@onClick
                         user.activeHand = true
@@ -96,6 +95,7 @@ object ConnectionHandler : Listener {
                                 team.collected.entries.forEachIndexed { index, block ->
                                     val itemHand = player.itemInHand
                                     if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
+                                        // 118 - 0 = 1181
                                         val must = block.key.needTotal - block.value
                                         if (must == 0) {
                                             ModHelper.notification(
@@ -110,10 +110,14 @@ object ConnectionHandler : Listener {
                                             )
                                             return@onClick
                                         } else {
+                                            if (must > 100)
+                                                itemHand.setAmount(itemHand.getAmount() * 2)
                                             val subtraction = must - itemHand.getAmount()
-                                            team.collected[block.key] =
-                                                block.key.needTotal - maxOf(0, subtraction)
                                             val brought = must - subtraction
+
+                                            if (must > 100)
+                                                team.collected[block.key] =
+                                                    block.key.needTotal - maxOf(0, subtraction)
                                             itemHand.setAmount(itemHand.getAmount() - must)
 
                                             user.collectedBlocks += brought
@@ -126,9 +130,7 @@ object ConnectionHandler : Listener {
                                         }
                                         team.players.forEach { uuid ->
                                             ModHelper.notification(
-                                                getByUuid(
-                                                    uuid
-                                                ),
+                                                user,
                                                 "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
                                             )
                                             me.reidj.bridgebuilders.mod.ModTransfer()
@@ -162,7 +164,7 @@ object ConnectionHandler : Listener {
             }
         }
 
-        user.stat.lastEnter = System.currentTimeMillis()
+        getByPlayer(player).stat.lastEnter = System.currentTimeMillis()
 
         if (activeStatus == Status.STARTING) {
             player.inventory.setItem(8, back)
