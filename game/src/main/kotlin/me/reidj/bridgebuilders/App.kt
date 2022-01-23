@@ -266,7 +266,7 @@ class App : JavaPlugin() {
                 data[3].toFloat(),
                 data[4].toFloat(),
                 false,
-                mutableMapOf(),
+                com.google.common.collect.Maps.newConcurrentMap(),
                 Bridge(
                     Vector(data[1].toInt(), 0, data[2].toInt()),
                     worldMeta.getLabel("$team-x"),

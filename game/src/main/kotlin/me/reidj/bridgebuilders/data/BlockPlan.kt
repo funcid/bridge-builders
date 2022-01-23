@@ -8,7 +8,7 @@ enum class BlockPlan(val title: String, val needTotal: Int, val material: Materi
     SPRUCE_FENCE("Еловый забор", 4, Material.SPRUCE_FENCE),
     PRISMARINE("Призмарин", 20, Material.PRISMARINE),
     STAINED_CLAY("Фиолетовая керамика", 48, Material.STAINED_CLAY, 10),
-    SANDSTONE_STAIRS("Песчаниковые ступеньки", 82, Material.SANDSTONE_STAIRS ),
+    SANDSTONE_STAIRS("Песчаниковые ступеньки", 82, Material.SANDSTONE_STAIRS),
     CONCRETE("Бирюзовый бетон", 90, Material.CONCRETE, 9),
     COBBLESTONE_STAIRS("Булыжные ступеньки", 118, Material.COBBLESTONE_STAIRS),
     WOOD_STAIRS("Дубовые ступеньки", 164, Material.WOOD_STAIRS),

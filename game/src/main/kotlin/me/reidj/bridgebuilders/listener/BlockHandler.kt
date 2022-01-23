@@ -8,7 +8,6 @@ import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.teams
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
-import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Firework
 import org.bukkit.event.EventHandler
@@ -18,8 +17,6 @@ import org.bukkit.event.block.BlockPlaceEvent
 import kotlin.math.min
 
 object BlockHandler : Listener {
-
-    private val toDelete: MutableList<Location> = mutableListOf()
 
     @EventHandler
     fun BlockPlaceEvent.handle() {
@@ -83,25 +80,6 @@ object BlockHandler : Listener {
                 }
             }
             team.breakBlocks[block.location] = block.typeId to block.data
-            team.breakBlocks.forEach {
-                when (it.value) {
-                    15 to 0.toByte() -> blockPlace(300, it)
-                    56 to 0.toByte() -> blockPlace(600, it)
-                    16 to 0.toByte() -> blockPlace(180, it)
-                    14 to 0.toByte() -> blockPlace(400, it)
-                    17 to 1.toByte() -> blockPlace(120, it)
-                    5 to 1.toByte() -> blockPlace(120, it)
-                    17 to 2.toByte() -> blockPlace(120, it)
-                }
-            }
-            toDelete.forEach { team.breakBlocks.remove(it) }
-        }
-    }
-
-    private fun blockPlace(seconds: Int, block: Map.Entry<Location, Pair<Int, Byte>>) {
-        B.postpone(seconds * 20) {
-            block.key.block.setTypeAndDataFast(block.value.first, block.value.second)
-            toDelete.add(block.key)
         }
     }
 }

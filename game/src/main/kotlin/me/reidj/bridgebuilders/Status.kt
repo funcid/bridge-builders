@@ -6,11 +6,13 @@ import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Color.*
 import org.bukkit.GameMode
+import org.bukkit.Location
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_JOIN
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_RESTRICTED
 
 lateinit var winMessage: String
 val kit = DefaultKit
+val toDelete: MutableList<Location> = mutableListOf()
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     STARTING(10, { it ->
@@ -116,11 +118,30 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     .integer(time)
                     .boolean(false)
                     .send("bridge:online", app.getUser(it))
-                if (time == 600) {
+                if (time == 800) {
                     teams.forEach { team -> team.isActiveTeleport = true }
                     Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
+                } else if (time == 700) {
+                    Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
+                    teams.forEach { team ->
+                        team.breakBlocks.forEach { block ->
+                            when (block.value) {
+                                15 to block.value.second -> team.blockPlace(block)
+                                56 to block.value.second -> team.blockPlace(block)
+                                16 to block.value.second -> team.blockPlace(block)
+                                14 to block.value.second -> team.blockPlace(block)
+                                17 to block.value.second -> team.blockPlace(block)
+                                5 to block.value.second -> team.blockPlace(block)
+                                17 to block.value.second -> team.blockPlace(block)
+                                1 to 5.toByte() -> team.blockPlace(block)
+                                12 to 0.toByte() -> team.blockPlace(block)
+                            }
+                        }
+                    }
+
                 }
             }
+
         }
         // Проверка на победу
         if (me.reidj.bridgebuilders.util.WinUtil.check4win()) {

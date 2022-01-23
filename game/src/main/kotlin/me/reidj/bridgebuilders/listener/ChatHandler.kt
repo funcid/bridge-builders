@@ -50,7 +50,7 @@ object ChatHandler : Listener {
             cancel = true
             if (!message.startsWith("!")) {
                 team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
-                    it.sendMessage("§8КОМАНДА ${getPrefix(getByPlayer(player)) + message}")
+                    it.sendMessage("§8КОМАНДА${getPrefix(getByPlayer(player)) + message}")
                 }
             } else {
                 Bukkit.getOnlinePlayers().forEach {
