@@ -3,12 +3,9 @@ package me.reidj.bridgebuilders.listener
 import clepto.bukkit.B
 import clepto.bukkit.Cycle
 import me.func.mod.Anime
-import me.reidj.bridgebuilders.Status
-import me.reidj.bridgebuilders.activeStatus
+import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.donate.impl.Corpse
-import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.mod.ModHelper
-import me.reidj.bridgebuilders.teams
 import me.reidj.bridgebuilders.util.StandHelper
 import net.minecraft.server.v1_12_R1.EnumItemSlot
 import org.bukkit.Bukkit
@@ -106,10 +103,7 @@ object DamageListener : Listener {
                     .filter { team -> team.players.contains(player.uniqueId) }
                     .forEach { team ->
                         run {
-                            val spawn = team.spawn
-                            spawn.pitch = team.pitch
-                            spawn.yaw = team.yaw
-                            player.teleport(spawn)
+                            app.teleportAtBase(team, player)
                             player.foodLevel = 20
                         }
                     }

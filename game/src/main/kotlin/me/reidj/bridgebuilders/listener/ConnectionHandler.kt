@@ -95,7 +95,6 @@ object ConnectionHandler : Listener {
                                 team.collected.entries.forEachIndexed { index, block ->
                                     val itemHand = player.itemInHand
                                     if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
-                                        // 118 - 0 = 1181
                                         val must = block.key.needTotal - block.value
                                         if (must == 0) {
                                             ModHelper.notification(

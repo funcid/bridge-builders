@@ -13,7 +13,6 @@ import me.reidj.bridgebuilders.data.Bridge
 import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.listener.*
 import me.reidj.bridgebuilders.map.MapType
-import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.ArrowEffect
@@ -78,12 +77,13 @@ class App : JavaPlugin() {
             ) { player ->
                 if (!team.isActiveTeleport)
                     return@addPlace
+                var enemyTeam: Team? = null
                 val playerTeam = teams.filter { team -> team.players.contains(player.uniqueId) }
                 if (player.location.distanceSquared(playerTeam[0].teleport) < 4 * 4) {
-                    val enemyTeam = ListUtils.random(teams.stream()
+                    enemyTeam = ListUtils.random(teams.stream()
                         .filter { enemy -> !enemy.players.contains(player.uniqueId) }
                         .collect(Collectors.toList()))
-                    player.teleport(enemyTeam.spawn)
+                    teleportAtBase(enemyTeam, player)
                     enemyTeam.players.map { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
                         enemy.playSound(
                             player.location,
@@ -93,23 +93,24 @@ class App : JavaPlugin() {
                         )
                     }
                 } else {
-                    player.teleport(playerTeam[0].spawn)
+                    teleportAtBase(playerTeam[0], player)
                 }
-                team.isActiveTeleport = false
-                B.postpone(20 * 180) {
-                    team.isActiveTeleport = true
-                    team.players.map { uuid -> getByUuid(uuid) }.forEach { user ->
-                        ModHelper.notification(
-                            user,
-                            "Телепорт на чужие базы теперь §aдоступен"
-                        )
-                        user.player!!.playSound(
-                            user.player!!.location,
-                            Sound.BLOCK_PORTAL_AMBIENT,
-                            1.5f,
-                            1.5f
-                        )
-                    }
+                enemyTeam?.isActiveTeleport = false
+                playerTeam[0].isActiveTeleport = false
+
+                println(playerTeam[0].isActiveTeleport)
+
+                // Ставлю полоску куллдауна
+                enemyTeam?.let { displayCoolDownBar(it) }
+                displayCoolDownBar(playerTeam[0])
+
+                B.postpone(180 * 20) {
+                    enemyTeam?.isActiveTeleport = true
+                    playerTeam[0].isActiveTeleport = true
+
+                    // Отправляю сообщение о том что телепорт доступен
+                    enemyTeam?.let { teleportAvailable(it) }
+                    teleportAvailable(playerTeam[0])
                 }
             }
         }
@@ -274,5 +275,29 @@ class App : JavaPlugin() {
                 mutableMapOf()
             )
         }
+    }
+
+    fun teleportAtBase(team: Team, player: Player) {
+        val spawn = team.spawn
+        spawn.pitch = team.pitch
+        spawn.yaw = team.yaw
+        player.teleport(spawn)
+    }
+
+    private fun displayCoolDownBar(team: Team) {
+        team.players.map { Bukkit.getPlayer(it) }.forEach { Anime.reload(it, 180.0, "Перезарядка...", 42, 102, 240) }
+    }
+
+    private fun teleportAvailable(team: Team) {
+        team.players.map { Bukkit.getPlayer(it) }
+            .forEach {
+                Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
+                it.playSound(
+                    it.location,
+                    Sound.BLOCK_PORTAL_AMBIENT,
+                    1.5f,
+                    1.5f
+                )
+            }
     }
 }

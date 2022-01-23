@@ -57,15 +57,11 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     team.players.forEach {
                         val player = Bukkit.getPlayer(it) ?: return@forEach
                         val user = getByPlayer(player)
-                        val spawn = team.spawn
 
                         player.gameMode = GameMode.SURVIVAL
                         player.itemOnCursor = null
 
-                        spawn.pitch = team.pitch
-                        spawn.yaw = team.yaw
-                        player.teleport(spawn)
-
+                        me.reidj.bridgebuilders.app.teleportAtBase(team, player)
 
                         player.inventory.armorContents = kit.armor.map { armor ->
                             val meta = armor.itemMeta as org.bukkit.inventory.meta.LeatherArmorMeta
@@ -120,7 +116,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     .integer(time)
                     .boolean(false)
                     .send("bridge:online", app.getUser(it))
-                if (time == 1580) {
+                if (time == 600) {
                     teams.forEach { team -> team.isActiveTeleport = true }
                     Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
                 }
