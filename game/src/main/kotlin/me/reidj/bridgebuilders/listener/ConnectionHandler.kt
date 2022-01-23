@@ -180,7 +180,7 @@ object ConnectionHandler : Listener {
     @EventHandler
     fun PlayerQuitEvent.handle() {
         val user = getByPlayer(player)
-        teams.filter { it.players.contains(player.uniqueId) }.forEach { it.players.remove(player.uniqueId) }
+        teams.forEach { it.players.remove(player.uniqueId) }
         user.stat.timePlayedTotal += System.currentTimeMillis() - user.stat.lastEnter
     }
 

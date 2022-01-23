@@ -9,7 +9,7 @@ import org.bukkit.GameMode
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_JOIN
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_RESTRICTED
 
-lateinit var winMessage: String
+var winMessage: String = ""
 val kit = DefaultKit
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
@@ -61,7 +61,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         player.gameMode = GameMode.SURVIVAL
                         player.itemOnCursor = null
 
-                        me.reidj.bridgebuilders.app.teleportAtBase(team, player)
+                        app.teleportAtBase(team, player)
 
                         player.inventory.armorContents = kit.armor.map { armor ->
                             val meta = armor.itemMeta as org.bukkit.inventory.meta.LeatherArmorMeta
@@ -116,7 +116,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     .integer(time)
                     .boolean(false)
                     .send("bridge:online", app.getUser(it))
-                if (time == 800) {
+                if (time / 20 == 180) {
                     teams.forEach { team -> team.isActiveTeleport = true }
                     Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
                 } else if (time / 20 == 900) {
@@ -151,8 +151,8 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         }
         // Проверка на победу
         if (me.reidj.bridgebuilders.util.WinUtil.check4win()) {
-            activeStatus = END
             clepto.bukkit.B.bc(winMessage)
+            clepto.bukkit.B.postpone(5 * 20) { app.restart() }
         }
         time
     }),

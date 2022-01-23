@@ -1,12 +1,14 @@
 package me.reidj.bridgebuilders.util
 
-import me.reidj.bridgebuilders.activeStatus
-import me.reidj.bridgebuilders.timer
-import me.reidj.bridgebuilders.winMessage
+import me.reidj.bridgebuilders.*
 
 object WinUtil {
 
     fun check4win(): Boolean {
+        if (activeStatus != Status.GAME)
+            return false
+        if (teams.all { it.players.size == 0 })
+            return true
         // Если время вышло игроки победили
         if (activeStatus.lastSecond * 20 == timer.time) {
             winMessage = "§aВремя вышло! Победила дружба."
