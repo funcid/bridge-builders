@@ -8,11 +8,8 @@ import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
-import ru.cristalix.core.chat.IChatService
-import ru.cristalix.core.chat.IChatView
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.permissions.IPermissionService
-import java.util.concurrent.ExecutionException
 
 object ChatHandler : Listener {
 
@@ -20,34 +17,9 @@ object ChatHandler : Listener {
 
     @EventHandler
     fun AsyncPlayerChatEvent.handle() {
-        val uuid = player.uniqueId
-
-        val chatView: IChatView = IChatService.get().getChatView(uuid)
-        var error: String? = null
-
-        // Убираю задержку в чате для персонала
-        try {
-            if (permissionService.getStaffGroup(player.uniqueId).get().priority >= 2500)
-                chatView.resetCooldown(player.uniqueId)
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-        } catch (e: ExecutionException) {
-            e.printStackTrace()
-        }
-
-        if (chatView.isSilenced && !player.hasPermission(IChatService.SILENCE_BYPASS))
-            error = "Ты сейчас не можешь писать в чат!"
-        else if (!player.hasPermission(IChatService.COOLDOWN_BYPASS) && chatView.isOnCooldown(uuid))
-            error = "Погоди перед отправкой следующего сообщения"
-
-        if (error != null) {
-            player.sendMessage(Formatting.error(error))
-            isCancelled = true
-            return
-        }
         val team = teams.filter { team -> team.players.contains(player.uniqueId) }
         if (team.isNotEmpty()) {
-            cancel = true
+            isCancelled = true
             if (!message.startsWith("!")) {
                 team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
                     it.sendMessage("§8КОМАНДА${getPrefix(getByPlayer(player)) + message}")
@@ -71,10 +43,9 @@ object ChatHandler : Listener {
         permissionService.getBestGroup(user.stat.id).thenAccept { group ->
             permissionService.getNameColor(user.stat.id).thenApply {
                 finalPrefix = (if (user.stat.activeNameTag == NameTag.NONE) "" else user.stat.activeNameTag.getRare()
-                    .getColor() + user.stat.activeNameTag.getTitle()) + "§8 ┃ " + group.nameColor + group.prefix + "§8 ┃ §f" +
-                        (it ?: group.nameColor) + user.player!!.name + " §8${Formatting.ARROW_SYMBOL + group.chatMessageColor} "
+                    .getColor() + user.stat.activeNameTag.getTitle()) + "§8 ┃ " + group.nameColor + group.prefix + "§8 ┃ §f" + (it
+                    ?: group.nameColor) + user.player!!.name + " §8${Formatting.ARROW_SYMBOL + group.chatMessageColor} "
             }
-
         }
         return finalPrefix
     }
