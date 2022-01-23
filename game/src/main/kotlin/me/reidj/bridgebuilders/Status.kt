@@ -6,16 +6,14 @@ import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Color.*
 import org.bukkit.GameMode
-import org.bukkit.Location
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_JOIN
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_RESTRICTED
 
 lateinit var winMessage: String
 val kit = DefaultKit
-val toDelete: MutableList<Location> = mutableListOf()
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(10, { it ->
+    STARTING(5, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 40)
             realm.status = GAME_STARTED_CAN_JOIN
@@ -121,7 +119,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 if (time == 800) {
                     teams.forEach { team -> team.isActiveTeleport = true }
                     Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
-                } else if (time == 4000) {
+                } else if (time == 15000) {
                     Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
                     teams.forEach { team ->
                         team.breakBlocks.forEach { block ->

@@ -112,9 +112,8 @@ object ConnectionHandler : Listener {
                                             val subtraction = must - itemHand.getAmount()
                                             val brought = must - subtraction
 
-                                            if (must > 100)
-                                                team.collected[block.key] =
-                                                    block.key.needTotal - maxOf(0, subtraction)
+                                            team.collected[block.key] =
+                                                block.key.needTotal - maxOf(0, subtraction)
                                             itemHand.setAmount(itemHand.getAmount() - must)
 
                                             user.collectedBlocks += brought

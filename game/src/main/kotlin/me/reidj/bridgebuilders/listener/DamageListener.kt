@@ -27,11 +27,19 @@ object DamageListener : Listener {
             cancelled = true
     }
 
+
     @EventHandler
     fun PlayerDeathEvent.handle() {
         cancelled = true
 
         val player = entity as Player
+        val cause = player.lastDamageCause
+        val victim = teams.filter { team -> team.players.contains(player.uniqueId) }[0]
+
+        if (cause.cause == EntityDamageEvent.DamageCause.FALL)
+            printDeathMessage("Игрок ${victim.color.chatFormat + player.name} §fприземлился с большой высоты")
+        else if (cause.cause == EntityDamageEvent.DamageCause.VOID)
+            printDeathMessage("Игрок ${victim.color.chatFormat + player.name} §fприземлился с большой высоты")
 
         var location = player.location.clone()
         var id: Int
@@ -44,10 +52,9 @@ object DamageListener : Listener {
 
         if (player.killer != null) {
             val user = getByPlayer(player)
-            val victim = teams.filter { team -> team.players.contains(player.uniqueId) }
             val killer = teams.filter { team -> team.players.contains(player.killer.uniqueId) }
             drops.filter { it.getType().isBlock }.forEach { player.killer.inventory.addItem(it) }
-            ModHelper.allNotification("" + victim[0].color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " " + killer[0].color.chatColor + player.killer.name)
+            ModHelper.allNotification("" + victim.color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " " + killer[0].color.chatColor + player.killer.name)
             if (user.stat.activeCorpse != Corpse.NONE) {
                 val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
                     .marker(true)
@@ -118,6 +125,7 @@ object DamageListener : Listener {
 
     @EventHandler
     fun EntityDamageByEntityEvent.handle() {
+        // Отключение урона по союзникам
         teams.filter { team -> team.players.contains(damager.uniqueId) }
             .filter { it.players.contains(entity.uniqueId) }
             .forEach { _ -> isCancelled = true }
@@ -144,5 +152,9 @@ object DamageListener : Listener {
         }
         toDelete.forEach { it.setAmount(0) }
         toDelete.clear()
+    }
+
+    private fun printDeathMessage(text: String) {
+        Bukkit.getOnlinePlayers().forEach { Anime.killboardMessage(it, text) }
     }
 }
