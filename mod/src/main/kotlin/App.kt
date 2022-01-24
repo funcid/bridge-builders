@@ -22,9 +22,9 @@ class App : KotlinMod() {
         registerHandler<HungerRender> { isCancelled = true }
         registerHandler<ArmorRender> { isCancelled = true }
         registerHandler<VehicleHealthRender> { isCancelled = true }
+        registerHandler<PlayerListRender> { isCancelled = true }
 
         registerChannel("bridge:start") {
-            registerHandler<PlayerListRender> { isCancelled = true }
             registerHandler<ArmorRender> { isCancelled = false }
             registerHandler<HealthRender> { isCancelled = false }
             registerHandler<HungerRender> { isCancelled = false }
