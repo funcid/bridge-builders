@@ -135,7 +135,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         "Ускорение",
                         "Увеличено выпадение ресурсов"
                     )
-
                 } else if (time / 20 == 1500) {
                     Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
                     teams.forEach { team -> team.blockReturn() }

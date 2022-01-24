@@ -19,12 +19,8 @@ object BlockHandler : Listener {
 
     @EventHandler
     fun BlockPlaceEvent.handle() {
-        teams.forEach { team ->
-            if (block.location.distanceSquared(teams.filter { it.players.contains(player.uniqueId) }[0].spawn) > 50 * 50
-                || app.getBridge(team).contains(block.location)
-            )
-                isCancelled = true
-        }
+        if (teams.all { block.location.distanceSquared(it.spawn) > 60 * 72 })
+            isCancelled = true
     }
 
     @EventHandler
@@ -44,9 +40,9 @@ object BlockHandler : Listener {
 
             if (app.getBridge(team).contains(block.location))
                 isCancelled = true
-            else if (block.type == Material.BEACON && !app.getCountBlocksTeam(team))
+            else if (block.type == Material.BEACON && app.getCountBlocksTeam(team))
                 isCancelled = true
-            if (block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
+            if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
                 if (team.players.contains(player.uniqueId)) {
                     ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
                     B.bc(" ")
