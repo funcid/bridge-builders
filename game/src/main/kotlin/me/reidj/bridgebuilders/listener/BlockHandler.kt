@@ -29,23 +29,19 @@ object BlockHandler : Listener {
 
     @EventHandler
     fun BlockBreakEvent.handle() {
-        val has = activeStatus.now(timer.time) / 20 >= 900
-        if (block.type == Material.IRON_ORE) {
-            block.type = Material.AIR
-            player.inventory.addItem(ItemStack(Material.IRON_INGOT, if (has) 2 else 1))
-        } else if (block.type == Material.GOLD_ORE) {
-            block.type = Material.AIR
-            player.inventory.addItem(ItemStack(Material.GOLD_ORE, if (has) 2 else 1))
-        }
-        // Если прошло 15 минут с начала игры будет выпадать больше предметов
-        if (has) {
-            block.drops.forEach {
-                it.setAmount(it.getAmount() + 1)
-                block.world.dropItemNaturally(block.location, it)
-            }
-            dropItems = false
-        }
         teams.stream().forEach { team ->
+            when (val idAndData = block.typeId to block.data) {
+                15 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
+                56 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
+                16 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
+                14 to block.data -> team.breakBlocks[block.location] = idAndData
+                17 to block.data -> team.breakBlocks[block.location] = idAndData
+                5 to block.data -> team.breakBlocks[block.location] = idAndData
+                17 to block.data -> team.breakBlocks[block.location] = idAndData
+                1 to 5.toByte() -> team.breakBlocks[block.location] = idAndData
+                12 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
+            }
+
             if (app.getBridge(team).contains(block.location))
                 isCancelled = true
             else if (block.type == Material.BEACON && app.getCountBlocksTeam(team))
@@ -94,7 +90,23 @@ object BlockHandler : Listener {
                     return@forEach
                 }
             }
-            team.breakBlocks[block.location] = block.typeId to block.data
+        }
+
+        val has = activeStatus.now(timer.time) / 20 >= 900
+        if (block.type == Material.IRON_ORE) {
+            block.type = Material.AIR
+            player.inventory.addItem(ItemStack(Material.IRON_INGOT, if (has) 2 else 1))
+        } else if (block.type == Material.GOLD_ORE) {
+            block.type = Material.AIR
+            player.inventory.addItem(ItemStack(Material.GOLD_ORE, if (has) 2 else 1))
+        }
+        // Если прошло 15 минут с начала игры будет выпадать больше предметов
+        if (has) {
+            block.drops.forEach {
+                it.setAmount(it.getAmount() + 1)
+                block.world.dropItemNaturally(block.location, it)
+            }
+            dropItems = false
         }
     }
 }

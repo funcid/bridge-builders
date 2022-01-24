@@ -123,20 +123,12 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
                     teams.forEach { team ->
                         team.breakBlocks.forEach { block ->
-                            when (block.value) {
-                                15 to block.value.second -> team.blockPlace(block)
-                                56 to block.value.second -> team.blockPlace(block)
-                                16 to block.value.second -> team.blockPlace(block)
-                                14 to block.value.second -> team.blockPlace(block)
-                                17 to block.value.second -> team.blockPlace(block)
-                                5 to block.value.second -> team.blockPlace(block)
-                                17 to block.value.second -> team.blockPlace(block)
-                                1 to 5.toByte() -> team.blockPlace(block)
-                                12 to 0.toByte() -> team.blockPlace(block)
-                            }
+                            block.key.block.setTypeAndDataFast(
+                                block.value.first,
+                                block.value.second
+                            )
                         }
                     }
-
                 } else if (time / 20 == 960) {
                     Bukkit.getOnlinePlayers().forEach { player ->
                         Anime.alert(
