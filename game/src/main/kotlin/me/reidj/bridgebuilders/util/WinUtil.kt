@@ -7,8 +7,11 @@ object WinUtil {
     fun check4win(): Boolean {
         if (activeStatus != Status.GAME)
             return false
-        if (teams.all { it.players.size == 0 })
+        if (teams.all { it.players.size == 0 }) {
+            activeStatus = Status.END
+            winMessage = "§aПерезагрузка..."
             return true
+        }
         // Если время вышло игроки победили
         if (activeStatus.lastSecond * 20 == timer.time) {
             winMessage = "§aВремя вышло! Победила дружба."
