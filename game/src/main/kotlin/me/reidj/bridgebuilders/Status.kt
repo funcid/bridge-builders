@@ -119,24 +119,26 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 if (time / 20 == 180) {
                     teams.forEach { team -> team.isActiveTeleport = true }
                     Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
+                } else if (time / 20 == 600) {
+                    Anime.alert(
+                        it,
+                        "Ускорение",
+                        "Увеличина скорость разрушения блоков"
+                    )
+                    clepto.bukkit.B.potion(it, org.bukkit.potion.PotionEffectType.FAST_DIGGING, Int.MAX_VALUE, 0)
                 } else if (time / 20 == 900) {
                     Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
-                    teams.forEach { team ->
-                        team.breakBlocks.forEach { block ->
-                            block.key.block.setTypeAndDataFast(
-                                block.value.first,
-                                block.value.second
-                            )
-                        }
-                    }
+                    teams.forEach { team -> team.blockReturn() }
                 } else if (time / 20 == 960) {
-                    Bukkit.getOnlinePlayers().forEach { player ->
-                        Anime.alert(
-                            player,
-                            "Ускорение",
-                            "Увеличено выпадение ресурсов"
-                        )
-                    }
+                    Anime.alert(
+                        it,
+                        "Ускорение",
+                        "Увеличено выпадение ресурсов"
+                    )
+
+                } else if (time / 20 == 1500) {
+                    Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
+                    teams.forEach { team -> team.blockReturn() }
                 }
             }
 

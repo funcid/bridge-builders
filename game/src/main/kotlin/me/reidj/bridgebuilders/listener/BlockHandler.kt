@@ -95,15 +95,15 @@ object BlockHandler : Listener {
         val has = activeStatus.now(timer.time) / 20 >= 900
         if (block.type == Material.IRON_ORE) {
             block.type = Material.AIR
-            player.inventory.addItem(ItemStack(Material.IRON_INGOT, if (has) 2 else 1))
+            player.inventory.addItem(ItemStack(Material.IRON_INGOT, if (has) 3 else 1))
         } else if (block.type == Material.GOLD_ORE) {
             block.type = Material.AIR
-            player.inventory.addItem(ItemStack(Material.GOLD_ORE, if (has) 2 else 1))
+            player.inventory.addItem(ItemStack(Material.GOLD_ORE, if (has) 3 else 1))
         }
         // Если прошло 15 минут с начала игры будет выпадать больше предметов
         if (has) {
             block.drops.forEach {
-                it.setAmount(it.getAmount() + 1)
+                it.setAmount(it.getAmount() + 2)
                 block.world.dropItemNaturally(block.location, it)
             }
             dropItems = false

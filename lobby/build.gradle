@@ -39,7 +39,6 @@ dependencies {
     implementation 'dev.implario.bukkit:kotlin-api:1.1.1'
     implementation 'dev.implario.bukkit:dark-paper:1.0.0'
 
-    implementation 'ru.cristalix:boards-bukkit-api:3.0.0'
     implementation 'me.func:animation-api:1.1.63'
     implementation project(':commons')
 }

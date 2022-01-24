@@ -127,9 +127,6 @@ object ConnectionHandler : Listener {
                                                 user.player!!,
                                                 "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
                                             )
-                                            B.bc(user.player!!.name + " " + user.collectedBlocks)
-                                            B.bc("всего " + team.players.map { getByUuid(it) }
-                                                .sumOf { it.collectedBlocks })
                                             me.reidj.bridgebuilders.mod.ModTransfer()
                                                 .integer(index + 2)
                                                 .integer(block.key.needTotal)

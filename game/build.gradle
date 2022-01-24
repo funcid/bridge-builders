@@ -48,7 +48,7 @@ dependencies {
     compileOnly 'cristalix:dark-paper:21.02.03'
     compileOnly 'dev.xdark:feder:1.0-SNAPSHOT'
 
-    implementation 'dev.implario:kensuke-client-bukkit:2.1.9'
+    implementation 'dev.implario:kensuke-client-bukkit:2.1.10'
 
     implementation 'dev.implario.bukkit:kotlin-api:1.1.1'
     implementation 'dev.implario.bukkit:dark-paper:1.0.0'
@@ -59,8 +59,6 @@ dependencies {
 
     implementation 'me.func:animation-api:1.1.63'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.0'
-
-    implementation 'ru.cristalix:boards-bukkit-api:3.0.0'
     implementation project(':commons')
 }
 
