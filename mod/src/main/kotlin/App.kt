@@ -16,6 +16,7 @@ class App : KotlinMod() {
         Indicator
         NotificationManager
         BoardBlocks
+        TeamProgress
 
         registerHandler<HealthRender> { isCancelled = true }
         registerHandler<ExpBarRender> { isCancelled = true }

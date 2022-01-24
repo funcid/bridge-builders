@@ -13,7 +13,7 @@ lateinit var winMessage: String
 val kit = DefaultKit
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(20, { it ->
+    STARTING(10, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 40)
             realm.status = GAME_STARTED_CAN_JOIN
@@ -53,7 +53,8 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         teams.minByOrNull { it.players.size }!!.players.add(player.uniqueId)
                 }
                 // Телепортация игроков
-                teams.forEach { team ->
+                teams.forEachIndexed { index, team ->
+                    val color = checkColor(team.color)
                     team.players.forEach {
                         val player = Bukkit.getPlayer(it) ?: return@forEach
                         val user = getByPlayer(player)
@@ -82,6 +83,13 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                 .item(block.key.getItem())
                                 .send("bridge:init", user)
                         }
+                        // Отправка прогресса команд
+                        me.reidj.bridgebuilders.mod.ModTransfer()
+                            .integer(index + 2)
+                            .integer(color.getRed())
+                            .integer(color.getGreen())
+                            .integer(color.getBlue())
+                            .send("bridge:progressinit", user)
 
                         Anime.alert(
                             player,
