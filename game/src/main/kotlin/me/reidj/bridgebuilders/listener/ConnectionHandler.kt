@@ -20,6 +20,7 @@ import ru.cristalix.core.item.Items
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmStatus
 import java.util.*
+import kotlin.math.max
 
 object ConnectionHandler : Listener {
 
@@ -112,10 +113,8 @@ object ConnectionHandler : Listener {
                                             val subtraction = must - itemHand.getAmount()
                                             team.collected[block.key] =
                                                 block.key.needTotal - maxOf(0, subtraction)
-                                            val brought = must - subtraction
                                             itemHand.setAmount(itemHand.getAmount() - must)
-
-                                            user.collectedBlocks += brought
+                                            user.collectedBlocks += must - max(0, subtraction)
                                             player.playSound(
                                                 player.location,
                                                 org.bukkit.Sound.ENTITY_PLAYER_LEVELUP,
@@ -128,11 +127,14 @@ object ConnectionHandler : Listener {
                                                 user.player!!,
                                                 "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
                                             )
+                                            B.bc(user.player!!.name + " " + user.collectedBlocks)
+                                            B.bc("всего " + team.players.map { getByUuid(it) }
+                                                .sumOf { it.collectedBlocks })
                                             me.reidj.bridgebuilders.mod.ModTransfer()
                                                 .integer(index + 2)
                                                 .integer(block.key.needTotal)
                                                 .integer(block.value)
-                                                .integer(4096)
+                                                .integer(3639)
                                                 .integer(team.players.map { getByUuid(it) }
                                                     .sumOf { it.collectedBlocks })
                                                 .send(

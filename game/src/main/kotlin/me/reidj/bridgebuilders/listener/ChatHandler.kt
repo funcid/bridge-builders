@@ -1,5 +1,7 @@
 package me.reidj.bridgebuilders.listener
 
+import me.reidj.bridgebuilders.Status
+import me.reidj.bridgebuilders.activeStatus
 import me.reidj.bridgebuilders.donate.impl.NameTag
 import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.teams
@@ -17,6 +19,8 @@ object ChatHandler : Listener {
 
     @EventHandler
     fun AsyncPlayerChatEvent.handle() {
+        if (activeStatus != Status.GAME)
+            return
         val team = teams.filter { team -> team.players.contains(player.uniqueId) }
         if (team.isNotEmpty()) {
             isCancelled = true
