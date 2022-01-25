@@ -36,6 +36,7 @@ lateinit var app: App
 val LOBBY_SERVER: RealmId = RealmId.of("TEST-56")
 var activeStatus = Status.STARTING
 var games = 0
+const val needBlocks = 3639
 
 lateinit var teams: List<Team>
 
@@ -246,7 +247,7 @@ class App : JavaPlugin() {
 
     fun getCountBlocksTeam(team: Team): Boolean {
         if (team.players.map { getByUuid(it) }
-                .sumOf { it.collectedBlocks } < 3639)
+                .sumOf { it.collectedBlocks } < needBlocks)
             return true
         return false
     }

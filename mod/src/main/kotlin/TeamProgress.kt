@@ -1,6 +1,8 @@
+
 import ru.cristalix.clientapi.mod
 import ru.cristalix.uiengine.UIEngine
 import ru.cristalix.uiengine.element.RectangleElement
+import ru.cristalix.uiengine.element.TextElement
 import ru.cristalix.uiengine.eventloop.animate
 import ru.cristalix.uiengine.utility.*
 
@@ -34,10 +36,13 @@ object TeamProgress {
 
         App::class.mod.registerChannel("bridge:progressupdate") {
             val index = readInt()
+            val needBlocks = readInt()
             val progress = readInt()
+            val rectangleElement = board.children[index] as RectangleElement
 
-            ((board.children[index] as RectangleElement).children[0] as RectangleElement).animate(1) {
-                size.x = 100.0 / 100.0 * progress
+            (rectangleElement.children[1] as TextElement).content = "${(progress * 1.0 / needBlocks * 100.0).toInt()}%"
+            (rectangleElement.children[0] as RectangleElement).animate(1) {
+                size.x = 100.0 / needBlocks * progress
             }
         }
 

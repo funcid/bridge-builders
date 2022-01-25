@@ -9,6 +9,7 @@ import me.func.protocol.Marker
 import me.func.protocol.MarkerSign
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.mod.ModHelper
+import me.reidj.bridgebuilders.mod.ModTransfer
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
@@ -91,8 +92,8 @@ object ConnectionHandler : Listener {
                             return@onClick
                         user.activeHand = true
                         B.postpone(5) { user.activeHand = false }
-                        teams.filter { it.players.contains(player.uniqueId) }
-                            .forEach { team ->
+                        teams.forEachIndexed { teamIndex, team ->
+                            if (team.players.contains(player.uniqueId)) {
                                 team.collected.entries.forEachIndexed { index, block ->
                                     val itemHand = player.itemInHand
                                     if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
@@ -127,11 +128,11 @@ object ConnectionHandler : Listener {
                                                 user.player!!,
                                                 "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
                                             )
-                                            me.reidj.bridgebuilders.mod.ModTransfer()
+                                            ModTransfer()
                                                 .integer(index + 2)
                                                 .integer(block.key.needTotal)
                                                 .integer(block.value)
-                                                .integer(3639)
+                                                .integer(needBlocks)
                                                 .integer(team.players.map { getByUuid(it) }
                                                     .sumOf { it.collectedBlocks })
                                                 .send(
@@ -140,11 +141,19 @@ object ConnectionHandler : Listener {
                                                 )
                                             return@forEach
                                         }
-                                        player.updateInventory()
-                                        return@onClick
                                     }
+                                    player.updateInventory()
+                                    return@onClick
                                 }
                             }
+                            team.players.forEach { uuid ->
+                                ModTransfer()
+                                    .integer(teamIndex + 2)
+                                    .integer(needBlocks)
+                                    .integer(team.collected.map { it.value }.sum())
+                                    .send("bridge:progressupdate", getByUuid(uuid))
+                            }
+                        }
                     }
                     x = label.x + 0.5
                     y = label.y

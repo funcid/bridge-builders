@@ -18,7 +18,7 @@ data class Progress(
         addChild(rectangle {
             origin = LEFT
             align = LEFT
-            size = V3(30.0, 10.0)
+            size = V3(0.0, 10.0)
             color = Color(red, green, blue)
         })
         addChild(text {
