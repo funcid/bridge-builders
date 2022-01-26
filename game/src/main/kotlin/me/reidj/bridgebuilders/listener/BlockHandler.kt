@@ -25,7 +25,7 @@ object BlockHandler : Listener {
 
     @EventHandler
     fun BlockBreakEvent.handle() {
-        teams.stream().forEach { team ->
+        teams.forEachIndexed { index, team ->
             when (val idAndData = block.typeId to block.data) {
                 15 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
                 56 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
@@ -37,7 +37,6 @@ object BlockHandler : Listener {
                 1 to 5.toByte() -> team.breakBlocks[block.location] = idAndData
                 12 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
             }
-
             if (app.getBridge(team).contains(block.location))
                 isCancelled = true
             else if (block.type == Material.BEACON && app.getCountBlocksTeam(team))
@@ -83,7 +82,7 @@ object BlockHandler : Listener {
                     team.players.forEach {
                         getByUuid(it).player?.let { player -> Anime.title(player, "§aПОРАЖЕНИЕ\n§aвы проиграли!") }
                     }
-                    return@forEach
+                    return@forEachIndexed
                 }
             }
         }

@@ -10,6 +10,7 @@ import me.func.protocol.MarkerSign
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.mod.ModTransfer
+import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
@@ -92,8 +93,8 @@ object ConnectionHandler : Listener {
                             return@onClick
                         user.activeHand = true
                         B.postpone(5) { user.activeHand = false }
-                        teams.forEachIndexed { teamIndex, team ->
-                            if (team.players.contains(player.uniqueId)) {
+                        teams.filter { it.players.contains(player.uniqueId) }
+                            .forEach { team ->
                                 team.collected.entries.forEachIndexed { index, block ->
                                     val itemHand = player.itemInHand
                                     if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
@@ -122,38 +123,40 @@ object ConnectionHandler : Listener {
                                                 1f,
                                                 1f
                                             )
-                                        }
-                                        team.players.map(getByUuid).forEach { user ->
-                                            Anime.killboardMessage(
-                                                user.player!!,
-                                                "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
-                                            )
-                                            ModTransfer()
-                                                .integer(index + 2)
-                                                .integer(block.key.needTotal)
-                                                .integer(block.value)
-                                                .integer(needBlocks)
-                                                .integer(team.players.map { getByUuid(it) }
-                                                    .sumOf { it.collectedBlocks })
-                                                .send(
-                                                    "bridge:tabupdate",
-                                                    user
+                                            teams.forEachIndexed { teamIndex, updateTeam ->
+                                                Bukkit.getOnlinePlayers().forEach {
+                                                    ModTransfer()
+                                                        .integer(teamIndex + 2)
+                                                        .integer(needBlocks)
+                                                        .integer(updateTeam.collected.map { block -> block.value }
+                                                            .sum())
+                                                        .send("bridge:progressupdate", getByPlayer(it))
+                                                }
+                                            }
+                                            // Обновление таба
+                                            team.players.map(getByUuid).forEach { user ->
+                                                Anime.killboardMessage(
+                                                    user.player!!,
+                                                    "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
                                                 )
-                                            return@forEach
+                                                ModTransfer()
+                                                    .integer(index + 2)
+                                                    .integer(block.key.needTotal)
+                                                    .integer(block.value)
+                                                    .integer(needBlocks)
+                                                    .integer(team.players.map { getByUuid(it) }
+                                                        .sumOf { it.collectedBlocks })
+                                                    .send(
+                                                        "bridge:tabupdate",
+                                                        user
+                                                    )
+                                                player.updateInventory()
+                                                return@onClick
+                                            }
                                         }
                                     }
-                                    player.updateInventory()
-                                    return@onClick
                                 }
                             }
-                            team.players.forEach { uuid ->
-                                ModTransfer()
-                                    .integer(teamIndex + 2)
-                                    .integer(needBlocks)
-                                    .integer(team.collected.map { it.value }.sum())
-                                    .send("bridge:progressupdate", getByUuid(uuid))
-                            }
-                        }
                     }
                     x = label.x + 0.5
                     y = label.y

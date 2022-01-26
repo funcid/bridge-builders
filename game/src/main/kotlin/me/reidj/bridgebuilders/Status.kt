@@ -55,6 +55,15 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 // Телепортация игроков
                 teams.forEachIndexed { index, team ->
                     val color = checkColor(team.color)
+                    Bukkit.getOnlinePlayers().forEach {
+                        // Отправка прогресса команд
+                        me.reidj.bridgebuilders.mod.ModTransfer()
+                            .integer(index + 2)
+                            .integer(color.getRed())
+                            .integer(color.getGreen())
+                            .integer(color.getBlue())
+                            .send("bridge:progressinit", getByPlayer(it))
+                    }
                     team.players.forEach {
                         val player = Bukkit.getPlayer(it) ?: return@forEach
                         val user = getByPlayer(player)
@@ -83,20 +92,12 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                 .item(block.key.getItem())
                                 .send("bridge:init", user)
                         }
-                        // Отправка прогресса команд
-                        me.reidj.bridgebuilders.mod.ModTransfer()
-                            .integer(index + 2)
-                            .integer(color.getRed())
-                            .integer(color.getGreen())
-                            .integer(color.getBlue())
-                            .send("bridge:progressinit", user)
 
                         Anime.alert(
                             player,
                             "Цель",
                             "Принесите нужные блоки строителю, \nчтобы построить мост к центру"
                         )
-
                         me.func.mod.Glow.showAllPlaces(player)
                     }
                 }

@@ -8,11 +8,11 @@ data class Progress(
     var blue: Int,
     val element: RectangleElement = rectangle {
         val index = TeamProgress.board.children.size
-        val margin = 20.0
-        val y = margin * index / 2 + size.y * index / 2 + if (index % 2 == 0) 0.0 else -margin / 2
+        val margin = 30.0
+        val y = margin * index / 2 + size.y * index / 2
         origin = TOP
         align = TOP
-        offset = V3(0.0, 10.0 + y)
+        offset = V3(10.0, -10.0 + y)
         size = V3(100.0, 10.0)
         color = Color(0, 0, 0, 1.0)
         addChild(rectangle {
@@ -22,10 +22,10 @@ data class Progress(
             color = Color(red, green, blue)
         })
         addChild(text {
+            content = "0%"
             origin = LEFT
             align = LEFT
-            offset = V3(-12.0, -19.5 + y)
-            content = "$progress%"
+            offset.x -= 22.0
             scale = V3(0.8, 0.8)
         })
     }
