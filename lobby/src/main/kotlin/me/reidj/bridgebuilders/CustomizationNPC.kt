@@ -49,7 +49,7 @@ class CustomizationNPC {
                     "XXXXXXXXX",
                     "XSXCXDXHX",
                     "XXXXXXXXX",
-                    "XXLKPIQXX",
+                    "XZLKPIQXX",
                     "XXXXOXXXX",
                     "XXXXQXXXX",
                 )
@@ -60,6 +60,7 @@ class CustomizationNPC {
                 contents.add('Q', ClickableItem.of(item {
                     type = Material.CLAY_BALL
                     nbt("marioparty", "bowspleef")
+                    nbt("HideFlags", 63)
                     text("§bЭффекты выстрела НОВОЕ!\n\n§7Выберите эффект, который\n§7останется после выстрела.")
                 }) {
                     subInventory(player, 3) { _: Player, currentContent: InventoryContents ->
@@ -77,6 +78,7 @@ class CustomizationNPC {
                 contents.add('S', ClickableItem.empty(item {
                     type = Material.CLAY_BALL
                     nbt("other", "quest_week")
+                    nbt("HideFlags", 63)
                     text(
                         "§f§l > §bОбщая статистика\n" +
                                 "§7    Монет: §e${stat.money}\n" +
@@ -93,6 +95,7 @@ class CustomizationNPC {
                 contents.add('P', ClickableItem.of(item {
                     type = Material.CLAY_BALL
                     nbt("other", "g2")
+                    nbt("HideFlags", 63)
                     text("§bМогилы\n\n§7Выберите могилу, которая\n§7появится на месте\n§7вашей смерти.")
                 }) {
                     subInventory(player, 1) { _: Player, currentContent: InventoryContents ->
@@ -105,6 +108,7 @@ class CustomizationNPC {
                 contents.add('K', ClickableItem.of(item {
                     type = Material.CLAY_BALL
                     nbt("other", "guild_members_add")
+                    nbt("HideFlags", 63)
                     text("§bЧастицы ходьбы\n\n§7Выберите тип частиц,\n§7которые будут появлять\n§7следом за вами.")
                 }) {
                     subInventory(player, 3) { _: Player, currentContent: InventoryContents ->
@@ -121,6 +125,7 @@ class CustomizationNPC {
                 contents.add('L', ClickableItem.of(item {
                     type = Material.CLAY_BALL
                     nbt("other", "new_booster_2")
+                    nbt("HideFlags", 63)
                     text("§bПсевдонимы\n\n§7Выберите псевдоним,\n§7который появится в\n§7табе.")
                 }) {
                     subInventory(player, 3) { _: Player, currentContent: InventoryContents ->
@@ -152,6 +157,7 @@ class CustomizationNPC {
                 contents.add('I', ClickableItem.of(item {
                     type = Material.IRON_SPADE
                     nbt("simulators", "luck_shovel")
+                    nbt("HideFlags", 63)
                     text("§bСообщения убийства\n\n§7Выберите сообщение,\n§7которое будет написано\n§7с 35% шансом, когда\n§7вы убьете кого-то.")
                 }) {
                     subInventory(player, 3) { _: Player, currentContent: InventoryContents ->
@@ -162,6 +168,23 @@ class CustomizationNPC {
                         )
                         pasteItems(user, false, currentContent, KillMessage.values().asIterable()) {
                             stat.activeKillMessage = it as KillMessage
+                        }
+                    }
+                })
+                contents.add('Z', ClickableItem.of(item {
+                    type = Material.CLAY_BALL
+                    nbt("other", "bag")
+                    nbt("HideFlags", 63)
+                    text("§bСтартовые наборы\n\n§7Выберите набор, который \n§7поможет вам в игре.")
+                }) {
+                    subInventory(player, 3) { _: Player, currentContent: InventoryContents ->
+                        currentContent.setLayout(
+                            "XIIIIIIIX",
+                            "XIIIIIIIX",
+                            "XXXXBXXXX"
+                        )
+                        pasteItems(user, false, currentContent, StarterKit.values().asIterable()) {
+                            stat.activeKit = it as StarterKit
                         }
                     }
                 })

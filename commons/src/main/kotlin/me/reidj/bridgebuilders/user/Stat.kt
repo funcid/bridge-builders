@@ -23,6 +23,7 @@ data class Stat(
     var activeNameTag: NameTag,
     var activeCorpse: Corpse,
     var arrowParticle: ArrowParticle,
+    var activeKit: StarterKit,
 
     var timePlayedTotal: Long,
     var lastEnter: Long,

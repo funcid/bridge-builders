@@ -62,7 +62,7 @@ object DamageListener : Listener {
                     player.killer.inventory.addItem(it)
                     it.setAmount(0)
                 }
-            ModHelper.allNotification("" + victim.color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " " + killer[0].color.chatColor + player.killer.name)
+            ModHelper.allNotification("" + victim.color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " игроком " + killer[0].color.chatColor + player.killer.name)
             if (user.stat.activeCorpse != Corpse.NONE) {
                 val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
                     .marker(true)

@@ -22,6 +22,7 @@ class DonateAdapter : JsonDeserializer<DonatePosition>, JsonSerializer<DonatePos
             "Corpse" -> Corpse.valueOf(value)
             "KillMessage" -> KillMessage.valueOf(value)
             "ArrowParticle" -> ArrowParticle.valueOf(value)
+            "StarterKit" -> StarterKit.valueOf(value)
             else -> throw IllegalArgumentException("Cannot deserialize data CLASS: $primitive, DATA: $value")
         }
     }

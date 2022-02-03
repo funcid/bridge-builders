@@ -5,7 +5,6 @@ import me.reidj.bridgebuilders.data.DefaultKit
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Color.*
-import org.bukkit.GameMode
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_JOIN
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_RESTRICTED
 
@@ -68,7 +67,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         val player = Bukkit.getPlayer(it) ?: return@forEach
                         val user = getByPlayer(player)
 
-                        player.gameMode = GameMode.SURVIVAL
+                        player.gameMode = org.bukkit.GameMode.SURVIVAL
                         player.itemOnCursor = null
 
                         app.teleportAtBase(team, player)
@@ -81,6 +80,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         }.toTypedArray()
 
                         player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
+                        user.stat.activeKit.content.forEach { starter -> player.inventory.addItem(starter) }
 
                         // Отправка таба
                         team.collected.entries.forEachIndexed { index, block ->

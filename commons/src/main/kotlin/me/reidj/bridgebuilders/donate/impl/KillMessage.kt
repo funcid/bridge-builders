@@ -7,7 +7,6 @@ import me.reidj.bridgebuilders.donate.Rare
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import ru.cristalix.core.formatting.Formatting
 
 enum class KillMessage(private val title: String, private val price: Int, private val rare: Rare, private val format: String) :
     DonatePosition {
@@ -44,7 +43,7 @@ enum class KillMessage(private val title: String, private val price: Int, privat
         return item {
             type = Material.CLAY_BALL
             nbt("other", "pets1")
-            text(rare.with(title) + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}\n§fПример: ${texted("func")}")
+            text(rare.with(title) + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}\n§fПример: func $format игроком reidj")
         }
     }
 
@@ -60,9 +59,4 @@ enum class KillMessage(private val title: String, private val price: Int, privat
     override fun getName(): String {
         return name
     }
-
-    fun texted(nickname: String): String {
-        return Formatting.error(format.format(nickname))
-    }
-
 }

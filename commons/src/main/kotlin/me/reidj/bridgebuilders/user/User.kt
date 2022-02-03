@@ -54,6 +54,7 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                 NameTag.NONE,
                 Corpse.NONE,
                 ArrowParticle.NONE,
+                StarterKit.NONE,
                 0,
                 0,
                 ""
@@ -91,6 +92,8 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                 stat.timePlayedTotal = 0
             if (stat.lastEnter == null)
                 stat.lastEnter = 0
+            if (stat.activeKit == null)
+                stat.activeKit = StarterKit.NONE
             this.stat = stat
         }
         this.session = session
