@@ -10,17 +10,17 @@ import org.bukkit.inventory.ItemStack
 
 enum class NameTag(private val title: String, private val price: Int, private val rare: Rare) : DonatePosition {
     NONE("Отсутсвует", 0, Rare.COMMON),
-    NEWBIE("Новичок", 128, Rare.COMMON),
-    FAST("Молния", 480, Rare.COMMON),
-    CAIN("Каин", 640, Rare.COMMON),
-    NINJA("Ниндзя", 1280, Rare.RARE),
-    EXECUTIONER("Палач", 1280, Rare.RARE),
-    STRATEGIST("Стратег", 1600, Rare.RARE),
-    SECRETAGENT("Тайный агент", 1600, Rare.RARE),
-    INVESTIGATOR("Следователь", 2048, Rare.EPIC),
-    KILLER("Киллер", 2048, Rare.EPIC),
-    CHAMPION("Чемпион", 4096, Rare.LEGENDARY),
-    LEGEND("Легенда", 4864, Rare.LEGENDARY);
+    BUILDER("Строитель", 128, Rare.COMMON),
+    HARD_WORKER("Работяга", 480, Rare.COMMON),
+    PAVEMENT("Мостовой", 640, Rare.COMMON),
+    MASON("Каменщик", 1280, Rare.RARE),
+    RALPH("Ральф", 1280, Rare.RARE),
+    DESIGNER("Дизайнер", 1600, Rare.RARE),
+    DROGBAR("Дрогбар", 1600, Rare.RARE),
+    CHIROPRACTOR("Костоправ", 2048, Rare.EPIC),
+    MUSKETEER("Мушкетёр", 2048, Rare.EPIC),
+    ARCHITECT("Архитектор", 4096, Rare.LEGENDARY),
+    ANARCHIST("Анархист", 4864, Rare.LEGENDARY);
 
     override fun getTitle(): String {
         return title
