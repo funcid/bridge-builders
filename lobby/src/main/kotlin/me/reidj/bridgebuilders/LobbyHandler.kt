@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
+import ru.cristalix.core.permissions.IPermissionService
 
 object LobbyHandler : Listener {
 
@@ -56,6 +57,8 @@ object LobbyHandler : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.handle() {
+        player.allowFlight = IPermissionService.get().isDonator(player.uniqueId)
+
         // NPC поиска игры
         B.postpone(5) {
             worldMeta.getLabels("play").forEach { npcLabel ->

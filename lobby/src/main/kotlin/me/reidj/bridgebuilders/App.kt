@@ -36,7 +36,7 @@ class App : JavaPlugin() {
 
         Anime.include(Kit.NPC)
 
-        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, MapLoader().load("prod"), 200)
+        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, MapLoader().load("LOBB"), 200)
 
         CoreApi.get().registerService(IRenderService::class.java, BukkitRenderService(getServer()))
 
