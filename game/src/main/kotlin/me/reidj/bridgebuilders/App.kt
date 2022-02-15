@@ -246,10 +246,8 @@ class App : JavaPlugin() {
     }
 
     fun getCountBlocksTeam(team: Team): Boolean {
-        if (team.players.map { getByUuid(it) }
-                .sumOf { it.collectedBlocks } < needBlocks)
-            return true
-        return false
+        return team.players.map { getByUuid(it) }
+            .sumOf { it.collectedBlocks } < needBlocks
     }
 
     private fun loadMap() {

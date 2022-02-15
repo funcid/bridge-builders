@@ -25,68 +25,69 @@ object BlockHandler : Listener {
 
     @EventHandler
     fun BlockBreakEvent.handle() {
-        teams.forEachIndexed { index, team ->
-            when (val idAndData = block.typeId to block.data) {
-                15 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
-                56 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
-                16 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
-                14 to block.data -> team.breakBlocks[block.location] = idAndData
-                17 to block.data -> team.breakBlocks[block.location] = idAndData
-                5 to block.data -> team.breakBlocks[block.location] = idAndData
-                17 to block.data -> team.breakBlocks[block.location] = idAndData
-                1 to 5.toByte() -> team.breakBlocks[block.location] = idAndData
-                12 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
-            }
-            if (app.getBridge(team).contains(block.location))
-                isCancelled = true
-            else if (block.type == Material.BEACON && app.getCountBlocksTeam(team))
-                isCancelled = true
-            if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
-                if (team.players.contains(player.uniqueId)) {
-                    ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
-                    B.bc(" ")
-                    B.bc("§b―――――――――――――――――")
-                    B.bc("" + team.color.chatFormat + team.color.teamName + " §f победили!")
-                    B.bc(" ")
-                    B.bc("§e§lТОП ПРИНЕСЁННЫХ БЛОКОВ")
-                    team.players.map { getByUuid(it) }.sortedBy { -it.collectedBlocks }
-                        .subList(0, min(3, team.players.size))
-                        .forEachIndexed { index, user ->
-                            B.bc(" §l${index + 1}. §e" + user.player?.name + " §с" + user.collectedBlocks + " блоков принесено")
-                        }
-                    B.bc("§b―――――――――――――――――")
-                    B.bc(" ")
-                    team.players.forEach { uuid ->
-                        val user = app.getUser(uuid)
-                        user.stat.wins++
-                        user.player?.let { player -> Anime.title(player, "§aПОБЕДА\n§aвы выиграли!") }
-                        val firework = user.player!!.world!!.spawn(user.player!!.location, Firework::class.java)
-                        val meta = firework.fireworkMeta
-                        meta.addEffect(
-                            FireworkEffect.builder()
-                                .flicker(true)
-                                .trail(true)
-                                .with(FireworkEffect.Type.BALL_LARGE)
-                                .with(FireworkEffect.Type.BALL)
-                                .with(FireworkEffect.Type.BALL_LARGE)
-                                .withColor(Color.YELLOW)
-                                .withColor(Color.GREEN)
-                                .withColor(Color.WHITE)
-                                .build()
-                        )
-                        meta.power = 0
-                        firework.fireworkMeta = meta
+        val team = teams.filter { it.players.contains(player.uniqueId) }[0]
+        when (val idAndData = block.typeId to block.data) {
+            15 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
+            56 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
+            16 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
+            14 to block.data -> team.breakBlocks[block.location] = idAndData
+            17 to block.data -> team.breakBlocks[block.location] = idAndData
+            5 to block.data -> team.breakBlocks[block.location] = idAndData
+            17 to block.data -> team.breakBlocks[block.location] = idAndData
+            1 to 5.toByte() -> team.breakBlocks[block.location] = idAndData
+            12 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
+        }
+        if (app.getBridge(team).contains(block.location) || app.getCountBlocksTeam(team)) {
+            isCancelled = true
+            return
+        } else if (block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
+            isCancelled = true
+            return
+        }
+        if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
+            if (team.players.contains(player.uniqueId)) {
+                ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
+                B.bc(" ")
+                B.bc("§b―――――――――――――――――")
+                B.bc("" + team.color.chatFormat + team.color.teamName + " §f победили!")
+                B.bc(" ")
+                B.bc("§e§lТОП ПРИНЕСЁННЫХ БЛОКОВ")
+                team.players.map { getByUuid(it) }.sortedBy { -it.collectedBlocks }
+                    .subList(0, min(3, team.players.size))
+                    .forEachIndexed { index, user ->
+                        B.bc(" §l${index + 1}. §e" + user.player?.name + " §с" + user.collectedBlocks + " блоков принесено")
                     }
-                    B.postpone(5 * 20) { app.restart() }
-                } else {
-                    team.players.forEach {
-                        getByUuid(it).player?.let { player -> Anime.title(player, "§aПОРАЖЕНИЕ\n§aвы проиграли!") }
-                    }
-                    return@forEachIndexed
+                B.bc("§b―――――――――――――――――")
+                B.bc(" ")
+                team.players.forEach { uuid ->
+                    val user = app.getUser(uuid)
+                    user.stat.wins++
+                    user.player?.let { player -> Anime.title(player, "§aПОБЕДА\n§aвы выиграли!") }
+                    val firework = user.player!!.world!!.spawn(user.player!!.location, Firework::class.java)
+                    val meta = firework.fireworkMeta
+                    meta.addEffect(
+                        FireworkEffect.builder()
+                            .flicker(true)
+                            .trail(true)
+                            .with(FireworkEffect.Type.BALL_LARGE)
+                            .with(FireworkEffect.Type.BALL)
+                            .with(FireworkEffect.Type.BALL_LARGE)
+                            .withColor(Color.YELLOW)
+                            .withColor(Color.GREEN)
+                            .withColor(Color.WHITE)
+                            .build()
+                    )
+                    meta.power = 0
+                    firework.fireworkMeta = meta
                 }
+                B.postpone(5 * 20) { app.restart() }
+            } else {
+                team.players.forEach {
+                    getByUuid(it).player?.let { player -> Anime.title(player, "§aПОРАЖЕНИЕ\n§aвы проиграли!") }
+                }
+                return
             }
         }
-
         val has = activeStatus.now(timer.time) / 20 >= 900
         if (block.type == Material.IRON_ORE) {
             block.type = Material.AIR
