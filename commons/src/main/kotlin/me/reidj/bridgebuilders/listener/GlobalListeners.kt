@@ -43,7 +43,7 @@ object GlobalListeners : Listener {
 
         player.sendMessage(Formatting.fine("О найденных багах сообщать в ВК - https://vk.com/reidj.java"))
 
-        B.postpone(5) {player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))}
+        B.postpone(5) { player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
 
         // Отправка модов
         modList.forEach {

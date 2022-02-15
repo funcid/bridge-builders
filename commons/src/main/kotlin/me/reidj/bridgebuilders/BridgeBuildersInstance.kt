@@ -46,7 +46,7 @@ var userManager = BukkitUserManager(
     { user, context -> context.store(statScope, user.stat) }
 )
 
-class BridgeBuildersInstance (
+class BridgeBuildersInstance(
     plugin: JavaPlugin,
     byPlayer: (Player) -> User,
     byUuid: (UUID) -> User,

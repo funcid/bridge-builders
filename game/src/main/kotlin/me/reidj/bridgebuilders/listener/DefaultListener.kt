@@ -88,6 +88,9 @@ object DefaultListener : Listener {
 
     @EventHandler
     fun PlayerMoveEvent.handle() {
+        if (activeStatus == Status.STARTING && player.location.block.y <= 2) player.teleport(
+            worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)
+        )
         // Если мост не достроен откидывать от него игрока
         teams.forEach { team ->
             if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 34 * 34)
