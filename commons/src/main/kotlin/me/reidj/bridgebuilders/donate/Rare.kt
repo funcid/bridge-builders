@@ -8,7 +8,7 @@ enum class Rare(val title: String, private val color: String) {
     LEGENDARY("Легендарный", "§6"),;
 
     fun with(content: String): String {
-        return "предмет ${getColored()} §7$content"
+        return "${getColored()} §7$content"
     }
 
     fun getColor(): String {

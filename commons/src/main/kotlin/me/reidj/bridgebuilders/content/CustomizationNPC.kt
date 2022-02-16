@@ -1,4 +1,4 @@
-package me.reidj.bridgebuilders
+package me.reidj.bridgebuilders.content
 
 import clepto.bukkit.B
 import dev.implario.bukkit.item.item
@@ -6,8 +6,11 @@ import me.reidj.bridgebuilders.achievement.Achievement
 import me.reidj.bridgebuilders.donate.DonateHelper
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.impl.*
+import me.reidj.bridgebuilders.getByPlayer
+import me.reidj.bridgebuilders.realm
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.ParticleHelper
+import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
@@ -24,15 +27,15 @@ import ru.cristalix.core.network.packages.MoneyTransactionResponsePackage
 import ru.cristalix.core.realm.RealmStatus
 import java.util.function.Consumer
 
-class CustomizationNPC {
+object CustomizationNPC {
 
-    private val backItem = item {
+    val backItem = item {
         type = Material.CLAY_BALL
         text("§cНазад")
         nbt("other", "cancel")
     }
 
-    private val accessItem = item {
+    val accessItem = item {
         text("§aКупить\n\n§7Это кнопка подтверждения\n§7покупки.")
         nbt("other", "access")
         enchant(Enchantment.LUCK, 1)

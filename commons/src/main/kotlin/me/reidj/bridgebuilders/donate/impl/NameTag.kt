@@ -38,7 +38,7 @@ enum class NameTag(private val title: String, private val price: Int, private va
         return item {
             type = Material.CLAY_BALL
             nbt("other", "pets1")
-            text(rare.with(title) + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}")
+            text(rare.with("префикс $title") + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}")
         }
     }
 

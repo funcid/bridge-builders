@@ -44,7 +44,7 @@ enum class StepParticle(
     override fun getIcon(): ItemStack {
         return item {
             type = icon
-            text(rare.with(title) + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}")
+            text(rare.with("эффект ходьбы $title") + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}")
         }
     }
 

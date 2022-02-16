@@ -1,6 +1,9 @@
 package me.reidj.bridgebuilders.user
 
+import me.func.protocol.battlepass.BattlePassUserData
 import me.reidj.bridgebuilders.achievement.Achievement
+import me.reidj.bridgebuilders.battlepass.quest.BattlePassQuest
+import me.reidj.bridgebuilders.battlepass.quest.QuestGenerator
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.impl.*
 import java.util.*
@@ -14,6 +17,10 @@ data class Stat(
     var games: Int,
     var lootbox: Int,
     var lootboxOpenned: Int,
+
+    var progress: BattlePassUserData? = BattlePassUserData(10, false),
+    var data: List<BattlePassQuest>? = QuestGenerator.generate(),
+    var lastGenerationTime: Long = System.currentTimeMillis(),
 
     var achievement: MutableList<Achievement>,
 
@@ -29,4 +36,6 @@ data class Stat(
     var lastEnter: Long,
 
     var lastSeenName: String?,
+
+    var claimedRewards: MutableList<Int>? = mutableListOf()
 )

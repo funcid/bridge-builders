@@ -2,6 +2,8 @@ package me.reidj.bridgebuilders.user
 
 import dev.implario.kensuke.KensukeSession
 import dev.implario.kensuke.impl.bukkit.IBukkitKensukeUser
+import me.func.protocol.battlepass.BattlePassUserData
+import me.reidj.bridgebuilders.battlepass.quest.QuestGenerator
 import me.reidj.bridgebuilders.donate.impl.*
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.mod.ModTransfer
@@ -41,6 +43,9 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                 0,
                 0,
                 0,
+                BattlePassUserData(10, false),
+                QuestGenerator.generate(),
+                System.currentTimeMillis(),
                 mutableListOf(),
                 arrayListOf(
                     KillMessage.NONE,
@@ -57,7 +62,8 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                 StarterKit.NONE,
                 0,
                 0,
-                ""
+                "",
+                mutableListOf()
             )
         } else {
             if (stat.money == null)
@@ -94,6 +100,14 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                 stat.lastEnter = 0
             if (stat.activeKit == null)
                 stat.activeKit = StarterKit.NONE
+            if (stat.progress == null)
+                stat.progress = BattlePassUserData(10, false)
+            if (stat.data == null)
+                stat.data = QuestGenerator.generate()
+            if (stat.lastGenerationTime == null)
+                stat.lastGenerationTime = System.currentTimeMillis()
+            if (stat.claimedRewards == null)
+                stat.claimedRewards = mutableListOf()
             this.stat = stat
         }
         this.session = session

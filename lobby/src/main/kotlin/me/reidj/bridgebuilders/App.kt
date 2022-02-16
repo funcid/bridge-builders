@@ -6,6 +6,8 @@ import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
 import me.func.mod.Kit
+import me.reidj.bridgebuilders.content.BattlePassManager
+import me.reidj.bridgebuilders.content.CustomizationNPC
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.listener.GlobalListeners
 import me.reidj.bridgebuilders.top.TopManager
@@ -34,7 +36,7 @@ class App : JavaPlugin() {
         app = this
         Platforms.set(PlatformDarkPaper())
 
-        Anime.include(Kit.NPC)
+        Anime.include(Kit.NPC, Kit.BATTLEPASS)
 
         BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, MapLoader().load("LOBB"), 200)
 
@@ -47,7 +49,7 @@ class App : JavaPlugin() {
 
         // Создание контента для лобби
         TopManager()
-        CustomizationNPC()
+        CustomizationNPC
 
         B.events(
             GlobalListeners,
@@ -85,6 +87,11 @@ class App : JavaPlugin() {
             Cristalix.transfer(listOf(player.uniqueId), RealmId.of(HUB))
             null
         }, "leave")
+
+        B.regCommand({ player, _ ->
+            BattlePassManager.show(player)
+            null
+        }, "battlepass", "bp")
     }
 
     private fun getUser(player: Player) = userManager.getUser(player.uniqueId)

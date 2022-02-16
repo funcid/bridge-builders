@@ -49,7 +49,7 @@ enum class ArrowParticle(
     override fun getIcon(): ItemStack {
         return item {
             type = icon
-            text(rare.with(title) + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}")
+            text(rare.with("след стрелы $title") + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}")
         }
     }
 

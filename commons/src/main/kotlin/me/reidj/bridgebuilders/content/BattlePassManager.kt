@@ -1,8 +1,28 @@
 package me.reidj.bridgebuilders.content
 
 import dev.implario.bukkit.item.item
+import me.func.mod.Anime
+import me.func.mod.battlepass.BattlePass
+import me.func.mod.battlepass.BattlePass.onBuyAdvanced
+import me.func.mod.battlepass.BattlePass.onBuyPage
+import me.func.mod.battlepass.BattlePass.sale
+import me.func.mod.battlepass.BattlePassPageAdvanced
+import me.func.mod.conversation.ModTransfer
 import me.func.protocol.DropRare
+import me.func.protocol.battlepass.BattlePassUserData
+import me.reidj.bridgebuilders.battlepass.BattlePassUtil
+import me.reidj.bridgebuilders.donate.impl.*
+import me.reidj.bridgebuilders.getByPlayer
+import me.reidj.bridgebuilders.util.Music
+import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.entity.Player
+import ru.cristalix.core.formatting.Formatting
+import ru.cristalix.core.network.ISocketClient
+import ru.cristalix.core.network.packages.MoneyTransactionRequestPackage
+import ru.cristalix.core.network.packages.MoneyTransactionResponsePackage
+import java.util.function.Consumer
+import java.util.function.Function
 
 const val BATTLEPASS_PRICE = 299
 const val BATTLEPASS_SALE_PERCENT = 20
@@ -23,177 +43,113 @@ object BattlePassManager {
         nbt("rare", DropRare.LEGENDARY.ordinal)
     }
 
-    /*val rewards = listOf(
+    private val rewards = listOf(
         listOf(
             MoneyKit.SMALL,
-            NameTag.TAG1,
-            Mask.COMEDY_MASK,
+            NameTag.BUILDER,
             MoneyKit.SMALL,
-            NameTag.TAG3,
-            MoneyKit.SMALL,
+            NameTag.HARD_WORKER,
             LootboxUnit,
             MoneyKit.SMALL,
+            NameTag.RALPH,
             MoneyKit.SMALL,
-            Mask.HORROR
+            ArrowParticle.SLIME,
+            LootboxUnit
         ) to listOf(
-            NameTag.TAG2,
+            NameTag.PAVEMENT,
             MoneyKit.SMALL,
-            NameTag.TAG4,
-            MoneyKit.SMALL,
-            LootboxUnit,
-            MoneyKit.SMALL,
-            Mask.TRADEGY,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            ArrowParticle.SLIME
-        ), listOf(
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            Mask.GAS_MASK,
-            MoneyKit.SMALL,
-            GraffitiUnit,
-            MoneyKit.SMALL,
-            NameTag.TAG4,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            Corpse.G1
-        ) to listOf(
+            NameTag.MASON,
             MoneyKit.SMALL,
             LootboxUnit,
+            NameTag.DESIGNER,
             MoneyKit.SMALL,
-            NameTag.TAG5,
+            Corpse.G1,
+            MoneyKit.SMALL,
+            LootboxUnit
+        ),
+        listOf(
             MoneyKit.SMALL,
             ArrowParticle.SLIME,
             MoneyKit.SMALL,
-            NameTag.TAG6,
+            NameTag.DROGBAR,
+            LootboxUnit,
+            MoneyKit.SMALL,
+            KillMessage.AHEAD,
+            MoneyKit.SMALL,
+            StepParticle.SLIME,
+            LootboxUnit
+        ) to listOf(
+            ArrowParticle.WATER_DROP,
+            MoneyKit.SMALL,
+            KillMessage.KIRA,
+            MoneyKit.SMALL,
+            LootboxUnit,
+            NameTag.MUSKETEER,
+            MoneyKit.SMALL,
+            NameTag.CHIROPRACTOR,
             MoneyKit.SMALL,
             LootboxUnit
         ), listOf(
             MoneyKit.SMALL,
-            KillMessage.GLOBAL,
-            MoneyKit.SMALL,
-            ArrowParticle.WATER_DROP,
-            MoneyKit.SMALL,
-            NameTag.TAG7,
-            MoneyKit.SMALL,
-            GraffitiUnit,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL
-        ) to listOf(
-            MoneyKit.SMALL,
-            LootboxUnit,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            StepParticle.SLIME,
-            MoneyKit.SMALL,
-            NameTag.TAG8,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            KillMessage.AHEAD
-        ), listOf(
-            MoneyKit.SMALL,
-            NameTag.TAG9,
-            MoneyKit.SMALL,
-            LootboxUnit,
+            StepParticle.VILLAGER_ANGRY,
             MoneyKit.SMALL,
             KillMessage.END,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            GraffitiUnit,
-            MoneyKit.SMALL
-        ) to listOf(
-            MoneyKit.SMALL,
-            NameTag.TAG10,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            NameTag.TAG11,
-            MoneyKit.SMALL,
-            Mask.DALLAS,
-            MoneyKit.SMALL,
-            StepParticle.FALLING_DUST,
-            MoneyKit.SMALL
-        ), listOf(
-            MoneyKit.SMALL,
-            NameTag.TAG12,
+            LootboxUnit,
             MoneyKit.SMALL,
             KillMessage.SLEEP,
             MoneyKit.SMALL,
             ArrowParticle.SPELL_INSTANT,
-            MoneyKit.SMALL,
-            Mask.HOUSTON,
-            MoneyKit.SMALL,
-            NameTag.TAG13
+            LootboxUnit
         ) to listOf(
+            NameTag.ANARCHIST,
             MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            Mask.CHAINS,
+            NameTag.ARCHITECT,
             MoneyKit.SMALL,
             LootboxUnit,
-            MoneyKit.SMALL,
             KillMessage.HORNY,
             MoneyKit.SMALL,
-            NameTag.TAG14,
-            MoneyKit.NORMAL
-        ), listOf(
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            NameTag.TAG15,
-            MoneyKit.SMALL,
             ArrowParticle.REDSTONE,
-            LootboxUnit,
             MoneyKit.SMALL,
-            NameTag.TAG16,
-            MoneyKit.SMALL,
-            Mask.FOXI
-        ) to listOf(
-            MoneyKit.SMALL,
-            Mask.CHICA,
+            LootboxUnit
+        ),
+        listOf(
             MoneyKit.SMALL,
             StepParticle.REDSTONE,
             MoneyKit.SMALL,
             MoneyKit.SMALL,
-            Mask.BONNIE,
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
-            NameTag.TAG17
-        ), listOf(
-            MoneyKit.SMALL,
-            NameTag.TAG18,
-            MoneyKit.SMALL,
-            ArrowParticle.VILLAGER_ANGRY,
-            MoneyKit.NORMAL,
-            StepParticle.VILLAGER_ANGRY,
-            MoneyKit.SMALL,
-            Mask.DIVER_HELMET,
-            MoneyKit.SMALL,
-            Corpse.G2
-        ) to listOf(
-            MoneyKit.SMALL,
-            Mask.RAPHAEL,
-            MoneyKit.SMALL,
-            StepParticle.VILLAGER_ANGRY,
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL,
             LootboxUnit,
             MoneyKit.SMALL,
+            Corpse.G2,
+            MoneyKit.SMALL,
+            ArrowParticle.SPELL_WITCH,
+            LootboxUnit
+        ) to listOf(
+            ArrowParticle.VILLAGER_ANGRY,
+            MoneyKit.SMALL,
+            StepParticle.VILLAGER_ANGRY,
             MoneyKit.NORMAL,
-            Mask.MICHELANGELO
-        ), listOf(
+            LootboxUnit,
+            StepParticle.VILLAGER_ANGRY,
             MoneyKit.SMALL,
-            NameTag.TAG19,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            Mask.LEONARDO,
             KillMessage.ROOM,
             MoneyKit.NORMAL,
+            LootboxUnit
+        )
+
+
+        /*listOf(
             MoneyKit.SMALL,
-            NameTag.TAG21,
-            ArrowParticle.SPELL_WITCH
+            MoneyKit.SMALL,
+            MoneyKit.SMALL,
         ) to listOf(
             MoneyKit.SMALL,
-            NameTag.TAG20,
+            MoneyKit.SMALL,
+            MoneyKit.SMALL,
             MoneyKit.NORMAL,
-            ArrowParticle.VILLAGER_HAPPY,
+            MoneyKit.SMALL,
+        ) to listOf(
+            MoneyKit.SMALL,
+            MoneyKit.NORMAL,
             MoneyKit.SMALL,
             StepParticle.FLAME,
             MoneyKit.SMALL,
@@ -202,43 +158,31 @@ object BattlePassManager {
             MoneyKit.SMALL
         ), listOf(
             MoneyKit.NORMAL,
-            NameTag.TAG22,
-            MoneyKit.SMALL,
-            Mask.DONATELLO,
             MoneyKit.SMALL,
             MoneyKit.SMALL,
-            Mask.SCREAM,
             MoneyKit.SMALL,
-            NameTag.TAG23,
+            MoneyKit.SMALL,
             MoneyKit.SMALL
         ) to listOf(
             MoneyKit.SMALL,
             MoneyKit.SMALL,
             LootboxUnit,
             MoneyKit.SMALL,
-            Mask.CREWMATE_ORANGE,
             MoneyKit.SMALL,
             MoneyKit.NORMAL,
-            Mask.CREWMATE_WHITE,
-            MoneyKit.SMALL,
-            NameTag.TAG24
+            MoneyKit.SMALL
         ), listOf(
             MoneyKit.SMALL,
-            GraffitiUnit,
             MoneyKit.SMALL,
-            NameTag.TAG25,
             MoneyKit.NORMAL,
             MoneyKit.SMALL,
-            Mask.CREWMATE_YELLOW,
             MoneyKit.NORMAL,
-            NameTag.TAG26,
             MoneyKit.SMALL
         ) to listOf(
             MoneyKit.NORMAL,
             MoneyKit.SMALL,
             ArrowParticle.LAVA,
             MoneyKit.SMALL,
-            NameTag.TAG27,
             MoneyKit.SMALL,
             KillMessage.X,
             MoneyKit.SMALL,
@@ -247,39 +191,29 @@ object BattlePassManager {
         ), listOf(
             MoneyKit.SMALL,
             MoneyKit.NORMAL,
-            NameTag.TAG28,
             MoneyKit.SMALL,
-            GraffitiUnit,
             MoneyKit.SMALL,
             MoneyKit.NORMAL,
-            NameTag.TAG29,
-            MoneyKit.SMALL,
-            Mask.JASON
+            MoneyKit.SMALL
         ) to listOf(
             MoneyKit.SMALL,
             ArrowParticle.NOTE,
             MoneyKit.NORMAL,
             MoneyKit.SMALL,
-            NameTag.TAG30,
             MoneyKit.SMALL,
-            Mask.EMOJI,
             MoneyKit.BIG,
-            MoneyKit.SMALL,
-            NameTag.TAG31
+            MoneyKit.SMALL
         ), listOf(
             MoneyKit.SMALL,
-            Mask.FREDDY,
             MoneyKit.SMALL,
             LootboxUnit,
             MoneyKit.NORMAL,
             MoneyKit.SMALL,
             ArrowParticle.HEAR,
             MoneyKit.NORMAL,
-            NameTag.TAG32,
             Corpse.G3
         ) to listOf(
             MoneyKit.SMALL,
-            Mask.ONI,
             MoneyKit.SMALL,
             MoneyKit.NORMAL,
             KillMessage.KIRA,
@@ -290,99 +224,53 @@ object BattlePassManager {
             MoneyKit.BIG
         ), listOf(
             MoneyKit.BIG,
-            Mask.CREWMATE_RED,
             MoneyKit.SMALL,
             LootboxUnit,
             MoneyKit.SMALL,
-            NameTag.TAG33,
             MoneyKit.NORMAL,
             MoneyKit.SMALL,
-            GraffitiUnit,
             MoneyKit.SMALL
         ) to listOf(
             MoneyKit.SMALL,
             MoneyKit.BIG,
-            Mask.CREWMATE_PURPLE,
             MoneyKit.SMALL,
             MoneyKit.SMALL,
-            Mask.CREWMATE_PINK,
             MoneyKit.SMALL,
             MoneyKit.NORMAL,
-            NameTag.TAG34,
             LootboxUnit
         ), listOf(
             MoneyKit.SMALL,
-            NameTag.TAG35,
             MoneyKit.NORMAL,
             MoneyKit.SMALL,
             LootboxUnit,
             MoneyKit.SMALL,
-            NameTag.TAG36,
             MoneyKit.SMALL,
-            MoneyKit.BIG,
-            Mask.CREWMATE_LIME
+            MoneyKit.BIG
         ) to listOf(
             MoneyKit.SMALL,
-            Mask.SAW,
             MoneyKit.SMALL,
             MoneyKit.BIG,
             LootboxUnit,
             Corpse.G4,
             MoneyKit.SMALL,
             MoneyKit.SMALL,
-            NameTag.TAG37,
             MoneyKit.BIG
         ), listOf(
             MoneyKit.SMALL,
             MoneyKit.BIG,
-            NameTag.TAG38,
             MoneyKit.SMALL,
-            Mask.AHRI,
             MoneyKit.SMALL,
             MoneyKit.NORMAL,
             LootboxUnit,
-            MoneyKit.SMALL,
-            object : DonatePosition {
-                override fun getIcon() = classic
-                override fun getName() = classic.itemMeta.displayName
-                override fun getPrice() = 999
-                override fun getRare() = DropRare.LEGENDARY
-                override fun getTitle() = classic.itemMeta.displayName
-                override fun isActive(player: ArcadeUserData) = true
-                override fun give(arcadeUserData: ArcadeUserData) {
-                    CoreApi.get().socketClient.write(
-                        GiveModelToUserPackage(
-                            arcadeUserData.uuid, UUID.fromString("1a4caaf5-77bc-4d7f-9302-6b2fcb510a6a")
-                        )
-                    )
-                }
-            }
+            MoneyKit.SMALL
         ) to listOf(
             MoneyKit.NORMAL,
-            NameTag.TAG39,
             MoneyKit.SMALL,
-            Mask.TIK_TOK,
             MoneyKit.SMALL,
-            Mask.STAR_PLATINUM,
             MoneyKit.SMALL,
             StepParticle.NOTE,
-            MoneyKit.BIG,
-            object : DonatePosition {
-                override fun getIcon() = premium
-                override fun getName() = premium.itemMeta.displayName
-                override fun getPrice() = 999
-                override fun getRare() = DropRare.LEGENDARY
-                override fun getTitle() = premium.itemMeta.displayName
-                override fun isActive(player: ArcadeUserData) = true
-                override fun give(arcadeUserData: ArcadeUserData) {
-                    CoreApi.get().socketClient.write(
-                        GiveModelToUserPackage(
-                            arcadeUserData.uuid, UUID.fromString("e28387d9-c465-41a5-871b-7f27fd26076d")
-                        )
-                    )
-                }
-            }
-        )
+            MoneyKit.BIG
+        )*/
     )
 
     private val battlepass = BattlePass.new(BATTLEPASS_PRICE) {
@@ -396,18 +284,19 @@ object BattlePassManager {
         }.toMutableList()
         sale(BATTLEPASS_SALE_PERCENT.toDouble())
         onBuyAdvanced { player ->
-            Arcade.getArcadeData(player).progress?.let { data ->
-                player.closeInventory()
+            val user = getByPlayer(player).stat
+            player.closeInventory()
 
+            user.progress?.let { data ->
                 if (data.advanced) {
-                    Anime.itemTitle(player, PersonalizationMenu.backItem, "Ошибка!", "У вас уже Премиум!", 2.5)
+                    Anime.itemTitle(player, CustomizationNPC.backItem, "Ошибка!", "У вас уже Премиум!", 2.5)
                     return@onBuyAdvanced
                 }
 
                 buy(
                     player,
                     BATTLEPASS_PRICE - (BATTLEPASS_PRICE * BATTLEPASS_SALE_PERCENT / 100.0).toInt(),
-                    "Покупка премиум адркадного BattlePass'а."
+                    "Покупка премиум BattlePass'а."
                 ) {
                     data.advanced = true
                     Anime.itemTitle(player, premium, "§bУспешно", "Собирайте награды!", 3.5)
@@ -426,11 +315,12 @@ object BattlePassManager {
         }
         onBuyPage { player, cost ->
             player.closeInventory()
+            val user = getByPlayer(player).stat
 
-            Arcade.getArcadeData(player).progress?.let { data ->
+            user.progress?.let { data ->
                 pages.firstOrNull { (it.skipPrice - it.skipPrice * BATTLEPASS_SALE_PERCENT / 100.0).toInt() == cost }
                     ?.let { page ->
-                        buy(player, cost, "Пропуск уровня аркадного BattlePass.") {
+                        buy(player, cost, "Пропуск уровня BattlePass.") {
                             data.exp += page.requiredExp
                             Anime.itemTitle(player, classic, "§bУспешно", "Новый уровень", 2.6)
                             Music.BONUS2.sound(player)
@@ -446,7 +336,7 @@ object BattlePassManager {
         }
 
         facade.tags.add("Выполняйте квесты - получайте призы!")
-        facade.tags.add("BattlePass завершится в 01.06.2022")
+        facade.tags.add("BattlePass завершится в 31.05.2022")
         questStatusUpdater = Function<Player, List<String>> { player ->
             BattlePassUtil.getQuestLore(player)
         }
@@ -457,9 +347,9 @@ object BattlePassManager {
             val advanced = buffer.readBoolean()
             val page = buffer.readInt()
             val index = buffer.readInt()
-            val data = Arcade.getArcadeData(player)
+            val data = getByPlayer(player)
 
-            data.progress?.let {
+            data.stat.progress?.let {
                 if (advanced && !it.advanced)
                     return@createReader
                 var exp = it.exp
@@ -477,17 +367,12 @@ object BattlePassManager {
                 val position =
                     (if (advanced) battlepass.pages.size * battlepass.pages.first().items.size else 0) + page * 10 + index
 
-                data.claimedRewards?.let { claimed ->
+                data.stat.claimedRewards?.let { claimed ->
                     if (claimed.contains(position))
                         return@createReader
 
                     if (level > page * 10 + index) {
                         val reward = (if (advanced) rewards[page].second else rewards[page].first)[index]
-
-                        if (reward is GraffitiUnit) {
-                            Anime.killboardMessage(player, Formatting.fine("Награду можно забрать потом."))
-                            return@createReader
-                        }
 
                         reward.give(data)
                         claimed.add(position)
@@ -499,7 +384,7 @@ object BattlePassManager {
         }
     }
 
-    fun buy(player: Player, price: Int, desc: String, successfully: Consumer<Player>) {
+    private fun buy(player: Player, price: Int, desc: String, successfully: Consumer<Player>) {
         ISocketClient.get().writeAndAwaitResponse<MoneyTransactionResponsePackage>(
             MoneyTransactionRequestPackage(
                 player.uniqueId,
@@ -510,16 +395,15 @@ object BattlePassManager {
         ).thenAccept {
             if (it.errorMessage.isNullOrEmpty()) {
                 successfully.accept(player)
-                Arcade.save(player.uniqueId)
             } else {
-                Anime.itemTitle(player, PersonalizationMenu.backItem, "Ошибка!", it.errorMessage, 2.5)
+                Anime.itemTitle(player, CustomizationNPC.backItem, "Ошибка!", it.errorMessage, 2.5)
             }
         }
     }
 
     fun show(player: Player) {
         BattlePass.send(player, battlepass)
-        val data = Arcade.getArcadeData(player)
+        val data = getByPlayer(player).stat
         var progress = data.progress
 
         if (progress == null)
@@ -532,5 +416,5 @@ object BattlePassManager {
         }.send("bp:claimed", player)
 
         BattlePass.show(player, battlepass, progress)
-    }*/
+    }
 }

@@ -153,7 +153,7 @@ enum class StarterKit(
         return item {
             type = items.first
             amount = items.second
-            text(rare.with(title) + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)} ${if (lore == "") "" else "\n\n§fВы получите:\n$lore"}")
+            text(rare.with("набор $title") + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)} ${if (lore == "") "" else "\n\n§fВы получите:\n$lore"}")
         }
     }
 
