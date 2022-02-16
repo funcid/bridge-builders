@@ -30,9 +30,10 @@ object Lootbox : Listener {
         .plus(StepParticle.values())
         .plus(KillMessage.values())
         .plus(ArrowParticle.values())
-        .filter { it != KillMessage.NONE && it != Corpse.NONE && it != NameTag.NONE && it != StepParticle.NONE && it != ArrowParticle.NONE }
+        .plus(StarterKit.values())
+        .filter { it != KillMessage.NONE && it != Corpse.NONE && it != NameTag.NONE && it != StepParticle.NONE && it != ArrowParticle.NONE && it != StarterKit.NONE }
 
-    private val lootboxPrice = 192
+    private const val lootboxPrice = 192
 
     private val lootboxItem = item {
         type = Material.CLAY_BALL

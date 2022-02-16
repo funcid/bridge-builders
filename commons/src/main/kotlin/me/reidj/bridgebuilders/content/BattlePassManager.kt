@@ -134,119 +134,32 @@ object BattlePassManager {
             KillMessage.ROOM,
             MoneyKit.NORMAL,
             LootboxUnit
-        )
-
-
-        /*listOf(
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-        ) to listOf(
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL,
-        ) to listOf(
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
+        ), listOf(
             MoneyKit.SMALL,
             StepParticle.FLAME,
             MoneyKit.SMALL,
-            MoneyKit.NORMAL,
             KillMessage.BLACK,
-            MoneyKit.SMALL
-        ), listOf(
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL
-        ) to listOf(
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
             LootboxUnit,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL
-        ), listOf(
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL
-        ) to listOf(
-            MoneyKit.NORMAL,
             MoneyKit.SMALL,
             ArrowParticle.LAVA,
             MoneyKit.SMALL,
-            MoneyKit.SMALL,
+            ArrowParticle.NOTE,
+            LootboxUnit,
+        ) to listOf(
             KillMessage.X,
             MoneyKit.SMALL,
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL
-        ), listOf(
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL
-        ) to listOf(
-            MoneyKit.SMALL,
-            ArrowParticle.NOTE,
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.BIG,
-            MoneyKit.SMALL
-        ), listOf(
-            MoneyKit.SMALL,
+            ArrowParticle.HEAR,
             MoneyKit.SMALL,
             LootboxUnit,
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL,
-            ArrowParticle.HEAR,
-            MoneyKit.NORMAL,
-            Corpse.G3
-        ) to listOf(
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
             KillMessage.KIRA,
             MoneyKit.SMALL,
-            LootboxUnit,
-            MoneyKit.NORMAL,
-            LootboxUnit,
-            MoneyKit.BIG
-        ), listOf(
-            MoneyKit.BIG,
+            Corpse.G3,
             MoneyKit.SMALL,
             LootboxUnit,
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL
-        ) to listOf(
-            MoneyKit.SMALL,
-            MoneyKit.BIG,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
-            LootboxUnit
-        ), listOf(
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL,
-            LootboxUnit,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.BIG
-        ) to listOf(
+        )
+
+
+        /* listOf(
             MoneyKit.SMALL,
             MoneyKit.SMALL,
             MoneyKit.BIG,
