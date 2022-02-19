@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 enum class KillMessage(private val title: String, private val price: Int, private val rare: Rare, private val format: String) :
     DonatePosition {
 
-    NONE("Отсутсвует", 0, Rare.COMMON, "убит"),
+    NONE("Отсутствует", 0, Rare.COMMON, "убит"),
     GLOBAL("Средневековье", 64, Rare.COMMON, "прибит"),
     AHEAD("Замемлен", 128, Rare.COMMON, "был замемлен"),
     DEAD("Кусь", 256, Rare.COMMON, "укушен"),

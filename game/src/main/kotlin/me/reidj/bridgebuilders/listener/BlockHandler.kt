@@ -27,9 +27,18 @@ object BlockHandler : Listener {
     fun BlockBreakEvent.handle() {
         val team = teams.filter { it.players.contains(player.uniqueId) }[0]
         when (val idAndData = block.typeId to block.data) {
-            15 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
-            56 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
-            16 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
+            15 to 0.toByte() -> {
+                //BattlePassUtil.update(player, BREAK, 1)
+                team.breakBlocks[block.location] = idAndData
+            }
+            56 to 0.toByte() -> {
+                //BattlePassUtil.update(player, BREAK, 1)
+                team.breakBlocks[block.location] = idAndData
+            }
+            16 to 0.toByte() -> {
+                //BattlePassUtil.update(player, BREAK, 1)
+                team.breakBlocks[block.location] = idAndData
+            }
             14 to block.data -> team.breakBlocks[block.location] = idAndData
             17 to block.data -> team.breakBlocks[block.location] = idAndData
             5 to block.data -> team.breakBlocks[block.location] = idAndData
@@ -45,6 +54,7 @@ object BlockHandler : Listener {
             return
         }
         if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
+            //BattlePassUtil.update(player, BREAK, 1)
             if (team.players.contains(player.uniqueId)) {
                 ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
                 B.bc(" ")
@@ -61,6 +71,8 @@ object BlockHandler : Listener {
                 B.bc(" ")
                 team.players.forEach { uuid ->
                     val user = app.getUser(uuid)
+
+                    //BattlePassUtil.update(user.player!!, WIN, 1)
                     user.stat.wins++
                     user.player?.let { player -> Anime.title(player, "§aПОБЕДА\n§aвы выиграли!") }
                     val firework = user.player!!.world!!.spawn(user.player!!.location, Firework::class.java)

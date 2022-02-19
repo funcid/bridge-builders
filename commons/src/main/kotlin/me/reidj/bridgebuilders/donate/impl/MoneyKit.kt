@@ -14,7 +14,7 @@ enum class MoneyKit(
     private val reward: Int,
     private val item: ItemStack
 ) : DonatePosition {
-    NONE("Отсутсвует", 0, Rare.COMMON, 0, item {}),
+    NONE("Отсутствует", 0, Rare.COMMON, 0, item {}),
     SMALL("Пара монет", 10, Rare.COMMON, 32, item {
         type = Material.CLAY_BALL
         text("§eПара монет §7> §f32\n\n§7Получите §e32 монеты\n§7за §b10 кристаликов§7.")

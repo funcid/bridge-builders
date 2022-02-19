@@ -58,6 +58,16 @@ object DefaultListener : Listener {
             B.postpone(1) { showTeamList(app.getUser(player)) }
     }
 
+    /*@EventHandler
+    fun CraftItemEvent.handle() {
+        val player = whoClicked as Player
+        BattlePassUtil.update(player, CRAFT, 1)
+        val has = recipe.result.getType()
+        if (has == Material.DIAMOND_BOOTS || has == Material.IRON_CHESTPLATE || has == Material.DIAMOND_HELMET
+            || has == Material.IRON_LEGGINGS || has == Material.DIAMOND_SWORD)
+            BattlePassUtil.update(player, CRAFT, 1)
+    }*/
+
     @EventHandler
     fun InventoryClickEvent.handle() {
         if (activeStatus == Status.STARTING)

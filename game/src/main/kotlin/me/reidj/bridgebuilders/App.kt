@@ -144,6 +144,7 @@ class App : JavaPlugin() {
         Bukkit.getOnlinePlayers().forEach {
             val user = app.getUser(it)
             user.stat.games++
+            //me.reidj.bridgebuilders.battlepass.BattlePassUtil.update(it, me.reidj.bridgebuilders.battlepass.quest.QuestType.PLAY, 1)
             if (Math.random() < 0.11) {
                 user.stat.lootbox++
                 B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${user.player!!.name} §fполучил §bлутбокс§f!"))

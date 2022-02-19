@@ -20,8 +20,6 @@ object BattlePassUtil {
             data.data = QuestGenerator.generate()
 
         data.data?.find { it.questType == type }?.let {
-            if (it.goal <= it.now)
-                return
             if ((data.data?.indexOf(it) ?: 0) > 5 && data.progress?.advanced != true)
                 return
 
@@ -29,6 +27,7 @@ object BattlePassUtil {
             else it.now += value
 
             if (it.goal <= it.now) {
+                println(2222)
                 Anime.topMessage(player, "§lЗадание выполнено! §6Награда: §b${it.exp} опыта §6баттлпасса")
                 data.progress!!.exp += it.exp
             }

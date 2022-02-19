@@ -37,6 +37,8 @@ object DamageListener : Listener {
         val cause = player.lastDamageCause
         val victim = teams.filter { team -> team.players.contains(player.uniqueId) }[0]
 
+        //BattlePassUtil.update(player.killer, QuestType.KILL, 1)
+
         if (cause.cause == EntityDamageEvent.DamageCause.FALL)
             printDeathMessage("Игрок ${victim.color.chatFormat + player.name} §fприземлился с большой высоты")
         else if (cause.cause == EntityDamageEvent.DamageCause.VOID)

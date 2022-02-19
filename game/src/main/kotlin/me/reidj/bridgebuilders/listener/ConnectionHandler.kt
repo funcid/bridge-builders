@@ -40,17 +40,6 @@ object ConnectionHandler : Listener {
         player.gameMode = GameMode.ADVENTURE
 
         B.postpone(5) {
-            /*BattlePass.new(300) {
-                pages = arrayListOf(
-                    BattlePassPageAdvanced(
-                        300,
-                        listOf(ItemStack(Material.STICK)),
-                        listOf(ItemStack(Material.CLAY_BALL))
-                    )
-                )
-
-                quests.add("Типо квест")
-            }*/
             // Создание маркера
             teams.forEach {
                 markers.add(
@@ -113,10 +102,11 @@ object ConnectionHandler : Listener {
                                             return@onClick
                                         } else {
                                             val subtraction = must - itemHand.getAmount()
-                                            team.collected[block.key] =
-                                                block.key.needTotal - maxOf(0, subtraction)
+                                            val collect = must - max(0, subtraction)
+                                            team.collected[block.key] = block.key.needTotal - maxOf(0, subtraction)
                                             itemHand.setAmount(itemHand.getAmount() - must)
-                                            user.collectedBlocks += must - max(0, subtraction)
+                                            user.collectedBlocks += collect
+                                            //BattlePassUtil.update(user.player!!, QuestType.POINTS, collect)
                                             player.playSound(
                                                 player.location,
                                                 org.bukkit.Sound.ENTITY_PLAYER_LEVELUP,

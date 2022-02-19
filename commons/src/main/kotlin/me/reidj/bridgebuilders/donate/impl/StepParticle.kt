@@ -16,7 +16,7 @@ enum class StepParticle(
     val type: Particle,
     private val icon: Material
 ) : DonatePosition {
-    NONE("Отсутсвует", 0, Rare.COMMON, Particle.SPELL_INSTANT, Material.BARRIER),
+    NONE("Отсутствует", 0, Rare.COMMON, Particle.SPELL_INSTANT, Material.BARRIER),
     SLIME("Слизь", 192, Rare.COMMON, Particle.SLIME, Material.SLIME_BALL),
     WATER_DROP("Капли воды", 256, Rare.COMMON, Particle.DRIP_WATER, Material.WATER_BUCKET),
     SPELL_INSTANT("Феерверк", 512, Rare.RARE, Particle.SPELL_INSTANT, Material.FIREWORK),

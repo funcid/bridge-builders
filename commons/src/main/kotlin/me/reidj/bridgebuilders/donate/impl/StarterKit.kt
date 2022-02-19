@@ -99,7 +99,7 @@ enum class StarterKit(
         )
     ),
     ASSASSIN(
-        "Ассассин",
+        "Ассасин",
         2048,
         Rare.EPIC,
         Material.BOW to 1,

@@ -10,9 +10,9 @@ object ParticleHelper {
         worldMeta.world.spawnParticle(
             org.bukkit.Particle.VILLAGER_HAPPY,
             location.clone().add(
-                (Math.random() - 0.5) / 0.8,
+                Math.random() / 0.8,
                 (Math.random() + 0.5),
-                (Math.random() - 0.5) / 0.8
+                Math.random() / 0.8
             ),
             1
         )

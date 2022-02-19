@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 enum class NameTag(private val title: String, private val price: Int, private val rare: Rare) : DonatePosition {
-    NONE("Отсутсвует", 0, Rare.COMMON),
+    NONE("Отсутствует", 0, Rare.COMMON),
     BUILDER("Строитель", 128, Rare.COMMON),
     HARD_WORKER("Работяга", 480, Rare.COMMON),
     PAVEMENT("Мостовой", 640, Rare.COMMON),

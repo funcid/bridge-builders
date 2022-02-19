@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack
 
 enum class Corpse(private val title: String, private val price: Int, private val rare: Rare) : DonatePosition {
 
-    NONE("Отсутсвует", 0, Rare.COMMON),
+    NONE("Отсутствует", 0, Rare.COMMON),
     G1("Поломанная могила", 64, Rare.COMMON),
     G2("Скромная могила", 128, Rare.COMMON),
     G3("Монолит", 256, Rare.RARE),

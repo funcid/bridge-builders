@@ -131,7 +131,7 @@ object BattlePassManager {
             LootboxUnit,
             StepParticle.VILLAGER_ANGRY,
             MoneyKit.SMALL,
-            KillMessage.ROOM,
+            StarterKit.BLACKSMITH,
             MoneyKit.NORMAL,
             LootboxUnit
         ), listOf(
@@ -151,39 +151,34 @@ object BattlePassManager {
             ArrowParticle.HEAR,
             MoneyKit.SMALL,
             LootboxUnit,
-            KillMessage.KIRA,
+            StarterKit.COOK,
             MoneyKit.SMALL,
             Corpse.G3,
             MoneyKit.SMALL,
-            LootboxUnit,
-        )
-
-
-        /* listOf(
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.BIG,
-            LootboxUnit,
-            Corpse.G4,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.BIG
+            LootboxUnit
         ), listOf(
             MoneyKit.SMALL,
-            MoneyKit.BIG,
+            Corpse.G4,
             MoneyKit.SMALL,
-            MoneyKit.SMALL,
-            MoneyKit.NORMAL,
+            StarterKit.MINER,
             LootboxUnit,
-            MoneyKit.SMALL
-        ) to listOf(
-            MoneyKit.NORMAL,
-            MoneyKit.SMALL,
-            MoneyKit.SMALL,
             MoneyKit.SMALL,
             StepParticle.NOTE,
-            MoneyKit.BIG
-        )*/
+            MoneyKit.SMALL,
+            StarterKit.HEALER,
+            LootboxUnit
+        ) to listOf(
+            KillMessage.ROOM,
+            MoneyKit.SMALL,
+            ArrowParticle.VILLAGER_HAPPY,
+            MoneyKit.SMALL,
+            LootboxUnit,
+            StarterKit.COLLECTOR,
+            MoneyKit.SMALL,
+            Corpse.G5,
+            MoneyKit.SMALL,
+            LootboxUnit
+        )
     )
 
     private val battlepass = BattlePass.new(BATTLEPASS_PRICE) {
