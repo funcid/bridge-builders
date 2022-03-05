@@ -12,7 +12,7 @@ lateinit var winMessage: String
 val kit = DefaultKit
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(50, { it ->
+    STARTING(10, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 40)
             realm.status = GAME_STARTED_CAN_JOIN
@@ -31,7 +31,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size + 4 < slots) {
+            if (players.size + 15 < slots) {
                 actualTime = 1
             } else {
                 // Обновление статуса реалма, чтобы нельзя было войти
@@ -128,13 +128,20 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 if (time / 20 == 180) {
                     teams.forEach { team -> team.isActiveTeleport = true }
                     Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
-                } else if (time / 20 == 600) {
+                }
+                if (time / 20 == 600) {
+                    it.addPotionEffect(
+                        org.bukkit.potion.PotionEffect(
+                            org.bukkit.potion.PotionEffectType.FAST_DIGGING,
+                            Int.MAX_VALUE,
+                            0
+                        )
+                    )
                     Anime.alert(
                         it,
                         "Ускорение",
                         "Увеличина скорость разрушения блоков"
                     )
-                    clepto.bukkit.B.potion(it, org.bukkit.potion.PotionEffectType.FAST_DIGGING, Int.MAX_VALUE, 0)
                 } else if (time / 20 == 900) {
                     Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
                     teams.forEach { team -> team.blockReturn() }

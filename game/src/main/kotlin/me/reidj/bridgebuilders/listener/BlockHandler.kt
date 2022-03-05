@@ -19,7 +19,9 @@ object BlockHandler : Listener {
 
     @EventHandler
     fun BlockPlaceEvent.handle() {
-        if (teams.all { block.location.distanceSquared(it.spawn) > 60 * 72 })
+        if (teams.all {
+                block.location.distanceSquared(it.spawn) > 60 * 72 || app.getBridge(it).contains(block.location)
+            })
             isCancelled = true
     }
 

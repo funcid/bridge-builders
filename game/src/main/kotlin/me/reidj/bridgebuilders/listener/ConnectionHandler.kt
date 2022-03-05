@@ -71,6 +71,7 @@ object ConnectionHandler : Listener {
                     )
                 }
             }
+
             // Спавню нпс
             worldMeta.getLabels("builder").forEach { label ->
                 val npcArgs = label.tag.split(" ")
