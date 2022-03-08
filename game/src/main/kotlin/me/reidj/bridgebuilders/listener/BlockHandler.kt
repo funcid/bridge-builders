@@ -110,13 +110,5 @@ object BlockHandler : Listener {
             block.type = Material.AIR
             player.inventory.addItem(ItemStack(Material.GOLD_ORE, if (has) 3 else 1))
         }
-        // Если прошло 15 минут с начала игры будет выпадать больше предметов
-        if (has) {
-            block.drops.forEach {
-                it.setAmount(it.getAmount() + 2)
-                block.world.dropItemNaturally(block.location, it)
-            }
-            dropItems = false
-        }
     }
 }
