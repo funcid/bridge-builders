@@ -64,7 +64,7 @@ object CustomizationNPC {
                     type = Material.CLAY_BALL
                     nbt("marioparty", "bowspleef")
                     nbt("HideFlags", 63)
-                    text("§bЭффекты выстрела НОВОЕ!\n\n§7Выберите эффект, который\n§7останется после выстрела.")
+                    text("§bЭффекты выстрела\n\n§7Выберите эффект, который\n§7останется после выстрела.")
                 }) {
                     subInventory(player, 3) { _: Player, currentContent: InventoryContents ->
                         currentContent.setLayout(
@@ -201,7 +201,7 @@ object CustomizationNPC {
                     type = Material.CLAY_BALL
                     nbt("other", "new_booster_1")
                     if (countHaveAchievement > 0)
-                        text("§bДостижения §eНОВОЕ!\n\n§aВы можете собрать $countHaveAchievement наград!")
+                        text("§bДостижения\n\n§aВы можете собрать $countHaveAchievement наград!")
                     else
                         text("§bДостижения\n\n§7Посмотреть список достижений.")
                 }) {

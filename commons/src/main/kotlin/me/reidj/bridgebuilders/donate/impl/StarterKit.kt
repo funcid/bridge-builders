@@ -15,16 +15,18 @@ enum class StarterKit(
     private val title: String,
     private val price: Int,
     private val rare: Rare,
-    private val items: Pair<Material, Int>,
+    private val icon: Material,
+    private val tag: String?,
     private val lore: String,
     val content: Array<ItemStack>
 ) : DonatePosition {
-    NONE("Отсутствует", 0, Rare.COMMON, Material.BARRIER to 1, "", arrayOf()),
+    NONE("Отсутствует", 0, Rare.COMMON, Material.BARRIER, null, "", arrayOf()),
     LUMBERJACK(
         "Лесоруб",
         256,
         Rare.COMMON,
-        Material.IRON_AXE to 1,
+        Material.IRON_AXE,
+        "weapons:iron_aztec_axe",
         "§b  Железный топор\n§b  Кольчужный нагрудник\n§b  Яблоко х16",
         arrayOf(
             ItemStack(Material.IRON_AXE),
@@ -36,7 +38,8 @@ enum class StarterKit(
         "Землерой",
         512,
         Rare.RARE,
-        Material.IRON_SPADE to 1,
+        Material.IRON_SPADE,
+        "weapons:iron_aztec_shovel",
         "§b  Железную лопату\n§b  Кольчужные поножи\n§b  Хлеб х16",
         arrayOf(
             ItemStack(Material.IRON_SPADE),
@@ -48,7 +51,8 @@ enum class StarterKit(
         "Рудокоп",
         768,
         Rare.RARE,
-        Material.IRON_PICKAXE to 1,
+        Material.IRON_PICKAXE,
+        "weapons:iron_aztec_pickaxe",
         "§b  Железную кирку\n§b  Кольчужный шлем\n§b  Морковь х6",
         arrayOf(
             ItemStack(Material.IRON_PICKAXE),
@@ -60,7 +64,8 @@ enum class StarterKit(
         "Кузнец",
         2048,
         Rare.EPIC,
-        Material.FURNACE to 1,
+        Material.DIAMOND_SWORD,
+        "weapons:titan_axe",
         "§b  Печка х2\n§b  Железная руда х16\n§b  Уголь х16\n§b  Золотой слиток х16\n§b  Алмаз х2\n§b  Жареная баранина х2",
         arrayOf(
             ItemStack(Material.FURNACE, 2),
@@ -75,7 +80,8 @@ enum class StarterKit(
         "Повар",
         2048,
         Rare.EPIC,
-        Material.BREAD to 32,
+        Material.CAKE,
+        null,
         "§b  Хлеб х32\n§b  Яблоко х32\n§b  Торт х5\n§b  Жареная баранина х16\n§b  Стейк х16",
         arrayOf(
             ItemStack(Material.BREAD, 32),
@@ -89,7 +95,8 @@ enum class StarterKit(
         "Целитель",
         2048,
         Rare.EPIC,
-        Material.GOLDEN_APPLE to 1,
+        Material.CLAY_BALL,
+        "other:heart",
         "§b  Зелье регенерации I х2\n§b  Зелье лечения I х3\n§b  Золотое яблоко х2\n§b  Хлеб х16",
         arrayOf(
             createPotion(PotionEffectType.REGENERATION, 60, 0, 2, "регенерации"),
@@ -102,7 +109,8 @@ enum class StarterKit(
         "Ассасин",
         2048,
         Rare.EPIC,
-        Material.BOW to 1,
+        Material.IRON_SWORD,
+        "weapons_other:42",
         "§b  Зелье невидимости х2\n§b  Зелье скорости I x2\n§b  Лук\n§b  Стрелы х32\n§b  Каменный меч\n§b  Стейк х12",
         arrayOf(
             createPotion(PotionEffectType.INVISIBILITY, 15, 0, 2, "невидимости"),
@@ -117,7 +125,8 @@ enum class StarterKit(
         "Коллекционер",
         4096,
         Rare.LEGENDARY,
-        Material.DIAMOND_PICKAXE to 1,
+        Material.GOLD_PICKAXE,
+        "simulators:donate_pickaxe",
         "§b  Алмазная кирка\n§b  Алмазный топор\n§b  Алмазная лопата\n§b  Жареная баранина х16",
         arrayOf(
             ItemStack(Material.DIAMOND_PICKAXE),
@@ -130,7 +139,8 @@ enum class StarterKit(
         "Люцифер",
         4096,
         Rare.LEGENDARY,
-        Material.CHAINMAIL_HELMET to 1,
+        Material.IRON_SWORD,
+        "weapons:dragon",
         "§b  Кольчужный шлем\n§b  Кольчужный нагрудник\n§b  Кольчужные поножи\n§b  Кольчужные ботинки\n§b  Каменный меч\n§b  Золотое яблоко х2",
         arrayOf(
             ItemStack(Material.CHAINMAIL_HELMET),
@@ -151,9 +161,18 @@ enum class StarterKit(
 
     override fun getIcon(): ItemStack {
         return item {
-            type = items.first
-            amount = items.second
-            text(rare.with("набор $title") + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)} ${if (lore == "") "" else "\n\n§fВы получите:\n$lore"}")
+            type = icon
+            tag?.let {
+                val pair = it.split(":")
+                nbt(pair[0], pair[1])
+            }
+            text(
+                rare.with("набор $title") + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${
+                    MoneyFormatter.texted(
+                        price
+                    )
+                } ${if (lore == "") "" else "\n\n§fВы получите:\n$lore"}"
+            )
         }
     }
 
