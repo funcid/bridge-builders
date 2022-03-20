@@ -6,7 +6,6 @@ import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
 import me.func.mod.Kit
-import me.reidj.bridgebuilders.content.BattlePassManager
 import me.reidj.bridgebuilders.content.CustomizationNPC
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.listener.GlobalListeners
@@ -17,9 +16,12 @@ import org.bukkit.plugin.java.JavaPlugin
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.display.data.DataDrawData
 import ru.cristalix.core.display.data.StringDrawData
+import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.math.V2
 import ru.cristalix.core.math.V3
+import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
+import ru.cristalix.core.realm.RealmStatus
 import ru.cristalix.core.render.BukkitRenderService
 import ru.cristalix.core.render.IRenderService
 import ru.cristalix.core.render.VisibilityTarget
@@ -88,10 +90,21 @@ class App : JavaPlugin() {
             null
         }, "leave")
 
-        B.regCommand({ player, _ ->
+        /*B.regCommand({ player, _ ->
             BattlePassManager.show(player)
             null
-        }, "battlepass", "bp")
+        }, "battlepass", "bp")*/
+        B.regCommand({ player, args ->
+            val realmId =
+                IRealmService.get().getRealmsOfType("BRI").filter { it.status == RealmStatus.GAME_STARTED_CAN_SPACTATE }
+                    .map { it.realmId }
+            val realm = RealmId.of(args[0])
+            if (realmId.contains(realm))
+                Cristalix.transfer(mutableListOf(player.uniqueId), realm)
+            else
+                player.sendMessage(Formatting.error("Сервер не найден."))
+            null
+        }, "spectate", "spec")
     }
 
     private fun getUser(player: Player) = userManager.getUser(player.uniqueId)

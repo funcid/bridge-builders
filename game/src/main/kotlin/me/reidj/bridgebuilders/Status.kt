@@ -5,7 +5,7 @@ import me.reidj.bridgebuilders.data.DefaultKit
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Color.*
-import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_RESTRICTED
+import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_SPACTATE
 
 lateinit var winMessage: String
 val kit = DefaultKit
@@ -32,7 +32,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 actualTime = 1
             } else {
                 // Обновление статуса реалма, чтобы нельзя было войти
-                realm.status = GAME_STARTED_RESTRICTED
+                realm.status = GAME_STARTED_CAN_SPACTATE
                 games++
                 // Удаление игроков если они оффлайн
                 teams.forEach {
