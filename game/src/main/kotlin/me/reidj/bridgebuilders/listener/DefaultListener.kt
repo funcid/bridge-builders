@@ -103,13 +103,11 @@ object DefaultListener : Listener {
         )
         // Если мост не достроен откидывать от него игрока
         teams.forEach { team ->
-            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 34 * 34)
+            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 20)
                 player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
         }
     }
 
     @EventHandler
-    fun PlayerDropItemEvent.handle() {
-        cancel = activeStatus == Status.STARTING
-    }
+    fun PlayerDropItemEvent.handle() = apply { cancel = activeStatus == Status.STARTING }
 }

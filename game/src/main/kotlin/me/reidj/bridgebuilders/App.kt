@@ -5,7 +5,6 @@ import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import implario.ListUtils
 import me.func.mod.Anime
-import me.func.mod.Banners
 import me.func.mod.Kit
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.data.BlockPlan
@@ -36,7 +35,7 @@ lateinit var app: App
 val LOBBY_SERVER: RealmId = RealmId.of("TEST-56")
 var activeStatus = Status.STARTING
 var games = 0
-const val needBlocks = 3639
+const val needBlocks = 2146
 
 lateinit var teams: List<Team>
 
@@ -118,18 +117,6 @@ class App : JavaPlugin() {
             }
         }
 
-        // Создание баннера
-        Banners.new {
-            x = 6.0
-            y = 97.0
-            z = -1.2
-            opacity = 0.0
-            content = "Сломай меня"
-            height = 10
-            weight = 10
-            watchingOnPlayer = true
-        }
-
         // Рисую эффект выстрела
         ArrowEffect().arrowEffect(this)
 
@@ -188,9 +175,7 @@ class App : JavaPlugin() {
             toPlace.keys.any { it.material.id == key.first }
         }.forEach { (key, value) ->
             val tempNearest = value.minByOrNull { it.distanceSquared(team.spawn) }
-            if (nearest == null || (tempNearest != null &&
-                        tempNearest.distanceSquared(team.spawn) < nearest!!.distanceSquared(team.spawn))
-            ) {
+            if (nearest == null || tempNearest != null) {
                 nearest = tempNearest
                 data = key
             }
@@ -215,7 +200,6 @@ class App : JavaPlugin() {
                 blockList.add(current)
             else
                 bridge.blocks[currentBlock] = mutableListOf(current)
-
             current.block.setTypeAndDataFast(0, 0)
         }
         return bridge
@@ -224,7 +208,7 @@ class App : JavaPlugin() {
     fun getBridge(team: Team): MutableList<Location> {
         val vector = team.bridge.toCenter
         val bridge = Bridge(vector, team.bridge.start, team.bridge.end, team.bridge.blocks)
-        val length = 84
+        val length = 54
         val width = 16
         val height = 30
         val blockLocation = mutableListOf<Location>()
