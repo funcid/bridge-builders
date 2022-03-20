@@ -28,7 +28,6 @@ object DamageListener : Listener {
             cancelled = true
     }
 
-
     @EventHandler
     fun PlayerDeathEvent.handle() {
         cancelled = true

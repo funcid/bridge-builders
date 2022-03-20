@@ -17,6 +17,7 @@ import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.ArrowEffect
 import me.reidj.bridgebuilders.util.MapLoader
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -128,7 +129,7 @@ class App : JavaPlugin() {
     }
 
     fun restart() {
-        Bukkit.getOnlinePlayers().forEach {
+        Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.forEach {
             val user = app.getUser(it)
             user.stat.games++
             //me.reidj.bridgebuilders.battlepass.BattlePassUtil.update(it, me.reidj.bridgebuilders.battlepass.quest.QuestType.PLAY, 1)
@@ -282,4 +283,6 @@ class App : JavaPlugin() {
                 )
             }
     }
+
+    fun isSpectator(player: Player): Boolean = player.gameMode == GameMode.SPECTATOR
 }

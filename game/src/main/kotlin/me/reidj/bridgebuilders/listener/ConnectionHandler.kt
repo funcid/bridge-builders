@@ -37,7 +37,9 @@ object ConnectionHandler : Listener {
     @EventHandler
     fun PlayerJoinEvent.handle() {
         player.inventory.clear()
-        player.gameMode = GameMode.ADVENTURE
+
+        if (activeStatus == Status.STARTING)
+            player.gameMode = GameMode.ADVENTURE
 
         B.postpone(5) {
             // Создание маркера
@@ -78,6 +80,8 @@ object ConnectionHandler : Listener {
                 Npc.npc {
                     onClick { event ->
                         val player = event.player
+                        if (app.isSpectator(player))
+                            return@onClick
                         val user = getByPlayer(player)
                         if (user.activeHand)
                             return@onClick
@@ -162,6 +166,11 @@ object ConnectionHandler : Listener {
             }
         }
 
+        if (activeStatus != Status.STARTING) {
+            player.gameMode = GameMode.SPECTATOR
+            return
+        }
+
         getByPlayer(player).stat.lastEnter = System.currentTimeMillis()
 
         if (activeStatus == Status.STARTING) {
@@ -181,6 +190,8 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun PlayerQuitEvent.handle() {
+        if (app.isSpectator(player))
+            return
         val user = getByPlayer(player)
         teams.forEach { it.players.remove(player.uniqueId) }
         user.stat.timePlayedTotal += System.currentTimeMillis() - user.stat.lastEnter

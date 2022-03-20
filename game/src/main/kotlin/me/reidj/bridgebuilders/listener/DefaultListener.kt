@@ -103,7 +103,7 @@ object DefaultListener : Listener {
         )
         // Если мост не достроен откидывать от него игрока
         teams.forEach { team ->
-            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 20)
+            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 20 && !app.isSpectator(player))
                 player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
         }
     }
