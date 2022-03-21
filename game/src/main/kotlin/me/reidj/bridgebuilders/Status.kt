@@ -5,6 +5,7 @@ import me.reidj.bridgebuilders.data.DefaultKit
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Color.*
+import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_JOIN
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_SPACTATE
 
 lateinit var winMessage: String
@@ -13,12 +14,15 @@ val kit = DefaultKit
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     STARTING(50, { it ->
         // Если набор игроков начался, обновить статус реалма
+        if (it == 60)
+            realm.status = GAME_STARTED_CAN_JOIN
+
         val players = Bukkit.getOnlinePlayers()
 
         // Обновление шкалы онлайна
         players.forEach {
             me.reidj.bridgebuilders.mod.ModTransfer()
-                .integer(slots)
+                .integer(slots - 4)
                 .integer(players.size)
                 .boolean(true)
                 .send("bridge:online", app.getUser(it))
@@ -28,7 +32,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size + 12 < slots) {
+            if (players.size + 4 < slots - 4) {
                 actualTime = 1
             } else {
                 // Обновление статуса реалма, чтобы нельзя было войти
@@ -48,54 +52,56 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     if (!teams.any { it.players.contains(player.uniqueId) })
                         teams.minByOrNull { it.players.size }!!.players.add(player.uniqueId)
                 }
-                // Телепортация игроков
-                teams.forEachIndexed { index, team ->
-                    val color = checkColor(team.color)
-                    Bukkit.getOnlinePlayers().forEach {
-                        // Отправка прогресса команд
-                        me.reidj.bridgebuilders.mod.ModTransfer()
-                            .integer(index + 2)
-                            .integer(color.getRed())
-                            .integer(color.getGreen())
-                            .integer(color.getBlue())
-                            .send("bridge:progressinit", getByPlayer(it))
-                    }
-                    team.players.forEach {
-                        val player = Bukkit.getPlayer(it) ?: return@forEach
-                        val user = getByPlayer(player)
-
-                        player.gameMode = org.bukkit.GameMode.SURVIVAL
-                        player.itemOnCursor = null
-
-                        app.teleportAtBase(team, player)
-
-                        player.inventory.armorContents = kit.armor.map { armor ->
-                            val meta = armor.itemMeta as org.bukkit.inventory.meta.LeatherArmorMeta
-                            meta.color = checkColor(team.color)
-                            armor.itemMeta = meta
-                            armor
-                        }.toTypedArray()
-
-                        player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
-                        user.stat.activeKit.content.forEach { starter -> player.inventory.addItem(starter) }
-
-                        // Отправка таба
-                        team.collected.entries.forEachIndexed { index, block ->
+                clepto.bukkit.B.postpone(10) {
+                    // Телепортация игроков
+                    teams.forEachIndexed { index, team ->
+                        val color = checkColor(team.color)
+                        Bukkit.getOnlinePlayers().forEach {
+                            // Отправка прогресса команд
                             me.reidj.bridgebuilders.mod.ModTransfer()
                                 .integer(index + 2)
-                                .integer(block.key.needTotal)
-                                .integer(block.value)
-                                .string(block.key.title)
-                                .item(block.key.getItem())
-                                .send("bridge:init", user)
+                                .integer(color.getRed())
+                                .integer(color.getGreen())
+                                .integer(color.getBlue())
+                                .send("bridge:progressinit", getByPlayer(it))
                         }
+                        team.players.forEach {
+                            val player = Bukkit.getPlayer(it) ?: return@forEach
+                            val user = getByPlayer(player)
 
-                        Anime.alert(
-                            player,
-                            "Цель",
-                            "Принесите нужные блоки строителю, \nчтобы построить мост к центру"
-                        )
-                        me.func.mod.Glow.showAllPlaces(player)
+                            player.gameMode = org.bukkit.GameMode.SURVIVAL
+                            player.itemOnCursor = null
+
+                            app.teleportAtBase(team, player)
+
+                            player.inventory.armorContents = kit.armor.map { armor ->
+                                val meta = armor.itemMeta as org.bukkit.inventory.meta.LeatherArmorMeta
+                                meta.color = checkColor(team.color)
+                                armor.itemMeta = meta
+                                armor
+                            }.toTypedArray()
+
+                            player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
+                            user.stat.activeKit.content.forEach { starter -> player.inventory.addItem(starter) }
+
+                            // Отправка таба
+                            team.collected.entries.forEachIndexed { index, block ->
+                                me.reidj.bridgebuilders.mod.ModTransfer()
+                                    .integer(index + 2)
+                                    .integer(block.key.needTotal)
+                                    .integer(block.value)
+                                    .string(block.key.title)
+                                    .item(block.key.getItem())
+                                    .send("bridge:init", user)
+                            }
+
+                            Anime.alert(
+                                player,
+                                "Цель",
+                                "Принесите нужные блоки строителю, \nчтобы построить мост к центру"
+                            )
+                            me.func.mod.Glow.showAllPlaces(player)
+                        }
                     }
                 }
                 // Список игроков
@@ -126,7 +132,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     teams.forEach { team -> team.isActiveTeleport = true }
                     Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
                 }
-                if (time / 20 == 900) {
+                if (time / 20 == 600) {
                     Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
                     teams.forEach { team -> team.blockReturn() }
                 }

@@ -138,6 +138,8 @@ object DamageListener : Listener {
         teams.filter { team -> team.players.contains(damager.uniqueId) }
             .filter { it.players.contains(entity.uniqueId) }
             .forEach { _ -> isCancelled = true }
+        if (damager is Player && (damager as Player).itemInHand.getType().name.endsWith("AXE"))
+            damage /= 3
     }
 
     private fun removeItems(itemStack: ItemStack) {

@@ -18,6 +18,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.inventory.ItemStack
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
 import ru.cristalix.core.permissions.IPermissionService
@@ -50,6 +51,12 @@ object LobbyHandler : Listener {
         val nmsItem = CraftItemStack.asNMSCopy(item)
         if (nmsItem.hasTag() && nmsItem.tag.hasKeyOfType("click", 8))
             player.performCommand(nmsItem.tag.getString("click"))
+    }
+
+    @EventHandler
+    fun PlayerMoveEvent.handle() {
+        if (player.location.block.y <= 2)
+            player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
     }
 
     private val balancer = PlayerBalancer()

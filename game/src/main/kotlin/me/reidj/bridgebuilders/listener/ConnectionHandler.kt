@@ -80,8 +80,6 @@ object ConnectionHandler : Listener {
                 Npc.npc {
                     onClick { event ->
                         val player = event.player
-                        if (app.isSpectator(player))
-                            return@onClick
                         val user = getByPlayer(player)
                         if (user.activeHand)
                             return@onClick

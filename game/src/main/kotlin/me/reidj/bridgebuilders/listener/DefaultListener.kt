@@ -61,8 +61,10 @@ object DefaultListener : Listener {
     /*@EventHandler
     fun CraftItemEvent.handle() {
         val player = whoClicked as Player
-        BattlePassUtil.update(player, CRAFT, 1)
-        val has = recipe.result.getType()
+        //BattlePassUtil.update(player, CRAFT, 1)
+        val has = recipe.result
+        if (has.getType().name.endsWith("AXE"))
+            has.
         if (has == Material.DIAMOND_BOOTS || has == Material.IRON_CHESTPLATE || has == Material.DIAMOND_HELMET
             || has == Material.IRON_LEGGINGS || has == Material.DIAMOND_SWORD)
             BattlePassUtil.update(player, CRAFT, 1)
@@ -98,12 +100,14 @@ object DefaultListener : Listener {
 
     @EventHandler
     fun PlayerMoveEvent.handle() {
-        if (activeStatus == Status.STARTING && player.location.block.y <= 2) player.teleport(
-            worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)
-        )
+        if (activeStatus == Status.STARTING && player.location.block.y <= 2)
+            player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
         // Если мост не достроен откидывать от него игрока
         teams.forEach { team ->
-            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 20 && !app.isSpectator(player))
+            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 20 && !app.isSpectator(
+                    player
+                )
+            )
                 player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
         }
     }

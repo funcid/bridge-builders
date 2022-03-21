@@ -2,8 +2,10 @@ package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
 import me.func.mod.Anime
-import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.app
+import me.reidj.bridgebuilders.getByUuid
 import me.reidj.bridgebuilders.mod.ModHelper
+import me.reidj.bridgebuilders.teams
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Material
@@ -20,7 +22,8 @@ object BlockHandler : Listener {
     @EventHandler
     fun BlockPlaceEvent.handle() {
         if (teams.all {
-                block.location.distanceSquared(it.spawn) > 60 * 72 || app.getBridge(it).contains(block.location)
+                block.location.distanceSquared(it.spawn) > 60 * 72 || app.getBridge(it).contains(block.location) ||
+                        block.location.distanceSquared(it.spawn) < 4 * 4
             })
             isCancelled = true
     }
@@ -52,6 +55,9 @@ object BlockHandler : Listener {
             isCancelled = true
             return
         } else if (block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
+            isCancelled = true
+            return
+        } else if (teams.any { block.location.distanceSquared(it.spawn) < 4 * 4 }) {
             isCancelled = true
             return
         }
@@ -102,13 +108,12 @@ object BlockHandler : Listener {
                 return
             }
         }
-        val has = activeStatus.now(timer.time) / 20 >= 900
         if (block.type == Material.IRON_ORE) {
             block.type = Material.AIR
-            player.inventory.addItem(ItemStack(Material.IRON_INGOT, if (has) 3 else 1))
+            player.inventory.addItem(ItemStack(Material.IRON_INGOT))
         } else if (block.type == Material.GOLD_ORE) {
             block.type = Material.AIR
-            player.inventory.addItem(ItemStack(Material.GOLD_ORE, if (has) 3 else 1))
+            player.inventory.addItem(ItemStack(Material.GOLD_ORE))
         }
     }
 }
