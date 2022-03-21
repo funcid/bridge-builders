@@ -98,7 +98,7 @@ class App : JavaPlugin() {
             val realmId =
                 IRealmService.get().getRealmsOfType("BRI").filter { it.status == RealmStatus.GAME_STARTED_CAN_SPACTATE }
                     .map { it.realmId }
-            val realm = RealmId.of(args[0])
+            val realm = RealmId.of("BRI-${args[0]}")
             if (realmId.contains(realm))
                 Cristalix.transfer(mutableListOf(player.uniqueId), realm)
             else
