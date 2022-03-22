@@ -2,10 +2,13 @@ package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
 import me.func.mod.Anime
+import me.func.protocol.EndStatus
 import me.reidj.bridgebuilders.app
+import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.getByUuid
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.teams
+import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Material
@@ -63,50 +66,62 @@ object BlockHandler : Listener {
         }
         if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
             //BattlePassUtil.update(player, BREAK, 1)
-            if (team.players.contains(player.uniqueId)) {
-                ModHelper.allNotification("Победила команда ${team.color.chatFormat + team.color.teamName}")
-                B.bc(" ")
-                B.bc("§b―――――――――――――――――")
-                B.bc("" + team.color.chatFormat + team.color.teamName + " §f победили!")
-                B.bc(" ")
-                B.bc("§e§lТОП ПРИНЕСЁННЫХ БЛОКОВ")
-                team.players.map { getByUuid(it) }.sortedBy { -it.collectedBlocks }
-                    .subList(0, min(3, team.players.size))
-                    .forEachIndexed { index, user ->
-                        B.bc(" §l${index + 1}. §e" + user.player?.name + " §с" + user.collectedBlocks + " блоков принесено")
-                    }
-                B.bc("§b―――――――――――――――――")
-                B.bc(" ")
-                team.players.forEach { uuid ->
-                    val user = app.getUser(uuid)
+            val winner = teams.filter { it.players.contains(player.uniqueId) }[0]
+            ModHelper.allNotification("Победила команда ${winner.color.chatFormat + winner.color.teamName}")
+            B.bc(" ")
+            B.bc("§b―――――――――――――――――")
+            B.bc("" + winner.color.chatFormat + winner.color.teamName + " §f победили!")
+            B.bc(" ")
+            B.bc("§e§lТОП ПРИНЕСЁННЫХ БЛОКОВ")
+            winner.players.map { getByUuid(it) }.sortedBy { -it.collectedBlocks }
+                .subList(0, min(3, winner.players.size))
+                .forEachIndexed { index, user ->
+                    B.bc(" §l${index + 1}. §e" + user.player?.name + " §с" + user.collectedBlocks + " блоков принесено")
+                }
+            B.bc("§b―――――――――――――――――")
+            B.bc(" ")
 
-                    //BattlePassUtil.update(user.player!!, WIN, 1)
-                    user.stat.wins++
-                    user.player?.let { player -> Anime.title(player, "§aПОБЕДА\n§aвы выиграли!") }
-                    val firework = user.player!!.world!!.spawn(user.player!!.location, Firework::class.java)
-                    val meta = firework.fireworkMeta
-                    meta.addEffect(
-                        FireworkEffect.builder()
-                            .flicker(true)
-                            .trail(true)
-                            .with(FireworkEffect.Type.BALL_LARGE)
-                            .with(FireworkEffect.Type.BALL)
-                            .with(FireworkEffect.Type.BALL_LARGE)
-                            .withColor(Color.YELLOW)
-                            .withColor(Color.GREEN)
-                            .withColor(Color.WHITE)
-                            .build()
+            winner.players.map(getByUuid).forEach { user ->
+                //BattlePassUtil.update(user.player!!, WIN, 1)
+                user.stat.wins++
+                user.player?.let { player ->
+                    Anime.showEnding(
+                        player,
+                        EndStatus.WIN,
+                        "Блоков принесено:",
+                        "${user.collectedBlocks}"
                     )
-                    meta.power = 0
-                    firework.fireworkMeta = meta
                 }
-                B.postpone(5 * 20) { app.restart() }
-            } else {
-                team.players.forEach {
-                    getByUuid(it).player?.let { player -> Anime.title(player, "§aПОРАЖЕНИЕ\n§aвы проиграли!") }
-                }
-                return
+                val firework = user.player!!.world!!.spawn(user.player!!.location, Firework::class.java)
+                val meta = firework.fireworkMeta
+                meta.addEffect(
+                    FireworkEffect.builder()
+                        .flicker(true)
+                        .trail(true)
+                        .with(FireworkEffect.Type.BALL_LARGE)
+                        .with(FireworkEffect.Type.BALL)
+                        .with(FireworkEffect.Type.BALL_LARGE)
+                        .withColor(Color.YELLOW)
+                        .withColor(Color.GREEN)
+                        .withColor(Color.WHITE)
+                        .build()
+                )
+                meta.power = 0
+                firework.fireworkMeta = meta
             }
+
+            Bukkit.getOnlinePlayers().forEach {
+                if (team.players.contains(it.uniqueId))
+                    return@forEach
+                Anime.showEnding(
+                    it,
+                    EndStatus.LOSE,
+                    "Блоков принесено:",
+                    "${getByPlayer(it).collectedBlocks}"
+                )
+            }
+            B.postpone(5 * 20) { app.restart() }
+            return
         }
         if (block.type == Material.IRON_ORE) {
             block.type = Material.AIR

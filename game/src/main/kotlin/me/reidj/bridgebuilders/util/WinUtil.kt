@@ -1,6 +1,9 @@
 package me.reidj.bridgebuilders.util
 
-import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.Status
+import me.reidj.bridgebuilders.activeStatus
+import me.reidj.bridgebuilders.teams
+import me.reidj.bridgebuilders.timer
 
 object WinUtil {
 
@@ -9,14 +12,11 @@ object WinUtil {
             return false
         if (teams.all { it.players.size == 0 }) {
             activeStatus = Status.END
-            winMessage = "§aПерезагрузка..."
             return true
         }
-        // Если время вышло игроки победили
-        if (activeStatus.lastSecond * 20 == timer.time) {
-            winMessage = "§aВремя вышло! Победила дружба."
+        // Если время вышло
+        if (activeStatus.lastSecond * 20 == timer.time)
             return true
-        }
         return false
     }
 }

@@ -1,5 +1,6 @@
 package me.reidj.bridgebuilders
 
+import clepto.bukkit.B
 import me.func.mod.Anime
 import me.reidj.bridgebuilders.data.DefaultKit
 import org.bukkit.Bukkit
@@ -8,11 +9,10 @@ import org.bukkit.Color.*
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_JOIN
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_SPACTATE
 
-lateinit var winMessage: String
 val kit = DefaultKit
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(50, { it ->
+    STARTING(10, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 60)
             realm.status = GAME_STARTED_CAN_JOIN
@@ -32,7 +32,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size + 4 < slots - 4) {
+            if (players.size + 15 < slots - 4) {
                 actualTime = 1
             } else {
                 // Обновление статуса реалма, чтобы нельзя было войти
@@ -52,7 +52,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     if (!teams.any { it.players.contains(player.uniqueId) })
                         teams.minByOrNull { it.players.size }!!.players.add(player.uniqueId)
                 }
-                clepto.bukkit.B.postpone(10) {
+                B.postpone(10) {
                     // Телепортация игроков
                     teams.forEachIndexed { index, team ->
                         val color = checkColor(team.color)
@@ -140,8 +140,8 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         }
         // Проверка на победу
         if (me.reidj.bridgebuilders.util.WinUtil.check4win()) {
-            clepto.bukkit.B.bc(winMessage)
-            clepto.bukkit.B.postpone(5 * 20) { app.restart() }
+            Bukkit.getOnlinePlayers().forEach { Anime.showEnding(it, me.func.protocol.EndStatus.DRAW, "Время вышло!", "") }
+            B.postpone(5 * 20) { app.restart() }
         }
         time
     }),

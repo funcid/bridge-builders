@@ -136,8 +136,8 @@ object ConnectionHandler : Listener {
                                                     .integer(team.players.map { getByUuid(it) }
                                                         .sumOf { it.collectedBlocks })
                                                     .send("bridge:tabupdate", whoSend)
-                                                player.updateInventory()
                                             }
+                                            player.updateInventory()
                                         }
                                     }
                                 }
