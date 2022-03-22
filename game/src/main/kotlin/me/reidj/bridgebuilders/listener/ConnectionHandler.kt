@@ -85,63 +85,64 @@ object ConnectionHandler : Listener {
                             return@onClick
                         user.activeHand = true
                         B.postpone(5) { user.activeHand = false }
-                        teams.filter { it.players.contains(player.uniqueId) }
-                            .forEach { team ->
-                                team.collected.entries.forEachIndexed { index, block ->
-                                    val itemHand = player.itemInHand
-                                    if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
-                                        val must = block.key.needTotal - block.value
-                                        if (must == 0) {
-                                            ModHelper.notification(
-                                                user,
-                                                ru.cristalix.core.formatting.Formatting.error("Мне больше не нужен этот ресурс")
-                                            )
-                                            player.playSound(
-                                                player.location,
-                                                org.bukkit.Sound.ENTITY_ARMORSTAND_HIT,
-                                                1f,
-                                                1f
-                                            )
-                                            return@onClick
-                                        } else {
-                                            val subtraction = must - itemHand.getAmount()
-                                            val collect = must - max(0, subtraction)
-                                            team.collected[block.key] = block.key.needTotal - maxOf(0, subtraction)
-                                            itemHand.setAmount(itemHand.getAmount() - must)
-                                            user.collectedBlocks += collect
-                                            //BattlePassUtil.update(user.player!!, QuestType.POINTS, collect)
-                                            player.playSound(
-                                                player.location,
-                                                org.bukkit.Sound.ENTITY_PLAYER_LEVELUP,
-                                                1f,
-                                                1f
-                                            )
-                                            teams.forEachIndexed { teamIndex, updateTeam ->
-                                                Bukkit.getOnlinePlayers().forEach {
-                                                    ModTransfer()
-                                                        .integer(teamIndex + 2)
-                                                        .integer(needBlocks)
-                                                        .integer(updateTeam.collected.map { block -> block.value }
-                                                            .sum())
-                                                        .send("bridge:progressupdate", getByPlayer(it))
-                                                }
-                                            }
-                                            // Обновление таба
-                                            team.players.map(getByUuid).forEach { whoSend ->
-                                                ModTransfer()
-                                                    .integer(index + 2)
-                                                    .integer(block.key.needTotal)
-                                                    .integer(block.value)
-                                                    .integer(needBlocks)
-                                                    .integer(team.players.map { getByUuid(it) }
-                                                        .sumOf { it.collectedBlocks })
-                                                    .send("bridge:tabupdate", whoSend)
-                                            }
-                                            player.updateInventory()
+                        val team = teams.filter { it.players.contains(player.uniqueId) }[0]
+                        team.collected.entries.forEachIndexed { index, block ->
+                            val itemHand = player.itemInHand
+                            if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
+                                val must = block.key.needTotal - block.value
+                                if (must == 0) {
+                                    ModHelper.notification(
+                                        user,
+                                        ru.cristalix.core.formatting.Formatting.error("Мне больше не нужен этот ресурс")
+                                    )
+                                    player.playSound(
+                                        player.location,
+                                        org.bukkit.Sound.ENTITY_ARMORSTAND_HIT,
+                                        1f,
+                                        1f
+                                    )
+                                    return@onClick
+                                } else {
+                                    val subtraction = must - itemHand.getAmount()
+                                    val collect = must - max(0, subtraction)
+                                    team.collected[block.key] = block.key.needTotal - maxOf(0, subtraction)
+                                    itemHand.setAmount(itemHand.getAmount() - must)
+                                    user.collectedBlocks += collect
+                                    //BattlePassUtil.update(user.player!!, QuestType.POINTS, collect)
+                                    player.playSound(
+                                        player.location,
+                                        org.bukkit.Sound.ENTITY_PLAYER_LEVELUP,
+                                        1f,
+                                        1f
+                                    )
+                                    teams.forEachIndexed { teamIndex, updateTeam ->
+                                        Bukkit.getOnlinePlayers().forEach {
+                                            ModTransfer()
+                                                .integer(teamIndex + 2)
+                                                .integer(needBlocks)
+                                                .integer(updateTeam.collected.map { block -> block.value }
+                                                    .sum())
+                                                .send("bridge:progressupdate", getByPlayer(it))
                                         }
+                                    }
+                                    // Обновление таба
+                                    team.players.map(getByUuid).forEach { whoSend ->
+                                        Anime.killboardMessage(
+                                            whoSend.player!!,
+                                            "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
+                                        )
+                                        ModTransfer()
+                                            .integer(index + 2)
+                                            .integer(block.key.needTotal)
+                                            .integer(block.value)
+                                            .integer(needBlocks)
+                                            .integer(team.players.map { getByUuid(it) }
+                                                .sumOf { it.collectedBlocks })
+                                            .send("bridge:tabupdate", whoSend)
                                     }
                                 }
                             }
+                        }
                     }
                     x = label.x + 0.5
                     y = label.y
