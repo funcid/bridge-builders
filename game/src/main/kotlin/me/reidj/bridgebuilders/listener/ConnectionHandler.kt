@@ -127,11 +127,7 @@ object ConnectionHandler : Listener {
                                                 }
                                             }
                                             // Обновление таба
-                                            team.players.map(getByUuid).forEach { user ->
-                                                Anime.killboardMessage(
-                                                    user.player!!,
-                                                    "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
-                                                )
+                                            team.players.map(getByUuid).forEach { whoSend ->
                                                 ModTransfer()
                                                     .integer(index + 2)
                                                     .integer(block.key.needTotal)
@@ -139,12 +135,8 @@ object ConnectionHandler : Listener {
                                                     .integer(needBlocks)
                                                     .integer(team.players.map { getByUuid(it) }
                                                         .sumOf { it.collectedBlocks })
-                                                    .send(
-                                                        "bridge:tabupdate",
-                                                        user
-                                                    )
+                                                    .send("bridge:tabupdate", whoSend)
                                                 player.updateInventory()
-                                                return@onClick
                                             }
                                         }
                                     }
