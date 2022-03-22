@@ -29,7 +29,7 @@ import ru.cristalix.core.transfer.TransferService
 import java.util.*
 import kotlin.properties.Delegates
 
-const val HUB = "HUB-11"
+const val HUB = "HUB-2"
 
 lateinit var bridgeBuildersInstance: JavaPlugin
 lateinit var getByPlayer: (Player) -> User
