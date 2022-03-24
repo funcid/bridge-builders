@@ -84,6 +84,7 @@ object BlockHandler : Listener {
             winner.players.map(getByUuid).forEach { user ->
                 //BattlePassUtil.update(user.player!!, WIN, 1)
                 user.stat.wins++
+                user.giveMoney(10)
                 user.player?.let { player ->
                     Anime.showEnding(
                         player,
@@ -110,14 +111,15 @@ object BlockHandler : Listener {
                 firework.fireworkMeta = meta
             }
 
-            Bukkit.getOnlinePlayers().forEach {
-                if (team.players.contains(it.uniqueId))
+            Bukkit.getOnlinePlayers().map(getByPlayer).forEach {
+                if (team.players.contains(it.stat.id))
                     return@forEach
+                it.giveMoney(5)
                 Anime.showEnding(
-                    it,
+                    it.player!!,
                     EndStatus.LOSE,
                     "Блоков принесено:",
-                    "${getByPlayer(it).collectedBlocks}"
+                    "${it.collectedBlocks}"
                 )
             }
             B.postpone(5 * 20) { app.restart() }

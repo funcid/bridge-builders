@@ -61,11 +61,3 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.0'
     implementation project(':commons')
 }
-
-afterEvaluate {
-    jar {
-        archiveBaseName.set 'bridge-builders-game'
-        from configurations.runtimeClasspath.collect { it.directory ? it : zipTree(it) }
-        duplicatesStrategy DuplicatesStrategy.EXCLUDE
-    }
-}

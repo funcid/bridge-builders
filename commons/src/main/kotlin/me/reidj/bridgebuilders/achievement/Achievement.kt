@@ -8,9 +8,27 @@ enum class Achievement(
     val predicate: (User) -> Boolean,
     val reward: (User) -> Any
 ) {
-    FIRST_JOIN("Награда новичка", "§7Ваша первая награда\n§f + 1 §bЛутбокс", { true }, { it.stat.lootbox++ }),
-    FIRST_WIN("Первая победа", "§7Победить 1 раз\n§f + §e10 монет", { it.stat.wins >= 1 }, { it.giveMoney(10) }),
-    TEN_WIN("Восходящая звезда", "§7Победить 10 раз\n§f + §e64 монеты\n" +
+    BEGINNER("Новичок", "§7Убить 10 игроков\n§f + §b1 лутбокс", { it.stat.kills == 10 }, { it.stat.lootbox++ }),
+    ACCUSTOMED("Освоившийся", "§7Убить 25 игроков\n§f + §e64 монеты", { it.stat.kills == 25 }, { it.giveMoney(64) }),
+    MERCENARY("Наемник", "§7Убить 50 игроков\n§f + §e128 монет", { it.stat.kills == 50 }, { it.giveMoney(128) }),
+    HOPLITE("Гоплит", "§7Убить 100 игроков\n§f + §e128 монет\n + §b1 лутбокс", { it.stat.kills == 100 }, {
+        it.stat.lootbox++
+        it.giveMoney(128)
+    }),
+    STRYKER("Страйкер", "§7Убить 250 игроков\n§f + §e256 монет\n + §b1 лутбокс", { it.stat.kills == 250}, {
+        it.stat.lootbox++
+        it.giveMoney(256)
+    }),
+    PRIMARIS("Примарис", "§7Убить 500 игроков\n§f + §e1024 монеты\n + §b3 лутбокса", { it.stat.kills == 500}, { user ->
+        repeat(3) { user.stat.lootbox++ }
+        user.giveMoney(1024)
+    }),
+    CENTURION("Центурин", "§7Убить 1000 игроков\n+ §e2048 монет\n + §b3 лутбокса", { it.stat.kills == 1000}, { user ->
+        repeat(3) { user.stat.lootbox++ }
+        user.giveMoney(2048)
+    }),
+    FIRST_WIN("Победитель Деревянного Ранга", "§7Победить 1 раз\n§f + §e10 монет", { it.stat.wins >= 1 }, { it.giveMoney(10) }),
+    TEN_WIN("Победитель Медного Ранга", "§7Победить 10 раз\n§f + §e64 монеты\n" +
             "§f + 1 §bЛутбокс", { it.stat.wins >= 10 }, {
         it.giveMoney(64)
         it.stat.lootbox++
@@ -23,69 +41,17 @@ enum class Achievement(
             "§f + 20 §bЛутбоксов", { it.stat.wins >= 1000 }, { user ->
         repeat(20) { user.stat.lootbox++ }
     }),
-    FIVE_KILLS(
-        "Начинающий маньяк",
-        "§7Убить пятерых\n§f + §e20 монет",
-        { it.stat.kills >= 5 },
-        { it.giveMoney(20) }),
-    HUNDRED_KILLS("Маньяк", "§7Убить 100 человек\n§f + §e128 монет\n" +
-            "§f + 1 §bЛутбокс", { it.stat.kills >= 100 }, {
-        it.giveMoney(128)
-        it.stat.lootbox++
-    }),
-    THOUSAND_KILLS("Маньяк в розыске", "§7Убить 1`000 человек\n§f + §e256 монет\n" +
-            "§f + 2 §bЛутбокса", { it.stat.kills >= 1000 }, {
-        it.giveMoney(256)
-        it.stat.lootbox++
-        it.stat.lootbox++
-    }),
-    HOUR_GAME("Начало пути", "§7Играть 1 час\n§f + §e64 монеты", { it.stat.timePlayedTotal / 1000 / 3600 >= 1 }, {
-        it.giveMoney(64)
-    }),
-    TWENTY_HOUR_GAME(
-        "Постоялец",
-        "§7Играть 20 часов\n§f + §e256 монет",
-        { it.stat.timePlayedTotal / 1000 / 3600 >= 20 },
-        {
-            it.giveMoney(256)
-        }),
-    HERE_FOREVER(
-        "Ты здесь навсегда",
-        "§7Играть 200 часов\n§f + §e1024 монет\n" +
-                "§f + 5 §bЛутбоксов",
-        { it.stat.timePlayedTotal / 1000 / 3600 >= 200 },
-        { user ->
-            repeat(5) { user.stat.lootbox++ }
-            user.giveMoney(1024)
-        }),
-    KILLER("Убийца всего живого", "§7Убить 10`000 игроков\n§f + §e4096 монет", { it.stat.kills >= 10000 }, {
-        it.giveMoney(4096)
-    }),
     TEN_GAMES("Игрок", "§7Сыграть 10 игр\n§f + §e128 монет", { it.stat.games >= 10 }, {
         it.giveMoney(128)
     }),
-    TWENTY_FIVE_GAMES("Эксперт", "§7Сыграть 25 игр\n§f + §e192 монеты\n§f + 1 §bЛутбокс", { it.stat.games >= 25 }, {
+    GAMER_PRO("Про игрок", "§7Сыграть 1000 игр\n§f + §e192 монеты\n§f + 1 §bЛутбокс", { it.stat.games >= 1000 }, {
         it.giveMoney(192)
         it.stat.lootbox++
-    }), FIVE_HOURS("Знаток", "§7Наиграть 5 часов\n§f + §e192 монеты\n§f + 1 §bЛутбокс", { it.stat.timePlayedTotal / 1000 / 3600 >= 5 }, {
-        it.giveMoney(192)
-        it.stat.lootbox++
-    }), FIVE_HUNDRED_GAMES("Невозможно", "§7Наиграть 500 часов\n§f + §e19`200 монет\n§f + 100 §bЛутбоксов", { it.stat.timePlayedTotal / 1000 / 3600 >= 500 }, { user ->
-        user.giveMoney(19200)
-        repeat(100) { user.stat.lootbox++ }
-    }), TWENTY_HUNDRED("Серийный маньяк", "§7Убить 250 человек\n§f + §e192 монеты\n§f + 1 §bЛутбокс", { it.stat.kills >= 250 }, {
-        it.giveMoney(192)
-        it.stat.lootbox++
-    }), GAMER_PRO("Про игрок", "§7Сыграть 1000 игр\n§f + §e192 монеты\n§f + 1 §bЛутбокс", { it.stat.games >= 1000 }, {
-        it.giveMoney(192)
-        it.stat.lootbox++
-    }), GAMER("Игрок", "§7Сыграть 100 игр\n§f + §e64 монеты", { it.stat.games >= 100 }, {
+    }),
+    GAMER("Игрок", "§7Сыграть 100 игр\n§f + §e64 монеты", { it.stat.games >= 100 }, {
         it.giveMoney(64)
-    }), LOOTER("Счастливчик", "§7Открыть 10 лутбоксов\n§f + 1 §bЛутбокс", { it.stat.lootboxOpenned >= 10 }, {
+    }),
+    LOOTER("Счастливчик", "§7Открыть 10 лутбоксов\n§f + 1 §bЛутбокс", { it.stat.lootboxOpenned >= 10 }, {
         it.stat.lootbox++
-    }), RICH("Богач", "§7Накопить 1`000 монет\n§f + 1 §bЛутбокс", { it.stat.money >= 1000 }, {
-        it.stat.lootbox++
-    }), VERY_RICH("Миллиардер", "§7Накопить 10`000 монет\n§f + 1 §bЛутбокс", { it.stat.money >= 10000 }, {
-        it.stat.lootbox++
-    })
+    }),
 }
