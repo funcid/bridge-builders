@@ -32,7 +32,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size + 4 < slots - 4) {
+            if (players.size + 12 < slots - 4) {
                 actualTime = 1
             } else {
                 // Обновление статуса реалма, чтобы нельзя было войти

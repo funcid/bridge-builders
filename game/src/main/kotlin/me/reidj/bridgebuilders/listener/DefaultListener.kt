@@ -104,7 +104,7 @@ object DefaultListener : Listener {
             player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
         // Если мост не достроен откидывать от него игрока
         teams.forEach { team ->
-            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 20 && !app.isSpectator(
+            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 12 && !app.isSpectator(
                     player
                 )
             )

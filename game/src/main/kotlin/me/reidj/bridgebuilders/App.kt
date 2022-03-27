@@ -36,7 +36,7 @@ lateinit var app: App
 val LOBBY_SERVER: RealmId = RealmId.of("TEST-56")
 var activeStatus = Status.STARTING
 var games = 0
-const val needBlocks = 2146
+const val needBlocks = 1761
 
 lateinit var teams: List<Team>
 
@@ -209,7 +209,7 @@ class App : JavaPlugin() {
     fun getBridge(team: Team): MutableList<Location> {
         val vector = team.bridge.toCenter
         val bridge = Bridge(vector, team.bridge.start, team.bridge.end, team.bridge.blocks)
-        val length = 54
+        val length = 42
         val width = 16
         val height = 30
         val blockLocation = mutableListOf<Location>()
