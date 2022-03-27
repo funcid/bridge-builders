@@ -67,7 +67,7 @@ class BridgeBuildersInstance(
         slots = currentSlot
         realm = IRealmService.get().currentRealmInfo
         realm.status = RealmStatus.WAITING_FOR_PLAYERS
-        realm.maxPlayers = currentSlot
+        realm.maxPlayers = currentSlot + 4
         realm.groupName = "BridgeBuilders"
 
         // Подключение к сервису статистики

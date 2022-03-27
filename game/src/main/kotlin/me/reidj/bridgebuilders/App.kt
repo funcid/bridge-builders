@@ -51,7 +51,7 @@ class App : JavaPlugin() {
 
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
 
-        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, worldMeta, 20)
+        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, worldMeta, 16)
         realm.readableName = "BridgeBuilders ${realm.realmId.id}"
         realm.lobbyFallback = LOBBY_SERVER
 
