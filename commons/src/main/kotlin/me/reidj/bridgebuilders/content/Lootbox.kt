@@ -2,11 +2,16 @@ package me.reidj.bridgebuilders.content
 
 import clepto.bukkit.B
 import dev.implario.bukkit.item.item
+import implario.humanize.Humanize
+import me.func.mod.Banners
+import me.func.protocol.element.Banner
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.MoneyFormatter
 import me.reidj.bridgebuilders.donate.impl.*
 import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.mod.ModTransfer
+import me.reidj.bridgebuilders.worldMeta
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
@@ -24,6 +29,38 @@ import ru.cristalix.core.inventory.InventoryContents
 import ru.cristalix.core.inventory.InventoryProvider
 
 object Lootbox : Listener {
+
+    val banners: MutableList<Banner> = mutableListOf()
+
+    init {
+        worldMeta.getLabels("lootbox").forEach {
+            val banner: Banner = Banner.Builder()
+                .x(it.x)
+                .y(it.y + 3.6)
+                .z(it.z + 2.0)
+                .yaw(-90f)
+                .pitch(10f)
+                .weight(65)
+                .height(14)
+                .resizeLine(0, 0.5)
+                .resizeLine(1, 0.5)
+                .build()
+            banners.add(banner)
+            B.repeat(20) {
+                Bukkit.getOnlinePlayers().map(getByPlayer).forEach { user ->
+                    banner.content = "§bЛутбокс\n§fДоступно ${user.stat.lootbox} ${
+                        Humanize.plurals(
+                            "штука",
+                            "штуки",
+                            "штук",
+                            user.stat.lootbox
+                        )
+                    }\n"
+                    Banners.content(user.player!!, banner.uuid, banner.content)
+                }
+            }
+        }
+    }
 
     private val dropList = Corpse.values().map { it }
         .plus(NameTag.values())

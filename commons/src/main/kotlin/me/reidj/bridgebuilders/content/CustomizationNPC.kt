@@ -90,8 +90,7 @@ object CustomizationNPC {
                                 "§7    Лутбоксов открыто: §f${stat.lootboxOpenned}\n" +
                                 "§7    Победы: §b${stat.wins}\n" +
                                 "§7    Убийств: §c${stat.kills}\n" +
-                                "§7    Сыграно: §f${stat.games} §7игр(ы)\n" +
-                                "§7    Наиграно §f${(stat.timePlayedTotal / 1000 / 360).toInt() / 10.0} §7часов\n\n"
+                                "§7    Сыграно: §f${stat.games} §7игр(ы)\n"
                     )
                 }))
 
