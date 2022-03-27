@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.inventory.ItemStack
+import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.util.UtilEntity
 
 object DamageListener : Listener {
@@ -66,6 +67,9 @@ object DamageListener : Listener {
                 }
             ModHelper.allNotification("" + victim.color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " игроком " + killer.color.chatColor + player.killer.name)
             killerStats.giveMoney(3)
+            killerStats.stat.kills++
+            killerStats.kills++
+            killerStats.player!!.sendMessage(Formatting.fine("Вы получили §e3 монеты §fза убийство."))
             if (user.stat.activeCorpse != Corpse.NONE) {
                 val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
                     .marker(true)

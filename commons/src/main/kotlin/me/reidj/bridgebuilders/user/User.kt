@@ -18,6 +18,7 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
     private var connection: PlayerConnection? = null
 
     var collectedBlocks = 0
+    var kills = 0
     var activeHand = false
 
     var stat: Stat

@@ -18,6 +18,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.inventory.ItemStack
+import ru.cristalix.core.formatting.Formatting
 import kotlin.math.min
 
 object BlockHandler : Listener {
@@ -83,14 +84,15 @@ object BlockHandler : Listener {
 
             winner.players.map(getByUuid).forEach { user ->
                 //BattlePassUtil.update(user.player!!, WIN, 1)
+                user.player!!.sendMessage(Formatting.fine("Вы получили §e10 монет §fза победу."))
                 user.stat.wins++
                 user.giveMoney(10)
                 user.player?.let { player ->
                     Anime.showEnding(
                         player,
                         EndStatus.WIN,
-                        "Блоков принесено:",
-                        "${user.collectedBlocks}"
+                        listOf("Блоков принесено:", "Игроков убито:"),
+                        listOf("${user.collectedBlocks}", "${user.kills}")
                     )
                 }
                 val firework = user.player!!.world!!.spawn(user.player!!.location, Firework::class.java)
@@ -115,11 +117,12 @@ object BlockHandler : Listener {
                 if (team.players.contains(it.stat.id))
                     return@forEach
                 it.giveMoney(5)
+                it.player!!.sendMessage(Formatting.fine("Вы получили §e5 монет§f."))
                 Anime.showEnding(
                     it.player!!,
                     EndStatus.LOSE,
-                    "Блоков принесено:",
-                    "${it.collectedBlocks}"
+                    listOf("Блоков принесено:", "Игроков убито:"),
+                    listOf("${it.collectedBlocks}", "${it.kills}")
                 )
             }
             B.postpone(5 * 20) { app.restart() }
