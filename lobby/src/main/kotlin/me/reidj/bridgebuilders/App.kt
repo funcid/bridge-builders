@@ -38,7 +38,7 @@ class App : JavaPlugin() {
         app = this
         Platforms.set(PlatformDarkPaper())
 
-        Anime.include(Kit.NPC, Kit.BATTLEPASS)
+        Anime.include(Kit.NPC, Kit.BATTLEPASS, Kit.EXPERIMENTAL, Kit.LOOTBOX)
 
         BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, MapLoader().load("LOBB"), 200)
 

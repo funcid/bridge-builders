@@ -3,7 +3,6 @@ package me.reidj.bridgebuilders.listener
 import clepto.bukkit.B
 import io.netty.buffer.Unpooled
 import me.func.mod.Banners
-import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.worldMeta
@@ -57,8 +56,6 @@ object GlobalListeners : Listener {
             )
         }
         ModHelper.updateBalance(user)
-
-        Lootbox.banners.forEach { Banners.show(user.player!!, it) }
 
         // Заполнение имени для топа
         if (user.stat.lastSeenName == null || (user.stat.lastSeenName != null && user.stat.lastSeenName!!.isEmpty()))
