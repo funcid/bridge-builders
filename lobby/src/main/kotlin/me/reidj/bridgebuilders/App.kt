@@ -54,9 +54,9 @@ class App : JavaPlugin() {
         CustomizationNPC
 
         B.events(
+            Lootbox,
             GlobalListeners,
-            LobbyHandler,
-            Lootbox
+            LobbyHandler
         )
 
         worldMeta.getLabels("play").forEach { npcLabel ->

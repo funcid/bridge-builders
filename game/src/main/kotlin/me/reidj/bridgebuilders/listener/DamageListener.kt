@@ -54,7 +54,8 @@ object DamageListener : Listener {
 
         if (player.killer != null) {
             val user = getByPlayer(player)
-            val killer = teams.filter { team -> team.players.contains(player.killer.uniqueId) }
+            val killer = teams.filter { team -> team.players.contains(player.killer.uniqueId) }[0]
+            val killerStats = app.getUser(player.killer)
             drops.filter {
                 it.getType().isBlock || it.getType() == Material.DIAMOND || it.getType() == Material.IRON_INGOT
                         || it.getType() == Material.COAL || it.getType() == Material.GOLD_INGOT
@@ -63,7 +64,8 @@ object DamageListener : Listener {
                     player.killer.inventory.addItem(it)
                     it.setAmount(0)
                 }
-            ModHelper.allNotification("" + victim.color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " игроком " + killer[0].color.chatColor + player.killer.name)
+            ModHelper.allNotification("" + victim.color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " игроком " + killer.color.chatColor + player.killer.name)
+            killerStats.giveMoney(3)
             if (user.stat.activeCorpse != Corpse.NONE) {
                 val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
                     .marker(true)
@@ -112,21 +114,18 @@ object DamageListener : Listener {
 
         player.gameMode = GameMode.SPECTATOR
 
-        Cycle.run(20, 5) {
-            if (it == 5) {
+        Cycle.run(20, 5) { time ->
+            if (time == 5) {
                 player.gameMode = GameMode.SURVIVAL
-                teams.stream()
-                    .filter { team -> team.players.contains(player.uniqueId) }
-                    .forEach { team ->
-                        run {
-                            app.teleportAtBase(team, player)
-                            player.foodLevel = 20
-                        }
-                    }
+                val team = teams.filter { it.players.contains(player.uniqueId) }[0]
+                run {
+                    app.teleportAtBase(team, player)
+                    player.foodLevel = 20
+                }
                 Cycle.exit()
-            } else if (it < 2) {
+            } else if (time < 2) {
                 Anime.title(player, "Возрождение...")
-            } else if (it == 2) {
+            } else if (time == 2) {
                 Anime.counting321(player)
             }
         }

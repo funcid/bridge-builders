@@ -34,12 +34,14 @@ enum class Achievement(
         it.stat.lootbox++
     }),
     HUNDRED_WIN("Герой", "§7Победить 100 раз\n" +
-            "§f + 3 §bЛутбокса", { it.stat.wins >= 100 }, { user ->
+            "§f + 3 §bЛутбокса\n§f + §e512 монет", { it.stat.wins >= 100 }, { user ->
         repeat(3) { user.stat.lootbox++ }
+        user.giveMoney(512)
     }),
     THOUSAND_WIN("Легенда", "§7Победить 1`000 раз\n" +
-            "§f + 20 §bЛутбоксов", { it.stat.wins >= 1000 }, { user ->
+            "§f + 20 §bЛутбоксов\n§f + §e1024 монет", { it.stat.wins >= 1000 }, { user ->
         repeat(20) { user.stat.lootbox++ }
+        user.giveMoney(1024)
     }),
     GAMER("Игрок", "§7Сыграть 10 игр\n§f + §e128 монет", { it.stat.games >= 10 }, {
         it.giveMoney(128)
