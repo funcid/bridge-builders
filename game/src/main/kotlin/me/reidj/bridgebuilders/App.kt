@@ -23,13 +23,17 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
+import ru.cristalix.core.CoreApi
 import ru.cristalix.core.datasync.EntityDataParameters
 import ru.cristalix.core.formatting.Color
+import ru.cristalix.core.karma.IKarmaService
+import ru.cristalix.core.karma.KarmaService
+import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.realm.RealmId
 import java.util.*
 import java.util.stream.Collectors
 
-const val GAMES_STREAK_RESTART = 6
+const val GAMES_STREAK_RESTART = 3
 
 lateinit var app: App
 
@@ -48,6 +52,8 @@ class App : JavaPlugin() {
         loadMap()
         Platforms.set(PlatformDarkPaper())
         EntityDataParameters.register()
+
+        CoreApi.get().registerService(IKarmaService::class.java, KarmaService(ISocketClient.get()))
 
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
 

@@ -35,7 +35,7 @@ object CustomizationNPC {
         nbt("other", "cancel")
     }
 
-    val accessItem = item {
+    private val accessItem = item {
         text("§aКупить\n\n§7Это кнопка подтверждения\n§7покупки.")
         nbt("other", "access")
         enchant(Enchantment.LUCK, 1)
@@ -150,7 +150,7 @@ object CustomizationNPC {
                 }) {
                     subInventory(player, 1) { _: Player, currentContent: InventoryContents ->
                         currentContent.setLayout("XIIIIXXBX")
-                        //pasteItems(user, true, currentContent, MoneyKit.values().filter { it != MoneyKit.NONE }) {}
+                        pasteItems(user, true, currentContent, MoneyKit.values().filter { it != MoneyKit.NONE }) {}
                     }
                 })
                 contents.add('O', ClickableItem.of(LootboxUnit.getIcon()) {
@@ -192,7 +192,7 @@ object CustomizationNPC {
                 })
 
                 contents.add('D', ClickableItem.of(StarterPack.getIcon()) {
-                    //donateMenu(player, StarterPack, true)
+                    donateMenu(player, StarterPack, true)
                 })
                 val countHaveAchievement =
                     Achievement.values().count { it.predicate(user) && !stat.achievement.contains(it) }

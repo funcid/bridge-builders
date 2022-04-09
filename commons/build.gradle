@@ -30,6 +30,7 @@ dependencies {
 
     implementation 'dev.implario.bukkit:kotlin-api:1.1.1'
     implementation 'me.func:animation-api:1.1.90'
+    implementation 'me.func:booster-api:last-SNAPSHOT'
     implementation 'implario:humanize:1.1.3'
 
     compileOnly 'cristalix:bukkit-core:21.01.30'
