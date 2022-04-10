@@ -14,6 +14,8 @@ import kotlin.math.max
 
 object BoardBlocks {
 
+    private var inGame = false
+
     val tab = rectangle {
         enabled = false
         size = V3(400.0, 230.0)
@@ -65,6 +67,7 @@ object BoardBlocks {
             if (tab.children.size <= index)
                 tab + Drop(title, item, needTotal, collected).element
             tab.enabled = true
+            inGame = true
         }
 
         App::class.mod.registerChannel("bridge:tabupdate") {
@@ -87,10 +90,11 @@ object BoardBlocks {
 
         registerHandler<GameLoop> {
             // Таб
-            if (tab.children.isNotEmpty() && (!tab.enabled && Keyboard.isKeyDown(Keyboard.KEY_TAB))
+            if (inGame && tab.children.isNotEmpty() && (!tab.enabled && Keyboard.isKeyDown(Keyboard.KEY_TAB))
                 || (tab.enabled && !Keyboard.isKeyDown(Keyboard.KEY_TAB))) {
                 tab.enabled = !tab.enabled
             }
+            OnlineBar.online.enabled = !(!inGame && Keyboard.isKeyDown(Keyboard.KEY_TAB))
         }
     }
 }

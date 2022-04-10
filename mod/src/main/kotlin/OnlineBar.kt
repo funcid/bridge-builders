@@ -8,7 +8,7 @@ import ru.cristalix.uiengine.utility.*
 
 object OnlineBar {
 
-    private val online = rectangle {
+    val online = rectangle {
         offset = V3(0.0, 25.0)
         origin = TOP
         align = TOP
