@@ -22,17 +22,17 @@ enum class MoneyKit(
     }),
     NORMAL("Мешок монет", 39, Rare.RARE, 256, item {
         type = Material.CLAY_BALL
-        text("§eПара монет §7> §f128\n\n§7Получите §e256 монет\n§7за §b39 кристаликов§7.\n\n§aСкидка 30%")
+        text("§eПара монет §7> §f128\n\n§7Получите §e256 монет\n§7за §b39 кристаликов§7.")
         nbt("other", "bag1")
     }),
     BIG("Коробка монет", 119, Rare.EPIC, 1024, item {
         type = Material.CLAY_BALL
-        text("§eПара монет §7> §f1024\n\n§7Получите §e1024 монеты\n§7за §b119 кристаликов§7.\n\n§aСкидка 30%")
+        text("§eПара монет §7> §f1024\n\n§7Получите §e1024 монеты\n§7за §b119 кристаликов§7.")
         nbt("other", "new_lvl_rare_close")
     }),
     HUGE("Гора монет", 499, Rare.LEGENDARY, 8192, item {
         type = Material.TOTEM
-        text("§eПара монет §7> §f8192\n\n§7Получите §e8192 монеты\n§7за §b499 кристаликов§7.\n\n§aСкидка 70%")
+        text("§eПара монет §7> §f8192\n\n§7Получите §e8192 монеты\n§7за §b499 кристаликов§7.")
         nbt("other", "knight")
     }), ;
 

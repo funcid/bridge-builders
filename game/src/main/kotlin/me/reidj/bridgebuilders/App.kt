@@ -37,7 +37,7 @@ const val GAMES_STREAK_RESTART = 3
 
 lateinit var app: App
 
-val LOBBY_SERVER: RealmId = RealmId.of("TEST-56")
+val LOBBY_SERVER: RealmId = RealmId.of("BRIL-1")
 var activeStatus = Status.STARTING
 var games = 0
 const val needBlocks = 1761

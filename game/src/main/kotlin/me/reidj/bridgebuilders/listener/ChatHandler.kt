@@ -7,11 +7,8 @@ import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
-import ru.cristalix.core.CoreApi
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.karma.IKarmaService
-import ru.cristalix.core.karma.KarmaService
-import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.permissions.IPermissionService
 import java.util.function.Predicate
 
@@ -23,7 +20,6 @@ object ChatHandler : Listener {
     fun AsyncPlayerChatEvent.handle() {
         if (activeStatus != Status.GAME)
             return
-        IKarmaService.get().enableGG(Predicate.isEqual(player.uniqueId))
         val team = teams.filter { team -> team.players.contains(player.uniqueId) }
         if (team.isNotEmpty() || app.isSpectator(player)) {
             isCancelled = true

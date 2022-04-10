@@ -42,8 +42,6 @@ object GlobalListeners : Listener {
     fun PlayerJoinEvent.handle() {
         val user = getByPlayer(player)
 
-        player.sendMessage(Formatting.fine("О найденных багах сообщать в ВК - https://vk.com/reidj.java"))
-
         B.postpone(5) { player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
 
         // Отправка модов

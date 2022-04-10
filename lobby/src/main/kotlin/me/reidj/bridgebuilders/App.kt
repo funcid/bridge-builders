@@ -11,21 +11,17 @@ import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.listener.GlobalListeners
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.util.MapLoader
+import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import ru.cristalix.core.CoreApi
-import ru.cristalix.core.display.data.DataDrawData
-import ru.cristalix.core.display.data.StringDrawData
 import ru.cristalix.core.formatting.Formatting
-import ru.cristalix.core.math.V2
-import ru.cristalix.core.math.V3
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
 import ru.cristalix.core.realm.RealmStatus
 import ru.cristalix.core.render.BukkitRenderService
 import ru.cristalix.core.render.IRenderService
-import ru.cristalix.core.render.VisibilityTarget
-import ru.cristalix.core.render.WorldRenderData
 import java.util.*
 
 lateinit var app: App
@@ -33,21 +29,26 @@ const val SKIN: String = "bf30a1df-85de-11e8-a6de-1cb72caa35fd"
 
 class App : JavaPlugin() {
 
+    var online = 0
+
     override fun onEnable() {
         B.plugin = this
         app = this
         Platforms.set(PlatformDarkPaper())
 
-        Anime.include(Kit.NPC, Kit.BATTLEPASS, Kit.EXPERIMENTAL, Kit.LOOTBOX)
+        Anime.include(Kit.NPC, Kit.LOOTBOX, Kit.EXPERIMENTAL)
 
         BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, MapLoader().load("LOBB"), 200)
 
         CoreApi.get().registerService(IRenderService::class.java, BukkitRenderService(getServer()))
 
         // Конфигурация реалма
-        realm.isLobbyServer = false
+        realm.status = RealmStatus.WAITING_FOR_PLAYERS
+        realm.maxPlayers = 1200
+        realm.isLobbyServer = true
         realm.readableName = "BridgeBuilders Lobby"
-        realm.servicedServers = arrayOf("BridgeBuilders Lobby ${realm.realmId.id}")
+        realm.groupName = "BridgeBuilders Lobby"
+        realm.servicedServers = arrayOf("BRI")
 
         // Создание контента для лобби
         TopManager()
@@ -59,29 +60,18 @@ class App : JavaPlugin() {
             LobbyHandler
         )
 
-        worldMeta.getLabels("play").forEach { npcLabel ->
-            val textDataName = UUID.randomUUID().toString()
-            IRenderService.get().createGlobalWorldRenderData(
-                worldMeta.world.uid,
-                textDataName,
-                WorldRenderData.builder().visibilityTarget(VisibilityTarget.BLACKLIST).name(textDataName).dataDrawData(
-                    DataDrawData.builder()
-                        .strings(
-                            listOf(
-                                StringDrawData.builder().align(1).scale(2).position(V2(100.0, 0.0))
-                                    .string("㗬㗬㗬")
-                                    .build(),
-                                StringDrawData.builder().align(1).scale(2).position(V2(115.0, 40.0))
-                                    .string("§l> §dBridgeBuilders §f§l<").build()
-                            )
-                        ).dimensions(V2(0.0, 0.0))
-                        .scale(2.0)
-                        .position(V3(npcLabel.x + 2.6, npcLabel.y + 4, npcLabel.z + 0.5))
-                        .rotation(180)
-                        .build()
-                ).build()
-            )
-            IRenderService.get().setRenderVisible(worldMeta.world.uid, textDataName, true)
+        val npcLabel = worldMeta.getLabel("play")
+        val stand = worldMeta.world.spawnEntity(
+            npcLabel.clone().add(0.5, 2.3, 0.5),
+            EntityType.ARMOR_STAND
+        ) as ArmorStand
+        stand.isMarker = true
+        stand.isVisible = false
+        stand.setGravity(false)
+        stand.isCustomNameVisible = true
+        B.repeat(20) {
+            realm.servicedServers.forEach { online = IRealmService.get().getOnlineOnRealms(it) }
+            stand.customName = "§bОнлайн $online"
         }
 
         // Команда выхода в хаб
@@ -96,7 +86,8 @@ class App : JavaPlugin() {
         }, "battlepass", "bp")*/
         B.regCommand({ player, args ->
             val realmId =
-                IRealmService.get().getRealmsOfType("BRI").filter { it.status == RealmStatus.GAME_STARTED_CAN_SPACTATE }
+                IRealmService.get().getRealmsOfType("BRI")
+                    .filter { it.status == RealmStatus.GAME_STARTED_CAN_SPACTATE }
                     .map { it.realmId }
             val realm = RealmId.of("BRI-${args[0]}")
             if (realmId.contains(realm))
