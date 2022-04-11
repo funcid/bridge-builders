@@ -11,6 +11,9 @@ import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.listener.GlobalListeners
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.util.MapLoader
+import net.md_5.bungee.api.ChatColor
+import net.md_5.bungee.api.chat.*
+import org.bukkit.Bukkit
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -23,6 +26,7 @@ import ru.cristalix.core.realm.RealmStatus
 import ru.cristalix.core.render.BukkitRenderService
 import ru.cristalix.core.render.IRenderService
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 lateinit var app: App
 const val SKIN: String = "bf30a1df-85de-11e8-a6de-1cb72caa35fd"
@@ -30,6 +34,23 @@ const val SKIN: String = "bf30a1df-85de-11e8-a6de-1cb72caa35fd"
 class App : JavaPlugin() {
 
     var online = 0
+
+    private val hoverEvent =
+        HoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf<BaseComponent>(TextComponent("§eНАЖМИ НА МЕНЯ")))
+    private val clickUrl = ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/crGfRk6As4")
+    private val alertMessage = ComponentBuilder("================\n").color(ChatColor.YELLOW)
+        .append("\n")
+        .bold(false)
+        .append("§fУ нас есть свой дискорд сервер!")
+        .append(" §fНе знал?")
+        .event(hoverEvent)
+        .event(clickUrl)
+        .append(" §fТогда скорее присоединяйся. §7*Клик*")
+        .event(hoverEvent)
+        .event(clickUrl)
+        .append("\n")
+        .append("\n================\n").color(ChatColor.YELLOW)
+        .create()
 
     override fun onEnable() {
         B.plugin = this
@@ -40,7 +61,11 @@ class App : JavaPlugin() {
 
         BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, MapLoader().load("LOBB"), 200)
 
-        CoreApi.get().registerService(IRenderService::class.java, BukkitRenderService(getServer()))
+        val core = CoreApi.get()
+        core.registerService(IRenderService::class.java, BukkitRenderService(getServer()))
+        core.platform.scheduler.runAsyncRepeating({
+            Bukkit.getOnlinePlayers().forEach { it.sendMessage(alertMessage) }
+        }, 10, TimeUnit.MINUTES)
 
         // Конфигурация реалма
         realm.status = RealmStatus.WAITING_FOR_PLAYERS
@@ -101,4 +126,8 @@ class App : JavaPlugin() {
     private fun getUser(player: Player) = userManager.getUser(player.uniqueId)
 
     private fun getUser(uuid: UUID) = userManager.getUser(uuid)
+}
+
+private fun Player.sendMessage(create: Array<BaseComponent>?) {
+
 }
