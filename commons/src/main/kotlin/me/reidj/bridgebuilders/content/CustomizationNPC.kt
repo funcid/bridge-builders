@@ -52,31 +52,13 @@ object CustomizationNPC {
                     "XXXXXXXXX",
                     "XSXCXDXHX",
                     "XXXXXXXXX",
-                    "XZLKPIQXX",
+                    "XXZLKPIXX",
                     "XXXXOXXXX",
                     "XXXXQXXXX",
                 )
 
                 val user = getByPlayer(player)
                 val stat = user.stat
-
-                contents.add('Q', ClickableItem.of(item {
-                    type = Material.CLAY_BALL
-                    nbt("marioparty", "bowspleef")
-                    nbt("HideFlags", 63)
-                    text("§bЭффекты выстрела\n\n§7Выберите эффект, который\n§7останется после выстрела.")
-                }) {
-                    subInventory(player, 3) { _: Player, currentContent: InventoryContents ->
-                        currentContent.setLayout(
-                            "XIIIIIIIX",
-                            "XIIIIIIIX",
-                            "XXXXBXXXX"
-                        )
-                        pasteItems(user, false, currentContent, ArrowParticle.values().asIterable()) {
-                            user.stat.arrowParticle = it as ArrowParticle
-                        }
-                    }
-                })
 
                 contents.add('S', ClickableItem.empty(item {
                     type = Material.CLAY_BALL

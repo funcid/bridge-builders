@@ -33,7 +33,7 @@ const val SKIN: String = "bf30a1df-85de-11e8-a6de-1cb72caa35fd"
 
 class App : JavaPlugin() {
 
-    var online = 0
+    private var online = 0
 
     private val hoverEvent =
         HoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf<BaseComponent>(TextComponent("§eНАЖМИ НА МЕНЯ")))
@@ -64,15 +64,15 @@ class App : JavaPlugin() {
         val core = CoreApi.get()
         core.registerService(IRenderService::class.java, BukkitRenderService(getServer()))
         core.platform.scheduler.runAsyncRepeating({
-            Bukkit.getOnlinePlayers().forEach { it.sendMessage(alertMessage) }
+            Bukkit.getOnlinePlayers().forEach { player -> alertMessage.forEach { player.sendMessage(it) } }
         }, 10, TimeUnit.MINUTES)
 
         // Конфигурация реалма
         realm.status = RealmStatus.WAITING_FOR_PLAYERS
         realm.maxPlayers = 1200
         realm.isLobbyServer = true
-        realm.readableName = "BridgeBuilders Lobby"
-        realm.groupName = "BridgeBuilders Lobby"
+        realm.readableName = "BridgeBuilders"
+        realm.groupName = "BridgeBuilders"
         realm.servicedServers = arrayOf("BRI")
 
         // Создание контента для лобби
@@ -126,8 +126,4 @@ class App : JavaPlugin() {
     private fun getUser(player: Player) = userManager.getUser(player.uniqueId)
 
     private fun getUser(uuid: UUID) = userManager.getUser(uuid)
-}
-
-private fun Player.sendMessage(create: Array<BaseComponent>?) {
-
 }

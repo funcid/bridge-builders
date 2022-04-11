@@ -53,7 +53,6 @@ object BattlePassManager {
             MoneyKit.SMALL,
             NameTag.RALPH,
             MoneyKit.SMALL,
-            ArrowParticle.SLIME,
             LootboxUnit
         ) to listOf(
             NameTag.PAVEMENT,
@@ -69,7 +68,6 @@ object BattlePassManager {
         ),
         listOf(
             MoneyKit.SMALL,
-            ArrowParticle.SLIME,
             MoneyKit.SMALL,
             NameTag.DROGBAR,
             LootboxUnit,
@@ -79,7 +77,6 @@ object BattlePassManager {
             StepParticle.SLIME,
             LootboxUnit
         ) to listOf(
-            ArrowParticle.WATER_DROP,
             MoneyKit.SMALL,
             KillMessage.KIRA,
             MoneyKit.SMALL,
@@ -98,7 +95,6 @@ object BattlePassManager {
             MoneyKit.SMALL,
             KillMessage.SLEEP,
             MoneyKit.SMALL,
-            ArrowParticle.SPELL_INSTANT,
             LootboxUnit
         ) to listOf(
             NameTag.ANARCHIST,
@@ -108,7 +104,6 @@ object BattlePassManager {
             LootboxUnit,
             KillMessage.HORNY,
             MoneyKit.SMALL,
-            ArrowParticle.REDSTONE,
             MoneyKit.SMALL,
             LootboxUnit
         ),
@@ -121,10 +116,8 @@ object BattlePassManager {
             MoneyKit.SMALL,
             Corpse.G2,
             MoneyKit.SMALL,
-            ArrowParticle.SPELL_WITCH,
             LootboxUnit
         ) to listOf(
-            ArrowParticle.VILLAGER_ANGRY,
             MoneyKit.SMALL,
             StepParticle.VILLAGER_ANGRY,
             MoneyKit.NORMAL,
@@ -141,14 +134,11 @@ object BattlePassManager {
             KillMessage.BLACK,
             LootboxUnit,
             MoneyKit.SMALL,
-            ArrowParticle.LAVA,
             MoneyKit.SMALL,
-            ArrowParticle.NOTE,
             LootboxUnit,
         ) to listOf(
             KillMessage.X,
             MoneyKit.SMALL,
-            ArrowParticle.HEAR,
             MoneyKit.SMALL,
             LootboxUnit,
             StarterKit.COOK,
@@ -170,7 +160,6 @@ object BattlePassManager {
         ) to listOf(
             KillMessage.ROOM,
             MoneyKit.SMALL,
-            ArrowParticle.VILLAGER_HAPPY,
             MoneyKit.SMALL,
             LootboxUnit,
             StarterKit.COLLECTOR,

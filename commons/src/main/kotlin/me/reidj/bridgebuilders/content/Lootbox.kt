@@ -64,9 +64,8 @@ object Lootbox : Listener {
         .plus(NameTag.values())
         .plus(StepParticle.values())
         .plus(KillMessage.values())
-        .plus(ArrowParticle.values())
         .plus(StarterKit.values())
-        .filter { it != KillMessage.NONE && it != Corpse.NONE && it != NameTag.NONE && it != StepParticle.NONE && it != ArrowParticle.NONE && it != StarterKit.NONE }
+        .filter { it != KillMessage.NONE && it != Corpse.NONE && it != NameTag.NONE && it != StepParticle.NONE && it != StarterKit.NONE }
 
     private const val lootboxPrice = 192
 

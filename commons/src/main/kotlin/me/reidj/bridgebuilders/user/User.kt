@@ -53,13 +53,11 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                     StepParticle.NONE,
                     NameTag.NONE,
                     Corpse.NONE,
-                    ArrowParticle.NONE,
                 ),
                 KillMessage.NONE,
                 StepParticle.NONE,
                 NameTag.NONE,
                 Corpse.NONE,
-                ArrowParticle.NONE,
                 StarterKit.NONE,
                 0,
                 0,
@@ -83,7 +81,6 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                     StepParticle.NONE,
                     NameTag.NONE,
                     Corpse.NONE,
-                    ArrowParticle.NONE,
                 )
             if (stat.activeKillMessage == null)
                 stat.activeKillMessage = KillMessage.NONE
@@ -93,8 +90,6 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                 stat.activeNameTag = NameTag.NONE
             if (stat.activeCorpse == null)
                 stat.activeCorpse = Corpse.NONE
-            if (stat.arrowParticle == null)
-                stat.arrowParticle = ArrowParticle.NONE
             if (stat.timePlayedTotal == null)
                 stat.timePlayedTotal = 0
             if (stat.lastEnter == null)

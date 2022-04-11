@@ -29,7 +29,6 @@ data class Stat(
     var activeParticle: StepParticle,
     var activeNameTag: NameTag,
     var activeCorpse: Corpse,
-    var arrowParticle: ArrowParticle,
     var activeKit: StarterKit,
 
     var timePlayedTotal: Long,

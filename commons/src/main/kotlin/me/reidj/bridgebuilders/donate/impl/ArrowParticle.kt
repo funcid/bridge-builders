@@ -9,10 +9,6 @@ import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.inventory.ItemStack
 
-/**
- * @author Рейдж 21.08.2021
- * @project Murder Mystery
- */
 enum class ArrowParticle(
     private val title: String,
     private val price: Int,
@@ -49,24 +45,29 @@ enum class ArrowParticle(
     override fun getIcon(): ItemStack {
         return item {
             type = icon
-            text(rare.with("след стрелы $title") + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}")
+            text(
+                rare.with("след стрелы $title") + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${
+                    MoneyFormatter.texted(
+                        price
+                    )
+                }"
+            )
         }
     }
 
     override fun give(user: User) {
-        user.stat.arrowParticle = this
-        user.stat.donate.add(this)
+
     }
 
     override fun isActive(user: User): Boolean {
-        return user.stat.arrowParticle == this
+        return false
     }
 
     override fun getName(): String {
         return name
     }
 
-    fun getParticle() : Particle? {
+    fun getParticle(): Particle? {
         return type
     }
 }
