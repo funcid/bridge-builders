@@ -36,7 +36,7 @@ object ConnectionHandler : Listener {
     fun PlayerJoinEvent.handle() {
         val user = getByPlayer(player)
 
-        player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+        B.postpone(5) { player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
         player.inventory.clear()
 
         // Заполнение имени для топа

@@ -35,6 +35,11 @@ class AdminCommand {
                     user.giveMoney(args[1].toInt())
             }, "money"
         )
+        B.regCommand(
+            adminConsume { _, args -> getByPlayer(Bukkit.getPlayer(args[0])).stat.wins += args[1].toInt() },
+            "win",
+            "wins"
+        )
     }
 
     private fun adminConsume(consumer: (user: User, args: Array<String>) -> Unit): B.Executor {
