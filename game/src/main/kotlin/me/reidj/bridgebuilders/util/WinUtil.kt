@@ -1,9 +1,15 @@
 package me.reidj.bridgebuilders.util
 
-import me.reidj.bridgebuilders.Status
-import me.reidj.bridgebuilders.activeStatus
-import me.reidj.bridgebuilders.teams
-import me.reidj.bridgebuilders.timer
+import me.func.mod.Anime
+import me.func.protocol.EndStatus
+import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.data.Team
+import me.reidj.bridgebuilders.user.User
+import org.bukkit.Bukkit
+import org.bukkit.Color
+import org.bukkit.FireworkEffect
+import org.bukkit.entity.Firework
+import ru.cristalix.core.formatting.Formatting
 
 object WinUtil {
 
@@ -18,5 +24,49 @@ object WinUtil {
         if (activeStatus.lastSecond * 20 == timer.time)
             return true
         return false
+    }
+
+    fun end(winner: User, team: Team) {
+        winner.apply {
+            player!!.sendMessage(Formatting.fine("Вы получили §e10 монет §fза победу."))
+            stat.wins++
+            giveMoney(10)
+            player?.let { player ->
+                Anime.showEnding(
+                    player,
+                    EndStatus.WIN,
+                    listOf("Блоков принесено:", "Игроков убито:"),
+                    listOf("${collectedBlocks}", "${kills}")
+                )
+            }
+            val firework = player!!.world!!.spawn(player!!.location, Firework::class.java)
+            val meta = firework.fireworkMeta
+            meta.addEffect(
+                FireworkEffect.builder()
+                    .flicker(true)
+                    .trail(true)
+                    .with(FireworkEffect.Type.BALL_LARGE)
+                    .with(FireworkEffect.Type.BALL)
+                    .with(FireworkEffect.Type.BALL_LARGE)
+                    .withColor(Color.YELLOW)
+                    .withColor(Color.GREEN)
+                    .withColor(Color.WHITE)
+                    .build()
+            )
+            meta.power = 0
+            firework.fireworkMeta = meta
+        }
+        Bukkit.getOnlinePlayers().map(getByPlayer).forEach {
+            if (team.players.contains(it.stat.id))
+                return@forEach
+            it.giveMoney(5)
+            it.player!!.sendMessage(Formatting.fine("Вы получили §e5 монет§f."))
+            Anime.showEnding(
+                it.player!!,
+                EndStatus.LOSE,
+                listOf("Блоков принесено:", "Игроков убито:"),
+                listOf("${it.collectedBlocks}", "${it.kills}")
+            )
+        }
     }
 }

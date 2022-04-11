@@ -27,7 +27,6 @@ object BattlePassUtil {
             else it.now += value
 
             if (it.goal <= it.now) {
-                println(2222)
                 Anime.topMessage(player, "§lЗадание выполнено! §6Награда: §b${it.exp} опыта §6баттлпасса")
                 data.progress!!.exp += it.exp
             }

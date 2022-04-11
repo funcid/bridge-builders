@@ -1,24 +1,17 @@
 package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
-import me.func.mod.Anime
-import me.func.protocol.EndStatus
 import me.reidj.bridgebuilders.app
-import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.getByUuid
 import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.teams
-import org.bukkit.Bukkit
-import org.bukkit.Color
-import org.bukkit.FireworkEffect
+import me.reidj.bridgebuilders.util.WinUtil
 import org.bukkit.Material
-import org.bukkit.entity.Firework
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.inventory.ItemStack
-import ru.cristalix.core.formatting.Formatting
 import kotlin.math.min
 
 object BlockHandler : Listener {
@@ -84,46 +77,7 @@ object BlockHandler : Listener {
 
             winner.players.map(getByUuid).forEach { user ->
                 //BattlePassUtil.update(user.player!!, WIN, 1)
-                user.player!!.sendMessage(Formatting.fine("Вы получили §e10 монет §fза победу."))
-                user.stat.wins++
-                user.giveMoney(10)
-                user.player?.let { player ->
-                    Anime.showEnding(
-                        player,
-                        EndStatus.WIN,
-                        listOf("Блоков принесено:", "Игроков убито:"),
-                        listOf("${user.collectedBlocks}", "${user.kills}")
-                    )
-                }
-                val firework = user.player!!.world!!.spawn(user.player!!.location, Firework::class.java)
-                val meta = firework.fireworkMeta
-                meta.addEffect(
-                    FireworkEffect.builder()
-                        .flicker(true)
-                        .trail(true)
-                        .with(FireworkEffect.Type.BALL_LARGE)
-                        .with(FireworkEffect.Type.BALL)
-                        .with(FireworkEffect.Type.BALL_LARGE)
-                        .withColor(Color.YELLOW)
-                        .withColor(Color.GREEN)
-                        .withColor(Color.WHITE)
-                        .build()
-                )
-                meta.power = 0
-                firework.fireworkMeta = meta
-            }
-
-            Bukkit.getOnlinePlayers().map(getByPlayer).forEach {
-                if (team.players.contains(it.stat.id))
-                    return@forEach
-                it.giveMoney(5)
-                it.player!!.sendMessage(Formatting.fine("Вы получили §e5 монет§f."))
-                Anime.showEnding(
-                    it.player!!,
-                    EndStatus.LOSE,
-                    listOf("Блоков принесено:", "Игроков убито:"),
-                    listOf("${it.collectedBlocks}", "${it.kills}")
-                )
+                WinUtil.end(user, team)
             }
             B.postpone(5 * 20) { app.restart() }
             return

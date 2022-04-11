@@ -147,8 +147,6 @@ class App : JavaPlugin() {
                                         .integer(team.players.map { getByUuid(it) }
                                             .sumOf { it.collectedBlocks })
                                         .send("bridge:tabupdate", whoSend)
-                                    println(team.players.map { getByUuid(it) }
-                                        .sumOf { it.collectedBlocks })
                                 }
                             }
                         }

@@ -2,7 +2,9 @@ package me.reidj.bridgebuilders
 
 import clepto.bukkit.B
 import me.func.mod.Anime
+import me.reidj.bridgebuilders.data.BlockPlan
 import me.reidj.bridgebuilders.data.DefaultKit
+import me.reidj.bridgebuilders.util.WinUtil
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Color.*
@@ -12,7 +14,7 @@ import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_SPACTATE
 val kit = DefaultKit
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(50, { it ->
+    STARTING(10, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 60)
             realm.status = GAME_STARTED_CAN_JOIN
@@ -32,7 +34,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size < slots) {
+            if (players.size + 15 < slots) {
                 actualTime = 1
             } else {
                 // Обновление статуса реалма, чтобы нельзя было войти
@@ -119,33 +121,50 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             actualTime = (STARTING.lastSecond - 10) * 20
         actualTime
     }),
-    GAME(1500, { time ->
-        // Обновление шкалы времени
-        if (time % 20 == 0) {
-            Bukkit.getOnlinePlayers().forEach {
-                me.reidj.bridgebuilders.mod.ModTransfer()
-                    .integer(GAME.lastSecond)
-                    .integer(time)
-                    .boolean(false)
-                    .send("bridge:online", app.getUser(it))
-                if (time / 20 == 180) {
-                    teams.forEach { team -> team.isActiveTeleport = true }
-                    Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
-                }
-                if (time / 20 == 600) {
-                    Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
-                    teams.forEach { team -> team.blockReturn() }
+    GAME(
+        50,
+        { time ->
+            // Обновление шкалы времени
+            if (time % 20 == 0) {
+                Bukkit.getOnlinePlayers().forEach {
+                    me.reidj.bridgebuilders.mod.ModTransfer()
+                        .integer(GAME.lastSecond)
+                        .integer(time)
+                        .boolean(false)
+                        .send("bridge:online", app.getUser(it))
+                    if (time / 20 == 180) {
+                        teams.forEach { team -> team.isActiveTeleport = true }
+                        Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
+                    }
+                    if (time / 20 == 600) {
+                        Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
+                        teams.forEach { team -> team.blockReturn() }
+                    }
                 }
             }
-        }
-        // Проверка на победу
-        if (me.reidj.bridgebuilders.util.WinUtil.check4win()) {
-            ru.cristalix.core.karma.IKarmaService.get().enableGG { true }
-            Bukkit.getOnlinePlayers().forEach { Anime.showEnding(it, me.func.protocol.EndStatus.DRAW, "Время вышло!", "") }
-            B.postpone(5 * 20) { app.restart() }
-        }
-        time
-    }),
+            // Проверка на победу
+            if (WinUtil.check4win()) {
+                ru.cristalix.core.karma.IKarmaService.get().enableGG { true }
+                var max: Map.Entry<BlockPlan, Int>? = null
+                teams.forEach {
+                    for (entry in it.collected.entries) {
+                        if (max == null || entry.value > max!!.value)
+                            max = entry
+                    }
+                }
+                teams.forEach { team ->
+                    team.collected.forEach {
+                        if (max != null && it == max)
+                            team.players.map(getByUuid).forEach { user -> WinUtil.end(user, team) }
+                    }
+                }
+                B.postpone(5 * 20) {
+                    max = null
+                    app.restart()
+                }
+            }
+            time
+        }),
     END(340, { time ->
         when {
             time == GAME.lastSecond * 20 + 20 * 10 -> {

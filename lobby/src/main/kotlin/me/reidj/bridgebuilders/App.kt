@@ -29,7 +29,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 lateinit var app: App
-const val SKIN: String = "bf30a1df-85de-11e8-a6de-1cb72caa35fd"
+const val SKIN: String = "ca87474e-b15c-11e9-80c4-1cb72caa35fd"
 
 class App : JavaPlugin() {
 
