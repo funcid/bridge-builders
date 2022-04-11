@@ -11,48 +11,32 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent
 object GlobalListeners : Listener {
 
     @EventHandler
-    fun BlockRedstoneEvent.handle() {
-        newCurrent = oldCurrent
-    }
+    fun BlockRedstoneEvent.handle() = apply { newCurrent = oldCurrent }
 
     @EventHandler
-    fun PlayerInteractEntityEvent.handle() {
-        isCancelled = true
-    }
+    fun PlayerInteractEntityEvent.handle() = apply { isCancelled = true }
 
     @EventHandler
-    fun BlockFadeEvent.handle() {
-        isCancelled = true
-    }
+    fun BlockFadeEvent.handle() = apply { isCancelled = true }
 
     @EventHandler
-    fun BlockSpreadEvent.handle() {
-        isCancelled = true
-    }
+    fun BlockSpreadEvent.handle() = apply { isCancelled = true }
 
     @EventHandler
-    fun EntityChangeBlockEvent.handle() {
+    fun EntityChangeBlockEvent.handle() = apply {
         isCancelled = true
         block.state.update(false, false)
     }
 
     @EventHandler
-    fun BlockGrowEvent.handle() {
-        isCancelled = true
-    }
+    fun BlockGrowEvent.handle() = apply { isCancelled = true }
 
     @EventHandler
-    fun BlockPhysicsEvent.handle() {
-        isCancelled = true
-    }
+    fun BlockPhysicsEvent.handle() = apply { isCancelled = true }
 
     @EventHandler
-    fun PlayerArmorStandManipulateEvent.handle() {
-        isCancelled = true
-    }
+    fun PlayerArmorStandManipulateEvent.handle() = apply { isCancelled = true }
 
     @EventHandler
-    fun PlayerSwapHandItemsEvent.handle() {
-        isCancelled = true
-    }
+    fun PlayerSwapHandItemsEvent.handle() = apply { isCancelled = true }
 }

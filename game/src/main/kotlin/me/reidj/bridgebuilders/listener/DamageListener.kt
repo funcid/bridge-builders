@@ -5,7 +5,6 @@ import clepto.bukkit.Cycle
 import me.func.mod.Anime
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.donate.impl.Corpse
-import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.util.StandHelper
 import net.minecraft.server.v1_12_R1.EnumItemSlot
 import org.bukkit.Bukkit
@@ -65,7 +64,12 @@ object DamageListener : Listener {
                     player.killer.inventory.addItem(it)
                     it.setAmount(0)
                 }
-            ModHelper.allNotification("" + victim.color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " игроком " + killer.color.chatColor + player.killer.name)
+            Bukkit.getOnlinePlayers().forEach {
+                Anime.killboardMessage(
+                    it,
+                    "" + victim.color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " игроком " + killer.color.chatColor + player.killer.name
+                )
+            }
             killerStats.giveMoney(3)
             killerStats.stat.kills++
             killerStats.kills++

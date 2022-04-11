@@ -10,7 +10,6 @@ import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.MoneyFormatter
 import me.reidj.bridgebuilders.donate.impl.*
 import me.reidj.bridgebuilders.getByPlayer
-import me.reidj.bridgebuilders.mod.ModTransfer
 import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -111,15 +110,15 @@ object Lootbox : Listener {
                         val drop = dropList.random() as DonatePosition
                         val moneyDrop = (Math.random() * 20 + 10).toInt()
 
-                        ModTransfer()
-                            .integer(2)
-                            .item(CraftItemStack.asNMSCopy(drop.getIcon()))
-                            .string(drop.getTitle())
-                            .string(drop.getRare().name)
-                            .item(CraftItemStack.asNMSCopy(ItemStack(Material.GOLD_INGOT)))
-                            .string("§e$moneyDrop монет")
-                            .string("")
-                            .send("lootbox", user)
+                        me.func.mod.conversation.ModTransfer(
+                            2,
+                            CraftItemStack.asNMSCopy(drop.getIcon()),
+                            drop.getTitle(),
+                            drop.getRare().name,
+                            CraftItemStack.asNMSCopy(ItemStack(Material.GOLD_INGOT)),
+                            "§e$moneyDrop монет",
+                            ""
+                        ).send("lootbox", player)
 
                         if (user.stat.donate.contains(drop)) {
                             val giveBack = (drop.getRare().ordinal + 1) * 48

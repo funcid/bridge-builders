@@ -3,7 +3,6 @@ package me.reidj.bridgebuilders.listener
 import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import me.reidj.bridgebuilders.*
-import me.reidj.bridgebuilders.mod.ModTransfer
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -83,7 +82,7 @@ object DefaultListener : Listener {
         val teamIndex = user.player!!.inventory.heldItemSlot
         val item = user.player!!.inventory.getItem(teamIndex)
 
-        val template = ModTransfer()
+        val template = me.func.mod.conversation.ModTransfer()
             .integer(teamIndex)
 
         if (item != null && item.getType() == Material.WOOL) {
@@ -95,7 +94,7 @@ object DefaultListener : Listener {
                 template.string(if (it < slots / teams.size - players.size) " §7..." else "")
             }
         }
-        template.send("bridge:team", user)
+        template.send("bridge:team", user.player)
     }
 
     @EventHandler

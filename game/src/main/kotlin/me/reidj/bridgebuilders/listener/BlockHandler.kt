@@ -1,11 +1,12 @@
 package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
+import me.func.mod.Anime
 import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.getByUuid
-import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.teams
 import me.reidj.bridgebuilders.util.WinUtil
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -61,7 +62,12 @@ object BlockHandler : Listener {
         if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
             //BattlePassUtil.update(player, BREAK, 1)
             val winner = teams.filter { it.players.contains(player.uniqueId) }[0]
-            ModHelper.allNotification("Победила команда ${winner.color.chatFormat + winner.color.teamName}")
+            Bukkit.getOnlinePlayers().forEach {
+                Anime.killboardMessage(
+                    it,
+                    "Победила команда ${winner.color.chatFormat + winner.color.teamName}"
+                )
+            }
             B.bc(" ")
             B.bc("§b―――――――――――――――――")
             B.bc("" + winner.color.chatFormat + winner.color.teamName + " §f победили!")

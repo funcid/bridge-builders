@@ -8,7 +8,6 @@ import me.func.mod.conversation.ModLoader
 import me.func.protocol.Marker
 import me.func.protocol.MarkerSign
 import me.reidj.bridgebuilders.*
-import me.reidj.bridgebuilders.mod.ModHelper
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
@@ -39,8 +38,6 @@ object ConnectionHandler : Listener {
 
         player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
         player.inventory.clear()
-
-        ModHelper.updateBalance(user)
 
         // Заполнение имени для топа
         if (user.stat.lastSeenName == null || (user.stat.lastSeenName != null && user.stat.lastSeenName!!.isEmpty()))
@@ -91,7 +88,6 @@ object ConnectionHandler : Listener {
             player.gameMode = GameMode.SPECTATOR
             return
         }
-
 
         if (activeStatus == Status.STARTING) {
             player.inventory.setItem(8, back)

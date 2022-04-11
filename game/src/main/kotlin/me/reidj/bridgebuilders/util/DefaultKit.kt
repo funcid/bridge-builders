@@ -1,4 +1,4 @@
-package me.reidj.bridgebuilders.data
+package me.reidj.bridgebuilders.util
 
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack

@@ -66,6 +66,7 @@ object LobbyHandler : Listener {
     fun PlayerJoinEvent.handle() {
         player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
         player.allowFlight = IPermissionService.get().isDonator(player.uniqueId)
+        getByPlayer(player).giveMoney(0)
 
         // NPC поиска игры
         B.postpone(5) {

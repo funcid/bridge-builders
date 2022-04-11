@@ -5,8 +5,6 @@ import dev.implario.kensuke.impl.bukkit.IBukkitKensukeUser
 import me.func.protocol.battlepass.BattlePassUserData
 import me.reidj.bridgebuilders.battlepass.quest.QuestGenerator
 import me.reidj.bridgebuilders.donate.impl.*
-import me.reidj.bridgebuilders.mod.ModHelper
-import me.reidj.bridgebuilders.mod.ModTransfer
 import net.minecraft.server.v1_12_R1.Packet
 import net.minecraft.server.v1_12_R1.PlayerConnection
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer
@@ -122,9 +120,6 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
 
     private fun changeMoney(dMoney: Int) {
         stat.money += dMoney
-        ModTransfer()
-            .integer(dMoney)
-            .send("bridge:money", this)
-        ModHelper.updateBalance(this)
+        me.func.mod.conversation.ModTransfer(stat.money).send("bridge:balance", player)
     }
 }

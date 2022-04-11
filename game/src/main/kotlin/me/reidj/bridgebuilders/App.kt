@@ -15,7 +15,6 @@ import me.reidj.bridgebuilders.data.Bridge
 import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.listener.*
 import me.reidj.bridgebuilders.map.MapType
-import me.reidj.bridgebuilders.mod.ModHelper
 import me.reidj.bridgebuilders.mod.ModTransfer
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.user.User
@@ -101,10 +100,7 @@ class App : JavaPlugin() {
                         if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
                             val must = block.key.needTotal - block.value
                             if (must == 0) {
-                                ModHelper.notification(
-                                    user,
-                                    ru.cristalix.core.formatting.Formatting.error("Мне больше не нужен этот ресурс")
-                                )
+                                Anime.killboardMessage(player, "Мне больше не нужен этот ресурс")
                                 player.playSound(
                                     player.location,
                                     org.bukkit.Sound.ENTITY_ARMORSTAND_HIT,
@@ -127,12 +123,10 @@ class App : JavaPlugin() {
                                 )
                                 teams.forEachIndexed { teamIndex, updateTeam ->
                                     Bukkit.getOnlinePlayers().forEach {
-                                        ModTransfer()
-                                            .integer(teamIndex + 2)
-                                            .integer(needBlocks)
-                                            .integer(updateTeam.collected.map { block -> block.value }
-                                                .sum())
-                                            .send("bridge:progressupdate", getByPlayer(it))
+                                        me.func.mod.conversation.ModTransfer(
+                                            teamIndex + 2,
+                                            needBlocks,
+                                            updateTeam.collected.map { block -> block.value }.sum()).send("bridge:progressupdate", player)
                                     }
                                 }
                                 // Обновление таба
@@ -141,14 +135,14 @@ class App : JavaPlugin() {
                                         whoSend.player!!,
                                         "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
                                     )
-                                    ModTransfer()
-                                        .integer(index + 2)
-                                        .integer(block.key.needTotal)
-                                        .integer(block.value)
-                                        .integer(needBlocks)
-                                        .integer(team.players.map { getByUuid(it) }
-                                            .sumOf { it.collectedBlocks })
-                                        .send("bridge:tabupdate", whoSend)
+                                    me.func.mod.conversation.ModTransfer(
+                                        index + 2,
+                                        block.key.needTotal,
+                                        block.value,
+                                        needBlocks,
+                                        team.players.map { getByUuid(it) }
+                                            .sumOf { it.collectedBlocks }
+                                    ).send("bridge:tabupdate", player)
                                 }
                             }
                         }

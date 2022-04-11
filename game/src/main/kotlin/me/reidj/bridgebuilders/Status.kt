@@ -2,8 +2,9 @@ package me.reidj.bridgebuilders
 
 import clepto.bukkit.B
 import me.func.mod.Anime
+import me.func.mod.conversation.ModTransfer
 import me.reidj.bridgebuilders.data.BlockPlan
-import me.reidj.bridgebuilders.data.DefaultKit
+import me.reidj.bridgebuilders.util.DefaultKit
 import me.reidj.bridgebuilders.util.WinUtil
 import org.bukkit.Bukkit
 import org.bukkit.Color
@@ -22,13 +23,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         val players = Bukkit.getOnlinePlayers()
 
         // Обновление шкалы онлайна
-        players.forEach {
-            me.reidj.bridgebuilders.mod.ModTransfer()
-                .integer(slots)
-                .integer(players.size)
-                .boolean(true)
-                .send("bridge:online", app.getUser(it))
-        }
+        players.forEach { player -> ModTransfer(me.reidj.bridgebuilders.slots, players.size, true).send("bridge:online", player) }
         var actualTime = it
 
         // Если время вышло и пора играть
@@ -60,12 +55,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         val color = checkColor(team.color)
                         Bukkit.getOnlinePlayers().forEach {
                             // Отправка прогресса команд
-                            me.reidj.bridgebuilders.mod.ModTransfer()
-                                .integer(index + 2)
-                                .integer(color.getRed())
-                                .integer(color.getGreen())
-                                .integer(color.getBlue())
-                                .send("bridge:progressinit", getByPlayer(it))
+                            ModTransfer(index + 2, color.getRed(), color.getGreen(), color.getBlue()).send("bridge:progressinit", it)
                         }
                         team.players.forEach {
                             val player = Bukkit.getPlayer(it) ?: return@forEach
@@ -88,13 +78,13 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
 
                             // Отправка таба
                             team.collected.entries.forEachIndexed { index, block ->
-                                me.reidj.bridgebuilders.mod.ModTransfer()
-                                    .integer(index + 2)
-                                    .integer(block.key.needTotal)
-                                    .integer(block.value)
-                                    .string(block.key.title)
-                                    .item(block.key.getItem())
-                                    .send("bridge:init", user)
+                                ModTransfer(
+                                    index + 2,
+                                    block.key.needTotal,
+                                    block.value,
+                                    block.key.title,
+                                    block.key.getItem()
+                                ).send("bridge:init", player)
                             }
 
                             Anime.alert(
@@ -110,7 +100,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 val users = players.map { app.getUser(it) }
                 users.forEach { user ->
                     // Отправить информацию о начале игры клиенту
-                    me.reidj.bridgebuilders.mod.ModTransfer().send("bridge:start", user)
+                    ModTransfer().send("bridge:start", user.player)
                 }
                 activeStatus = GAME
                 actualTime + 1
@@ -127,11 +117,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             // Обновление шкалы времени
             if (time % 20 == 0) {
                 Bukkit.getOnlinePlayers().forEach {
-                    me.reidj.bridgebuilders.mod.ModTransfer()
-                        .integer(GAME.lastSecond)
-                        .integer(time)
-                        .boolean(false)
-                        .send("bridge:online", app.getUser(it))
+                    ModTransfer(me.reidj.bridgebuilders.Status.GAME.lastSecond, time, false).send("bridge:online", it)
                     if (time / 20 == 180) {
                         teams.forEach { team -> team.isActiveTeleport = true }
                         Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
