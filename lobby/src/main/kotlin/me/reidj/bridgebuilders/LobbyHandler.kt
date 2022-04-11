@@ -5,6 +5,7 @@ import dev.implario.bukkit.item.item
 import me.func.mod.Npc
 import me.func.mod.Npc.location
 import me.func.mod.Npc.onClick
+import me.func.mod.conversation.ModLoader
 import me.func.protocol.npc.NpcBehaviour
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
@@ -66,6 +67,8 @@ object LobbyHandler : Listener {
     fun PlayerJoinEvent.handle() {
         player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
         player.allowFlight = IPermissionService.get().isDonator(player.uniqueId)
+
+        ModLoader.send("balance-bundle.jar", player)
         getByPlayer(player).giveMoney(0)
 
         // NPC поиска игры

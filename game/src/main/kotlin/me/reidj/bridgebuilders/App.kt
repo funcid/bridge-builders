@@ -15,7 +15,6 @@ import me.reidj.bridgebuilders.data.Bridge
 import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.listener.*
 import me.reidj.bridgebuilders.map.MapType
-import me.reidj.bridgebuilders.mod.ModTransfer
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.MapLoader
