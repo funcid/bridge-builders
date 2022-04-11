@@ -14,7 +14,7 @@ import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_SPACTATE
 val kit = DefaultKit
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(10, { it ->
+    STARTING(50, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 60)
             realm.status = GAME_STARTED_CAN_JOIN
@@ -34,7 +34,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size + 15 < slots) {
+            if (players.size < slots) {
                 actualTime = 1
             } else {
                 // Обновление статуса реалма, чтобы нельзя было войти

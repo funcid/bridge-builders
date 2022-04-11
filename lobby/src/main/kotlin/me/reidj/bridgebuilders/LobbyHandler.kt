@@ -64,6 +64,7 @@ object LobbyHandler : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.handle() {
+        player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
         player.allowFlight = IPermissionService.get().isDonator(player.uniqueId)
 
         // NPC поиска игры

@@ -6,6 +6,7 @@ import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
 import me.func.mod.Kit
+import me.func.mod.conversation.ModLoader
 import me.reidj.bridgebuilders.content.CustomizationNPC
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.listener.GlobalListeners

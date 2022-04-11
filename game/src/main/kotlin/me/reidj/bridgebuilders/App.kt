@@ -8,6 +8,7 @@ import me.func.mod.Anime
 import me.func.mod.Kit
 import me.func.mod.Npc
 import me.func.mod.Npc.onClick
+import me.func.mod.conversation.ModLoader
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.data.BlockPlan
 import me.reidj.bridgebuilders.data.Bridge
@@ -60,6 +61,7 @@ class App : JavaPlugin() {
         CoreApi.get().registerService(IKarmaService::class.java, KarmaService(ISocketClient.get()))
 
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
+        ModLoader.loadAll("mods")
 
         BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, worldMeta, 16)
         realm.readableName = "BridgeBuilders ${realm.realmId.id}"

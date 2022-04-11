@@ -60,7 +60,6 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                 Corpse.NONE,
                 StarterKit.NONE,
                 0,
-                0,
                 "",
                 mutableListOf()
             )
@@ -92,8 +91,6 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
                 stat.activeCorpse = Corpse.NONE
             if (stat.timePlayedTotal == null)
                 stat.timePlayedTotal = 0
-            if (stat.lastEnter == null)
-                stat.lastEnter = 0
             if (stat.activeKit == null)
                 stat.activeKit = StarterKit.NONE
             if (stat.progress == null)

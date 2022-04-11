@@ -4,9 +4,11 @@ import clepto.bukkit.B
 import dev.implario.bukkit.item.item
 import me.func.mod.Anime
 import me.func.mod.Npc
+import me.func.mod.conversation.ModLoader
 import me.func.protocol.Marker
 import me.func.protocol.MarkerSign
 import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.mod.ModHelper
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
@@ -14,10 +16,12 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import ru.cristalix.core.account.IAccountService
 import ru.cristalix.core.item.Items
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmStatus
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 object ConnectionHandler : Listener {
 
@@ -31,10 +35,22 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.handle() {
+        val user = getByPlayer(player)
+
+        player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
         player.inventory.clear()
+
+        ModHelper.updateBalance(user)
+
+        // Заполнение имени для топа
+        if (user.stat.lastSeenName == null || (user.stat.lastSeenName != null && user.stat.lastSeenName!!.isEmpty()))
+            user.stat.lastSeenName =
+                IAccountService.get().getNameByUuid(UUID.fromString(user.session.userId)).get(1, TimeUnit.SECONDS)
 
         if (activeStatus == Status.STARTING)
             player.gameMode = GameMode.ADVENTURE
+
+        ModLoader.send("mod-bundle.jar", player)
 
         B.postpone(5) {
             // Создание маркера
@@ -76,7 +92,6 @@ object ConnectionHandler : Listener {
             return
         }
 
-        getByPlayer(player).stat.lastEnter = System.currentTimeMillis()
 
         if (activeStatus == Status.STARTING) {
             player.inventory.setItem(8, back)
@@ -96,9 +111,7 @@ object ConnectionHandler : Listener {
     fun PlayerQuitEvent.handle() {
         if (app.isSpectator(player))
             return
-        val user = getByPlayer(player)
         teams.forEach { it.players.remove(player.uniqueId) }
-        user.stat.timePlayedTotal += System.currentTimeMillis() - user.stat.lastEnter
     }
 
     @EventHandler

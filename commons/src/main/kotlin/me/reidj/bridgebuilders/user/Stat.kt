@@ -32,7 +32,6 @@ data class Stat(
     var activeKit: StarterKit,
 
     var timePlayedTotal: Long,
-    var lastEnter: Long,
 
     var lastSeenName: String?,
 
