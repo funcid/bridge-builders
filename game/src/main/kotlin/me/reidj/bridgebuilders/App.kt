@@ -16,7 +16,6 @@ import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.listener.*
 import me.reidj.bridgebuilders.map.MapType
 import me.reidj.bridgebuilders.top.TopManager
-import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.MapLoader
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
@@ -32,7 +31,6 @@ import ru.cristalix.core.karma.IKarmaService
 import ru.cristalix.core.karma.KarmaService
 import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.realm.RealmId
-import java.util.*
 import java.util.stream.Collectors
 import kotlin.math.max
 
@@ -61,7 +59,7 @@ class App : JavaPlugin() {
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
         ModLoader.loadAll("mods")
 
-        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, worldMeta, 16)
+        BridgeBuildersInstance(this, { getByPlayer(it) }, { getByUuid(it) }, worldMeta, 16)
         realm.readableName = "BridgeBuilders ${realm.realmId.id}"
         realm.lobbyFallback = LOBBY_SERVER
 
@@ -214,7 +212,7 @@ class App : JavaPlugin() {
 
     fun restart() {
         Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.forEach {
-            val user = app.getUser(it)
+            val user = getByPlayer(it)
             user.stat.games++
             //me.reidj.bridgebuilders.battlepass.BattlePassUtil.update(it, me.reidj.bridgebuilders.battlepass.quest.QuestType.PLAY, 1)
             if (Math.random() < 0.11) {
@@ -239,14 +237,6 @@ class App : JavaPlugin() {
         // Полная перезагрузка если много игр наиграно
         if (games > GAMES_STREAK_RESTART)
             Bukkit.shutdown()
-    }
-
-    fun getUser(player: Player): User {
-        return getUser(player.uniqueId)
-    }
-
-    fun getUser(uuid: UUID): User {
-        return userManager.getUser(uuid)
     }
 
     fun addBlock(team: Team) {

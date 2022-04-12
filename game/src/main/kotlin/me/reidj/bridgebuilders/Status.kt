@@ -23,7 +23,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         val players = Bukkit.getOnlinePlayers()
 
         // Обновление шкалы онлайна
-        players.forEach { player -> ModTransfer(me.reidj.bridgebuilders.slots, players.size, true).send("bridge:online", player) }
+        players.forEach { player -> ModTransfer(slots, players.size, true).send("bridge:online", player) }
         var actualTime = it
 
         // Если время вышло и пора играть
@@ -97,7 +97,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     }
                 }
                 // Список игроков
-                val users = players.map { app.getUser(it) }
+                val users = players.map { getByPlayer(it) }
                 users.forEach { user ->
                     // Отправить информацию о начале игры клиенту
                     ModTransfer().send("bridge:start", user.player)
