@@ -104,9 +104,9 @@ object DamageListener : Listener {
             }
         }
 
-        teams.filter { it.players.contains(player.uniqueId) }.forEach {
-            it.players.forEach { uuid ->
-                Bukkit.getPlayer(uuid).playSound(
+        teams.filter { it.players.contains(player.uniqueId) }.forEach { team ->
+            team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach { player ->
+                player.playSound(
                     player.location,
                     org.bukkit.Sound.ENTITY_ENDERDRAGON_AMBIENT,
                     1f,
