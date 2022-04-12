@@ -37,10 +37,16 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.handle() {
-        if (app.getUser(player) == null) {
+        if (userManager.userMap[player.uniqueId.toString()] == null || app.getUser(player) == null || userManager.getUser(
+                player.uniqueId
+            ) == null
+        ) {
+            println("повезло пзвело")
             player.sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
             Cristalix.transfer(listOf(player.uniqueId), RealmId.of(HUB))
             return
+        } else {
+            println("не повезло не повезло")
         }
 
         val user = app.getUser(player)!!
@@ -90,7 +96,7 @@ object ConnectionHandler : Listener {
                     )
                 }
             }
-            Npc.npcs.values.forEach { it.spawn(player)}
+            Npc.npcs.values.forEach { it.spawn(player) }
         }
 
         if (activeStatus != Status.STARTING) {
