@@ -3,7 +3,6 @@ package me.reidj.bridgebuilders.listener
 import clepto.bukkit.B
 import me.func.mod.Anime
 import me.reidj.bridgebuilders.app
-import me.reidj.bridgebuilders.getByUuid
 import me.reidj.bridgebuilders.teams
 import me.reidj.bridgebuilders.util.WinUtil
 import org.bukkit.Bukkit
@@ -73,7 +72,7 @@ object BlockHandler : Listener {
             B.bc("" + winner.color.chatFormat + winner.color.teamName + " §f победили!")
             B.bc(" ")
             B.bc("§e§lТОП ПРИНЕСЁННЫХ БЛОКОВ")
-            winner.players.map { getByUuid(it)!! }.sortedBy { -it.collectedBlocks }
+            winner.players.mapNotNull { app.getUser(it) }.sortedBy { -it.collectedBlocks }
                 .subList(0, min(3, winner.players.size))
                 .forEachIndexed { index, user ->
                     B.bc(" §l${index + 1}. §e" + user.player?.name + " §с" + user.collectedBlocks + " блоков принесено")
@@ -81,9 +80,9 @@ object BlockHandler : Listener {
             B.bc("§b―――――――――――――――――")
             B.bc(" ")
 
-            winner.players.map(getByUuid).forEach { user ->
+            winner.players.mapNotNull { app.getUser(it) }.forEach { user ->
                 //BattlePassUtil.update(user.player!!, WIN, 1)
-                WinUtil.end(user!!, team)
+                WinUtil.end(user, team)
             }
             B.postpone(5 * 20) { app.restart() }
             return

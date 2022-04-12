@@ -1,16 +1,17 @@
 package me.reidj.bridgebuilders.listener
 
-import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.Status
+import me.reidj.bridgebuilders.activeStatus
+import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.donate.impl.NameTag
+import me.reidj.bridgebuilders.teams
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import ru.cristalix.core.formatting.Formatting
-import ru.cristalix.core.karma.IKarmaService
 import ru.cristalix.core.permissions.IPermissionService
-import java.util.function.Predicate
 
 object ChatHandler : Listener {
 
@@ -23,20 +24,23 @@ object ChatHandler : Listener {
         val team = teams.filter { team -> team.players.contains(player.uniqueId) }
         if (team.isNotEmpty() || app.isSpectator(player)) {
             isCancelled = true
-            if (!message.startsWith("!")) {
-                team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
-                    it.sendMessage("§8КОМАНДА ${getPrefix(getByPlayer(player)!!) + message}")
-                }
-            } else {
-                Bukkit.getOnlinePlayers().forEach {
-                    it.sendMessage(
-                        "" + team[0].color.chatColor + team[0].color.teamName.substring(
-                            0,
-                            1
-                        ) + " " + getPrefix(getByPlayer(player)!!) + message.drop(1)
-                    )
+            app.getUser(player)?.let { user ->
+                if (!message.startsWith("!")) {
+                    team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
+                        it.sendMessage("§8КОМАНДА ${getPrefix(user) + message}")
+                    }
+                } else {
+                    Bukkit.getOnlinePlayers().forEach {
+                        it.sendMessage(
+                            "" + team[0].color.chatColor + team[0].color.teamName.substring(
+                                0,
+                                1
+                            ) + " " + getPrefix(user) + message.drop(1)
+                        )
+                    }
                 }
             }
+
         }
     }
 
@@ -48,10 +52,6 @@ object ChatHandler : Listener {
                 finalPrefix = (if (user.stat.activeNameTag == NameTag.NONE) "" else user.stat.activeNameTag.getRare()
                     .getColor() + user.stat.activeNameTag.getTitle() + "§8 ┃ ") + (if (group.prefix == "") "" else group.nameColor + group.prefix + "§8 ┃ §f") + (it
                     ?: group.nameColor) + user.player!!.name + " §8${Formatting.ARROW_SYMBOL + group.chatMessageColor} "
-
-                    /*finalPrefix = (if (user.stat.activeNameTag == NameTag.NONE) "" else user.stat.activeNameTag.getRare()
-                    .getColor() + user.stat.activeNameTag.getTitle()) + (if (group.prefix == "") "" else "§8 ┃ ") + group.nameColor + group.prefix + "§8 ┃ §f" + (it
-                    ?: group.nameColor) + user.player!!.name + " §8${Formatting.ARROW_SYMBOL + group.chatMessageColor} "*/
             }
         }
         return finalPrefix

@@ -69,7 +69,7 @@ object LobbyHandler : Listener {
         player.allowFlight = IPermissionService.get().isDonator(player.uniqueId)
 
         ModLoader.send("balance-bundle.jar", player)
-        getByPlayer(player)!!.giveMoney(0)
+        getByPlayer(player)?.giveMoney(0)
 
         // NPC поиска игры
         B.postpone(5) {

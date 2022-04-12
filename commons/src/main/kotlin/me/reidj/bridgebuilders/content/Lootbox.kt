@@ -43,9 +43,9 @@ object Lootbox : Listener {
                 shineBlocks(false)
             }
             B.repeat(20) {
-                Bukkit.getOnlinePlayers().map(getByPlayer).forEach { user ->
+                Bukkit.getOnlinePlayers().mapNotNull(getByPlayer).forEach { user ->
                     Banners.content(
-                        user?.player!!, banner.uuid, "§bЛутбокс\n§fДоступно ${user.stat.lootbox} ${
+                        user.player!!, banner.uuid, "§bЛутбокс\n§fДоступно ${user.stat.lootbox} ${
                             Humanize.plurals(
                                 "штука",
                                 "штуки",
@@ -86,8 +86,6 @@ object Lootbox : Listener {
         .columns(9)
         .provider(object : InventoryProvider {
             override fun init(player: Player, contents: InventoryContents) {
-                val user = getByPlayer(player)!!
-
                 contents.setLayout(
                     "XOOOOOOOX",
                     "XOOOOOOOX",
@@ -96,48 +94,56 @@ object Lootbox : Listener {
                     "XOOOOOOOX",
                 )
 
-                repeat(minOf(user.stat.lootbox, contents.size('O'))) {
-                    contents.add('O', ClickableItem.of(lootboxItem) {
-                        player.closeInventory()
-                        if (user.stat.money < lootboxPrice) {
-                            player.sendMessage(Formatting.error("Не хватает монет :("))
-                            return@of
-                        }
-                        user.minusMoney(lootboxPrice)
-                        user.stat.lootbox--
-                        user.stat.lootboxOpenned++
+                getByPlayer(player)?.let { user ->
+                    repeat(minOf(user.stat.lootbox, contents.size('O'))) {
+                        contents.add('O', ClickableItem.of(lootboxItem) {
+                            player.closeInventory()
+                            if (user.stat.money < lootboxPrice) {
+                                player.sendMessage(Formatting.error("Не хватает монет :("))
+                                return@of
+                            }
+                            user.minusMoney(lootboxPrice)
+                            user.stat.lootbox--
+                            user.stat.lootboxOpenned++
 
-                        val drop = dropList.random() as DonatePosition
-                        val moneyDrop = (Math.random() * 20 + 10).toInt()
+                            val drop = dropList.random() as DonatePosition
+                            val moneyDrop = (Math.random() * 20 + 10).toInt()
 
-                        me.func.mod.conversation.ModTransfer(
-                            2,
-                            CraftItemStack.asNMSCopy(drop.getIcon()),
-                            drop.getTitle(),
-                            drop.getRare().name,
-                            CraftItemStack.asNMSCopy(ItemStack(Material.GOLD_INGOT)),
-                            "§e$moneyDrop монет",
-                            ""
-                        ).send("lootbox", player)
+                            me.func.mod.conversation.ModTransfer(
+                                2,
+                                CraftItemStack.asNMSCopy(drop.getIcon()),
+                                drop.getTitle(),
+                                drop.getRare().name,
+                                CraftItemStack.asNMSCopy(ItemStack(Material.GOLD_INGOT)),
+                                "§e$moneyDrop монет",
+                                ""
+                            ).send("lootbox", player)
 
-                        if (user.stat.donate.contains(drop)) {
-                            val giveBack = (drop.getRare().ordinal + 1) * 48
-                            player.sendMessage(Formatting.fine("§aДубликат! §fЗаменен на §e$giveBack монет§f."))
-                            user.giveMoney(giveBack)
-                        } else {
-                            user.stat.donate.add(drop)
-                        }
-                        user.giveMoney(moneyDrop)
+                            if (user.stat.donate.contains(drop)) {
+                                val giveBack = (drop.getRare().ordinal + 1) * 48
+                                player.sendMessage(Formatting.fine("§aДубликат! §fЗаменен на §e$giveBack монет§f."))
+                                user.giveMoney(giveBack)
+                            } else {
+                                user.stat.donate.add(drop)
+                            }
+                            user.giveMoney(moneyDrop)
 
-                        B.bc(Formatting.fine("§e${player.name} §fполучил §b${drop.getRare().with(drop.getTitle())}."))
-                    })
+                            B.bc(
+                                Formatting.fine(
+                                    "§e${player.name} §fполучил §b${
+                                        drop.getRare().with(drop.getTitle())
+                                    }."
+                                )
+                            )
+                        })
+                    }
+                    contents.add('P', ClickableItem.empty(item {
+                        type = Material.CLAY_BALL
+                        nbt("other", "anvil")
+                        text("§bКак их получить?\n\n§7Побеждайте в игре,\n§7и с шансом §a5%\n§7вы получите §bлутбокс§7.")
+                    }))
+                    contents.fillMask('X', ClickableItem.empty(ItemStack(Material.AIR)))
                 }
-                contents.add('P', ClickableItem.empty(item {
-                    type = Material.CLAY_BALL
-                    nbt("other", "anvil")
-                    text("§bКак их получить?\n\n§7Побеждайте в игре,\n§7и с шансом §a5%\n§7вы получите §bлутбокс§7.")
-                }))
-                contents.fillMask('X', ClickableItem.empty(ItemStack(Material.AIR)))
             }
         }).build()
 

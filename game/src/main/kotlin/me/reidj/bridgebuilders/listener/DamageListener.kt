@@ -3,8 +3,11 @@ package me.reidj.bridgebuilders.listener
 import clepto.bukkit.B
 import clepto.bukkit.Cycle
 import me.func.mod.Anime
-import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.Status
+import me.reidj.bridgebuilders.activeStatus
+import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.donate.impl.Corpse
+import me.reidj.bridgebuilders.teams
 import me.reidj.bridgebuilders.util.StandHelper
 import net.minecraft.server.v1_12_R1.EnumItemSlot
 import org.bukkit.Bukkit
@@ -53,46 +56,51 @@ object DamageListener : Listener {
         } while ((id == 0 || id == 171 || id == 96 || id == 167) && counter < 20)
 
         if (player.killer != null) {
-            val user = getByPlayer(player)!!
             val killer = teams.filter { team -> team.players.contains(player.killer.uniqueId) }[0]
-            val killerStats = getByPlayer(player.killer)!!
+            // Удаление и выдача убийцы некоторых вещей
             drops.filter {
                 it.getType().isBlock || it.getType() == Material.DIAMOND || it.getType() == Material.IRON_INGOT
                         || it.getType() == Material.COAL || it.getType() == Material.GOLD_INGOT
-            }
-                .forEach {
+            }.forEach {
                     player.killer.inventory.addItem(it)
                     it.setAmount(0)
                 }
-            Bukkit.getOnlinePlayers().forEach {
-                Anime.killboardMessage(
-                    it,
-                    "" + victim.color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " игроком " + killer.color.chatColor + player.killer.name
-                )
-            }
-            killerStats.giveMoney(3)
-            killerStats.stat.kills++
-            killerStats.kills++
-            killerStats.player!!.sendMessage(Formatting.fine("Вы получили §e3 монеты §fза убийство."))
-            if (user.stat.activeCorpse != Corpse.NONE) {
-                val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
-                    .marker(true)
-                    .invisible(true)
-                    .gravity(false)
-                    .slot(EnumItemSlot.HEAD, user.stat.activeCorpse.getIcon())
-                    .markTrash()
-                    .build()
-                val name = StandHelper(location.clone().add(0.0, 1.0, 0.0))
-                    .marker(true)
-                    .invisible(true)
-                    .gravity(false)
-                    .name("§e${player.name}")
-                    .build()
-                UtilEntity.setScale(grave, 2.0, 2.0, 2.0)
-                B.postpone(120 * 20) {
-                    grave.remove()
-                    name.remove()
+            // Сообщение об убийстве
+            app.getUser(player)?.let { user ->
+                Bukkit.getOnlinePlayers().forEach {
+                    Anime.killboardMessage(
+                        it,
+                        "" + victim.color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " игроком " + killer.color.chatColor + player.killer.name
+                    )
                 }
+                // Создаю гроб, лол
+                if (user.stat.activeCorpse != Corpse.NONE) {
+                    val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
+                        .marker(true)
+                        .invisible(true)
+                        .gravity(false)
+                        .slot(EnumItemSlot.HEAD, user.stat.activeCorpse.getIcon())
+                        .markTrash()
+                        .build()
+                    val name = StandHelper(location.clone().add(0.0, 1.0, 0.0))
+                        .marker(true)
+                        .invisible(true)
+                        .gravity(false)
+                        .name("§e${player.name}")
+                        .build()
+                    UtilEntity.setScale(grave, 2.0, 2.0, 2.0)
+                    B.postpone(120 * 20) {
+                        grave.remove()
+                        name.remove()
+                    }
+                }
+            }
+            // Начисление убийце статистики
+            app.getUser(player.killer)?.let { killerStats ->
+                killerStats.giveMoney(3)
+                killerStats.stat.kills++
+                killerStats.kills++
+                killerStats.player!!.sendMessage(Formatting.fine("Вы получили §e3 монеты §fза убийство."))
             }
         }
 
@@ -172,7 +180,5 @@ object DamageListener : Listener {
         toDelete.clear()
     }
 
-    private fun printDeathMessage(text: String) {
-        Bukkit.getOnlinePlayers().forEach { Anime.killboardMessage(it, text) }
-    }
+    private fun printDeathMessage(text: String) = Bukkit.getOnlinePlayers().forEach { Anime.killboardMessage(it, text) }
 }

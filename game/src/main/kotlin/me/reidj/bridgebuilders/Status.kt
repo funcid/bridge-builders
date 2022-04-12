@@ -55,11 +55,15 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         val color = checkColor(team.color)
                         Bukkit.getOnlinePlayers().forEach {
                             // Отправка прогресса команд
-                            ModTransfer(index + 2, color.getRed(), color.getGreen(), color.getBlue()).send("bridge:progressinit", it)
+                            ModTransfer(
+                                index + 2,
+                                color.getRed(),
+                                color.getGreen(),
+                                color.getBlue()
+                            ).send("bridge:progressinit", it)
                         }
                         team.players.forEach {
                             val player = Bukkit.getPlayer(it) ?: return@forEach
-                            val user = getByPlayer(player)!!
 
                             player.gameMode = org.bukkit.GameMode.SURVIVAL
                             player.itemOnCursor = null
@@ -74,7 +78,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                             }.toTypedArray()
 
                             player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
-                            user.stat.activeKit.content.forEach { starter -> player.inventory.addItem(starter) }
+                            app.getUser(player)?.let { it.stat.activeKit.content.forEach { starter -> player.inventory.addItem(starter) } }
 
                             // Отправка таба
                             team.collected.entries.forEachIndexed { index, block ->
@@ -97,10 +101,10 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     }
                 }
                 // Список игроков
-                val users = players.map { getByPlayer(it) }
+                val users = players.mapNotNull { app.getUser(it) }
                 users.forEach { user ->
                     // Отправить информацию о начале игры клиенту
-                    ModTransfer().send("bridge:start", user!!.player)
+                    ModTransfer().send("bridge:start", user.player)
                 }
                 activeStatus = GAME
                 actualTime + 1
@@ -141,7 +145,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 teams.forEach { team ->
                     team.collected.forEach {
                         if (max != null && it == max)
-                            team.players.map(getByUuid).forEach { user -> WinUtil.end(user!!, team) }
+                            team.players.mapNotNull { app.getUser(it) }.forEach { user -> WinUtil.end(user, team) }
                     }
                 }
                 B.postpone(5 * 20) {

@@ -40,7 +40,8 @@ object DefaultListener : Listener {
                                 team
                             )
                         }
-                        .forEach { showTeamList(getByPlayer(it)!!) }
+                        .mapNotNull { app.getUser(it) }
+                        .forEach { showTeamList(it) }
                     player.sendMessage(Formatting.fine("Вы выбрали команду: " + team.color.chatFormat + team.color.teamName))
                 }
             } else if (material == Material.CLAY_BALL)
@@ -54,7 +55,7 @@ object DefaultListener : Listener {
             return
         val newItem = player.inventory.getItem(newSlot)
         if (newItem != player.inventory.getItem(previousSlot))
-            B.postpone(1) { showTeamList(getByPlayer(player)!!) }
+            B.postpone(1) { app.getUser(player)?.let { showTeamList(it) } }
     }
 
     /*@EventHandler
@@ -87,8 +88,8 @@ object DefaultListener : Listener {
 
         if (item != null && item.getType() == Material.WOOL) {
             val players = teams[teamIndex].players
-            players.take(4).map { getByUuid(it) }.forEach {
-                template.string(it!!.player!!.name)
+            players.take(4).mapNotNull { getByUuid(it) }.forEach {
+                template.string(it.player!!.name)
             }
             repeat(4 - players.size) {
                 template.string(if (it < slots / teams.size - players.size) " §7..." else "")

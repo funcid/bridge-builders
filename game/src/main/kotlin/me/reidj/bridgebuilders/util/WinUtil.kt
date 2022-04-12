@@ -31,14 +31,12 @@ object WinUtil {
             player!!.sendMessage(Formatting.fine("Вы получили §e10 монет §fза победу."))
             stat.wins++
             giveMoney(10)
-            player?.let { player ->
-                Anime.showEnding(
-                    player,
-                    EndStatus.WIN,
-                    listOf("Блоков принесено:", "Игроков убито:"),
-                    listOf("${collectedBlocks}", "${kills}")
-                )
-            }
+            Anime.showEnding(
+                player!!,
+                EndStatus.WIN,
+                listOf("Блоков принесено:", "Игроков убито:"),
+                listOf("$collectedBlocks", "$kills")
+            )
             val firework = player!!.world!!.spawn(player!!.location, Firework::class.java)
             val meta = firework.fireworkMeta
             meta.addEffect(
@@ -56,8 +54,8 @@ object WinUtil {
             meta.power = 0
             firework.fireworkMeta = meta
         }
-        Bukkit.getOnlinePlayers().map(getByPlayer).forEach {
-            if (team.players.contains(it!!.stat.id))
+        Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.forEach {
+            if (team.players.contains(it.stat.id))
                 return@forEach
             it.giveMoney(5)
             it.player!!.sendMessage(Formatting.fine("Вы получили §e5 монет§f."))

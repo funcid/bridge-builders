@@ -1,7 +1,6 @@
 package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
-import clepto.cristalix.Cristalix
 import dev.implario.bukkit.item.item
 import me.func.mod.Anime
 import me.func.mod.Npc
@@ -17,10 +16,8 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import ru.cristalix.core.account.IAccountService
-import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.item.Items
 import ru.cristalix.core.realm.IRealmService
-import ru.cristalix.core.realm.RealmId
 import ru.cristalix.core.realm.RealmStatus
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -36,78 +33,25 @@ object ConnectionHandler : Listener {
     private val markers = mutableListOf<Marker>()
 
     @EventHandler
-    fun PlayerJoinEvent.handle() {
-        if (userManager.userMap[player.uniqueId.toString()] == null || app.getUser(player) == null || userManager.getUser(
-                player.uniqueId
-            ) == null
-        ) {
-            println("повезло пзвело")
-            player.sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
-            Cristalix.transfer(listOf(player.uniqueId), RealmId.of(HUB))
-            return
-        } else {
-            println("не повезло не повезло")
-        }
+    fun PlayerJoinEvent.handle() = player.apply {
+        inventory.clear()
 
-        val user = app.getUser(player)!!
+        val user = app.getUser(this)
 
-        B.postpone(5) { player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
-        player.inventory.clear()
+        ModLoader.send("mod-bundle.jar", this)
+
+        B.postpone(5) { teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
 
         // Заполнение имени для топа
-        if (user.stat.lastSeenName == null || (user.stat.lastSeenName != null && user.stat.lastSeenName!!.isEmpty()))
-            user.stat.lastSeenName =
-                IAccountService.get().getNameByUuid(UUID.fromString(user.session.userId)).get(1, TimeUnit.SECONDS)
-
-        if (activeStatus == Status.STARTING)
-            player.gameMode = GameMode.ADVENTURE
-
-        ModLoader.send("mod-bundle.jar", player)
-
-        B.postpone(5) {
-            // Создание маркера
-            teams.forEach {
-                markers.add(
-                    Anime.marker(
-                        player,
-                        Marker(
-                            UUID.randomUUID(),
-                            it.teleport.x + 0.5,
-                            it.teleport.y + 1.5,
-                            it.teleport.z + 0.5,
-                            16.0,
-                            MarkerSign.ARROW_DOWN.texture
-                        )
-                    )
-                )
-            }
-            // Движение маркера
-            markers.forEach { marker ->
-                var up = false
-                B.repeat(15) {
-                    up = !up
-                    Anime.moveMarker(
-                        player,
-                        marker.uuid,
-                        marker.x,
-                        marker.y - if (up) 0.0 else 0.7,
-                        marker.z,
-                        0.75
-                    )
-                }
-            }
-            Npc.npcs.values.forEach { it.spawn(player) }
-        }
-
-        if (activeStatus != Status.STARTING) {
-            player.gameMode = GameMode.SPECTATOR
-            return
-        }
+        if (user?.stat?.lastSeenName == null || (user.stat.lastSeenName != null && user.stat.lastSeenName!!.isEmpty()))
+            user?.stat?.lastSeenName =
+                IAccountService.get().getNameByUuid(UUID.fromString(user?.session?.userId)).get(1, TimeUnit.SECONDS)
 
         if (activeStatus == Status.STARTING) {
-            player.inventory.setItem(8, back)
+            gameMode = GameMode.ADVENTURE
+            inventory.setItem(8, back)
             teams.forEach {
-                player.inventory.addItem(
+                inventory.addItem(
                     Items.builder()
                         .displayName("Выбрать команду: " + it.color.chatFormat + it.color.teamName)
                         .type(Material.WOOL)
@@ -115,6 +59,42 @@ object ConnectionHandler : Listener {
                         .build()
                 )
             }
+            B.postpone(5) {
+                // Создание маркера
+                teams.forEach {
+                    markers.add(
+                        Anime.marker(
+                            this,
+                            Marker(
+                                UUID.randomUUID(),
+                                it.teleport.x + 0.5,
+                                it.teleport.y + 1.5,
+                                it.teleport.z + 0.5,
+                                16.0,
+                                MarkerSign.ARROW_DOWN.texture
+                            )
+                        )
+                    )
+                }
+                // Движение маркера
+                markers.forEach { marker ->
+                    var up = false
+                    B.repeat(15) {
+                        up = !up
+                        Anime.moveMarker(
+                            this,
+                            marker.uuid,
+                            marker.x,
+                            marker.y - if (up) 0.0 else 0.7,
+                            marker.z,
+                            0.75
+                        )
+                    }
+                }
+                Npc.npcs.values.forEach { it.spawn(this) }
+            }
+        } else {
+            gameMode = GameMode.SPECTATOR
         }
     }
 
