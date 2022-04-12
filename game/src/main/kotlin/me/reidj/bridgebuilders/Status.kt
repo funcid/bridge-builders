@@ -112,7 +112,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         actualTime
     }),
     GAME(
-        50,
+        1500,
         { time ->
             // Обновление шкалы времени
             if (time % 20 == 0) {
