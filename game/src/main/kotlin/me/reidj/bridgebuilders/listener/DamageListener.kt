@@ -53,9 +53,9 @@ object DamageListener : Listener {
         } while ((id == 0 || id == 171 || id == 96 || id == 167) && counter < 20)
 
         if (player.killer != null) {
-            val user = getByPlayer(player)
+            val user = getByPlayer(player)!!
             val killer = teams.filter { team -> team.players.contains(player.killer.uniqueId) }[0]
-            val killerStats = getByPlayer(player.killer)
+            val killerStats = getByPlayer(player.killer)!!
             drops.filter {
                 it.getType().isBlock || it.getType() == Material.DIAMOND || it.getType() == Material.IRON_INGOT
                         || it.getType() == Material.COAL || it.getType() == Material.GOLD_INGOT

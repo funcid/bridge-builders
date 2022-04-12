@@ -25,7 +25,7 @@ object ChatHandler : Listener {
             isCancelled = true
             if (!message.startsWith("!")) {
                 team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
-                    it.sendMessage("§8КОМАНДА ${getPrefix(getByPlayer(player)) + message}")
+                    it.sendMessage("§8КОМАНДА ${getPrefix(getByPlayer(player)!!) + message}")
                 }
             } else {
                 Bukkit.getOnlinePlayers().forEach {
@@ -33,7 +33,7 @@ object ChatHandler : Listener {
                         "" + team[0].color.chatColor + team[0].color.teamName.substring(
                             0,
                             1
-                        ) + " " + getPrefix(getByPlayer(player)) + message.drop(1)
+                        ) + " " + getPrefix(getByPlayer(player)!!) + message.drop(1)
                     )
                 }
             }

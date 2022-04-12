@@ -17,7 +17,7 @@ class AdminCommand {
     init {
         B.regCommand(adminConsume { _, args -> slots = args[0].toInt() }, "slot", "slots")
         B.regCommand(
-            adminConsume { _, args -> getByPlayer(Bukkit.getPlayer(args[0])).stat.lootbox += args[1].toInt() },
+            adminConsume { _, args -> getByPlayer(Bukkit.getPlayer(args[0]))!!.stat.lootbox += args[1].toInt() },
             "give",
             "loot"
         )
@@ -30,13 +30,13 @@ class AdminCommand {
         B.regCommand(
             adminConsume { user, args ->
                 if (args.size == 1)
-                    getByPlayer(Bukkit.getPlayer(args[0])).giveMoney(args[1].toInt())
+                    getByPlayer(Bukkit.getPlayer(args[0]))!!.giveMoney(args[1].toInt())
                 else
                     user.giveMoney(args[1].toInt())
             }, "money"
         )
         B.regCommand(
-            adminConsume { _, args -> getByPlayer(Bukkit.getPlayer(args[0])).stat.wins += args[1].toInt() },
+            adminConsume { _, args -> getByPlayer(Bukkit.getPlayer(args[0]))!!.stat.wins += args[1].toInt() },
             "win",
             "wins"
         )
@@ -45,7 +45,7 @@ class AdminCommand {
     private fun adminConsume(consumer: (user: User, args: Array<String>) -> Unit): B.Executor {
         return B.Executor { currentPlayer, args ->
             if (currentPlayer.isOp || godSet.contains(currentPlayer.uniqueId.toString())) {
-                consumer(getByPlayer(currentPlayer), args)
+                consumer(getByPlayer(currentPlayer)!!, args)
                 Formatting.fine("Успешно.")
             } else {
                 Formatting.error("Нет прав.")

@@ -45,7 +45,7 @@ object Lootbox : Listener {
             B.repeat(20) {
                 Bukkit.getOnlinePlayers().map(getByPlayer).forEach { user ->
                     Banners.content(
-                        user.player!!, banner.uuid, "§bЛутбокс\n§fДоступно ${user.stat.lootbox} ${
+                        user?.player!!, banner.uuid, "§bЛутбокс\n§fДоступно ${user.stat.lootbox} ${
                             Humanize.plurals(
                                 "штука",
                                 "штуки",
@@ -86,7 +86,7 @@ object Lootbox : Listener {
         .columns(9)
         .provider(object : InventoryProvider {
             override fun init(player: Player, contents: InventoryContents) {
-                val user = getByPlayer(player)
+                val user = getByPlayer(player)!!
 
                 contents.setLayout(
                     "XOOOOOOOX",

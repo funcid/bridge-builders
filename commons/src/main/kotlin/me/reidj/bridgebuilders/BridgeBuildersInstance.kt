@@ -32,8 +32,8 @@ import kotlin.properties.Delegates
 const val HUB = "HUB-2"
 
 lateinit var bridgeBuildersInstance: JavaPlugin
-lateinit var getByPlayer: (Player) -> User
-lateinit var getByUuid: (UUID) -> User
+lateinit var getByPlayer: (Player) -> User?
+lateinit var getByUuid: (UUID) -> User?
 lateinit var kensuke: Kensuke
 lateinit var worldMeta: WorldMeta
 lateinit var realm: RealmInfo
@@ -48,8 +48,8 @@ var userManager = BukkitUserManager(
 
 class BridgeBuildersInstance(
     plugin: JavaPlugin,
-    byPlayer: (Player) -> User,
-    byUuid: (UUID) -> User,
+    byPlayer: (Player) -> User?,
+    byUuid: (UUID) -> User?,
     meta: WorldMeta,
     currentSlot: Int
 ) {

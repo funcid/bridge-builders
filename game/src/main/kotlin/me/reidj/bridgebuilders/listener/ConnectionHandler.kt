@@ -1,6 +1,7 @@
 package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
+import clepto.cristalix.Cristalix
 import dev.implario.bukkit.item.item
 import me.func.mod.Anime
 import me.func.mod.Npc
@@ -16,8 +17,10 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import ru.cristalix.core.account.IAccountService
+import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.item.Items
 import ru.cristalix.core.realm.IRealmService
+import ru.cristalix.core.realm.RealmId
 import ru.cristalix.core.realm.RealmStatus
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -34,7 +37,13 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.handle() {
-        val user = getByPlayer(player)
+        if (app.getUser(player) == null) {
+            player.sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
+            Cristalix.transfer(listOf(player.uniqueId), RealmId.of(HUB))
+            return
+        }
+
+        val user = app.getUser(player)!!
 
         B.postpone(5) { player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
         player.inventory.clear()

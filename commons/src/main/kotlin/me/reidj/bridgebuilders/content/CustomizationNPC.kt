@@ -57,8 +57,8 @@ object CustomizationNPC {
                     "XXXXQXXXX",
                 )
 
-                val user = getByPlayer(player)
-                val stat = user.stat
+                val user = getByPlayer(player)!!
+                val stat = user?.stat
 
                 contents.add('S', ClickableItem.empty(item {
                     type = Material.CLAY_BALL
@@ -287,27 +287,29 @@ object CustomizationNPC {
             contents.add('O', ClickableItem.empty(donatePosition.getIcon()))
             contents.add('G', ClickableItem.of(accessItem) {
                 val user = getByPlayer(player)
-                if (realMoney)
-                    buy(user, donatePosition.getPrice(), donatePosition.getTitle()) { donatePosition.give(user) }
-                else {
-                    if (user.stat.donate.contains(donatePosition)) {
-                        player.sendMessage(Formatting.error("У вас уже есть этот товар."))
-                        player.closeInventory()
-                    } else if (donatePosition.getPrice() > user.stat.money) {
-                        player.sendMessage(Formatting.error("Не хватает денег :<"))
-                        player.closeInventory()
+                user?.let {
+                    if (realMoney) {
+                        buy(it, donatePosition.getPrice(), donatePosition.getTitle()) { donatePosition.give(it) }
                     } else {
-                        user.minusMoney(donatePosition.getPrice())
-                        donatePosition.give(user)
-                        player.sendMessage(Formatting.fine("Успешно!"))
-                        player.closeInventory()
+                        if (it.stat.donate.contains(donatePosition)) {
+                            player.sendMessage(Formatting.error("У вас уже есть этот товар."))
+                            player.closeInventory()
+                        } else if (donatePosition.getPrice() > it.stat.money) {
+                            player.sendMessage(Formatting.error("Не хватает денег :<"))
+                            player.closeInventory()
+                        } else {
+                            it.minusMoney(donatePosition.getPrice())
+                            donatePosition.give(it)
+                            player.sendMessage(Formatting.fine("Успешно!"))
+                            player.closeInventory()
+                        }
                     }
                 }
             })
         }
     }
 
-    private fun buy(user: User, money: Int, desc: String, accept: Consumer<User>) {
+    fun buy(user: User, money: Int, desc: String, accept: Consumer<User>) {
         val player = user.player!!
         ISocketClient.get().writeAndAwaitResponse<MoneyTransactionResponsePackage>(
             MoneyTransactionRequestPackage(player.uniqueId, money, true, desc)

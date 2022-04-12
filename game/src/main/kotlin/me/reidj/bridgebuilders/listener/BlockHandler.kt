@@ -73,7 +73,7 @@ object BlockHandler : Listener {
             B.bc("" + winner.color.chatFormat + winner.color.teamName + " §f победили!")
             B.bc(" ")
             B.bc("§e§lТОП ПРИНЕСЁННЫХ БЛОКОВ")
-            winner.players.map { getByUuid(it) }.sortedBy { -it.collectedBlocks }
+            winner.players.map { getByUuid(it)!! }.sortedBy { -it.collectedBlocks }
                 .subList(0, min(3, winner.players.size))
                 .forEachIndexed { index, user ->
                     B.bc(" §l${index + 1}. §e" + user.player?.name + " §с" + user.collectedBlocks + " блоков принесено")
@@ -83,7 +83,7 @@ object BlockHandler : Listener {
 
             winner.players.map(getByUuid).forEach { user ->
                 //BattlePassUtil.update(user.player!!, WIN, 1)
-                WinUtil.end(user, team)
+                WinUtil.end(user!!, team)
             }
             B.postpone(5 * 20) { app.restart() }
             return

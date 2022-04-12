@@ -59,7 +59,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         }
                         team.players.forEach {
                             val player = Bukkit.getPlayer(it) ?: return@forEach
-                            val user = getByPlayer(player)
+                            val user = getByPlayer(player)!!
 
                             player.gameMode = org.bukkit.GameMode.SURVIVAL
                             player.itemOnCursor = null
@@ -100,7 +100,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 val users = players.map { getByPlayer(it) }
                 users.forEach { user ->
                     // Отправить информацию о начале игры клиенту
-                    ModTransfer().send("bridge:start", user.player)
+                    ModTransfer().send("bridge:start", user!!.player)
                 }
                 activeStatus = GAME
                 actualTime + 1
@@ -141,7 +141,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 teams.forEach { team ->
                     team.collected.forEach {
                         if (max != null && it == max)
-                            team.players.map(getByUuid).forEach { user -> WinUtil.end(user, team) }
+                            team.players.map(getByUuid).forEach { user -> WinUtil.end(user!!, team) }
                     }
                 }
                 B.postpone(5 * 20) {

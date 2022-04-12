@@ -181,10 +181,10 @@ object BattlePassManager {
         }.toMutableList()
         sale(BATTLEPASS_SALE_PERCENT.toDouble())
         onBuyAdvanced { player ->
-            val user = getByPlayer(player).stat
+            val user = getByPlayer(player)?.stat
             player.closeInventory()
 
-            user.progress?.let { data ->
+            user?.progress?.let { data ->
                 if (data.advanced) {
                     Anime.itemTitle(player, CustomizationNPC.backItem, "Ошибка!", "У вас уже Премиум!", 2.5)
                     return@onBuyAdvanced
@@ -212,7 +212,7 @@ object BattlePassManager {
         }
         onBuyPage { player, cost ->
             player.closeInventory()
-            val user = getByPlayer(player).stat
+            val user = getByPlayer(player)!!.stat
 
             user.progress?.let { data ->
                 pages.firstOrNull { (it.skipPrice - it.skipPrice * BATTLEPASS_SALE_PERCENT / 100.0).toInt() == cost }
@@ -246,7 +246,7 @@ object BattlePassManager {
             val index = buffer.readInt()
             val data = getByPlayer(player)
 
-            data.stat.progress?.let {
+            data!!.stat.progress?.let {
                 if (advanced && !it.advanced)
                     return@createReader
                 var exp = it.exp
@@ -300,7 +300,7 @@ object BattlePassManager {
 
     fun show(player: Player) {
         BattlePass.send(player, battlepass)
-        val data = getByPlayer(player).stat
+        val data = getByPlayer(player)!!.stat
         var progress = data.progress
 
         if (progress == null)

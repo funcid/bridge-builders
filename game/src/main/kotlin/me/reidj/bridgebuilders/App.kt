@@ -61,7 +61,7 @@ class App : JavaPlugin() {
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
         ModLoader.loadAll("mods")
 
-        BridgeBuildersInstance(this, { userManager.getUser(it) }, { userManager.getUser(it) }, worldMeta, 16)
+        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, worldMeta, 16)
         realm.readableName = "BridgeBuilders ${realm.realmId.id}"
         realm.lobbyFallback = LOBBY_SERVER
 
@@ -88,7 +88,7 @@ class App : JavaPlugin() {
             Npc.npc {
                 onClick { event ->
                     val player = event.player
-                    val user = getByPlayer(player)
+                    val user = getByPlayer(player)!!
                     if (user.activeHand)
                         return@onClick
                     user.activeHand = true
@@ -131,7 +131,7 @@ class App : JavaPlugin() {
                                 // Обновление таба
                                 team.players.map(getByUuid).forEach { whoSend ->
                                     Anime.killboardMessage(
-                                        whoSend.player!!,
+                                        whoSend!!.player!!,
                                         "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
                                     )
                                     me.func.mod.conversation.ModTransfer(
@@ -140,7 +140,7 @@ class App : JavaPlugin() {
                                         block.value,
                                         needBlocks,
                                         team.players.map { getByUuid(it) }
-                                            .sumOf { it.collectedBlocks }
+                                            .sumOf { it!!.collectedBlocks }
                                     ).send("bridge:tabupdate", player)
                                 }
                             }
@@ -214,7 +214,7 @@ class App : JavaPlugin() {
 
     fun restart() {
         Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.forEach {
-            val user = getByPlayer(it)
+            val user = getByPlayer(it)!!
             user.stat.games++
             //me.reidj.bridgebuilders.battlepass.BattlePassUtil.update(it, me.reidj.bridgebuilders.battlepass.quest.QuestType.PLAY, 1)
             if (Math.random() < 0.11) {
@@ -309,7 +309,7 @@ class App : JavaPlugin() {
 
     fun getCountBlocksTeam(team: Team): Boolean {
         return team.players.map { getByUuid(it) }
-            .sumOf { it.collectedBlocks } < needBlocks
+            .sumOf { it!!.collectedBlocks } < needBlocks
     }
 
     private fun loadMap() {
@@ -361,4 +361,8 @@ class App : JavaPlugin() {
     }
 
     fun isSpectator(player: Player): Boolean = player.gameMode == GameMode.SPECTATOR
+
+    fun getUser(player: Player): User? = getUser(player.uniqueId)
+
+    fun getUser(uuid: UUID): User? = userManager.getUser(uuid)
 }

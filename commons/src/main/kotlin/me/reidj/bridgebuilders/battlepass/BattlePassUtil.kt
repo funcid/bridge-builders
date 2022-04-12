@@ -13,7 +13,7 @@ const val BATTLEPASS_RECHARGE_HOURS = 6
 object BattlePassUtil {
 
     fun update(player: Player, type: QuestType, value: Int, absolute: Boolean = false) {
-        val data = getByPlayer(player).stat
+        val data = getByPlayer(player)!!.stat
         if (data.progress == null)
             data.progress = BattlePassUserData(15, false)
         if (data.data!!.isEmpty())
@@ -34,7 +34,7 @@ object BattlePassUtil {
     }
 
     fun getQuestLore(player: Player): List<String> {
-        val data = getByPlayer(player).stat
+        val data = getByPlayer(player)!!.stat
         val now = System.currentTimeMillis()
 
         if (now - data.lastGenerationTime > 1000 * 60 * 60 * BATTLEPASS_RECHARGE_HOURS) {
