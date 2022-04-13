@@ -142,7 +142,7 @@ class App : JavaPlugin() {
                                             needBlocks,
                                             team.players.mapNotNull { getUser(it) }
                                                 .sumOf { it.collectedBlocks }
-                                        ).send("bridge:tabupdate", player)
+                                        ).send("bridge:tabupdate", whoSend.player!!)
                                     }
                                 }
                             }
