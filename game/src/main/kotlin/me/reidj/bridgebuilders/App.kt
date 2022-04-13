@@ -7,6 +7,7 @@ import implario.ListUtils
 import me.func.mod.Anime
 import me.func.mod.Kit
 import me.func.mod.Npc
+import me.func.mod.Npc.location
 import me.func.mod.Npc.onClick
 import me.func.mod.conversation.ModLoader
 import me.reidj.bridgebuilders.content.Lootbox
@@ -130,9 +131,9 @@ class App : JavaPlugin() {
                                         }
                                     }
                                     // Обновление таба
-                                    team.players.mapNotNull { getUser(it) }.forEach { whoSend ->
+                                    team.players.map(Bukkit::getPlayer).forEach { whoSend ->
                                         Anime.killboardMessage(
-                                            whoSend.player!!,
+                                            whoSend,
                                             "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
                                         )
                                         me.func.mod.conversation.ModTransfer(
@@ -142,16 +143,14 @@ class App : JavaPlugin() {
                                             needBlocks,
                                             team.players.mapNotNull { getUser(it) }
                                                 .sumOf { it.collectedBlocks }
-                                        ).send("bridge:tabupdate", whoSend.player!!)
+                                        ).send("bridge:tabupdate", whoSend)
                                     }
                                 }
                             }
                         }
                     }
                 }
-                x = label.x + 0.5
-                y = label.y
-                z = label.z + 0.5
+                location(label.clone().add(0.5, 0.0, 0.5))
                 behaviour = me.func.protocol.npc.NpcBehaviour.STARE_AT_PLAYER
                 name = "§bСтроитель Джо"
                 pitch = npcArgs[0].toFloat()

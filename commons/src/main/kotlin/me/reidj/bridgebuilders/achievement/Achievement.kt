@@ -27,33 +27,33 @@ enum class Achievement(
         repeat(3) { user.stat.lootbox++ }
         user.giveMoney(2048)
     }),
-    FIRST_WIN("Победитель Деревянного Ранга", "§7Победить 1 раз\n§f + §e32 монеты", { it.stat.wins >= 1 }, { it.giveMoney(32) }),
+    FIRST_WIN("Победитель Деревянного Ранга", "§7Победить 1 раз\n§f + §e32 монеты", { it.stat.wins == 1 }, { it.giveMoney(32) }),
     TEN_WIN("Победитель Медного Ранга", "§7Победить 10 раз\n§f + §e64 монеты\n" +
-            "§f + 1 §bЛутбокс", { it.stat.wins >= 10 }, {
+            "§f + 1 §bЛутбокс", { it.stat.wins == 10 }, {
         it.giveMoney(64)
         it.stat.lootbox++
     }),
     HUNDRED_WIN("Герой", "§7Победить 100 раз\n" +
-            "§f + 3 §bЛутбокса\n§f + §e512 монет", { it.stat.wins >= 100 }, { user ->
+            "§f + 3 §bЛутбокса\n§f + §e512 монет", { it.stat.wins == 100 }, { user ->
         repeat(3) { user.stat.lootbox++ }
         user.giveMoney(512)
     }),
     THOUSAND_WIN("Легенда", "§7Победить 1`000 раз\n" +
-            "§f + 20 §bЛутбоксов\n§f + §e1024 монет", { it.stat.wins >= 1000 }, { user ->
+            "§f + 20 §bЛутбоксов\n§f + §e1024 монет", { it.stat.wins == 1000 }, { user ->
         repeat(20) { user.stat.lootbox++ }
         user.giveMoney(1024)
     }),
-    GAMER("Игрок", "§7Сыграть 10 игр\n§f + §e128 монет", { it.stat.games >= 10 }, {
+    GAMER("Игрок", "§7Сыграть 10 игр\n§f + §e128 монет", { it.stat.games == 10 }, {
         it.giveMoney(128)
     }),
-    GLADIATOR("Гладиатор", "§7Сыграть 100 игр\n§f + §e64 монеты", { it.stat.games >= 100 }, {
+    GLADIATOR("Гладиатор", "§7Сыграть 100 игр\n§f + §e64 монеты", { it.stat.games == 100 }, {
         it.giveMoney(64)
     }),
-    MAXIMUS("Максимус", "§7Сыграть 1000 игр\n§f + §e192 монеты\n§f + 1 §bЛутбокс", { it.stat.games >= 1000 }, {
+    MAXIMUS("Максимус", "§7Сыграть 1000 игр\n§f + §e192 монеты\n§f + 1 §bЛутбокс", { it.stat.games == 1000 }, {
         it.giveMoney(192)
         it.stat.lootbox++
     }),
-    LOOTER("Счастливчик", "§7Открыть 10 лутбоксов\n§f + 1 §bЛутбокс", { it.stat.lootboxOpenned >= 10 }, { user ->
+    LOOTER("Счастливчик", "§7Открыть 10 лутбоксов\n§f + 1 §bЛутбокс", { it.stat.lootboxOpenned == 10 }, { user ->
         repeat(15) { user.stat.lootbox++ }
     }),
 }

@@ -4,12 +4,13 @@ import me.func.protocol.battlepass.BattlePassUserData
 import me.reidj.bridgebuilders.achievement.Achievement
 import me.reidj.bridgebuilders.battlepass.quest.BattlePassQuest
 import me.reidj.bridgebuilders.battlepass.quest.QuestGenerator
+import me.reidj.bridgebuilders.data.Unique
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.impl.*
 import java.util.*
 
-data class Stat(
-    val id: UUID,
+open class Stat(
+    private val uuid: UUID,
 
     var money: Int,
     var kills: Int,
@@ -36,4 +37,7 @@ data class Stat(
     var lastSeenName: String?,
 
     var claimedRewards: MutableList<Int>? = mutableListOf()
-)
+) : Unique {
+    override fun getUuid(): UUID = uuid
+}
+

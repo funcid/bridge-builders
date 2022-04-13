@@ -1,6 +1,7 @@
 package me.reidj.bridgebuilders
 
 import clepto.bukkit.B
+import clepto.cristalix.Cristalix
 import clepto.cristalix.WorldMeta
 import com.google.gson.GsonBuilder
 import dev.implario.kensuke.Kensuke
@@ -8,6 +9,7 @@ import dev.implario.kensuke.KensukeSession
 import dev.implario.kensuke.Scope
 import dev.implario.kensuke.impl.bukkit.BukkitKensuke
 import dev.implario.kensuke.impl.bukkit.BukkitUserManager
+import me.reidj.bridgebuilders.client.ClientSocket
 import me.reidj.bridgebuilders.command.AdminCommand
 import me.reidj.bridgebuilders.donate.DonateAdapter
 import me.reidj.bridgebuilders.donate.DonatePosition
@@ -37,6 +39,7 @@ lateinit var getByUuid: (UUID) -> User?
 lateinit var kensuke: Kensuke
 lateinit var worldMeta: WorldMeta
 lateinit var realm: RealmInfo
+lateinit var clientSocket: ClientSocket
 
 var slots by Delegates.notNull<Int>()
 val statScope = Scope("bridge-builderssss", Stat::class.java)
@@ -56,6 +59,21 @@ class BridgeBuildersInstance(
     init {
         bridgeBuildersInstance = plugin
         worldMeta = meta
+
+
+        // Подкючение к Netty сервису / Управляет конфигами, кастомными пакетами, всей data
+        val bridgeServiceHost: String = getEnv("BRIDGE_SERVICE_HOST", "127.0.0.1")
+        val bridgeServicePort: Int = getEnv("BRIDGE_SERVICE_PORT", "14653").toInt()
+        val bridgeServicePassword: String = getEnv("BRIDGE_SERVICE_PASSWORD", "12345")
+
+        clientSocket = ClientSocket(
+            bridgeServiceHost,
+            bridgeServicePort,
+            bridgeServicePassword,
+            Cristalix.getRealmString()
+        )
+
+        clientSocket.connect()
 
         // Регистрация сервисов
         val core = CoreApi.get()
@@ -90,5 +108,14 @@ class BridgeBuildersInstance(
             nextGame.accept(player)
             null
         }, "next")
+    }
+
+    private fun getEnv(name: String, defaultValue: String): String {
+        var field = System.getenv(name)
+        if (field == null || field.isEmpty()) {
+            println("No $name environment variable specified!")
+            field = defaultValue
+        }
+        return field
     }
 }

@@ -5,15 +5,10 @@ import dev.implario.kensuke.impl.bukkit.IBukkitKensukeUser
 import me.func.protocol.battlepass.BattlePassUserData
 import me.reidj.bridgebuilders.battlepass.quest.QuestGenerator
 import me.reidj.bridgebuilders.donate.impl.*
-import net.minecraft.server.v1_12_R1.Packet
-import net.minecraft.server.v1_12_R1.PlayerConnection
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer
 import org.bukkit.entity.Player
 import java.util.*
 
 class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
-
-    private var connection: PlayerConnection? = null
 
     var collectedBlocks = 0
     var kills = 0
@@ -104,19 +99,11 @@ class User(session: KensukeSession, stat: Stat?) : IBukkitKensukeUser {
         this.session = session
     }
 
-    fun sendPacket(packet: Packet<*>) {
-        if (connection == null)
-            connection = (player as CraftPlayer).handle.playerConnection
-        connection?.sendPacket(packet)
-    }
+    fun giveMoney(money: Int) = changeMoney(money)
 
-    fun giveMoney(money: Int) {
-        changeMoney(money)
-    }
 
-    fun minusMoney(money: Int) {
-        changeMoney(-money)
-    }
+    fun minusMoney(money: Int) = changeMoney(-money)
+
 
     private fun changeMoney(dMoney: Int) {
         stat.money += dMoney
