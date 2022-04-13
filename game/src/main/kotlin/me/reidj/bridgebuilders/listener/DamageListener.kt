@@ -133,6 +133,8 @@ object DamageListener : Listener {
         Cycle.run(20, 5) { time ->
             if (time == 5) {
                 player.gameMode = GameMode.SURVIVAL
+                if (teams.none { it.players.contains(player.uniqueId) })
+                    return@run
                 val team = teams.filter { it.players.contains(player.uniqueId) }[0]
                 run {
                     app.teleportAtBase(team, player)
