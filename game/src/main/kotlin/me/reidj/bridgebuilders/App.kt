@@ -144,8 +144,7 @@ class App : JavaPlugin() {
                                             block.key.needTotal,
                                             block.value,
                                             needBlocks,
-                                            team.players.mapNotNull { getUser(it) }
-                                                .sumOf { it.collectedBlocks }
+                                            team.collected.map { it.value }.sum()
                                         ).send("bridge:tabupdate", whoSend)
                                     }
                                 }
@@ -171,8 +170,10 @@ class App : JavaPlugin() {
                 team.teleport.y,
                 team.teleport.z + 0.5
             ) { player ->
+                println(team.isActiveTeleport)
                 if (!team.isActiveTeleport)
                     return@addPlace
+                println(team.isActiveTeleport)
                 var enemyTeam: Team? = null
                 val playerTeam = teams.filter { team -> team.players.contains(player.uniqueId) }
                 if (player.location.distanceSquared(playerTeam[0].teleport) < 4 * 4) {
@@ -310,10 +311,7 @@ class App : JavaPlugin() {
         return blockLocation
     }
 
-    fun getCountBlocksTeam(team: Team): Boolean {
-        return team.players.mapNotNull { app.getUser(it) }
-            .sumOf { it.collectedBlocks } < needBlocks
-    }
+    fun getCountBlocksTeam(team: Team): Boolean = team.collected.map { it.value }.sum() < needBlocks
 
     private fun loadMap() {
         worldMeta = MapLoader.load(MapType.AQUAMARINE.data.title)
