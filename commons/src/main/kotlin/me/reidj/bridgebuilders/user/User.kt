@@ -20,7 +20,6 @@ class User(stat: Stat) {
 
     fun minusMoney(money: Int) = changeMoney(-money)
 
-
     private fun changeMoney(dMoney: Int) {
         stat.money += dMoney
         me.func.mod.conversation.ModTransfer(stat.money).send("bridge:balance", player)

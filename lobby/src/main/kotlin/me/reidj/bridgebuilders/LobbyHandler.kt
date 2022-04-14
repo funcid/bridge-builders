@@ -1,7 +1,9 @@
 package me.reidj.bridgebuilders
 
 import clepto.bukkit.B
+import com.destroystokyo.paper.event.player.PlayerUseUnknownEntityEvent
 import dev.implario.bukkit.item.item
+import me.func.mod.Banners
 import me.func.mod.Npc
 import me.func.mod.conversation.ModLoader
 import org.bukkit.Material
@@ -57,18 +59,25 @@ object LobbyHandler : Listener {
     }
 
     @EventHandler
-    fun PlayerJoinEvent.handle() {
+    fun PlayerUseUnknownEntityEvent.handle() = Npc.npcs[entityId]!!.click!!.accept(this)
+
+    @EventHandler
+    fun PlayerJoinEvent.handle() = player.apply {
         B.postpone(5) {
-            player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
-            Npc.npcs.values.forEach { it.spawn(player) }
+            teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+            Npc.npcs.values.forEach { it.spawn(this) }
+            Banners.banners.values.forEach {
+                println(it)
+                Banners.show(this, it)
+            }
         }
-        player.allowFlight = IPermissionService.get().isDonator(player.uniqueId)
+        allowFlight = IPermissionService.get().isDonator(uniqueId)
 
-        ModLoader.send("balance-bundle.jar", player)
+        ModLoader.send("balance-bundle.jar", this)
 
-        val user = app.getUser(player)
+        val user = app.getUser(this)
         user?.giveMoney(0)
-        user?.player = player
+        user?.player = this
     }
 
     @EventHandler

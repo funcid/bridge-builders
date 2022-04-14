@@ -4,8 +4,6 @@ import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
-import me.func.mod.Anime
-import me.func.mod.Kit
 import me.func.mod.Npc
 import me.func.mod.Npc.location
 import me.func.mod.Npc.onClick
@@ -65,7 +63,6 @@ class App : JavaPlugin() {
         app = this
         Platforms.set(PlatformDarkPaper())
 
-        Anime.include(Kit.NPC, Kit.LOOTBOX, Kit.EXPERIMENTAL)
         ModLoader.loadAll("mods")
 
         BridgeBuildersInstance(this, { getUser(it) }, MapLoader.load("LOBB"), 1500)
@@ -89,8 +86,8 @@ class App : JavaPlugin() {
         CustomizationNPC
 
         B.events(
-            LobbyHandler,
             Lootbox,
+            LobbyHandler,
             GlobalListeners
         )
 
