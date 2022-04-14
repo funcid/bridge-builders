@@ -85,7 +85,7 @@ object CustomizationNPC {
                         subInventory(player, 1) { _: Player, currentContent: InventoryContents ->
                             currentContent.setLayout("XIIIIIXBX")
                             pasteItems(user, false, currentContent, Corpse.values().filter { it != Corpse.NONE }) {
-                                user.stat.activeCorpse = it as data.Corpse
+                                user.stat.activeCorpse = data.Corpse.valueOf(it.objectName)
                             }
                         }
                     })
@@ -102,7 +102,7 @@ object CustomizationNPC {
                                 "XXXXBXXXX"
                             )
                             pasteItems(user, false, currentContent, StepParticle.values().asIterable()) {
-                                stat.activeParticle = it as data.StepParticle
+                                stat.activeParticle = data.StepParticle.valueOf(it.objectName)
                             }
                         }
                     })
@@ -119,7 +119,7 @@ object CustomizationNPC {
                                 "XXXXBXXXX"
                             )
                             pasteItems(user, false, currentContent, NameTag.values().asIterable()) {
-                                stat.activeNameTag = it as data.NameTag
+                                stat.activeNameTag = data.NameTag.valueOf(it.objectName)
                             }
                         }
                     })
@@ -151,7 +151,7 @@ object CustomizationNPC {
                                 "XXXXBXXXX"
                             )
                             pasteItems(user, false, currentContent, KillMessage.values().asIterable()) {
-                                stat.activeKillMessage = it as data.KillMessage
+                                stat.activeKillMessage = data.KillMessage.valueOf(it.objectName)
                             }
                         }
                     })
@@ -168,7 +168,7 @@ object CustomizationNPC {
                                 "XXXXBXXXX"
                             )
                             pasteItems(user, false, currentContent, StarterKit.values().asIterable()) {
-                                stat.activeKit = it as data.StarterKit
+                                stat.activeKit = data.StarterKit.valueOf(it.objectName)
                             }
                         }
                     })

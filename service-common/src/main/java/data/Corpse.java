@@ -1,5 +1,8 @@
 package data;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 public enum Corpse {
 
     NONE,

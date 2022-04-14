@@ -51,6 +51,10 @@ public class PlayerDataManager {
                             StarterKit.NONE,
                             0L
                     );
+
+                if (stat.getDonates() == null)
+                    stat.setDonates(new HashSet<>());
+
                 userMap.put(uuid, new User(stat));
             } catch (Exception ex) {
                 event.setCancelReason("Не удалось загрузить статистику.");
