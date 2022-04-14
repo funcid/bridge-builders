@@ -11,6 +11,7 @@ class User(stat: Stat) {
 
     var stat: Stat
     var player: Player? = null
+    var lastDamager: Player? = null
 
     init {
         this.stat = stat

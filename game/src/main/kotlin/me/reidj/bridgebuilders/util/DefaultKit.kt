@@ -13,5 +13,7 @@ object DefaultKit {
     )
     val sword: ItemStack = ItemStack(Material.WOOD_SWORD)
     val pickaxe = ItemStack(Material.WOOD_PICKAXE)
+    val axe = ItemStack(Material.WOOD_AXE)
+    val spade = ItemStack(Material.WOOD_SPADE)
     val bread = ItemStack(Material.BREAD, 32)
 }

@@ -42,9 +42,11 @@ object DamageListener : Listener {
 
         //BattlePassUtil.update(player.killer, QuestType.KILL, 1)
 
+        val user = app.getUser(player)!!
+
         if (cause.cause == EntityDamageEvent.DamageCause.FALL)
             printDeathMessage("Игрок ${victim.color.chatFormat + player.name} §fприземлился с большой высоты")
-        else if (cause.cause == EntityDamageEvent.DamageCause.VOID)
+        else if (cause.cause == EntityDamageEvent.DamageCause.VOID && user.lastDamager == null)
             printDeathMessage("Игрока ${victim.color.chatFormat + player.name} §fпоглотила бездна")
 
         var location = player.location.clone()
@@ -56,31 +58,24 @@ object DamageListener : Listener {
             id = location.block.typeId
         } while ((id == 0 || id == 171 || id == 96 || id == 167) && counter < 20)
 
-        if (player.killer != null) {
-            val killer = teams.filter { team -> team.players.contains(player.killer.uniqueId) }[0]
-            // Удаление и выдача убийцы некоторых вещей
-            drops.filter {
-                it.getType().isBlock || it.getType() == Material.DIAMOND || it.getType() == Material.IRON_INGOT
-                        || it.getType() == Material.COAL || it.getType() == Material.GOLD_INGOT
-            }.forEach {
-                    player.killer.inventory.addItem(it)
-                    it.setAmount(0)
-                }
+        if (user.lastDamager != null) {
+            val killer = teams.filter { team -> team.players.contains(user.lastDamager!!.uniqueId) }[0]
             // Сообщение об убийстве
-            app.getUser(player)?.let { user ->
+            app.getUser(player)?.let { victimUser ->
                 Bukkit.getOnlinePlayers().forEach {
                     Anime.killboardMessage(
                         it,
-                        "" + victim.color.chatColor + player.name + "§f " + KillMessage.valueOf(user.stat.activeKillMessage.name).getFormat() + " игроком " + killer.color.chatColor + player.killer.name
+                        "" + victim.color.chatColor + player.name + "§f " + KillMessage.valueOf(victimUser.stat.activeKillMessage.name)
+                            .getFormat() + " игроком " + killer.color.chatColor + user.lastDamager!!.name
                     )
                 }
                 // Создаю гроб, лол
-                if (user.stat.activeCorpse != data.Corpse.NONE) {
+                if (victimUser.stat.activeCorpse != data.Corpse.NONE) {
                     val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
                         .marker(true)
                         .invisible(true)
                         .gravity(false)
-                        .slot(EnumItemSlot.HEAD, Corpse.valueOf(user.stat.activeCorpse.name).getIcon())
+                        .slot(EnumItemSlot.HEAD, Corpse.valueOf(victimUser.stat.activeCorpse.name).getIcon())
                         .markTrash()
                         .build()
                     val name = StandHelper(location.clone().add(0.0, 1.0, 0.0))
@@ -97,11 +92,20 @@ object DamageListener : Listener {
                 }
             }
             // Начисление убийце статистики
-            app.getUser(player.killer)?.let { killerStats ->
+            app.getUser(user.lastDamager!!)?.let { killerStats ->
                 killerStats.giveMoney(3)
                 killerStats.stat.kills++
                 killerStats.kills++
                 killerStats.player!!.sendMessage(Formatting.fine("Вы получили §e3 монеты §fза убийство."))
+            }
+            // Удаление и выдача убийцы некоторых вещей
+            drops.filter {
+                it.getType().isBlock || it.getType() == Material.DIAMOND || it.getType() == Material.IRON_INGOT
+                        || it.getType() == Material.COAL || it.getType() == Material.GOLD_INGOT
+            }.forEach {
+                user.lastDamager!!.inventory.addItem(it)
+                it.setAmount(0)
+                B.postpone(5) { user.lastDamager = null }
             }
         }
 
@@ -156,8 +160,15 @@ object DamageListener : Listener {
         teams.filter { team -> team.players.contains(damager.uniqueId) }
             .filter { it.players.contains(entity.uniqueId) }
             .forEach { _ -> isCancelled = true }
-        if (damager is Player && (damager as Player).itemInHand.getType().name.endsWith("AXE"))
-            damage /= 3
+        if (damager is Player && entity is Player) {
+            println(11111)
+            val player = damager as Player
+            val user = app.getUser(entity as Player)!!
+            if (player.itemInHand.getType().name.endsWith("AXE"))
+                damage /= 3
+            if (user.lastDamager == null)
+                user.lastDamager = player
+        }
     }
 
     private fun removeItems(itemStack: ItemStack) {

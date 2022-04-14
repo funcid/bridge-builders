@@ -349,7 +349,7 @@ class App : JavaPlugin() {
             .forEach { Anime.reload(it, 180.0, "Перезарядка...", 42, 102, 240) }
     }
 
-    private fun teleportAvailable(team: Team) {
+    fun teleportAvailable(team: Team) {
         team.players.mapNotNull { Bukkit.getPlayer(it) }
             .forEach {
                 Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
