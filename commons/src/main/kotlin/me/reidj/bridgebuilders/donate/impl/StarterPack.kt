@@ -43,4 +43,6 @@ object StarterPack : DonatePosition {
     override fun getName(): String {
         return "StarterPack"
     }
+
+    override fun getObjectName(): String = "StarterPack"
 }

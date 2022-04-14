@@ -47,10 +47,10 @@ object ChatHandler : Listener {
     private fun getPrefix(user: User): String {
         var finalPrefix = ""
 
-        permissionService.getBestGroup(user.stat.id).thenAccept { group ->
-            permissionService.getNameColor(user.stat.id).thenApply {
-                finalPrefix = (if (user.stat.activeNameTag == NameTag.NONE) "" else user.stat.activeNameTag.getRare()
-                    .getColor() + user.stat.activeNameTag.getTitle() + "§8 ┃ ") + (if (group.prefix == "") "" else group.nameColor + group.prefix + "§8 ┃ §f") + (it
+        permissionService.getBestGroup(user.stat.uuid).thenAccept { group ->
+            permissionService.getNameColor(user.stat.uuid).thenApply {
+                finalPrefix = (if (user.stat.activeNameTag == data.NameTag.NONE) "" else NameTag.valueOf(user.stat.activeNameTag.name).getRare()
+                    .getColor() + NameTag.valueOf(user.stat.activeNameTag.name).getTitle() + "§8 ┃ ") + (if (group.prefix == "") "" else group.nameColor + group.prefix + "§8 ┃ §f") + (it
                     ?: group.nameColor) + user.player!!.name + " §8${Formatting.ARROW_SYMBOL + group.chatMessageColor} "
             }
         }

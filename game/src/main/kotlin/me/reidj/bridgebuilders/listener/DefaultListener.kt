@@ -88,7 +88,7 @@ object DefaultListener : Listener {
 
         if (item != null && item.getType() == Material.WOOL) {
             val players = teams[teamIndex].players
-            players.take(4).mapNotNull { getByUuid(it) }.forEach {
+            players.take(4).mapNotNull { app.getUser(it) }.forEach {
                 template.string(it.player!!.name)
             }
             repeat(4 - players.size) {

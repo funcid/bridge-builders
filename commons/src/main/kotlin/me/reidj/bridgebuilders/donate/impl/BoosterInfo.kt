@@ -35,10 +35,12 @@ data class BoosterInfo(val uuid: UUID, val until: Double, val time: Double, val 
     }
 
     override fun give(user: User) {
-        user.stat.donate.add(this)
+       // user.stat.donate.add(this)
     }
 
     override fun isActive(user: User): Boolean = true
 
     override fun getName(): String = "ExpBoost"
+
+    override fun getObjectName(): String = "ExpBoost"
 }

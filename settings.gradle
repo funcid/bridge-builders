@@ -1,7 +1,7 @@
 rootProject.name = 'BridgeBuilders'
 include 'game'
 include 'commons'
-include 'common'
+include 'service-common'
 include 'lobby'
 include 'mod'
 include 'balance'

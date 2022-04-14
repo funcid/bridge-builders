@@ -4,6 +4,7 @@ import clepto.bukkit.B
 import me.func.mod.Anime
 import me.func.mod.conversation.ModTransfer
 import me.reidj.bridgebuilders.data.BlockPlan
+import me.reidj.bridgebuilders.donate.impl.StarterKit
 import me.reidj.bridgebuilders.util.DefaultKit
 import me.reidj.bridgebuilders.util.WinUtil
 import org.bukkit.Bukkit
@@ -29,7 +30,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size < slots) {
+            if (players.size + 6 < slots) {
                 actualTime = 1
             } else {
                 // Обновление статуса реалма, чтобы нельзя было войти
@@ -78,7 +79,11 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                             }.toTypedArray()
 
                             player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
-                            app.getUser(player)?.let { it.stat.activeKit.content.forEach { starter -> player.inventory.addItem(starter) } }
+                            app.getUser(player)?.let {
+                                StarterKit.valueOf(it.stat.activeKit.name).content.forEach { starter ->
+                                    player.inventory.addItem(starter)
+                                }
+                            }
 
                             // Отправка таба
                             team.collected.entries.forEachIndexed { index, block ->
@@ -116,7 +121,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         actualTime
     }),
     GAME(
-        1500,
+        2500,
         { time ->
             // Обновление шкалы времени
             if (time % 20 == 0) {
@@ -136,16 +141,15 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             if (WinUtil.check4win()) {
                 ru.cristalix.core.karma.IKarmaService.get().enableGG { true }
                 var max: Map.Entry<BlockPlan, Int>? = null
-                teams.forEach {
-                    for (entry in it.collected.entries) {
+                teams.forEach { team ->
+                    for (entry in team.collected.entries) {
                         if (max == null || entry.value > max!!.value)
                             max = entry
                     }
                 }
                 teams.forEach { team ->
-                    team.collected.forEach {
-                        if (max != null && it == max)
-                            team.players.mapNotNull { app.getUser(it) }.forEach { user -> WinUtil.end(user, team) }
+                    team.collected.filter { max != null && it == max }.forEach { _ ->
+                        team.players.mapNotNull { app.getUser(it) }.forEach { user -> WinUtil.end(user, team) }
                     }
                 }
                 B.postpone(5 * 20) {

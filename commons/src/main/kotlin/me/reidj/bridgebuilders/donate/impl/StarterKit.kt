@@ -177,15 +177,17 @@ enum class StarterKit(
     }
 
     override fun give(user: User) {
-        user.stat.activeKit = this
+        user.stat.activeKit = data.StarterKit.valueOf(name)
         user.stat.donate.add(this)
     }
 
     override fun isActive(user: User): Boolean {
-        return user.stat.activeKit == this
+        return user.stat.activeKit == data.StarterKit.valueOf(name)
     }
 
     override fun getName() = name
+
+    override fun getObjectName(): String = name
 }
 
 fun createPotion(type: PotionEffectType, duration: Int, amplifier: Int, amount: Int, title: String): ItemStack {

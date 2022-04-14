@@ -55,7 +55,7 @@ object WinUtil {
             firework.fireworkMeta = meta
         }
         Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.forEach {
-            if (team.players.contains(it.stat.id))
+            if (team.players.contains(it.stat.uuid))
                 return@forEach
             it.giveMoney(5)
             it.player!!.sendMessage(Formatting.fine("Вы получили §e5 монет§f."))

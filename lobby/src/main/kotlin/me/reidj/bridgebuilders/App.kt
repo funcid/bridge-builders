@@ -6,7 +6,11 @@ import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
 import me.func.mod.Kit
+import me.func.mod.Npc
+import me.func.mod.Npc.location
+import me.func.mod.Npc.onClick
 import me.func.mod.conversation.ModLoader
+import me.func.protocol.npc.NpcBehaviour
 import me.reidj.bridgebuilders.content.CustomizationNPC
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.listener.GlobalListeners
@@ -36,6 +40,9 @@ class App : JavaPlugin() {
 
     private var online = 0
 
+    private val balancer = PlayerBalancer()
+    private var fixDoubleClick: Player? = null
+
     private val hoverEvent =
         HoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf<BaseComponent>(TextComponent("§eНАЖМИ НА МЕНЯ")))
     private val clickUrl = ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/crGfRk6As4")
@@ -61,7 +68,7 @@ class App : JavaPlugin() {
         Anime.include(Kit.NPC, Kit.LOOTBOX, Kit.EXPERIMENTAL)
         ModLoader.loadAll("mods")
 
-        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, MapLoader().load("LOBB"), 200)
+        BridgeBuildersInstance(this, { getUser(it) }, MapLoader.load("LOBB"), 1500)
 
         val core = CoreApi.get()
         core.registerService(IRenderService::class.java, BukkitRenderService(getServer()))
@@ -78,13 +85,13 @@ class App : JavaPlugin() {
         realm.servicedServers = arrayOf("BRI")
 
         // Создание контента для лобби
-        TopManager()
+        TopManager().runTaskTimer(this, 0, 1)
         CustomizationNPC
 
         B.events(
+            LobbyHandler,
             Lootbox,
-            GlobalListeners,
-            LobbyHandler
+            GlobalListeners
         )
 
         val npcLabel = worldMeta.getLabel("play")
@@ -101,11 +108,53 @@ class App : JavaPlugin() {
             stand.customName = "§bОнлайн $online"
         }
 
+        // NPC поиска игры
+        B.postpone(5) {
+            worldMeta.getLabels("play").forEach { npcLabel ->
+                val npcArgs = npcLabel.tag.split(" ")
+                Npc.npc {
+                    onClick {
+                        val player = it.player
+                        if (fixDoubleClick != null && fixDoubleClick == player)
+                            return@onClick
+                        balancer.accept(player)
+                        fixDoubleClick = player
+                    }
+                    name = "§e§lНАЖМИТЕ ЧТОБЫ ИГРАТЬ"
+                    behaviour = NpcBehaviour.STARE_AT_PLAYER
+                    skinUrl = "https://webdata.c7x.dev/textures/skin/$SKIN"
+                    skinDigest = SKIN
+                    location(npcLabel.clone().add(0.5, 0.0, 0.5))
+                    yaw = npcArgs[0].toFloat()
+                    pitch = npcArgs[1].toFloat()
+                }
+            }
+            // Создание NPC
+            val guide = worldMeta.getLabel("guide")
+            val npcArgs = guide.tag.split(" ")
+            Npc.npc {
+                onClick { it.player.performCommand("menu") }
+                location(guide.clone().add(0.5, 0.0, 0.5))
+                name = "§dПерсонализация"
+                behaviour = NpcBehaviour.STARE_AT_PLAYER
+                skinUrl = "https://webdata.c7x.dev/textures/skin/$SKIN"
+                skinDigest = SKIN
+                yaw = npcArgs[0].toFloat()
+                pitch = npcArgs[1].toFloat()
+            }
+        }
+
         // Команда выхода в хаб
         B.regCommand({ player, _ ->
             Cristalix.transfer(listOf(player.uniqueId), RealmId.of(HUB))
             null
         }, "leave")
+
+        val nextGame = PlayerBalancer()
+        B.regCommand({ player: Player, _ ->
+            nextGame.accept(player)
+            null
+        }, "next")
 
         /*B.regCommand({ player, _ ->
             BattlePassManager.show(player)
@@ -125,7 +174,7 @@ class App : JavaPlugin() {
         }, "spectate", "spec")
     }
 
-    private fun getUser(player: Player) = userManager.getUser(player.uniqueId)
+    fun getUser(player: Player) = getUser(player.uniqueId)
 
-    private fun getUser(uuid: UUID) = userManager.getUser(uuid)
+    fun getUser(uuid: UUID) = playerDataManager.userMap[uuid]
 }

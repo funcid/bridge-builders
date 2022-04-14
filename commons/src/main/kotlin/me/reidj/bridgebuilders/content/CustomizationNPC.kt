@@ -85,7 +85,7 @@ object CustomizationNPC {
                         subInventory(player, 1) { _: Player, currentContent: InventoryContents ->
                             currentContent.setLayout("XIIIIIXBX")
                             pasteItems(user, false, currentContent, Corpse.values().filter { it != Corpse.NONE }) {
-                                user.stat.activeCorpse = it as Corpse
+                                user.stat.activeCorpse = it as data.Corpse
                             }
                         }
                     })
@@ -102,7 +102,7 @@ object CustomizationNPC {
                                 "XXXXBXXXX"
                             )
                             pasteItems(user, false, currentContent, StepParticle.values().asIterable()) {
-                                stat.activeParticle = it as StepParticle
+                                stat.activeParticle = it as data.StepParticle
                             }
                         }
                     })
@@ -119,7 +119,7 @@ object CustomizationNPC {
                                 "XXXXBXXXX"
                             )
                             pasteItems(user, false, currentContent, NameTag.values().asIterable()) {
-                                stat.activeNameTag = it as NameTag
+                                stat.activeNameTag = it as data.NameTag
                             }
                         }
                     })
@@ -151,7 +151,7 @@ object CustomizationNPC {
                                 "XXXXBXXXX"
                             )
                             pasteItems(user, false, currentContent, KillMessage.values().asIterable()) {
-                                stat.activeKillMessage = it as KillMessage
+                                stat.activeKillMessage = it as data.KillMessage
                             }
                         }
                     })
@@ -168,7 +168,7 @@ object CustomizationNPC {
                                 "XXXXBXXXX"
                             )
                             pasteItems(user, false, currentContent, StarterKit.values().asIterable()) {
-                                stat.activeKit = it as StarterKit
+                                stat.activeKit = it as data.StarterKit
                             }
                         }
                     })
@@ -177,7 +177,7 @@ object CustomizationNPC {
                         donateMenu(player, StarterPack, true)
                     })
                     val countHaveAchievement =
-                        Achievement.values().count { it.predicate(user) && !stat.achievement.contains(it) }
+                        Achievement.values().count { it.predicate(user) && !stat.achievement.contains(data.Achievement.valueOf(it.name)) }
                     contents.add('H', ClickableItem.of(item {
                         type = Material.CLAY_BALL
                         nbt("other", "new_booster_1")
@@ -196,22 +196,23 @@ object CustomizationNPC {
                             )
                             Achievement.values()
                                 .sortedBy { !it.predicate(user) }
-                                .sortedBy { stat.achievement.contains(it) }
-                                .forEach { achievement ->
+                                .sortedBy { stat.achievement.contains(data.Achievement.valueOf(it.name)) }
+                                .forEach { oldAchievement ->
+                                    val achievement = data.Achievement.valueOf(oldAchievement.name)
                                     val playerHas = stat.achievement.contains(achievement)
-                                    val canGet = achievement.predicate(user)
+                                    val canGet = oldAchievement.predicate(user)
                                     currentContent.add('I', ClickableItem.of(item {
                                         type = Material.CLAY_BALL
                                         if (playerHas) {
                                             nbt("other", "new_booster_0")
-                                            text("§aНаграда получена\n§7${achievement.title}")
+                                            text("§aНаграда получена\n§7${oldAchievement.title}")
                                         } else {
                                             nbt("other", "new_booster_1")
                                             if (canGet && !playerHas) {
                                                 enchant(Enchantment.DAMAGE_ALL, 1)
-                                                text("§b${achievement.title}\n\n${achievement.lore}\n\n§aНажмите чтобы забрать награду!")
+                                                text("§b${oldAchievement.title}\n\n${oldAchievement.lore}\n\n§aНажмите чтобы забрать награду!")
                                             } else {
-                                                text("§b${achievement.title}\n\n${achievement.lore}")
+                                                text("§b${oldAchievement.title}\n\n${oldAchievement.lore}")
                                             }
                                         }
                                     }) {
@@ -219,7 +220,7 @@ object CustomizationNPC {
                                             return@of
                                         player.closeInventory()
                                         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1f)
-                                        achievement.reward(user)
+                                        oldAchievement.reward(user)
                                         user.stat.achievement.add(achievement)
                                         player.sendMessage(Formatting.fine("Вы успешно получили награду!"))
                                     })
@@ -317,10 +318,6 @@ object CustomizationNPC {
         ).thenAccept {
             if (it.errorMessage != null) {
                 player.sendMessage(Formatting.error(it.errorMessage))
-                return@thenAccept
-            }
-            if (!user.session.isActive) {
-                player.sendMessage(Formatting.error("Что-то пошло не так... Попробуйте перезайти"))
                 return@thenAccept
             }
             accept.accept(user)

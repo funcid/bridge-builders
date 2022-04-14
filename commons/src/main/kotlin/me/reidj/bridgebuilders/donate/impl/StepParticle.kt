@@ -49,15 +49,17 @@ enum class StepParticle(
     }
 
     override fun give(user: User) {
-        user.stat.activeParticle = this
+        user.stat.activeParticle = data.StepParticle.valueOf(name)
         user.stat.donate.add(this)
     }
 
     override fun isActive(user: User): Boolean {
-        return user.stat.activeParticle == this
+        return user.stat.activeParticle == data.StepParticle.valueOf(name)
     }
 
     override fun getName(): String {
         return name
     }
+
+    override fun getObjectName(): String = name
 }

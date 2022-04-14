@@ -48,15 +48,17 @@ enum class KillMessage(private val title: String, private val price: Int, privat
     }
 
     override fun give(user: User) {
-        user.stat.activeKillMessage = this
+        user.stat.activeKillMessage = data.KillMessage.valueOf(name)
         user.stat.donate.add(this)
     }
 
     override fun isActive(user: User): Boolean {
-        return user.stat.activeKillMessage == this
+        return user.stat.activeKillMessage == data.KillMessage.valueOf(name)
     }
 
     override fun getName(): String {
         return name
     }
+
+    override fun getObjectName(): String = name
 }

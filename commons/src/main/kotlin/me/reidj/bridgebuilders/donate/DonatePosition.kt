@@ -1,9 +1,10 @@
 package me.reidj.bridgebuilders.donate
 
+import data.Donate
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.inventory.ItemStack
 
-interface DonatePosition {
+interface DonatePosition : Donate {
 
     fun getTitle(): String
 

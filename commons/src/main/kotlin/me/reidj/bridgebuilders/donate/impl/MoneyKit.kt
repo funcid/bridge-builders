@@ -63,4 +63,6 @@ enum class MoneyKit(
     override fun getName(): String {
         return name
     }
+
+    override fun getObjectName(): String = name
 }

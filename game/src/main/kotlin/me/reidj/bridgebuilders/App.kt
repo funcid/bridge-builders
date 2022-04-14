@@ -53,7 +53,7 @@ class App : JavaPlugin() {
     override fun onEnable() {
         B.plugin = this
         app = this
-        loadMap()
+
         Platforms.set(PlatformDarkPaper())
         EntityDataParameters.register()
 
@@ -62,7 +62,10 @@ class App : JavaPlugin() {
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
         ModLoader.loadAll("mods")
 
-        BridgeBuildersInstance(this, { getUser(it) }, { getUser(it) }, worldMeta, 16)
+        loadMap()
+
+        BridgeBuildersInstance(this, { getUser(it) }, worldMeta, 16)
+
         realm.readableName = "BridgeBuilders ${realm.realmId.id}"
         realm.lobbyFallback = LOBBY_SERVER
 
@@ -313,7 +316,7 @@ class App : JavaPlugin() {
     }
 
     private fun loadMap() {
-        worldMeta = MapLoader().load(MapType.AQUAMARINE.data.title)
+        worldMeta = MapLoader.load(MapType.AQUAMARINE.data.title)
         teams = worldMeta.getLabels("team").map {
             val data = it.tag.split(" ")
             val team = data[0]
@@ -365,5 +368,5 @@ class App : JavaPlugin() {
 
     fun getUser(player: Player): User? = getUser(player.uniqueId)
 
-    fun getUser(uuid: UUID): User? = userManager.getUser(uuid)
+    fun getUser(uuid: UUID): User? = playerDataManager.userMap[uuid]
 }

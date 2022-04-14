@@ -1,15 +1,8 @@
 package me.reidj.bridgebuilders.top
 
-import me.reidj.bridgebuilders.bridgeBuildersInstance
-import me.reidj.bridgebuilders.kensuke
-import me.reidj.bridgebuilders.statScope
-import me.reidj.bridgebuilders.user.Stat
-import me.reidj.bridgebuilders.userManager
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import ru.cristalix.boards.bukkitapi.Boards
-import ru.cristalix.core.account.IAccountService
-import java.util.*
+import user.Stat
 
 object TopCreator {
 
@@ -22,7 +15,7 @@ object TopCreator {
         blocks.location = location
         Boards.addBoard(blocks)
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(
+        /*Bukkit.getScheduler().scheduleSyncRepeatingTask(
             bridgeBuildersInstance, {
                 kensuke.getLeaderboard(userManager, statScope, key, 10).thenAccept {
                     blocks.clearContent()
@@ -42,6 +35,6 @@ object TopCreator {
                     blocks.updateContent()
                 }
             }, 20, 10 * 20
-        )
+        )*/
     }
 }

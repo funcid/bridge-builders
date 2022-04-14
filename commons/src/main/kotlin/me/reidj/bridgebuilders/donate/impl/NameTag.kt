@@ -43,16 +43,18 @@ enum class NameTag(private val title: String, private val price: Int, private va
     }
 
     override fun give(user: User) {
-        user.stat.activeNameTag = this
+        user.stat.activeNameTag = data.NameTag.valueOf(name)
         user.stat.donate.add(this)
     }
 
     override fun isActive(user: User): Boolean {
-        return user.stat.activeNameTag == this
+        return user.stat.activeNameTag == data.NameTag.valueOf(name)
     }
 
     override fun getName(): String {
         return name
     }
+
+    override fun getObjectName(): String = name
 
 }

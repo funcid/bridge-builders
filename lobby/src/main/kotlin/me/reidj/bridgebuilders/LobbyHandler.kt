@@ -3,13 +3,9 @@ package me.reidj.bridgebuilders
 import clepto.bukkit.B
 import dev.implario.bukkit.item.item
 import me.func.mod.Npc
-import me.func.mod.Npc.location
-import me.func.mod.Npc.onClick
 import me.func.mod.conversation.ModLoader
-import me.func.protocol.npc.NpcBehaviour
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
@@ -60,52 +56,19 @@ object LobbyHandler : Listener {
             player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
     }
 
-    private val balancer = PlayerBalancer()
-    private var fixDoubleClick: Player? = null
-
     @EventHandler
     fun PlayerJoinEvent.handle() {
-        B.postpone(5) { player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
+        B.postpone(5) {
+            player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+            Npc.npcs.values.forEach { it.spawn(player) }
+        }
         player.allowFlight = IPermissionService.get().isDonator(player.uniqueId)
 
         ModLoader.send("balance-bundle.jar", player)
-        getByPlayer(player)?.giveMoney(0)
 
-        // NPC поиска игры
-        B.postpone(5) {
-            worldMeta.getLabels("play").forEach { npcLabel ->
-                val npcArgs = npcLabel.tag.split(" ")
-                Npc.npc {
-                    onClick {
-                        val player = it.player
-                        if (fixDoubleClick != null && fixDoubleClick == player)
-                            return@onClick
-                        balancer.accept(player)
-                        fixDoubleClick = player
-                    }
-                    name = "§e§lНАЖМИТЕ ЧТОБЫ ИГРАТЬ"
-                    behaviour = NpcBehaviour.STARE_AT_PLAYER
-                    skinUrl = "https://webdata.c7x.dev/textures/skin/$SKIN"
-                    skinDigest = SKIN
-                    location(npcLabel.clone().add(0.5, 0.0, 0.5))
-                    yaw = npcArgs[0].toFloat()
-                    pitch = npcArgs[1].toFloat()
-                }.spawn(player)
-            }
-            // Создание NPC
-            val npcLabel = worldMeta.getLabel("guide")
-            val npcArgs = npcLabel.tag.split(" ")
-            Npc.npc {
-                onClick { it.player.performCommand("menu") }
-                location(npcLabel.clone().add(0.5, 0.0, 0.5))
-                name = "§dПерсонализация"
-                behaviour = NpcBehaviour.STARE_AT_PLAYER
-                skinUrl = "https://webdata.c7x.dev/textures/skin/$SKIN"
-                skinDigest = SKIN
-                yaw = npcArgs[0].toFloat()
-                pitch = npcArgs[1].toFloat()
-            }.spawn(player)
-        }
+        val user = app.getUser(player)
+        user?.giveMoney(0)
+        user?.player = player
     }
 
     @EventHandler

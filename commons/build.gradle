@@ -1,4 +1,7 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+
+}
 
 group = 'me.reidj'
 version = '1.0-SNAPSHOT'
@@ -25,6 +28,7 @@ compileKotlin {
 }
 
 dependencies {
+    compileOnly project(':service-common')
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5'
 
     implementation 'dev.implario.bukkit:kotlin-api:1.1.1'
@@ -38,7 +42,6 @@ dependencies {
 
     implementation 'clepto:clepto-bukkit:3.4.2'
     implementation 'clepto:clepto-cristalix:3.0.2'
-    implementation 'dev.implario:kensuke-client-bukkit:2.1.10'
 
     implementation 'dev.implario.bukkit:kotlin-api:1.1.1'
     implementation 'dev.implario.bukkit:dark-paper:1.0.0'

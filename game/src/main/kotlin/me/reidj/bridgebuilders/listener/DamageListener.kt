@@ -7,6 +7,7 @@ import me.reidj.bridgebuilders.Status
 import me.reidj.bridgebuilders.activeStatus
 import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.donate.impl.Corpse
+import me.reidj.bridgebuilders.donate.impl.KillMessage
 import me.reidj.bridgebuilders.teams
 import me.reidj.bridgebuilders.util.StandHelper
 import net.minecraft.server.v1_12_R1.EnumItemSlot
@@ -70,16 +71,16 @@ object DamageListener : Listener {
                 Bukkit.getOnlinePlayers().forEach {
                     Anime.killboardMessage(
                         it,
-                        "" + victim.color.chatColor + player.name + "§f " + user.stat.activeKillMessage.getFormat() + " игроком " + killer.color.chatColor + player.killer.name
+                        "" + victim.color.chatColor + player.name + "§f " + KillMessage.valueOf(user.stat.activeKillMessage.name).getFormat() + " игроком " + killer.color.chatColor + player.killer.name
                     )
                 }
                 // Создаю гроб, лол
-                if (user.stat.activeCorpse != Corpse.NONE) {
+                if (user.stat.activeCorpse != data.Corpse.NONE) {
                     val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
                         .marker(true)
                         .invisible(true)
                         .gravity(false)
-                        .slot(EnumItemSlot.HEAD, user.stat.activeCorpse.getIcon())
+                        .slot(EnumItemSlot.HEAD, Corpse.valueOf(user.stat.activeCorpse.name).getIcon())
                         .markTrash()
                         .build()
                     val name = StandHelper(location.clone().add(0.0, 1.0, 0.0))

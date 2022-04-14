@@ -39,4 +39,6 @@ object LootboxUnit : DonatePosition {
     override fun getName(): String {
         return "Lootbox"
     }
+
+    override fun getObjectName(): String = "Lootbox"
 }

@@ -70,4 +70,6 @@ enum class ArrowParticle(
     fun getParticle(): Particle? {
         return type
     }
+
+    override fun getObjectName(): String = name
 }

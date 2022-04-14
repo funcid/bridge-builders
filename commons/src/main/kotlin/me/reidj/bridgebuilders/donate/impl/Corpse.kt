@@ -38,16 +38,17 @@ enum class Corpse(private val title: String, private val price: Int, private val
     }
 
     override fun give(user: User) {
-        user.stat.activeCorpse = this
+        user.stat.activeCorpse = data.Corpse.valueOf(name)
         user.stat.donate.add(this)
     }
 
     override fun isActive(user: User): Boolean {
-        return user.stat.activeCorpse == this
+        return user.stat.activeCorpse == data.Corpse.valueOf(name)
     }
 
     override fun getName(): String {
         return name
     }
 
+    override fun getObjectName(): String = name
 }
