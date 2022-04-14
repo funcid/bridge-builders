@@ -134,7 +134,7 @@ class App : JavaPlugin() {
                                         }
                                     }
                                     // Обновление таба
-                                    team.players.map(Bukkit::getPlayer).forEach { whoSend ->
+                                    team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach { whoSend ->
                                         Anime.killboardMessage(
                                             whoSend,
                                             "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"

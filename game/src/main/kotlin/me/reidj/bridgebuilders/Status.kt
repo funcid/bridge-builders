@@ -79,8 +79,8 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                             }.toTypedArray()
 
                             player.inventory.addItem(kit.sword, kit.pickaxe, kit.bread)
-                            app.getUser(player)?.let {
-                                StarterKit.valueOf(it.stat.activeKit.name).content.forEach { starter ->
+                            app.getUser(player)?.let { user ->
+                                StarterKit.valueOf(user.stat.activeKit.name).content.forEach { starter ->
                                     player.inventory.addItem(starter)
                                 }
                             }
