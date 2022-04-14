@@ -178,7 +178,7 @@ enum class StarterKit(
 
     override fun give(user: User) {
         user.stat.activeKit = data.StarterKit.valueOf(name)
-        user.stat.donate.add(this)
+        user.stat.donates.add(getName())
     }
 
     override fun isActive(user: User): Boolean {

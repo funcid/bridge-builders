@@ -10,10 +10,7 @@ import ru.cristalix.core.CoreApi;
 import ru.cristalix.core.event.AccountEvent;
 import user.Stat;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -45,6 +42,7 @@ public class PlayerDataManager {
                             5,
                             0,
                             new ArrayList<>(),
+                            new HashSet<>(),
                             new ArrayList<>(),
                             KillMessage.NONE,
                             StepParticle.NONE,

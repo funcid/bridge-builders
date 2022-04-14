@@ -258,7 +258,7 @@ object CustomizationNPC {
     ) {
         item.forEach { currentItem ->
             content.add('I', ClickableItem.of(DonateHelper.modifiedItem(user, currentItem)) {
-                if (user.stat.donate.contains(currentItem)) {
+                if (user.stat.donates.contains(currentItem.objectName)) {
                     fill(currentItem)
                     user.player!!.closeInventory()
                 } else {
@@ -288,20 +288,19 @@ object CustomizationNPC {
             contents.setLayout("XOXXXXGBX")
             contents.add('O', ClickableItem.empty(donatePosition.getIcon()))
             contents.add('G', ClickableItem.of(accessItem) {
-                val user = getByPlayer(player)
-                user?.let {
+                getByPlayer(player)?.let { user ->
                     if (realMoney) {
-                        buy(it, donatePosition.getPrice(), donatePosition.getTitle()) { donatePosition.give(it) }
+                        buy(user, donatePosition.getPrice(), donatePosition.getTitle()) { donatePosition.give(user) }
                     } else {
-                        if (it.stat.donate.contains(donatePosition)) {
+                        if (user.stat.donates.contains(donatePosition.objectName)) {
                             player.sendMessage(Formatting.error("У вас уже есть этот товар."))
                             player.closeInventory()
-                        } else if (donatePosition.getPrice() > it.stat.money) {
+                        } else if (donatePosition.getPrice() > user.stat.money) {
                             player.sendMessage(Formatting.error("Не хватает денег :<"))
                             player.closeInventory()
                         } else {
-                            it.minusMoney(donatePosition.getPrice())
-                            donatePosition.give(it)
+                            user.minusMoney(donatePosition.getPrice())
+                            donatePosition.give(user)
                             player.sendMessage(Formatting.fine("Успешно!"))
                             player.closeInventory()
                         }
@@ -311,7 +310,7 @@ object CustomizationNPC {
         }
     }
 
-    fun buy(user: User, money: Int, desc: String, accept: Consumer<User>) {
+    private fun buy(user: User, money: Int, desc: String, accept: Consumer<User>) {
         val player = user.player!!
         ISocketClient.get().writeAndAwaitResponse<MoneyTransactionResponsePackage>(
             MoneyTransactionRequestPackage(player.uniqueId, money, true, desc)

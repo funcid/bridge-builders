@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -22,6 +23,7 @@ public class Stat implements Unique {
     private int lootboxOpenned;
 
     private List<Donate> donate;
+    private Set<String> donates;
     private List<Achievement> achievement;
 
     private KillMessage activeKillMessage;

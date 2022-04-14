@@ -50,7 +50,7 @@ enum class StepParticle(
 
     override fun give(user: User) {
         user.stat.activeParticle = data.StepParticle.valueOf(name)
-        user.stat.donate.add(this)
+        user.stat.donates.add(getName())
     }
 
     override fun isActive(user: User): Boolean {
