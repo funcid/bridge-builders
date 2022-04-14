@@ -3,7 +3,7 @@ package data;
 public enum KillMessage {
 
     NONE,
-    GLOBA,
+    GLOBAL,
     AHEAD,
     DEAD,
     END,

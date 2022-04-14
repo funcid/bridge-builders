@@ -119,13 +119,13 @@ object Lootbox : Listener {
                                 ""
                             ).send("lootbox", player)
 
-                            /*if (user.stat.donate.contains(drop)) {
+                            if (user.stat.donate.contains(drop)) {
                                 val giveBack = (drop.getRare().ordinal + 1) * 48
                                 player.sendMessage(Formatting.fine("§aДубликат! §fЗаменен на §e$giveBack монет§f."))
                                 user.giveMoney(giveBack)
                             } else {
                                 user.stat.donate.add(drop)
-                            }*/
+                            }
                             user.giveMoney(moneyDrop)
 
                             B.bc(

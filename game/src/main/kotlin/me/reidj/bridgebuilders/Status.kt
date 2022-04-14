@@ -16,7 +16,7 @@ import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_SPACTATE
 val kit = DefaultKit
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(50, { it ->
+    STARTING(80, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 60)
             realm.status = GAME_STARTED_CAN_JOIN
@@ -126,7 +126,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             // Обновление шкалы времени
             if (time % 20 == 0) {
                 Bukkit.getOnlinePlayers().forEach {
-                    ModTransfer(me.reidj.bridgebuilders.Status.GAME.lastSecond, time, false).send("bridge:online", it)
+                    ModTransfer(GAME.lastSecond, time, false).send("bridge:online", it)
                     if (time / 20 == 180) {
                         teams.forEach { team -> team.isActiveTeleport = true }
                         Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")

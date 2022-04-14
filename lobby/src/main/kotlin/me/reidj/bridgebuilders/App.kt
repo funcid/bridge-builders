@@ -167,6 +167,15 @@ class App : JavaPlugin() {
         }, "spectate", "spec")
     }
 
+    override fun onDisable() {
+        clientSocket.write(playerDataManager.bulk(true))
+        try {
+            Thread.sleep(1000L) // Если вдруг он не успеет написать в сокет(хотя вряд ли, конечно)
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
+    }
+
     fun getUser(player: Player) = getUser(player.uniqueId)
 
     fun getUser(uuid: UUID) = playerDataManager.userMap[uuid]

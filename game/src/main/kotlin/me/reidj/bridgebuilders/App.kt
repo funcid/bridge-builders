@@ -364,6 +364,15 @@ class App : JavaPlugin() {
             }
     }
 
+    override fun onDisable() {
+        clientSocket.write(playerDataManager.bulk(true))
+        try {
+            Thread.sleep(1000L) // Если вдруг он не успеет написать в сокет(хотя вряд ли, конечно)
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
+    }
+
     fun isSpectator(player: Player): Boolean = player.gameMode == GameMode.SPECTATOR
 
     fun getUser(player: Player): User? = getUser(player.uniqueId)

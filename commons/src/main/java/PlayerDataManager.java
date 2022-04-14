@@ -2,6 +2,8 @@ import com.google.common.collect.Maps;
 import data.*;
 import me.reidj.bridgebuilders.BridgeBuildersInstanceKt;
 import me.reidj.bridgebuilders.user.User;
+import org.bukkit.Bukkit;
+import packages.BulkSaveUserPackage;
 import packages.SaveUserPackage;
 import packages.StatPackage;
 import ru.cristalix.core.CoreApi;
@@ -10,8 +12,10 @@ import user.Stat;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class PlayerDataManager {
 
@@ -63,5 +67,15 @@ public class PlayerDataManager {
             Stat info = user.getStat();
             BridgeBuildersInstanceKt.getClientSocket().write(new SaveUserPackage(event.getUuid(), info));
         }, 100);
+    }
+
+    public BulkSaveUserPackage bulk(boolean remove) {
+        return new BulkSaveUserPackage(Bukkit.getOnlinePlayers().stream().map(pl -> {
+            UUID uuid = pl.getUniqueId();
+            User user = remove ? userMap.remove(uuid) : userMap.get(uuid);
+            if (user == null)
+                return null;
+            return new SaveUserPackage(uuid, user.getStat());
+        }).filter(Objects::nonNull).collect(Collectors.toList()));
     }
 }
