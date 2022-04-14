@@ -59,36 +59,67 @@ object DamageListener : Listener {
         } while ((id == 0 || id == 171 || id == 96 || id == 167) && counter < 20)
 
         if (user.lastDamager != null) {
-            val killer = teams.filter { team -> team.players.contains(user.lastDamager!!.uniqueId) }[0]
-            // Сообщение об убийстве
-            app.getUser(player)?.let { victimUser ->
-                Bukkit.getOnlinePlayers().forEach {
-                    Anime.killboardMessage(
-                        it,
-                        "" + victim.color.chatColor + player.name + "§f " + KillMessage.valueOf(victimUser.stat.activeKillMessage.name)
-                            .getFormat() + " игроком " + killer.color.chatColor + user.lastDamager!!.name
-                    )
-                }
-                // Создаю гроб, лол
-                if (victimUser.stat.activeCorpse != data.Corpse.NONE) {
-                    val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
-                        .marker(true)
-                        .invisible(true)
-                        .gravity(false)
-                        .slot(EnumItemSlot.HEAD, Corpse.valueOf(victimUser.stat.activeCorpse.name).getIcon())
-                        .markTrash()
-                        .build()
-                    val name = StandHelper(location.clone().add(0.0, 1.0, 0.0))
-                        .marker(true)
-                        .invisible(true)
-                        .gravity(false)
-                        .name("§e${player.name}")
-                        .build()
-                    UtilEntity.setScale(grave, 2.0, 2.0, 2.0)
-                    B.postpone(120 * 20) {
-                        grave.remove()
-                        name.remove()
+            val killer = teams.filter { team -> team.players.contains(user.lastDamager?.uniqueId) }
+            // Удаление вещей
+            player.inventory
+                .filterNotNull()
+                .forEach { removeItems(it) }
+            removeItems(player.itemOnCursor)
+            removeItems(player.inventory.itemInOffHand)
+            player.openInventory.topInventory.filterNotNull().forEach { removeItems(it) }
+
+            player.updateInventory()
+
+            player.gameMode = GameMode.SPECTATOR
+
+            Cycle.run(20, 5) { time ->
+                if (time == 5) {
+                    player.gameMode = GameMode.SURVIVAL
+                    if (teams.none { it.players.contains(player.uniqueId) })
+                        return@run
+                    val team = teams.filter { it.players.contains(player.uniqueId) }[0]
+                    run {
+                        app.teleportAtBase(team, player)
+                        player.foodLevel = 20
                     }
+                    Cycle.exit()
+                } else if (time < 2) {
+                    Anime.title(player, "Возрождение...")
+                } else if (time == 2) {
+                    Anime.counting321(player)
+                }
+            }
+            if (killer.isEmpty()) {
+                user.lastDamager = null
+                return
+            }
+            // Сообщение об убийстве
+            Bukkit.getOnlinePlayers().forEach {
+                Anime.killboardMessage(
+                    it,
+                    "" + victim.color.chatColor + player.name + "§f " + KillMessage.valueOf(user.stat.activeKillMessage.name)
+                        .getFormat() + " игроком " + killer[0].color.chatColor + user.lastDamager!!.name
+                )
+            }
+            // Создаю гроб, лол
+            if (user.stat.activeCorpse != data.Corpse.NONE) {
+                val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
+                    .marker(true)
+                    .invisible(true)
+                    .gravity(false)
+                    .slot(EnumItemSlot.HEAD, Corpse.valueOf(user.stat.activeCorpse.name).getIcon())
+                    .markTrash()
+                    .build()
+                val name = StandHelper(location.clone().add(0.0, 1.0, 0.0))
+                    .marker(true)
+                    .invisible(true)
+                    .gravity(false)
+                    .name("§e${player.name}")
+                    .build()
+                UtilEntity.setScale(grave, 2.0, 2.0, 2.0)
+                B.postpone(120 * 20) {
+                    grave.remove()
+                    name.remove()
                 }
             }
             // Начисление убийце статистики
@@ -122,36 +153,6 @@ object DamageListener : Listener {
 
         if (player.gameMode == GameMode.SPECTATOR)
             return
-
-        // Удаление вещей
-        player.inventory
-            .filterNotNull()
-            .forEach { removeItems(it) }
-        removeItems(player.itemOnCursor)
-        removeItems(player.inventory.itemInOffHand)
-        player.openInventory.topInventory.filterNotNull().forEach { removeItems(it) }
-
-        player.updateInventory()
-
-        player.gameMode = GameMode.SPECTATOR
-
-        Cycle.run(20, 5) { time ->
-            if (time == 5) {
-                player.gameMode = GameMode.SURVIVAL
-                if (teams.none { it.players.contains(player.uniqueId) })
-                    return@run
-                val team = teams.filter { it.players.contains(player.uniqueId) }[0]
-                run {
-                    app.teleportAtBase(team, player)
-                    player.foodLevel = 20
-                }
-                Cycle.exit()
-            } else if (time < 2) {
-                Anime.title(player, "Возрождение...")
-            } else if (time == 2) {
-                Anime.counting321(player)
-            }
-        }
     }
 
     @EventHandler
@@ -161,7 +162,6 @@ object DamageListener : Listener {
             .filter { it.players.contains(entity.uniqueId) }
             .forEach { _ -> isCancelled = true }
         if (damager is Player && entity is Player) {
-            println(11111)
             val player = damager as Player
             val user = app.getUser(entity as Player)!!
             if (player.itemInHand.getType().name.endsWith("AXE"))
