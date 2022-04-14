@@ -153,10 +153,6 @@ class App : JavaPlugin() {
             null
         }, "next")
 
-        /*B.regCommand({ player, _ ->
-            BattlePassManager.show(player)
-            null
-        }, "battlepass", "bp")*/
         B.regCommand({ player, args ->
             val realmId =
                 IRealmService.get().getRealmsOfType("BRI")

@@ -48,11 +48,9 @@ class App : KotlinMod() {
 
         UIEngine.overlayContext.addChild(balanceText)
 
-        registerHandler<PluginMessage> {
-            if (channel == "bridge:balance") {
-                val money = data.readInt()
-                balanceText.content = "§e${money} ${Humanize.plurals("монета", "монеты", "монет", money)}"
-            }
+        registerChannel("bridge:balance") {
+            val money = readInt()
+            balanceText.content = "§e${money} ${Humanize.plurals("монета", "монеты", "монет", money)}"
         }
 
         // Чтение NPC

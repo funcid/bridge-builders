@@ -63,21 +63,16 @@ object LobbyHandler : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.handle() = player.apply {
+        allowFlight = IPermissionService.get().isDonator(uniqueId)
+        ModLoader.send("balance-bundle.jar", this)
         B.postpone(5) {
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
             Npc.npcs.values.forEach { it.spawn(this) }
-            Banners.banners.values.forEach {
-                println(it)
-                Banners.show(this, it)
-            }
+            Banners.banners.values.forEach { Banners.show(this, it) }
         }
-        allowFlight = IPermissionService.get().isDonator(uniqueId)
-
-        ModLoader.send("balance-bundle.jar", this)
-
         val user = app.getUser(this)
-        user?.giveMoney(0)
         user?.player = this
+        user?.giveMoney(0)
     }
 
     @EventHandler

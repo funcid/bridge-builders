@@ -11,5 +11,6 @@ public enum StarterKit {
     ASSASSIN,
     COLLECTOR,
     LUCIFER,
+    LUMBERJACK,
     ;
 }
