@@ -28,11 +28,8 @@ class AdminCommand {
                 user.player!!.isOp = true
         }, "op")
         B.regCommand(
-            adminConsume { user, args ->
-                if (args.size == 1)
-                    getByPlayer(Bukkit.getPlayer(args[0]))!!.giveMoney(args[1].toInt())
-                else
-                    user.giveMoney(args[1].toInt())
+            adminConsume { _, args ->
+                getByPlayer(Bukkit.getPlayer(args[0]))!!.giveMoney(args[1].toInt())
             }, "money"
         )
         B.regCommand(
