@@ -14,7 +14,7 @@ object DonateHelper {
                 meta.addEnchant(Enchantment.LUCK, 1, false)
                 "§f§lВЫБРАНО"
             }
-            //user.stat.donate.contains(donate) -> "§aВыбрать"
+            user.stat.donates.contains(donate.objectName) -> "§aВыбрать"
             else -> "§bПосмотреть"
         } + " §7${donate.getTitle()}"
         clone.itemMeta = meta

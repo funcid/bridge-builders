@@ -16,7 +16,7 @@ import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_SPACTATE
 val kit = DefaultKit
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
-    STARTING(20, { it ->
+    STARTING(70, { it ->
         // Если набор игроков начался, обновить статус реалма
         if (it == 60)
             realm.status = GAME_STARTED_CAN_JOIN
