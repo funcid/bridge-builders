@@ -177,7 +177,6 @@ enum class StarterKit(
     }
 
     override fun give(user: User) {
-        user.stat.activeKit = data.StarterKit.valueOf(name)
         user.stat.donates.add(getName())
     }
 
