@@ -166,8 +166,7 @@ object DamageListener : Listener {
             val user = app.getUser(entity as Player)!!
             if (player.itemInHand.getType().name.endsWith("AXE"))
                 damage /= 3
-            if (user.lastDamager == null)
-                user.lastDamager = player
+            user.lastDamager = player
         }
     }
 
