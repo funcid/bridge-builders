@@ -47,9 +47,9 @@ object ConnectionHandler : Listener {
             }
         }
 
-        val user = app.getUser(this)
+        val user = app.getUser(this)!!
 
-        if (user!!.player == null)
+        if (user.player == null)
             user.player = player
 
         ModLoader.send("mod-bundle.jar", this)

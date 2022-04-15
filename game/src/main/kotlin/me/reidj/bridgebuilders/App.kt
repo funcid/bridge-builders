@@ -173,7 +173,6 @@ class App : JavaPlugin() {
                 println(team.isActiveTeleport)
                 if (!team.isActiveTeleport)
                     return@addPlace
-                println(team.isActiveTeleport)
                 var enemyTeam: Team? = null
                 val playerTeam = teams.filter { team -> team.players.contains(player.uniqueId) }
                 if (player.location.distanceSquared(playerTeam[0].teleport) < 4 * 4) {

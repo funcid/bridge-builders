@@ -101,6 +101,13 @@ object DamageListener : Listener {
                         .getFormat() + " игроком " + killer[0].color.chatColor + user.lastDamager!!.name
                 )
             }
+            // Начисление убийце статистики
+            app.getUser(user.lastDamager!!)!!.apply {
+                giveMoney(3)
+                stat.kills++
+                kills++
+                player.sendMessage(Formatting.fine("Вы получили §e3 монеты §fза убийство."))
+            }
             // Создаю гроб, лол
             if (user.stat.activeCorpse != data.Corpse.NONE) {
                 val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
@@ -121,13 +128,6 @@ object DamageListener : Listener {
                     grave.remove()
                     name.remove()
                 }
-            }
-            // Начисление убийце статистики
-            app.getUser(user.lastDamager!!)?.let { killerStats ->
-                killerStats.giveMoney(3)
-                killerStats.stat.kills++
-                killerStats.kills++
-                killerStats.player!!.sendMessage(Formatting.fine("Вы получили §e3 монеты §fза убийство."))
             }
             // Удаление и выдача убийцы некоторых вещей
             drops.filter {
