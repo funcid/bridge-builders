@@ -218,7 +218,7 @@ class App : JavaPlugin() {
     }
 
     fun restart() {
-        Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.mapNotNull { app.getUser(it) }.forEach {
+        Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.map { app.getUser(it)!! }.forEach {
             it.stat.games++
             //me.reidj.bridgebuilders.battlepass.BattlePassUtil.update(it, me.reidj.bridgebuilders.battlepass.quest.QuestType.PLAY, 1)
             if (Math.random() < 0.11) {

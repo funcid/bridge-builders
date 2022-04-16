@@ -4,7 +4,6 @@ import me.func.mod.Anime
 import me.func.protocol.EndStatus
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.data.Team
-import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
@@ -26,40 +25,42 @@ object WinUtil {
         return false
     }
 
-    fun end(winner: User, team: Team) {
-        winner.apply {
-            player!!.sendMessage(Formatting.fine("Вы получили §e10 монет §fза победу."))
-            println("${Bukkit.getPlayer(stat.uuid).name} ${stat.wins}")
-            stat.wins++
-            println("${Bukkit.getPlayer(stat.uuid).name} ${stat.wins}")
-            println("${Bukkit.getPlayer(stat.uuid).name} ${stat.money}")
-            giveMoney(10)
-            println("${Bukkit.getPlayer(stat.uuid).name} ${stat.money}")
-            Anime.showEnding(
-                player!!,
-                EndStatus.WIN,
-                listOf("Блоков принесено:", "Игроков убито:"),
-                listOf("$collectedBlocks", "$kills")
-            )
-            val firework = player!!.world!!.spawn(player!!.location, Firework::class.java)
-            val meta = firework.fireworkMeta
-            meta.addEffect(
-                FireworkEffect.builder()
-                    .flicker(true)
-                    .trail(true)
-                    .with(FireworkEffect.Type.BALL_LARGE)
-                    .with(FireworkEffect.Type.BALL)
-                    .with(FireworkEffect.Type.BALL_LARGE)
-                    .withColor(Color.YELLOW)
-                    .withColor(Color.GREEN)
-                    .withColor(Color.WHITE)
-                    .build()
-            )
-            meta.power = 0
-            firework.fireworkMeta = meta
+    fun end(team: Team) {
+        team.players.map { app.getUser(it)!! }.forEach {
+            it.apply {
+                player!!.sendMessage(Formatting.fine("Вы получили §e10 монет §fза победу."))
+                println("${player!!.name} ${stat.wins}")
+                stat.wins++
+                println("${player!!.name} ${stat.wins}")
+                println("${player!!.name} ${stat.money}")
+                giveMoney(10)
+                println("${player!!.name} ${stat.money}")
+                Anime.showEnding(
+                    player!!,
+                    EndStatus.WIN,
+                    listOf("Блоков принесено:", "Игроков убито:"),
+                    listOf("$collectedBlocks", "$kills")
+                )
+                val firework = player!!.world!!.spawn(player!!.location, Firework::class.java)
+                val meta = firework.fireworkMeta
+                meta.addEffect(
+                    FireworkEffect.builder()
+                        .flicker(true)
+                        .trail(true)
+                        .with(FireworkEffect.Type.BALL_LARGE)
+                        .with(FireworkEffect.Type.BALL)
+                        .with(FireworkEffect.Type.BALL_LARGE)
+                        .withColor(Color.YELLOW)
+                        .withColor(Color.GREEN)
+                        .withColor(Color.WHITE)
+                        .build()
+                )
+                meta.power = 0
+                firework.fireworkMeta = meta
+            }
         }
-        Bukkit.getOnlinePlayers().map { app.getUser(it) }.forEach {
-            if (team.players.contains(it!!.stat.uuid))
+        Bukkit.getOnlinePlayers().map { app.getUser(it)!! }.forEach {
+            if (team.players.contains(it.stat.uuid))
                 return@forEach
             it.giveMoney(5)
             it.player!!.sendMessage(Formatting.fine("Вы получили §e5 монет§f."))

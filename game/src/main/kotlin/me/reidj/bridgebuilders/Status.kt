@@ -3,7 +3,7 @@ package me.reidj.bridgebuilders
 import clepto.bukkit.B
 import me.func.mod.Anime
 import me.func.mod.conversation.ModTransfer
-import me.reidj.bridgebuilders.data.BlockPlan
+import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.util.DefaultKit
 import me.reidj.bridgebuilders.util.WinUtil
 import org.bukkit.Bukkit
@@ -120,7 +120,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             actualTime = (STARTING.lastSecond - 10) * 20
         actualTime
     }),
-    GAME(2500, { time ->
+    GAME(150, { time ->
         // Обновление шкалы времени
         if (time % 20 == 0) {
             Bukkit.getOnlinePlayers().forEach {
@@ -138,20 +138,17 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Проверка на победу
         if (WinUtil.check4win()) {
             ru.cristalix.core.karma.IKarmaService.get().enableGG { true }
-            var max: Map.Entry<BlockPlan, Int>? = null
-            teams.forEach { team ->
-                for (entry in team.collected.entries) {
-                    if (max == null || entry.value > max!!.value)
-                        max = entry
-                }
-            }
-            teams.forEach { team ->
-                team.collected.filter { max != null && it == max }.forEach { _ ->
-                    team.players.map { app.getUser(it) }.forEach { user -> WinUtil.end(user!!, team) }
-                }
-            }
+            val teamsWithBlockCount: MutableMap<Team, Int> = mutableMapOf()
+            // Получаю команды с количеством принесённых блоков
+            teams.forEach { teamsWithBlockCount[it] = it.collected.map { collected -> collected.value }.sum() }
+
+            // Победившая команда
+            teamsWithBlockCount.entries.sortedBy { -it.value }
+                .subList(0, 1)
+                .forEach { WinUtil.end(it.key) }
+
             B.postpone(5 * 20) {
-                max = null
+                teamsWithBlockCount.clear()
                 app.restart()
             }
         }
