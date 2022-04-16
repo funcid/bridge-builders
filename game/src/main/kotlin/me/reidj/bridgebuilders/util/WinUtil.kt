@@ -2,8 +2,11 @@ package me.reidj.bridgebuilders.util
 
 import me.func.mod.Anime
 import me.func.protocol.EndStatus
-import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.Status
+import me.reidj.bridgebuilders.activeStatus
+import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.data.Team
+import me.reidj.bridgebuilders.timer
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
@@ -13,15 +16,15 @@ import ru.cristalix.core.formatting.Formatting
 object WinUtil {
 
     fun check4win(): Boolean {
-        if (activeStatus != Status.GAME)
-            return false
-        if (teams.all { it.players.size == 0 }) {
-            activeStatus = Status.END
-            return true
+        if (activeStatus == Status.GAME || activeStatus == Status.END) {
+            if (Bukkit.getOnlinePlayers().isEmpty()) {
+                activeStatus = Status.END
+                return true
+            }
+            // Если время вышло
+            if (activeStatus.lastSecond * 20 == timer.time)
+                return true
         }
-        // Если время вышло
-        if (activeStatus.lastSecond * 20 == timer.time)
-            return true
         return false
     }
 

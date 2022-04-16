@@ -44,8 +44,7 @@ class App : JavaPlugin() {
     private val hoverEvent =
         HoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf<BaseComponent>(TextComponent("§eНАЖМИ НА МЕНЯ")))
     private val clickUrl = ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/crGfRk6As4")
-    private val alertMessage = ComponentBuilder("================\n").color(ChatColor.YELLOW)
-        .append("\n")
+    private val alertMessage = ComponentBuilder("\n================\n").color(ChatColor.YELLOW)
         .bold(false)
         .append("§fУ нас есть свой дискорд сервер!")
         .append("§fНе знал?")
@@ -54,7 +53,6 @@ class App : JavaPlugin() {
         .append("§fТогда скорее присоединяйся. §7*Клик*")
         .event(hoverEvent)
         .event(clickUrl)
-        .append("\n")
         .append("\n================\n").color(ChatColor.YELLOW)
         .create()
 
