@@ -120,7 +120,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             actualTime = (STARTING.lastSecond - 10) * 20
         actualTime
     }),
-    GAME(150, { time ->
+    GAME(2500, { time ->
         // Обновление шкалы времени
         if (time % 20 == 0) {
             Bukkit.getOnlinePlayers().forEach {
@@ -143,9 +143,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             teams.forEach { teamsWithBlockCount[it] = it.collected.map { collected -> collected.value }.sum() }
 
             // Победившая команда
-            teamsWithBlockCount.entries.sortedBy { -it.value }
-                .subList(0, 1)
-                .forEach { WinUtil.end(it.key) }
+            WinUtil.end(teamsWithBlockCount.entries.sortedBy { -it.value }.subList(0, 1)[0].key)
 
             B.postpone(5 * 20) {
                 teamsWithBlockCount.clear()
