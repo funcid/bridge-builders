@@ -184,10 +184,8 @@ object DamageListener : Listener {
         } else {
             val name = itemStack.getType().name
             if (name.endsWith("SWORD") || name.endsWith("AXE") || name.endsWith("PICKAXE") || name.endsWith("SPADE")
-                || name.endsWith("CHESTPLATE") || name.endsWith("LEGGINGS") || name.endsWith("HELMET") || name.endsWith(
-                    "BOOTS"
-                )
-            ) {
+                || name.endsWith("CHESTPLATE") || name.endsWith("LEGGINGS") || name.endsWith("HELMET") ||
+                name.endsWith("BOOTS") || name == "BOW") {
                 if (itemStack.getDurability() >= 0)
                     itemStack.setDurability((itemStack.getDurability() + 20).toShort())
                 else
