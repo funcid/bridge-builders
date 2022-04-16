@@ -16,8 +16,23 @@ class Timer : BukkitRunnable() {
                 .mapNotNull { app.getUser(it) }
                 .forEach { user ->
                     val particle = user.stat.activeParticle
-                    if (particle != data.StepParticle.NONE)
-                        user.player?.let { it.world.spawnParticle(StepParticle.valueOf(particle.name).type, it.location.clone().add(0.0, 0.2, 0.0), 1) }
+                    if (particle != data.StepParticle.NONE && user.player!!.world != null) {
+                        try {
+                            user.player!!.world.spawnParticle(
+                                StepParticle.valueOf(particle.name).type,
+                                user.player!!.location.clone().add(0.0, 0.2, 0.0),
+                                1
+                            )
+                        } catch (ex: NullPointerException) {
+                            ex.printStackTrace()
+                            println(user)
+                            println(user.player)
+                            println(user.player?.world)
+                            println(particle)
+                            println(StepParticle.valueOf(particle.name))
+                            println(StepParticle.valueOf(particle.name).type)
+                        }
+                    }
                 }
         }
         if (time % 5 == 0)

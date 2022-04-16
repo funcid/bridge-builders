@@ -14,7 +14,9 @@ import net.minecraft.server.v1_12_R1.EnumItemSlot
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
+import org.bukkit.entity.Projectile
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -23,6 +25,7 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.inventory.ItemStack
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.util.UtilEntity
+
 
 object DamageListener : Listener {
 
@@ -162,10 +165,10 @@ object DamageListener : Listener {
     @EventHandler
     fun EntityDamageByEntityEvent.handle() {
         // Отключение урона по союзникам
-        teams.filter { team -> team.players.contains(damager.uniqueId) }
-            .filter { it.players.contains(entity.uniqueId) }
-            .forEach { _ -> isCancelled = true }
-        if (damager is Player && entity is Player) {
+        if ((damager is Player || damager is Arrow) && entity is Player) {
+            val damager = if (damager is Projectile) (damager as Projectile).shooter as Player else damager as Player
+            if (teams.filter { team -> team.players.contains(damager.uniqueId) }[0].players.contains(entity.uniqueId))
+                isCancelled = true
             val player = damager as Player
             val user = app.getUser(entity as Player)!!
             if (player.itemInHand.getType().name.endsWith("AXE"))
@@ -197,5 +200,6 @@ object DamageListener : Listener {
         toDelete.clear()
     }
 
-    private fun printDeathMessage(text: String) = Bukkit.getOnlinePlayers().forEach { Anime.killboardMessage(it, text) }
+    private fun printDeathMessage(text: String) =
+        Bukkit.getOnlinePlayers().forEach { Anime.killboardMessage(it, text) }
 }

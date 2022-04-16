@@ -35,11 +35,11 @@ public class PlayerDataManager {
                     stat = new Stat(
                             uuid,
                             null,
-                            800,
                             0,
                             0,
                             0,
-                            5,
+                            0,
+                            0,
                             0,
                             new ArrayList<>(),
                             new HashSet<>(),

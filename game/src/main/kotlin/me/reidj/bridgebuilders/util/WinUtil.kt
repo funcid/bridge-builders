@@ -29,7 +29,7 @@ object WinUtil {
     fun end(winner: User, team: Team) {
         winner.apply {
             player!!.sendMessage(Formatting.fine("Вы получили §e10 монет §fза победу."))
-            println(stat.wins)
+            println("${Bukkit.getPlayer(stat.uuid).name} ${stat.wins}")
             stat.wins++
             println("${Bukkit.getPlayer(stat.uuid).name} ${stat.wins}")
             println("${Bukkit.getPlayer(stat.uuid).name} ${stat.money}")
@@ -58,8 +58,8 @@ object WinUtil {
             meta.power = 0
             firework.fireworkMeta = meta
         }
-        Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.forEach {
-            if (team.players.contains(it.stat.uuid))
+        Bukkit.getOnlinePlayers().map { app.getUser(it) }.forEach {
+            if (team.players.contains(it!!.stat.uuid))
                 return@forEach
             it.giveMoney(5)
             it.player!!.sendMessage(Formatting.fine("Вы получили §e5 монет§f."))

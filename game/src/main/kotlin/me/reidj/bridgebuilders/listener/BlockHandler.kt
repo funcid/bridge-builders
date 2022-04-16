@@ -80,6 +80,9 @@ object BlockHandler : Listener {
             B.bc("§b―――――――――――――――――")
             B.bc(" ")
 
+            println(winner.players.size)
+            winner.players.forEach { println(Bukkit.getPlayer(it).name) }
+
             winner.players.map { app.getUser(it) }.forEach { user ->
                 //BattlePassUtil.update(user.player!!, WIN, 1)
                 WinUtil.end(user!!, team)
