@@ -1,7 +1,6 @@
 
 import dev.xdark.clientapi.event.render.*
 import dev.xdark.feder.NetUtil
-import ru.cristalix.clientapi.mod
 import ru.cristalix.clientapi.registerHandler
 import ru.cristalix.uiengine.UIEngine
 import ru.cristalix.uiengine.utility.*
@@ -59,7 +58,7 @@ object CommandChoose {
 
         val playerName = UIEngine.clientApi.minecraft().player.name
 
-        App::class.mod.registerChannel("bridge:team") {
+        mod.registerChannel("bridge:team") {
             if (!waiting)
                 return@registerChannel
             val active = teams[readInt()]
@@ -85,7 +84,7 @@ object CommandChoose {
         registerHandler<ArmorRender> { isCancelled = waiting }
         registerHandler<VehicleHealthRender> { isCancelled = waiting }
 
-        App::class.mod.registerChannel("bridge:start") {
+        mod.registerChannel("bridge:start") {
             waiting = false
             UIEngine.overlayContext.removeChild(box)
         }

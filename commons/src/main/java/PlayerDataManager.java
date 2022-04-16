@@ -80,4 +80,13 @@ public class PlayerDataManager {
             return new SaveUserPackage(uuid, user.getStat());
         }).filter(Objects::nonNull).collect(Collectors.toList()));
     }
+
+    public void save() {
+        BridgeBuildersInstanceKt.getClientSocket().write(bulk(true));
+        try {
+            Thread.sleep(3000L); // Если вдруг он не успеет написать в сокет(хотя вряд ли, конечно)
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
 }

@@ -29,7 +29,7 @@ object ConnectionHandler : Listener {
         type = Material.CLAY_BALL
         nbt("other", "cancel")
         text("§cВернуться")
-    }
+    }.build()
 
     private val markers = mutableListOf<Marker>()
 
@@ -52,7 +52,7 @@ object ConnectionHandler : Listener {
         if (user.player == null)
             user.player = player
 
-        ModLoader.send("mod-bundle.jar", this)
+        ModLoader.send("bridge-mod-bundle.jar", this)
 
         B.postpone(5) { teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
 

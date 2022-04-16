@@ -59,7 +59,7 @@ class App : JavaPlugin() {
 
         CoreApi.get().registerService(IKarmaService::class.java, KarmaService(ISocketClient.get()))
 
-        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
+        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC, Kit.LOOTBOX)
         ModLoader.loadAll("mods")
 
         loadMap()
@@ -170,7 +170,6 @@ class App : JavaPlugin() {
                 team.teleport.y,
                 team.teleport.z + 0.5
             ) { player ->
-                println(team.isActiveTeleport)
                 if (!team.isActiveTeleport)
                     return@addPlace
                 var enemyTeam: Team? = null
@@ -214,6 +213,8 @@ class App : JavaPlugin() {
 
         // Ломаю мосты
         teams.forEach { generateBridge(it) }
+
+        Runtime.getRuntime().addShutdownHook(Thread { playerDataManager.save() })
     }
 
     fun restart() {
@@ -240,7 +241,7 @@ class App : JavaPlugin() {
         teams.forEach { generateBridge(it) }
 
         // Полная перезагрузка если много игр наиграно
-        if (games > GAMES_STREAK_RESTART)
+        if (games >= GAMES_STREAK_RESTART)
             Bukkit.shutdown()
     }
 
@@ -361,14 +362,7 @@ class App : JavaPlugin() {
             }
     }
 
-    override fun onDisable() {
-        clientSocket.write(playerDataManager.bulk(true))
-        try {
-            Thread.sleep(1000L) // Если вдруг он не успеет написать в сокет(хотя вряд ли, конечно)
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-        }
-    }
+    override fun onDisable() = playerDataManager.save()
 
     fun isSpectator(player: Player): Boolean = player.gameMode == GameMode.SPECTATOR
 

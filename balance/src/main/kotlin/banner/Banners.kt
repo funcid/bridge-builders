@@ -1,12 +1,11 @@
 package banner
 
-import App
 import dev.xdark.clientapi.entity.Entity
 import dev.xdark.clientapi.event.render.NameTemplateRender
 import dev.xdark.clientapi.event.render.RenderTickPre
 import dev.xdark.clientapi.opengl.GlStateManager
 import dev.xdark.feder.NetUtil
-import ru.cristalix.clientapi.mod
+import mod
 import ru.cristalix.clientapi.registerHandler
 import ru.cristalix.uiengine.UIEngine
 import ru.cristalix.uiengine.element.Context3D
@@ -52,7 +51,7 @@ object Banners {
             }
         }
 
-        App::class.mod.registerChannel("banner:new") {
+        mod.registerChannel("banner:new") {
             repeat(readInt()) {
                 val uuid = UUID.fromString(NetUtil.readUtf8(this))
                 val banner = Banner(
@@ -114,7 +113,7 @@ object Banners {
             }
         }
 
-        App::class.mod.registerChannel("banner:change-content") {
+        mod.registerChannel("banner:change-content") {
             val uuid = UUID.fromString(NetUtil.readUtf8(this))
             banners[uuid]?.let { pair ->
                 val element = (pair.second.children[0] as RectangleElement)
@@ -123,7 +122,7 @@ object Banners {
             }
         }
 
-        App::class.mod.registerChannel("banner:size-text") {
+        mod.registerChannel("banner:size-text") {
             val uuid = UUID.fromString(NetUtil.readUtf8(this))
             banners[uuid]?.let { pair ->
                 repeat(readInt()) {
@@ -144,7 +143,7 @@ object Banners {
             }
         }
 
-        App::class.mod.registerChannel("banner:remove") {
+        mod.registerChannel("banner:remove") {
             repeat(readInt()) {
                 val uuid = UUID.fromString(NetUtil.readUtf8(this))
                 banners[uuid]?.let {

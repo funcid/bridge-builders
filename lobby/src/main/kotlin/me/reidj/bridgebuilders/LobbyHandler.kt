@@ -29,19 +29,19 @@ object LobbyHandler : Listener {
         text("§aПерсонаж")
         nbt("other", "clothes")
         nbt("click", "menu")
-    }
+    }.build()
     private var startItem: ItemStack = item {
         type = Material.CLAY_BALL
         text("§bИграть")
         nbt("other", "guild_members")
         nbt("click", "next")
-    }
+    }.build()
     private var backItem: ItemStack = item {
         type = Material.CLAY_BALL
         text("§cВыйти")
         nbt("other", "cancel")
         nbt("click", "leave")
-    }
+    }.build()
 
     @EventHandler
     fun PlayerInteractEvent.handle() {

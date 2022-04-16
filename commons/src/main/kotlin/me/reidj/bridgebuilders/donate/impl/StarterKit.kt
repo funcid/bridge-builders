@@ -147,7 +147,7 @@ enum class StarterKit(
             ItemStack(Material.CHAINMAIL_CHESTPLATE),
             ItemStack(Material.CHAINMAIL_LEGGINGS),
             ItemStack(Material.CHAINMAIL_BOOTS),
-            ItemStack(Material.WOOD_SWORD),
+            ItemStack(Material.STONE_SWORD),
             ItemStack(Material.GOLDEN_APPLE, 2)
         )
     ),
@@ -173,7 +173,7 @@ enum class StarterKit(
                     )
                 } ${if (lore == "") "" else "\n\n§fВы получите:\n$lore"}"
             )
-        }
+        }.build()
     }
 
     override fun give(user: User) {

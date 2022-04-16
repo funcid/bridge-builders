@@ -1,5 +1,4 @@
 
-import ru.cristalix.clientapi.mod
 import ru.cristalix.uiengine.UIEngine
 import ru.cristalix.uiengine.element.RectangleElement
 import ru.cristalix.uiengine.element.TextElement
@@ -35,7 +34,7 @@ object OnlineBar {
     init {
         UIEngine.overlayContext.addChild(online)
 
-        App::class.mod.registerChannel("bridge:online") {
+        mod.registerChannel("bridge:online") {
             val max = readInt()
             val current = readInt()
             val waiting = readBoolean()

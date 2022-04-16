@@ -3,7 +3,6 @@ import dev.xdark.clientapi.event.lifecycle.GameLoop
 import dev.xdark.clientapi.item.ItemTools
 import dev.xdark.feder.NetUtil
 import org.lwjgl.input.Keyboard
-import ru.cristalix.clientapi.mod
 import ru.cristalix.clientapi.registerHandler
 import ru.cristalix.uiengine.UIEngine
 import ru.cristalix.uiengine.element.RectangleElement
@@ -58,7 +57,7 @@ object BoardBlocks {
     init {
         UIEngine.overlayContext + tab
 
-        App::class.mod.registerChannel("bridge:init") {
+        mod.registerChannel("bridge:init") {
             val index = readInt()
             val needTotal = readInt()
             val collected = readInt()
@@ -70,7 +69,7 @@ object BoardBlocks {
             inGame = true
         }
 
-        App::class.mod.registerChannel("bridge:tabupdate") {
+        mod.registerChannel("bridge:tabupdate") {
             val index = readInt()
             val needTotal = readInt()
             val collected = readInt()

@@ -1,5 +1,4 @@
 
-import ru.cristalix.clientapi.mod
 import ru.cristalix.uiengine.UIEngine
 import ru.cristalix.uiengine.element.RectangleElement
 import ru.cristalix.uiengine.element.TextElement
@@ -34,7 +33,7 @@ object TeamProgress {
     init {
         UIEngine.overlayContext + board
 
-        App::class.mod.registerChannel("bridge:progressinit") {
+        mod.registerChannel("bridge:progressinit") {
             val index = readInt()
             val red = readInt()
             val green = readInt()
@@ -44,7 +43,7 @@ object TeamProgress {
             board.enabled = true
         }
 
-        App::class.mod.registerChannel("bridge:progressupdate") {
+        mod.registerChannel("bridge:progressupdate") {
             val index = readInt()
             val needBlocks = readInt()
             val progress = readInt()

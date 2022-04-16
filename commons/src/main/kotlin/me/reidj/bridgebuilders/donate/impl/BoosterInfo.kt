@@ -32,7 +32,7 @@ data class BoosterInfo(val uuid: UUID, val until: Double, val time: Double, val 
     override fun getIcon(): ItemStack = item {
         type = org.bukkit.Material.CLAY_BALL
         nbt("other", "win1")
-    }
+    }.build()
 
     override fun give(user: User) {
        // user.stat.donate.add(this)

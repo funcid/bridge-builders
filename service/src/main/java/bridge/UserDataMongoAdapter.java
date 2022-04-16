@@ -28,7 +28,6 @@ public class UserDataMongoAdapter extends MongoAdapter<Stat> {
 
     public CompletableFuture<List<PlayerTopEntry<Object>>> getTop(TopPackage.TopType topType, int limit) {
         return makeRatingByField(topType.name().toLowerCase(), limit).thenApplyAsync(entries -> {
-            entries.forEach(en -> System.out.println(en.getKey()));
             List<PlayerTopEntry<Object>> playerEntries = new ArrayList<>();
             for (val userInfoObjectTopEntry : entries) {
                 PlayerTopEntry<Object> objectPlayerTopEntry = new PlayerTopEntry<>(userInfoObjectTopEntry.getKey(), userInfoObjectTopEntry.getValue());
@@ -48,8 +47,6 @@ public class UserDataMongoAdapter extends MongoAdapter<Stat> {
                         .collect(Collectors.toMap(GroupData::getUuid, Function.identity()));
                 for (PlayerTopEntry<Object> playerEntry : playerEntries) {
                     GroupData data = map.get(playerEntry.getKey().getUuid());
-                    System.out.println("data " + data);
-                    System.out.println("name " + data.getUsername());
                     playerEntry.setUserName(data.getUsername());
                     playerEntry.setDisplayName(UtilCristalix.createDisplayName(data));
                 }

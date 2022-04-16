@@ -14,10 +14,10 @@ class Timer : BukkitRunnable() {
         if (time % 2 == 0) {
             Bukkit.getOnlinePlayers().filter { it.gameMode != GameMode.SPECTATOR }
                 .mapNotNull { app.getUser(it) }
-                .forEach {
-                    val particle = it.stat.activeParticle
+                .forEach { user ->
+                    val particle = user.stat.activeParticle
                     if (particle != data.StepParticle.NONE)
-                        it.player!!.world.spawnParticle(StepParticle.valueOf(particle.name).type, it.player!!.location.clone().add(0.0, 0.2, 0.0), 1)
+                        user.player?.let { it.world.spawnParticle(StepParticle.valueOf(particle.name).type, it.location.clone().add(0.0, 0.2, 0.0), 1) }
                 }
         }
         if (time % 5 == 0)

@@ -24,10 +24,14 @@ import ru.cristalix.uiengine.utility.text
 import java.lang.Math.*
 import java.util.*
 
+lateinit var mod: App
+
 class App : KotlinMod() {
 
     override fun onEnable() {
         UIEngine.initialize(this)
+
+        mod = this
 
         Banners
         NpcManager

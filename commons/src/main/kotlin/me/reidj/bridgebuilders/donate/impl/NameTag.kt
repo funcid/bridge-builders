@@ -39,7 +39,7 @@ enum class NameTag(private val title: String, private val price: Int, private va
             type = Material.CLAY_BALL
             nbt("other", "pets1")
             text(rare.with("префикс $title") + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}")
-        }
+        }.build()
     }
 
     override fun give(user: User) {

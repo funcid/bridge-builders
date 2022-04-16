@@ -119,7 +119,6 @@ public class MongoAdapter<T extends Unique> {
 		CompletableFuture<List<TopEntry<T, V>>> future = new CompletableFuture<>();
 		data.aggregate(operations).forEach(document -> {
 			T key = readDocument(document);
-			System.out.println(document.get(fieldName));
 			entries.add(new TopEntry<>(key, (V) document.get(fieldName)));
 		}, (__, throwable) -> {
 			if (throwable != null) {

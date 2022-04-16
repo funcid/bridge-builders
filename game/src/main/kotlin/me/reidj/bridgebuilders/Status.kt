@@ -4,7 +4,6 @@ import clepto.bukkit.B
 import me.func.mod.Anime
 import me.func.mod.conversation.ModTransfer
 import me.reidj.bridgebuilders.data.BlockPlan
-import me.reidj.bridgebuilders.donate.impl.StarterKit
 import me.reidj.bridgebuilders.util.DefaultKit
 import me.reidj.bridgebuilders.util.WinUtil
 import org.bukkit.Bukkit
@@ -30,7 +29,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size + 6 < slots) {
+            if (players.size < slots) {
                 actualTime = 1
             } else {
                 // Обновление статуса реалма, чтобы нельзя было войти
@@ -79,8 +78,9 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                             }.toTypedArray()
 
                             player.inventory.addItem(kit.sword, kit.pickaxe, kit.axe, kit.spade, kit.bread)
-                            app.getUser(player)?.let { user ->
-                                StarterKit.valueOf(user.stat.activeKit.name).content.forEach { starter ->
+
+                            app.getUser(player)!!.apply {
+                                me.reidj.bridgebuilders.donate.impl.StarterKit.valueOf(stat.activeKit.name).content.forEach { starter ->
                                     player.inventory.addItem(starter)
                                 }
                             }
@@ -120,45 +120,43 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             actualTime = (STARTING.lastSecond - 10) * 20
         actualTime
     }),
-    GAME(
-        2500,
-        { time ->
-            // Обновление шкалы времени
-            if (time % 20 == 0) {
-                Bukkit.getOnlinePlayers().forEach {
-                    ModTransfer(GAME.lastSecond, time, false).send("bridge:online", it)
-                    if (time / 20 == 180) {
-                        teams.forEach { team -> team.isActiveTeleport = true }
-                        Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
-                    }
-                    if (time / 20 == 600) {
-                        Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
-                        teams.forEach { team -> team.blockReturn() }
-                    }
+    GAME(2500, { time ->
+        // Обновление шкалы времени
+        if (time % 20 == 0) {
+            Bukkit.getOnlinePlayers().forEach {
+                ModTransfer(GAME.lastSecond, time, false).send("bridge:online", it)
+                if (time / 20 == 180) {
+                    teams.forEach { team -> team.isActiveTeleport = true }
+                    Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
+                }
+                if (time / 20 == 600) {
+                    Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
+                    teams.forEach { team -> team.blockReturn() }
                 }
             }
-            // Проверка на победу
-            if (WinUtil.check4win()) {
-                ru.cristalix.core.karma.IKarmaService.get().enableGG { true }
-                var max: Map.Entry<BlockPlan, Int>? = null
-                teams.forEach { team ->
-                    for (entry in team.collected.entries) {
-                        if (max == null || entry.value > max!!.value)
-                            max = entry
-                    }
-                }
-                teams.forEach { team ->
-                    team.collected.filter { max != null && it == max }.forEach { _ ->
-                        team.players.mapNotNull { app.getUser(it) }.forEach { user -> WinUtil.end(user, team) }
-                    }
-                }
-                B.postpone(5 * 20) {
-                    max = null
-                    app.restart()
+        }
+        // Проверка на победу
+        if (WinUtil.check4win()) {
+            ru.cristalix.core.karma.IKarmaService.get().enableGG { true }
+            var max: Map.Entry<BlockPlan, Int>? = null
+            teams.forEach { team ->
+                for (entry in team.collected.entries) {
+                    if (max == null || entry.value > max!!.value)
+                        max = entry
                 }
             }
-            time
-        }),
+            teams.forEach { team ->
+                team.collected.filter { max != null && it == max }.forEach { _ ->
+                    team.players.map { app.getUser(it) }.forEach { user -> WinUtil.end(user!!, team) }
+                }
+            }
+            B.postpone(5 * 20) {
+                max = null
+                app.restart()
+            }
+        }
+        time
+    }),
     END(340, { time ->
         when {
             time == GAME.lastSecond * 20 + 20 * 10 -> {

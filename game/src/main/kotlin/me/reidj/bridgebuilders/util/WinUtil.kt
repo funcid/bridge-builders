@@ -29,8 +29,12 @@ object WinUtil {
     fun end(winner: User, team: Team) {
         winner.apply {
             player!!.sendMessage(Formatting.fine("Вы получили §e10 монет §fза победу."))
+            println(stat.wins)
             stat.wins++
+            println("${Bukkit.getPlayer(stat.uuid).name} ${stat.wins}")
+            println("${Bukkit.getPlayer(stat.uuid).name} ${stat.money}")
             giveMoney(10)
+            println("${Bukkit.getPlayer(stat.uuid).name} ${stat.money}")
             Anime.showEnding(
                 player!!,
                 EndStatus.WIN,

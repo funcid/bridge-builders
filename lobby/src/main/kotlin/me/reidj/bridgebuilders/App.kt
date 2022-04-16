@@ -48,10 +48,10 @@ class App : JavaPlugin() {
         .append("\n")
         .bold(false)
         .append("§fУ нас есть свой дискорд сервер!")
-        .append(" §fНе знал?")
+        .append("§fНе знал?")
         .event(hoverEvent)
         .event(clickUrl)
-        .append(" §fТогда скорее присоединяйся. §7*Клик*")
+        .append("§fТогда скорее присоединяйся. §7*Клик*")
         .event(hoverEvent)
         .event(clickUrl)
         .append("\n")
@@ -165,16 +165,11 @@ class App : JavaPlugin() {
                 player.sendMessage(Formatting.error("Сервер не найден."))
             null
         }, "spectate", "spec")
+
+        Runtime.getRuntime().addShutdownHook(Thread { playerDataManager.save() })
     }
 
-    override fun onDisable() {
-        clientSocket.write(playerDataManager.bulk(true))
-        try {
-            Thread.sleep(1000L) // Если вдруг он не успеет написать в сокет(хотя вряд ли, конечно)
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-        }
-    }
+    override fun onDisable() = playerDataManager.save()
 
     fun getUser(player: Player) = getUser(player.uniqueId)
 

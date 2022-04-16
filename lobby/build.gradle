@@ -30,15 +30,16 @@ dependencies {
     compileOnly 'cristalix:bukkit-core:21.01.30'
     compileOnly 'cristalix:dark-paper:21.02.03'
 
-    compileOnly 'dev.xdark:feder:1.0-SNAPSHOT'
+    compileOnly 'dev.xdark:feder:1.0'
 
     implementation 'clepto:clepto-bukkit:3.4.2'
     implementation 'clepto:clepto-cristalix:3.0.2'
 
-    implementation 'dev.implario.bukkit:kotlin-api:1.1.1'
+    implementation 'implario:bukkit-tools:4.4.12'
+    implementation 'implario:kotlin-api:1.0.0'
     implementation 'dev.implario.bukkit:dark-paper:1.0.0'
 
-    implementation 'me.func:animation-api:1.1.63'
+    implementation 'me.func.animation-api:animation-api:live-SNAPSHOT'
     implementation project(':commons')
     implementation project(':service-common')
 }
