@@ -90,61 +90,60 @@ class App : JavaPlugin() {
             Npc.npc {
                 onClick { event ->
                     val player = event.player
-                    getUser(player)?.let { user ->
-                        if (user.activeHand)
-                            return@onClick
-                        user.activeHand = true
-                        B.postpone(5) { user.activeHand = false }
-                        val team = teams.filter { it.players.contains(player.uniqueId) }[0]
-                        team.collected.entries.forEachIndexed { index, block ->
-                            val itemHand = player.itemInHand
-                            if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
-                                val must = block.key.needTotal - block.value
-                                if (must == 0) {
-                                    Anime.killboardMessage(player, "Мне больше не нужен этот ресурс")
-                                    player.playSound(
-                                        player.location,
-                                        Sound.ENTITY_ARMORSTAND_HIT,
-                                        1f,
-                                        1f
-                                    )
-                                    return@onClick
-                                } else {
-                                    val subtraction = must - itemHand.getAmount()
-                                    val collect = must - max(0, subtraction)
-                                    team.collected[block.key] = block.key.needTotal - maxOf(0, subtraction)
-                                    itemHand.setAmount(itemHand.getAmount() - must)
-                                    user.collectedBlocks += collect
-                                    //BattlePassUtil.update(user.player!!, QuestType.POINTS, collect)
-                                    player.playSound(
-                                        player.location,
-                                        Sound.ENTITY_PLAYER_LEVELUP,
-                                        1f,
-                                        1f
-                                    )
-                                    teams.forEachIndexed { teamIndex, updateTeam ->
-                                        Bukkit.getOnlinePlayers().forEach { online ->
-                                            me.func.mod.conversation.ModTransfer(
-                                                teamIndex + 2,
-                                                needBlocks,
-                                                updateTeam.collected.map { block -> block.value }.sum()
-                                            ).send("bridge:progressupdate", online)
-                                        }
-                                    }
-                                    // Обновление таба
-                                    team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach { whoSend ->
-                                        Anime.killboardMessage(
-                                            whoSend,
-                                            "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
-                                        )
+                    val user = app.getUser(player)!!
+                    if (user.activeHand)
+                        return@onClick
+                    user.activeHand = true
+                    B.postpone(5) { user.activeHand = false }
+                    val team = teams.filter { it.players.contains(player.uniqueId) }[0]
+                    team.collected.entries.forEachIndexed { index, block ->
+                        val itemHand = player.itemInHand
+                        if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
+                            val must = block.key.needTotal - block.value
+                            if (must == 0) {
+                                Anime.killboardMessage(player, "Мне больше не нужен этот ресурс")
+                                player.playSound(
+                                    player.location,
+                                    Sound.ENTITY_ARMORSTAND_HIT,
+                                    1f,
+                                    1f
+                                )
+                                return@onClick
+                            } else {
+                                val subtraction = must - itemHand.getAmount()
+                                val collect = must - max(0, subtraction)
+                                team.collected[block.key] = block.key.needTotal - maxOf(0, subtraction)
+                                itemHand.setAmount(itemHand.getAmount() - must)
+                                user.collectedBlocks += collect
+                                //BattlePassUtil.update(user.player!!, QuestType.POINTS, collect)
+                                player.playSound(
+                                    player.location,
+                                    Sound.ENTITY_PLAYER_LEVELUP,
+                                    1f,
+                                    1f
+                                )
+                                teams.forEachIndexed { teamIndex, updateTeam ->
+                                    Bukkit.getOnlinePlayers().forEach { online ->
                                         me.func.mod.conversation.ModTransfer(
-                                            index + 2,
-                                            block.key.needTotal,
-                                            block.value,
+                                            teamIndex + 2,
                                             needBlocks,
-                                            team.collected.map { it.value }.sum()
-                                        ).send("bridge:tabupdate", whoSend)
+                                            updateTeam.collected.map { block -> block.value }.sum()
+                                        ).send("bridge:progressupdate", online)
                                     }
+                                }
+                                // Обновление таба
+                                team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach { whoSend ->
+                                    Anime.killboardMessage(
+                                        whoSend,
+                                        "§e${player.name} §fпринёс §b${block.key.title}, §fстроительство продолжается"
+                                    )
+                                    me.func.mod.conversation.ModTransfer(
+                                        index + 2,
+                                        block.key.needTotal,
+                                        block.value,
+                                        needBlocks,
+                                        team.collected.map { it.value }.sum()
+                                    ).send("bridge:tabupdate", whoSend)
                                 }
                             }
                         }

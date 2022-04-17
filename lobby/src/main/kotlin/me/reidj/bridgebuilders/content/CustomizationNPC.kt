@@ -7,7 +7,6 @@ import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.donate.DonateHelper
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.impl.*
-import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.realm
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.ParticleHelper
@@ -288,22 +287,21 @@ object CustomizationNPC {
             contents.setLayout("XOXXXXGBX")
             contents.add('O', ClickableItem.empty(donatePosition.getIcon()))
             contents.add('G', ClickableItem.of(accessItem) {
-                getByPlayer(player)?.let { user ->
-                    if (realMoney) {
-                        buy(user, donatePosition.getPrice(), donatePosition.getTitle()) { donatePosition.give(user) }
+                val user = app.getUser(player)!!
+                if (realMoney) {
+                    buy(user, donatePosition.getPrice(), donatePosition.getTitle()) { donatePosition.give(user) }
+                } else {
+                    if (user.stat.donates.contains(donatePosition.objectName)) {
+                        player.sendMessage(Formatting.error("У вас уже есть этот товар."))
+                        player.closeInventory()
+                    } else if (donatePosition.getPrice() > user.stat.money) {
+                        player.sendMessage(Formatting.error("Не хватает денег :<"))
+                        player.closeInventory()
                     } else {
-                        if (user.stat.donates.contains(donatePosition.objectName)) {
-                            player.sendMessage(Formatting.error("У вас уже есть этот товар."))
-                            player.closeInventory()
-                        } else if (donatePosition.getPrice() > user.stat.money) {
-                            player.sendMessage(Formatting.error("Не хватает денег :<"))
-                            player.closeInventory()
-                        } else {
-                            user.minusMoney(donatePosition.getPrice())
-                            donatePosition.give(user)
-                            player.sendMessage(Formatting.fine("Успешно!"))
-                            player.closeInventory()
-                        }
+                        user.minusMoney(donatePosition.getPrice())
+                        donatePosition.give(user)
+                        player.sendMessage(Formatting.fine("Успешно!"))
+                        player.closeInventory()
                     }
                 }
             })

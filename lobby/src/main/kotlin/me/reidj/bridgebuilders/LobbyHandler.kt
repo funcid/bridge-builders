@@ -73,7 +73,7 @@ object LobbyHandler : Listener {
             B.postpone(3) {
                 Cristalix.transfer(
                     setOf(uniqueId),
-                    RealmId.of("BRIL-1")
+                    RealmId.of(HUB)
                 )
             }
         }
