@@ -22,7 +22,7 @@ public class RealmsController {
         CoreApi.get().getPlatform().getScheduler().runAsyncRepeating(() -> {
             try {
                 realms = fetchThePitRealms().get(5L, TimeUnit.SECONDS);
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
                 System.out.println("AllRealmsPackage timeout");
             }
@@ -37,7 +37,9 @@ public class RealmsController {
     }
 
     private CompletableFuture<List<RealmInfo>> fetchThePitRealms() {
-        return ISocketClient.get().<AllRealmsPackage>writeAndAwaitResponse(new AllRealmsPackage()).thenApply(pckg -> Stream.of(pckg.getRealms()).filter(info -> info.getRealmId().getTypeName().equals("BRIT")).collect(Collectors.toList()));
+        return ISocketClient.get().<AllRealmsPackage>writeAndAwaitResponse(new AllRealmsPackage())
+                .thenApply(pckg -> Stream.of(pckg.getRealms())
+                        .filter(info -> info.getRealmId().getTypeName().equals("BRI") || info.getRealmId().getTypeName().equals("BRIL")).collect(Collectors.toList()));
     }
 
 }
