@@ -166,16 +166,10 @@ object DamageListener : Listener {
         // Отключение урона по союзникам
         if ((damager is Player || damager is Arrow) && entity is Player) {
             val damager = if (damager is Projectile) (damager as Projectile).shooter as Player else damager as Player
-            app.getUser(entity as Player)!!.lastDamager = damager
-            if (teams.any { team -> team.players.contains(damager.uniqueId) } && teams.filter { team ->
-                    team.players.contains(
-                        damager.uniqueId
-                    )
-                }[0].players.contains(
-                    entity.uniqueId
-                )
-            )
+            if (teams.any { team -> team.players.contains(damager.uniqueId) } && teams.filter { team -> team.players.contains(damager.uniqueId) }[0].players.contains(entity.uniqueId))
                 isCancelled = true
+            else
+                app.getUser(entity as Player)!!.lastDamager = damager
             if (damager.itemInHand.getType().name.endsWith("AXE"))
                 damage /= 3
         }
