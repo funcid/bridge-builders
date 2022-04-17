@@ -55,6 +55,9 @@ public class PlayerDataManager {
                 if (stat.getDonates() == null)
                     stat.setDonates(new HashSet<>());
 
+                if (stat.getRealm() == null)
+                    stat.setRealm("");
+
                 userMap.put(uuid, new User(stat));
             } catch (Exception ex) {
                 event.setCancelReason("Не удалось загрузить статистику.");
