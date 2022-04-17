@@ -1,7 +1,5 @@
 package bridge;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.async.client.FindIterable;
 import com.mongodb.async.client.MongoClient;
@@ -12,6 +10,7 @@ import data.Unique;
 import lombok.Getter;
 import lombok.val;
 import org.bson.Document;
+import ru.cristalix.core.GlobalSerializers;
 import tops.TopEntry;
 
 import java.util.*;
@@ -30,8 +29,6 @@ public class MongoAdapter<T extends Unique> {
 	private final ClientSession session;
 
 	private final AtomicBoolean connected = new AtomicBoolean(false);
-
-	private static final Gson gson = new GsonBuilder().create();
 
 	public MongoAdapter(MongoClient client, String database, String collection, Class<T> type) {
 		this.data = client.getDatabase(database).getCollection(collection);
@@ -84,7 +81,7 @@ public class MongoAdapter<T extends Unique> {
 	}
 
 	private T readDocument(Document document) {
-		return document == null ? null : gson.fromJson(document.toJson(), type);
+		return document == null ? null : GlobalSerializers.fromJson(document.toJson(), type);
 	}
 
 	public void save(Unique unique) {
@@ -96,7 +93,7 @@ public class MongoAdapter<T extends Unique> {
 		for (Unique unique : uniques) {
 			WriteModel<Document> model = new UpdateOneModel<>(
 					Filters.eq("uuid", unique.getUuid().toString()),
-					new Document("$set", Document.parse(gson.toJson(unique))),
+					new Document("$set", Document.parse(GlobalSerializers.toJson(unique))),
 					UPSERT
 			);
 			models.add(model);
