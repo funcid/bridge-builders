@@ -3,6 +3,10 @@ import data.*;
 import me.reidj.bridgebuilders.BridgeBuildersInstanceKt;
 import me.reidj.bridgebuilders.user.User;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
 import packages.BulkSaveUserPackage;
 import packages.SaveUserPackage;
 import packages.StatPackage;
@@ -14,7 +18,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class PlayerDataManager {
+public class PlayerDataManager implements Listener {
 
     private final Map<UUID, User> userMap = Maps.newHashMap();
 
@@ -72,6 +76,12 @@ public class PlayerDataManager {
             Stat info = user.getStat();
             BridgeBuildersInstanceKt.getClientSocket().write(new SaveUserPackage(event.getUuid(), info));
         }, 100);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerLogin(PlayerLoginEvent event) {
+        if (event.getResult() != PlayerLoginEvent.Result.ALLOWED)
+            userMap.remove(event.getPlayer().getUniqueId());
     }
 
     public BulkSaveUserPackage bulk(boolean remove) {

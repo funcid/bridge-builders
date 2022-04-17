@@ -1,5 +1,6 @@
 package me.reidj.bridgebuilders
 
+import PlayerDataManager
 import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import dev.implario.bukkit.platform.Platforms
@@ -86,7 +87,8 @@ class App : JavaPlugin() {
         B.events(
             Lootbox,
             LobbyHandler,
-            GlobalListeners
+            GlobalListeners,
+            PlayerDataManager()
         )
 
         val npcLabel = worldMeta.getLabel("play")

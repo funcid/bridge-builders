@@ -1,5 +1,6 @@
 package me.reidj.bridgebuilders
 
+import PlayerDataManager
 import clepto.bukkit.B
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
@@ -81,7 +82,8 @@ class App : JavaPlugin() {
             DefaultListener,
             DamageListener,
             ChatHandler,
-            BlockHandler
+            BlockHandler,
+            PlayerDataManager()
         )
 
         // Спавню нпс
