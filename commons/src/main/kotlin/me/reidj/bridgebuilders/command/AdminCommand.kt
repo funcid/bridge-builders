@@ -10,9 +10,10 @@ import ru.cristalix.core.formatting.Formatting
 class AdminCommand {
 
     private val godSet = hashSetOf(
-        "307264a1-2c69-11e8-b5ea-1cb72caa35fd",
-        "bf30a1df-85de-11e8-a6de-1cb72caa35fd",
-        "ca87474e-b15c-11e9-80c4-1cb72caa35fd"
+        "307264a1-2c69-11e8-b5ea-1cb72caa35fd", // Func
+        "bf30a1df-85de-11e8-a6de-1cb72caa35fd", // Reidj
+        "ca87474e-b15c-11e9-80c4-1cb72caa35fd", // Moisei
+        "f5a63d7c-2da4-11ea-b816-1cb72caa35fd" // Seperinous
     )
 
     init {

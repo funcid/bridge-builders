@@ -142,13 +142,13 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             // Получаю команды с количеством принесённых блоков
             teams.forEach { teamsWithBlockCount[it] = it.collected.map { collected -> collected.value }.sum() }
 
+            clepto.bukkit.B.postpone(5 * 20) {
+                teamsWithBlockCount.clear()
+                me.reidj.bridgebuilders.app.restart()
+            }
+
             // Победившая команда
             WinUtil.end(teamsWithBlockCount.entries.sortedBy { -it.value }.subList(0, 1)[0].key)
-
-            B.postpone(5 * 20) {
-                teamsWithBlockCount.clear()
-                app.restart()
-            }
         }
         time
     }),

@@ -41,20 +41,19 @@ object DamageListener : Listener {
     fun PlayerDeathEvent.handle() {
         cancelled = true
 
-        val player = entity as Player
-        val cause = player.lastDamageCause
-        val victim = teams.filter { team -> team.players.contains(player.uniqueId) }[0]
+        val cause = getEntity().lastDamageCause
+        val victim = teams.filter { team -> team.players.contains(getEntity().uniqueId) }[0]
 
         //BattlePassUtil.update(player.killer, QuestType.KILL, 1)
 
-        val user = app.getUser(player)!!
+        val user = app.getUser(getEntity())!!
 
         if (cause.cause == EntityDamageEvent.DamageCause.FALL)
-            printDeathMessage("Игрок ${victim.color.chatFormat + player.name} §fприземлился с большой высоты")
+            printDeathMessage("Игрок ${victim.color.chatFormat + getEntity().name} §fприземлился с большой высоты")
         else if (cause.cause == EntityDamageEvent.DamageCause.VOID && user.lastDamager == null)
-            printDeathMessage("Игрока ${victim.color.chatFormat + player.name} §fпоглотила бездна")
+            printDeathMessage("Игрока ${victim.color.chatFormat + getEntity().name} §fпоглотила бездна")
 
-        var location = player.location.clone()
+        var location = getEntity().location.clone()
         var id: Int
         var counter = 0
         do {
@@ -64,32 +63,33 @@ object DamageListener : Listener {
         } while ((id == 0 || id == 171 || id == 96 || id == 167) && counter < 20)
 
         // Удаление вещей
-        player.inventory
+        getEntity().inventory
             .filterNotNull()
             .forEach { removeItems(it) }
-        removeItems(player.itemOnCursor)
-        removeItems(player.inventory.itemInOffHand)
-        player.openInventory.topInventory.filterNotNull().forEach { removeItems(it) }
+        removeItems(getEntity().itemOnCursor)
+        removeItems(getEntity().inventory.itemInOffHand)
+        getEntity().openInventory.topInventory.filterNotNull().forEach { removeItems(it) }
 
-        player.updateInventory()
+        getEntity().updateInventory()
 
-        player.gameMode = GameMode.SPECTATOR
+        getEntity().gameMode = GameMode.SPECTATOR
 
         Cycle.run(20, 5) { time ->
             if (time == 5) {
-                player.gameMode = GameMode.SURVIVAL
-                if (teams.none { it.players.contains(player.uniqueId) })
+                getEntity().gameMode = GameMode.SURVIVAL
+                if (teams.none { it.players.contains(getEntity().uniqueId) })
                     return@run
-                val team = teams.filter { it.players.contains(player.uniqueId) }[0]
+                val team = teams.filter { it.players.contains(getEntity().uniqueId) }[0]
                 run {
-                    app.teleportAtBase(team, player)
-                    player.foodLevel = 20
+                    app.teleportAtBase(team, getEntity())
+                    getEntity().foodLevel = 20
+                    user.lastDamager = null
                 }
                 Cycle.exit()
             } else if (time < 2) {
-                Anime.title(player, "Возрождение...")
+                Anime.title(getEntity(), "Возрождение...")
             } else if (time == 2) {
-                Anime.counting321(player)
+                Anime.counting321(getEntity())
             }
         }
 
@@ -104,7 +104,7 @@ object DamageListener : Listener {
             Bukkit.getOnlinePlayers().forEach {
                 Anime.killboardMessage(
                     it,
-                    "" + victim.color.chatColor + player.name + "§f " + KillMessage.valueOf(user.stat.activeKillMessage.name)
+                    "" + victim.color.chatColor + getEntity().name + "§f " + KillMessage.valueOf(user.stat.activeKillMessage.name)
                         .getFormat() + " игроком " + killer[0].color.chatColor + user.lastDamager!!.name
                 )
             }
@@ -113,7 +113,7 @@ object DamageListener : Listener {
                 giveMoney(3)
                 stat.kills++
                 kills++
-                player.sendMessage(Formatting.fine("Вы получили §e3 монеты §fза убийство."))
+                player!!.sendMessage(Formatting.fine("Вы получили §e3 монеты §fза убийство."))
             }
             // Создаю гроб, лол
             if (user.stat.activeCorpse != data.Corpse.NONE) {
@@ -128,7 +128,7 @@ object DamageListener : Listener {
                     .marker(true)
                     .invisible(true)
                     .gravity(false)
-                    .name("§e${player.name}")
+                    .name("§e${getEntity().name}")
                     .build()
                 UtilEntity.setScale(grave, 2.0, 2.0, 2.0)
                 B.postpone(120 * 20) {
@@ -143,11 +143,10 @@ object DamageListener : Listener {
             }.forEach {
                 user.lastDamager!!.inventory.addItem(it)
                 it.setAmount(0)
-                B.postpone(5) { user.lastDamager = null }
             }
         }
 
-        teams.filter { it.players.contains(player.uniqueId) }.forEach { team ->
+        teams.filter { it.players.contains(getEntity().uniqueId) }.forEach { team ->
             team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach { player ->
                 player.playSound(
                     player.location,
@@ -158,7 +157,7 @@ object DamageListener : Listener {
             }
         }
 
-        if (player.gameMode == GameMode.SPECTATOR)
+        if (getEntity().gameMode == GameMode.SPECTATOR)
             return
     }
 
@@ -167,17 +166,18 @@ object DamageListener : Listener {
         // Отключение урона по союзникам
         if ((damager is Player || damager is Arrow) && entity is Player) {
             val damager = if (damager is Projectile) (damager as Projectile).shooter as Player else damager as Player
-            if (teams.filter { team -> team.players.contains(damager.uniqueId) }
-                    .isNotEmpty() && teams.filter { team -> team.players.contains(damager.uniqueId) }[0].players.contains(
+            app.getUser(entity as Player)!!.lastDamager = damager
+            if (teams.any { team -> team.players.contains(damager.uniqueId) } && teams.filter { team ->
+                    team.players.contains(
+                        damager.uniqueId
+                    )
+                }[0].players.contains(
                     entity.uniqueId
                 )
             )
                 isCancelled = true
-            val player = damager as Player
-            val user = app.getUser(entity as Player)!!
-            if (player.itemInHand.getType().name.endsWith("AXE"))
+            if (damager.itemInHand.getType().name.endsWith("AXE"))
                 damage /= 3
-            user.lastDamager = player
         }
     }
 
