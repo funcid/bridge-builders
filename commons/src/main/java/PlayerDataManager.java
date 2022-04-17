@@ -33,7 +33,8 @@ public class PlayerDataManager implements Listener {
                 return;
             UUID uuid = event.getUuid();
             try {
-                StatPackage statPackage = BridgeBuildersInstanceKt.getClientSocket().writeAndAwaitResponse(new StatPackage(uuid)).get(5L, TimeUnit.SECONDS);
+                StatPackage statPackage = BridgeBuildersInstanceKt.getClientSocket().writeAndAwaitResponse(new StatPackage(uuid))
+                        .get(5L, TimeUnit.SECONDS);
                 Stat stat = statPackage.getStat();
                 if (stat == null)
                     stat = new Stat(

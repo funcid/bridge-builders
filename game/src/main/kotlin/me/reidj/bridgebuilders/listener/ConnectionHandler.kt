@@ -122,6 +122,7 @@ object ConnectionHandler : Listener {
                     if (IRealmService.get().currentRealmInfo.status != RealmStatus.WAITING_FOR_PLAYERS) {
                         disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Сейчас нельзя зайти на этот сервер")
                         loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
+                        playerDataManager.userMap.remove(uniqueId)
                     }
                 }
             }
