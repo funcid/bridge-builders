@@ -2,6 +2,7 @@ package me.reidj.bridgebuilders
 
 import PlayerDataManager
 import clepto.bukkit.B
+import clepto.cristalix.Cristalix
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import implario.ListUtils
@@ -59,6 +60,20 @@ class App : JavaPlugin() {
 
         CoreApi.get().registerService(IKarmaService::class.java, KarmaService(ISocketClient.get()))
 
+        // Подкючение к Netty сервису / Управляет конфигами, кастомными пакетами, всей data
+        val bridgeServiceHost: String = getEnv("BRIDGE_SERVICE_HOST", "127.0.0.1")
+        val bridgeServicePort: Int = getEnv("BRIDGE_SERVICE_PORT", "14653").toInt()
+        val bridgeServicePassword: String = getEnv("BRIDGE_SERVICE_PASSWORD", "12345")
+
+        clientSocket = client.ClientSocket(
+            bridgeServiceHost,
+            bridgeServicePort,
+            bridgeServicePassword,
+            Cristalix.getRealmString()
+        )
+
+        clientSocket.connect()
+
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
         ModLoader.loadAll("mods")
 
@@ -75,6 +90,8 @@ class App : JavaPlugin() {
         timer = Timer()
         timer.runTaskTimer(this, 10, 1)
 
+        playerDataManager = PlayerDataManager()
+
         // Регистрация обработчиков событий
         B.events(
             GlobalListeners,
@@ -83,7 +100,7 @@ class App : JavaPlugin() {
             DamageListener,
             ChatHandler,
             BlockHandler,
-            PlayerDataManager()
+            playerDataManager
         )
 
         // Спавню нпс
@@ -369,4 +386,13 @@ class App : JavaPlugin() {
     fun getUser(player: Player): User? = getUser(player.uniqueId)
 
     fun getUser(uuid: UUID): User? = playerDataManager.userMap[uuid]
+
+    private fun getEnv(name: String, defaultValue: String): String {
+        var field = System.getenv(name)
+        if (field == null || field.isEmpty()) {
+            println("No $name environment variable specified!")
+            field = defaultValue
+        }
+        return field
+    }
 }

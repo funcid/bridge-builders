@@ -66,6 +66,20 @@ class App : JavaPlugin() {
 
         BridgeBuildersInstance(this, { getUser(it) }, MapLoader.load("LOBB"), 1500)
 
+        // Подкючение к Netty сервису / Управляет конфигами, кастомными пакетами, всей data
+        val bridgeServiceHost: String = getEnv("BRIDGE_SERVICE_HOST", "127.0.0.1")
+        val bridgeServicePort: Int = getEnv("BRIDGE_SERVICE_PORT", "14653").toInt()
+        val bridgeServicePassword: String = getEnv("BRIDGE_SERVICE_PASSWORD", "12345")
+
+        clientSocket = client.ClientSocket(
+            bridgeServiceHost,
+            bridgeServicePort,
+            bridgeServicePassword,
+            Cristalix.getRealmString()
+        )
+
+        clientSocket.connect()
+
         val core = CoreApi.get()
         core.registerService(IRenderService::class.java, BukkitRenderService(getServer()))
         core.platform.scheduler.runAsyncRepeating({
@@ -84,11 +98,13 @@ class App : JavaPlugin() {
         TopManager().runTaskTimer(this, 0, 1)
         CustomizationNPC
 
+        playerDataManager = PlayerDataManager()
+
         B.events(
             Lootbox,
             LobbyHandler,
             GlobalListeners,
-            PlayerDataManager()
+            playerDataManager
         )
 
         val npcLabel = worldMeta.getLabel("play")
@@ -174,4 +190,13 @@ class App : JavaPlugin() {
     fun getUser(player: Player) = getUser(player.uniqueId)
 
     fun getUser(uuid: UUID) = playerDataManager.userMap[uuid]
+
+    private fun getEnv(name: String, defaultValue: String): String {
+        var field = System.getenv(name)
+        if (field == null || field.isEmpty()) {
+            println("No $name environment variable specified!")
+            field = defaultValue
+        }
+        return field
+    }
 }
