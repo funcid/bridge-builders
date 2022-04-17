@@ -10,7 +10,6 @@ import me.func.mod.Npc
 import me.func.mod.Npc.location
 import me.func.mod.Npc.onClick
 import me.func.mod.conversation.ModLoader
-import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.data.BlockPlan
 import me.reidj.bridgebuilders.data.Bridge
 import me.reidj.bridgebuilders.data.Team
@@ -59,7 +58,7 @@ class App : JavaPlugin() {
 
         CoreApi.get().registerService(IKarmaService::class.java, KarmaService(ISocketClient.get()))
 
-        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC, Kit.LOOTBOX)
+        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
         ModLoader.loadAll("mods")
 
         loadMap()
@@ -82,8 +81,7 @@ class App : JavaPlugin() {
             DefaultListener,
             DamageListener,
             ChatHandler,
-            BlockHandler,
-            Lootbox
+            BlockHandler
         )
 
         // Спавню нпс

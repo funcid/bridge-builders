@@ -1,6 +1,7 @@
 package me.reidj.bridgebuilders
 
 import clepto.bukkit.B
+import clepto.cristalix.Cristalix
 import com.destroystokyo.paper.event.player.PlayerUseUnknownEntityEvent
 import dev.implario.bukkit.item.item
 import me.func.mod.Banners
@@ -20,7 +21,9 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.inventory.ItemStack
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
+import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.permissions.IPermissionService
+import ru.cristalix.core.realm.RealmId
 
 object LobbyHandler : Listener {
 
@@ -63,6 +66,18 @@ object LobbyHandler : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.handle() = player.apply {
+        val user = app.getUser(this)
+
+        if (user == null) {
+            sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
+            B.postpone(3) {
+                Cristalix.transfer(
+                    setOf(uniqueId),
+                    RealmId.of("BRIL-1")
+                )
+            }
+        }
+
         allowFlight = IPermissionService.get().isDonator(uniqueId)
         ModLoader.send("balance-bundle.jar", this)
         B.postpone(5) {
@@ -70,9 +85,8 @@ object LobbyHandler : Listener {
             Npc.npcs.values.forEach { it.spawn(this) }
             Banners.banners.values.forEach { Banners.show(this, it) }
         }
-        val user = app.getUser(this)
-        user?.player = this
-        user?.giveMoney(0)
+        user!!.player = this
+        user.giveMoney(0)
     }
 
     @EventHandler

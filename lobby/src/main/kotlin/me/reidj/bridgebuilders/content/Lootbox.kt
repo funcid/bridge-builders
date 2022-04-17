@@ -6,6 +6,7 @@ import implario.humanize.Humanize
 import me.func.mod.Banners
 import me.func.mod.Banners.shineBlocks
 import me.func.protocol.element.MotionType
+import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.MoneyFormatter
 import me.reidj.bridgebuilders.donate.impl.*
@@ -94,56 +95,55 @@ object Lootbox : Listener {
                     "XOOOOOOOX",
                 )
 
-                getByPlayer(player)?.let { user ->
-                    repeat(minOf(user.stat.lootbox, contents.size('O'))) {
-                        contents.add('O', ClickableItem.of(lootboxItem) {
-                            player.closeInventory()
-                            if (user.stat.money < lootboxPrice) {
-                                player.sendMessage(Formatting.error("Не хватает монет :("))
-                                return@of
-                            }
-                            user.minusMoney(lootboxPrice)
-                            user.stat.lootbox--
-                            user.stat.lootboxOpenned++
+                val user = app.getUser(player)!!
+                repeat(minOf(user.stat.lootbox, contents.size('O'))) {
+                    contents.add('O', ClickableItem.of(lootboxItem) {
+                        player.closeInventory()
+                        if (user.stat.money < lootboxPrice) {
+                            player.sendMessage(Formatting.error("Не хватает монет :("))
+                            return@of
+                        }
+                        user.minusMoney(lootboxPrice)
+                        user.stat.lootbox--
+                        user.stat.lootboxOpenned++
 
-                            val drop = dropList.random() as DonatePosition
-                            val moneyDrop = (Math.random() * 20 + 10).toInt()
+                        val drop = dropList.random() as DonatePosition
+                        val moneyDrop = (Math.random() * 20 + 10).toInt()
 
-                            me.func.mod.conversation.ModTransfer(
-                                2,
-                                CraftItemStack.asNMSCopy(drop.getIcon()),
-                                drop.getTitle(),
-                                drop.getRare().name,
-                                CraftItemStack.asNMSCopy(ItemStack(Material.GOLD_INGOT)),
-                                "§e$moneyDrop монет",
-                                ""
-                            ).send("lootbox", player)
+                        me.func.mod.conversation.ModTransfer(
+                            2,
+                            CraftItemStack.asNMSCopy(drop.getIcon()),
+                            drop.getTitle(),
+                            drop.getRare().name,
+                            CraftItemStack.asNMSCopy(ItemStack(Material.GOLD_INGOT)),
+                            "§e$moneyDrop монет",
+                            ""
+                        ).send("lootbox", player)
 
-                            if (user.stat.donates.contains(drop.objectName)) {
-                                val giveBack = (drop.getRare().ordinal + 1) * 48
-                                player.sendMessage(Formatting.fine("§aДубликат! §fЗаменен на §e$giveBack монет§f."))
-                                user.giveMoney(giveBack)
-                            } else {
-                                drop.give(user)
-                            }
-                            user.giveMoney(moneyDrop)
+                        if (user.stat.donates.contains(drop.objectName)) {
+                            val giveBack = (drop.getRare().ordinal + 1) * 48
+                            player.sendMessage(Formatting.fine("§aДубликат! §fЗаменен на §e$giveBack монет§f."))
+                            user.giveMoney(giveBack)
+                        } else {
+                            drop.give(user)
+                        }
+                        user.giveMoney(moneyDrop)
 
-                            B.bc(
-                                Formatting.fine(
-                                    "§e${player.name} §fполучил §b${
-                                        drop.getRare().with(drop.getTitle())
-                                    }."
-                                )
+                        B.bc(
+                            Formatting.fine(
+                                "§e${player.name} §fполучил §b${
+                                    drop.getRare().with(drop.getTitle())
+                                }."
                             )
-                        })
-                    }
-                    contents.add('P', ClickableItem.empty(item {
-                        type = Material.CLAY_BALL
-                        nbt("other", "anvil")
-                        text("§bКак их получить?\n\n§7Побеждайте в игре,\n§7и с шансом §a5%\n§7вы получите §bлутбокс§7.")
-                    }.build()))
-                    contents.fillMask('X', ClickableItem.empty(ItemStack(Material.AIR)))
+                        )
+                    })
                 }
+                contents.add('P', ClickableItem.empty(item {
+                    type = Material.CLAY_BALL
+                    nbt("other", "anvil")
+                    text("§bКак их получить?\n\n§7Побеждайте в игре,\n§7и с шансом §a5%\n§7вы получите §bлутбокс§7.")
+                }.build()))
+                contents.fillMask('X', ClickableItem.empty(ItemStack(Material.AIR)))
             }
         }).build()
 
