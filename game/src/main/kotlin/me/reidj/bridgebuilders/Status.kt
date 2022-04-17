@@ -4,6 +4,7 @@ import clepto.bukkit.B
 import me.func.mod.Anime
 import me.func.mod.conversation.ModTransfer
 import me.reidj.bridgebuilders.data.Team
+import me.reidj.bridgebuilders.donate.impl.StarterKit
 import me.reidj.bridgebuilders.util.DefaultKit
 import me.reidj.bridgebuilders.util.WinUtil
 import org.bukkit.Bukkit
@@ -79,10 +80,8 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
 
                             player.inventory.addItem(kit.sword, kit.pickaxe, kit.axe, kit.spade, kit.bread)
 
-                            app.getUser(player)!!.apply {
-                                me.reidj.bridgebuilders.donate.impl.StarterKit.valueOf(stat.activeKit.name).content.forEach { starter ->
-                                    player.inventory.addItem(starter)
-                                }
+                            StarterKit.valueOf(app.getUser(it)!!.stat.activeKit.name).content.forEach { starter ->
+                                player.inventory.addItem(starter)
                             }
 
                             // Отправка таба
