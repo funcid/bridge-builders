@@ -223,6 +223,7 @@ class App : JavaPlugin() {
                 B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${it.player!!.name} §fполучил §bлутбокс§f!"))
             }
         }
+        playerDataManager.save()
         Bukkit.getOnlinePlayers().forEach { it.kickPlayer("Выключение сервера.") }
         Bukkit.unloadWorld(worldMeta.world, false)
         loadMap()

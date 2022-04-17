@@ -51,11 +51,14 @@ object BlockHandler : Listener {
         if (app.getBridge(team).contains(block.location)) {
             isCancelled = true
             return
+        } else if (block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
+            isCancelled = true
+            return
         } else if (teams.any { block.location.distanceSquared(it.spawn) < 4 * 4 }) {
             isCancelled = true
             return
         }
-        if (block.type == Material.BEACON) {
+        if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
             //BattlePassUtil.update(player, BREAK, 1)
             val winner = teams.filter { it.players.contains(player.uniqueId) }[0]
             Bukkit.getOnlinePlayers().forEach {

@@ -23,6 +23,7 @@ import user.Stat;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author Рейдж 03.10.2021
@@ -85,6 +86,10 @@ public class BridgeService {
         registerHandler(SaveUserPackage.class, (channel, source, pckg) -> {
             System.out.println("Received SaveUserPackage from " + source + " for " + pckg.getUser().toString());
             userData.save(pckg.getUserInfo());
+        });
+        registerHandler(BulkSaveUserPackage.class, (channel, source, pckg) -> {
+            System.out.println("Received BulkSaveUserPackage from " + source);
+            userData.save(pckg.getPackages().stream().map(SaveUserPackage::getUserInfo).collect(Collectors.toList()));
         });
         registerHandler(TopPackage.class, ((channel, serverName, pitPackage) ->
                 userData.getTop(pitPackage.getTopType(), pitPackage.getLimit()).thenAccept(res -> {

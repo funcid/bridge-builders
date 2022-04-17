@@ -67,7 +67,7 @@ public class PlayerDataManager {
         }, 400);
         core.bus().register(this, AccountEvent.Unload.class, event -> {
             User user = userMap.remove(event.getUuid());
-            if (user == null || user.getStat() == null)
+            if (user == null)
                 return;
             Stat info = user.getStat();
             BridgeBuildersInstanceKt.getClientSocket().write(new SaveUserPackage(event.getUuid(), info));
@@ -87,7 +87,7 @@ public class PlayerDataManager {
     public void save() {
         BridgeBuildersInstanceKt.getClientSocket().write(bulk(true));
         try {
-            Thread.sleep(3000L); // Если вдруг он не успеет написать в сокет(хотя вряд ли, конечно)
+            Thread.sleep(1000L); // Если вдруг он не успеет написать в сокет(хотя вряд ли, конечно)
         } catch (Exception exception) {
             exception.printStackTrace();
         }
