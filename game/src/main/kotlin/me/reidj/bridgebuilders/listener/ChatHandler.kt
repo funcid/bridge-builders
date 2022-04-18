@@ -27,7 +27,7 @@ object ChatHandler : Listener {
             val user = app.getUser(player)!!
             if (!message.startsWith("!")) {
                 team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
-                    it.sendMessage("§8КОМАНДА ${getPrefix(user) + message}")
+                    it.sendMessage("§8КОМАНДА ${getPrefix(user, false) + message}")
                 }
             } else {
                 Bukkit.getOnlinePlayers().forEach {
@@ -35,7 +35,7 @@ object ChatHandler : Listener {
                         "" + team[0].color.chatColor + team[0].color.teamName.substring(
                             0,
                             1
-                        ) + " " + getPrefix(user) + message.drop(1)
+                        ) + " " + getPrefix(user, false) + message.drop(1)
                     )
                 }
             }
@@ -43,7 +43,7 @@ object ChatHandler : Listener {
         }
     }
 
-    private fun getPrefix(user: User): String {
+    fun getPrefix(user: User, isTab: Boolean): String {
         var finalPrefix = ""
         permissionService.getBestGroup(user.stat.uuid).thenAccept { group ->
             permissionService.getNameColor(user.stat.uuid).thenApply {
@@ -52,7 +52,7 @@ object ChatHandler : Listener {
                         .getRare()
                         .getColor() + NameTag.valueOf(user.stat.activeNameTag.name)
                         .getTitle() + "§8 ┃ ") + (if (group.prefix == "") "" else group.nameColor + group.prefix + "§8 ┃ §f") + (it
-                        ?: group.nameColor) + user.player!!.name + " §8${Formatting.ARROW_SYMBOL + group.chatMessageColor} "
+                        ?: group.nameColor) + user.player!!.name + if (!isTab) " §8${Formatting.ARROW_SYMBOL + group.chatMessageColor} " else ""
             }
         }
         return finalPrefix
