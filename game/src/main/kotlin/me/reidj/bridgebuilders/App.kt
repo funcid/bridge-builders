@@ -398,7 +398,7 @@ class App : JavaPlugin() {
 
     fun updateNumbersPlayersInTeam() = teams.forEach { team ->
         team.players.forEach {
-            Anime.bottomRightMessage(Bukkit.getPlayer(it), "Игроков в команде §a${team.players.size}")
+            Anime.bottomRightMessage(Bukkit.getPlayer(it), "Игроков в команде §8>> §a${team.players.size}")
         }
     }
 }

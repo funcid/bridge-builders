@@ -57,11 +57,38 @@ public class PlayerDataManager implements Listener {
                             0L
                     );
 
-                if (stat.getDonates() == null)
-                    stat.setDonates(new HashSet<>());
+                if (stat.getUuid() == null)
+                    stat.setUuid(uuid);
 
                 if (stat.getRealm() == null)
                     stat.setRealm("");
+
+                if (stat.getDonate() == null)
+                    stat.setDonate(new ArrayList<>());
+
+                if (stat.getDonates() == null)
+                    stat.setDonates(new HashSet<>());
+
+                if (stat.getAchievement() == null)
+                    stat.setAchievement(new ArrayList<>());
+
+                if (stat.getActiveKillMessage() == null)
+                    stat.setActiveKillMessage(KillMessage.NONE);
+
+                if (stat.getActiveParticle() == null)
+                    stat.setActiveParticle(StepParticle.NONE);
+
+                if (stat.getActiveNameTag() == null)
+                    stat.setActiveNameTag(NameTag.NONE);
+
+                if (stat.getActiveCorpse() == null)
+                    stat.setActiveCorpse(Corpse.NONE);
+
+                if (stat.getActiveKit() == null)
+                    stat.setActiveKit(StarterKit.NONE);
+
+                if (stat.getTimePlayedTotal() == null)
+                    stat.setTimePlayedTotal(0L);
 
                 userMap.put(uuid, new User(stat));
             } catch (Exception ex) {

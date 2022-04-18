@@ -16,15 +16,15 @@ import java.util.function.Consumer
 
 class PlayerBalancer : Consumer<Player> {
 
-    private fun getRealm(mintoJoin: Int): Optional<RealmId> {
+    private fun getRealm(minToJoin: Int): Optional<RealmId> {
         var maxRealm: RealmInfo? = null
         var minRealm: RealmInfo? = null
         for (realmInfo in IRealmService.get().getRealmsOfType("BRI")) {
             if (realmInfo.status == RealmStatus.GAME_STARTED_RESTRICTED || realmInfo.status == RealmStatus.GAME_STARTED_CAN_SPACTATE
-                || realmInfo.currentPlayers + mintoJoin > realmInfo.maxPlayers) {
+                || realmInfo.currentPlayers + minToJoin > realmInfo.maxPlayers) {
                 continue
             }
-            if (realmInfo.currentPlayers + mintoJoin <= 16) {
+            if (realmInfo.currentPlayers + minToJoin <= 16) {
                 if (maxRealm == null) {
                     maxRealm = realmInfo
                 } else if (maxRealm.currentPlayers <= realmInfo.currentPlayers) {

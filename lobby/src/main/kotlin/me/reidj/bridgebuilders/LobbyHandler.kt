@@ -62,7 +62,7 @@ object LobbyHandler : Listener {
     }
 
     @EventHandler
-    fun PlayerUseUnknownEntityEvent.handle() = Npc.npcs[entityId]!!.click!!.accept(this)
+    fun PlayerUseUnknownEntityEvent.handle() = Npc.npcs[entityId]?.click!!.accept(this)
 
     @EventHandler
     fun PlayerJoinEvent.handle() = player.apply {

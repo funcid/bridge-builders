@@ -141,13 +141,13 @@ enum class StarterKit(
         Rare.LEGENDARY,
         Material.IRON_SWORD,
         "weapons:dragon",
-        "§b  Кольчужный шлем\n§b  Кольчужный нагрудник\n§b  Кольчужные поножи\n§b  Кольчужные ботинки\n§b  Каменный меч\n§b  Золотое яблоко х2",
+        "§b  Кольчужный шлем\n§b  Кольчужный нагрудник\n§b  Кольчужные поножи\n§b  Кольчужные ботинки\n§b  Железный меч\n§b  Золотое яблоко х2",
         arrayOf(
             ItemStack(Material.CHAINMAIL_HELMET),
             ItemStack(Material.CHAINMAIL_CHESTPLATE),
             ItemStack(Material.CHAINMAIL_LEGGINGS),
             ItemStack(Material.CHAINMAIL_BOOTS),
-            ItemStack(Material.STONE_SWORD),
+            ItemStack(Material.IRON_SWORD),
             ItemStack(Material.GOLDEN_APPLE, 2)
         )
     ),

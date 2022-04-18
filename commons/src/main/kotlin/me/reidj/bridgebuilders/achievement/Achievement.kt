@@ -29,7 +29,7 @@ enum class Achievement(
     }),
     FIRST_WIN("Победитель Деревянного Ранга", "§7Победить 1 раз\n§f + §e32 монеты", { it.stat.wins >= 1 }, { it.giveMoney(32) }),
     TEN_WIN("Победитель Медного Ранга", "§7Победить 10 раз\n§f + §e64 монеты\n" +
-            "§f + 1 §bЛутбокс", { it.stat.wins == 10 }, {
+            "§f + 1 §bЛутбокс", { it.stat.wins >= 10 }, {
         it.giveMoney(64)
         it.stat.lootbox++
     }),
