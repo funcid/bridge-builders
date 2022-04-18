@@ -95,6 +95,7 @@ object DamageListener : Listener {
 
         if (user.lastDamager != null) {
             val killer = teams.filter { team -> team.players.contains(user.lastDamager?.uniqueId) }
+            val killerStatistic = app.getUser(user.lastDamager!!)!!
 
             if (killer.isEmpty()) {
                 user.lastDamager = null
@@ -104,12 +105,12 @@ object DamageListener : Listener {
             Bukkit.getOnlinePlayers().forEach {
                 Anime.killboardMessage(
                     it,
-                    "" + victim.color.chatColor + getEntity().name + "§f " + KillMessage.valueOf(user.stat.activeKillMessage.name)
+                    "" + victim.color.chatColor + getEntity().name + "§f " + KillMessage.valueOf(killerStatistic.stat.activeKillMessage.name)
                         .getFormat() + " игроком " + killer[0].color.chatColor + user.lastDamager!!.name
                 )
             }
             // Начисление убийце статистики
-            app.getUser(user.lastDamager!!)!!.apply {
+            killerStatistic.apply {
                 giveMoney(3)
                 stat.kills++
                 kills++
