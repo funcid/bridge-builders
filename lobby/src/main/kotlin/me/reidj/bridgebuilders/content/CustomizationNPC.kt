@@ -4,6 +4,7 @@ import clepto.bukkit.B
 import dev.implario.bukkit.item.item
 import me.reidj.bridgebuilders.achievement.Achievement
 import me.reidj.bridgebuilders.app
+import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.donate.DonateHelper
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.impl.*
@@ -16,6 +17,7 @@ import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.inventory.ClickableItem
 import ru.cristalix.core.inventory.ControlledInventory
@@ -260,6 +262,7 @@ object CustomizationNPC {
                 if (user.stat.donates.contains(currentItem.objectName)) {
                     fill(currentItem)
                     user.player!!.closeInventory()
+                    clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
                 } else {
                     donateMenu(user.player!!, currentItem, realMoney)
                 }
@@ -302,6 +305,7 @@ object CustomizationNPC {
                         donatePosition.give(user)
                         player.sendMessage(Formatting.fine("Успешно!"))
                         player.closeInventory()
+                        clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
                     }
                 }
             })
@@ -320,6 +324,7 @@ object CustomizationNPC {
             accept.accept(user)
             player.closeInventory()
             player.sendMessage(Formatting.fine("Спасибо за поддержку разработчиков!"))
+            clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
         }
     }
 }
