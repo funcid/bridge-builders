@@ -186,11 +186,11 @@ class App : JavaPlugin() {
                 team.teleport.y,
                 team.teleport.z + 0.5
             ) { player ->
-                if (!team.isActiveTeleport)
+                val playerTeam = teams.filter { team -> team.players.contains(player.uniqueId) }[0]
+                if (!playerTeam.isActiveTeleport)
                     return@addPlace
                 var enemyTeam: Team? = null
-                val playerTeam = teams.filter { team -> team.players.contains(player.uniqueId) }
-                if (player.location.distanceSquared(playerTeam[0].teleport) < 4 * 4) {
+                if (player.location.distanceSquared(playerTeam.teleport) < 4 * 4) {
                     enemyTeam = ListUtils.random(teams.stream()
                         .filter { enemy -> !enemy.players.contains(player.uniqueId) }
                         .collect(Collectors.toList()))
@@ -204,22 +204,22 @@ class App : JavaPlugin() {
                         )
                     }
                 } else {
-                    teleportAtBase(playerTeam[0], player)
+                    teleportAtBase(playerTeam, player)
                 }
                 enemyTeam?.isActiveTeleport = false
-                playerTeam[0].isActiveTeleport = false
+                playerTeam.isActiveTeleport = false
 
                 // Ставлю полоску куллдауна
                 enemyTeam?.let { displayCoolDownBar(it) }
-                displayCoolDownBar(playerTeam[0])
+                displayCoolDownBar(playerTeam)
 
                 B.postpone(180 * 20) {
                     enemyTeam?.isActiveTeleport = true
-                    playerTeam[0].isActiveTeleport = true
+                    playerTeam.isActiveTeleport = true
 
                     // Отправляю сообщение о том что телепорт доступен
                     enemyTeam?.let { teleportAvailable(it) }
-                    teleportAvailable(playerTeam[0])
+                    teleportAvailable(playerTeam)
                 }
             }
         }
