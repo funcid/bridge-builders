@@ -112,6 +112,7 @@ object ConnectionHandler : Listener {
         if (app.isSpectator(player))
             return
         teams.forEach { it.players.remove(player.uniqueId) }
+        app.updateNumbersPlayersInTeam()
     }
 
     @EventHandler

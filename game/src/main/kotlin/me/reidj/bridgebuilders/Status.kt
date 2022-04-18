@@ -5,7 +5,6 @@ import me.func.mod.Anime
 import me.func.mod.conversation.ModTransfer
 import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.donate.impl.StarterKit
-import me.reidj.bridgebuilders.listener.ChatHandler
 import me.reidj.bridgebuilders.util.DefaultKit
 import me.reidj.bridgebuilders.util.WinUtil
 import org.bukkit.Bukkit
@@ -65,6 +64,8 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                             ).send("bridge:progressinit", it)
                         }
 
+                        me.reidj.bridgebuilders.app.updateNumbersPlayersInTeam()
+
                         team.players.forEach {
                             val player = Bukkit.getPlayer(it) ?: return@forEach
                             val user = app.getUser(it)!!
@@ -74,14 +75,12 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
 
                             app.teleportAtBase(team, player)
 
-                            val nick = ChatHandler.getPrefix(user, true)
-
                             player.customName = "${team.color.chatColor}[${
                                 team.color.teamName.substring(
                                     0,
                                     1
                                 )
-                            }] $nick"
+                            }] ${me.reidj.bridgebuilders.listener.ChatHandler.getPrefix(user, true)}"
 
                             player.inventory.armorContents = kit.armor.map { armor ->
                                 val meta = armor.itemMeta as org.bukkit.inventory.meta.LeatherArmorMeta
