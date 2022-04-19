@@ -18,19 +18,24 @@ val kit = DefaultKit
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     STARTING(70, { it ->
         // Если набор игроков начался, обновить статус реалма
-        if (it == 60)
-            realm.status = RealmStatus.GAME_STARTED_CAN_JOIN
+        realm.status = RealmStatus.GAME_STARTED_RESTRICTED
+        ru.cristalix.core.network.ISocketClient.get().write(
+            ru.cristalix.core.network.packages.RealmUpdatePackage(
+                ru.cristalix.core.network.packages.RealmUpdatePackage.UpdateType.UPDATE,
+                realm
+            )
+        )
 
         val players = Bukkit.getOnlinePlayers()
 
         // Обновление шкалы онлайна
-        players.forEach { player -> ModTransfer(slots, players.size, true).send("bridge:online", player) }
+        players.forEach { player -> ModTransfer(me.reidj.bridgebuilders.slots, players.size, true).send("bridge:online", player) }
         var actualTime = it
 
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size < slots) {
+            if (players.size < me.reidj.bridgebuilders.slots) {
                 actualTime = 1
             } else {
                 // Обновление статуса реалма, чтобы нельзя было войти
@@ -64,7 +69,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                             ).send("bridge:progressinit", it)
                         }
 
-                        me.reidj.bridgebuilders.app.updateNumbersPlayersInTeam()
+                        app.updateNumbersPlayersInTeam()
 
                         team.players.forEach {
                             val player = Bukkit.getPlayer(it) ?: return@forEach
@@ -126,7 +131,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             }
         }
         // Если набралось максимальное количество игроков, то сократить время ожидания до 10 секунд
-        if (players.size == slots && it / 20 < STARTING.lastSecond - 10)
+        if (players.size == me.reidj.bridgebuilders.slots && it / 20 < STARTING.lastSecond - 10)
             actualTime = (STARTING.lastSecond - 10) * 20
         actualTime
     }),
@@ -135,7 +140,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         if (time % 20 == 0) {
             Bukkit.getOnlinePlayers().forEach {
                 ModTransfer(GAME.lastSecond, time, false).send("bridge:online", it)
-                if (time / 20 == 180) {
+                if (time / 20 == 90) {
                     teams.forEach { team -> team.isActiveTeleport = true }
                     Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
                 }

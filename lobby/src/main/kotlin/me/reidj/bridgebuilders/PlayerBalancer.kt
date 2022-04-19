@@ -1,6 +1,5 @@
 package me.reidj.bridgebuilders
 
-import clepto.bukkit.B
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.entity.Player
@@ -31,9 +30,7 @@ class PlayerBalancer(private val server: String, private val maxPlayers: Int) : 
                 val realm = getRealm(server, party1.members.size)
                 if (realm.isPresent) {
                     val realmInfo = IRealmService.get().getRealmById(realm.get())
-                    if (realmInfo.currentPlayers + party1.members.size <= realmInfo
-                            .maxPlayers
-                    ) {
+                    if (realmInfo.currentPlayers + party1.members.size <= realmInfo.maxPlayers) {
                         for (uuid in party1.members) {
                             ITransferService.get().transfer(uuid, realm.get())
                         }
@@ -72,7 +69,7 @@ class PlayerBalancer(private val server: String, private val maxPlayers: Int) : 
         var maxRealm: RealmInfo? = null
         var minRealm: RealmInfo? = null
         for (realmInfo in IRealmService.get().getRealmsOfType(realm)) {
-            if (realmInfo.status != RealmStatus.WAITING_FOR_PLAYERS
+            if (realmInfo.status != RealmStatus.GAME_STARTED_RESTRICTED
                 || realmInfo.currentPlayers + mintoJoin > realmInfo.maxPlayers
             ) {
                 continue
@@ -95,14 +92,12 @@ class PlayerBalancer(private val server: String, private val maxPlayers: Int) : 
     }
 
     override fun accept(player: Player) {
-        B.postpone(3) {
-            try {
-                sendToServer(player)
-            } catch (e: ExecutionException) {
-                e.printStackTrace()
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
+        try {
+            sendToServer(player)
+        } catch (e: ExecutionException) {
+            e.printStackTrace()
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
         }
     }
 }

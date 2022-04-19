@@ -26,20 +26,23 @@ import ru.cristalix.core.CoreApi
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
+import ru.cristalix.core.realm.RealmInfo
 import ru.cristalix.core.realm.RealmStatus
 import ru.cristalix.core.render.BukkitRenderService
 import ru.cristalix.core.render.IRenderService
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-lateinit var app: App
 const val SKIN: String = "ca87474e-b15c-11e9-80c4-1cb72caa35fd"
+
+lateinit var app: App
+lateinit var info: RealmInfo
 
 class App : JavaPlugin() {
 
     private var online = 0
 
-    private val balancer = PlayerBalancer("BRI", 16)
+    private val balancer = PlayerBalancer("BRIT", 16)
     private var fixDoubleClick: Player? = null
 
     private val hoverEvent =
@@ -64,7 +67,7 @@ class App : JavaPlugin() {
 
         ModLoader.loadAll("mods")
 
-        BridgeBuildersInstance(this, { getUser(it) }, MapLoader.load("LOBB"), 1500)
+        BridgeBuildersInstance(this, { getUser(it) }, MapLoader.load("LOBB"))
 
         // Подкючение к Netty сервису / Управляет конфигами, кастомными пакетами, всей data
         val bridgeServiceHost: String = getEnv("BRIDGE_SERVICE_HOST", "127.0.0.1")
@@ -87,12 +90,13 @@ class App : JavaPlugin() {
         }, 10, TimeUnit.MINUTES)
 
         // Конфигурация реалма
-        realm.status = RealmStatus.WAITING_FOR_PLAYERS
-        realm.maxPlayers = 1200
-        realm.isLobbyServer = true
-        realm.readableName = "BridgeBuilders"
-        realm.groupName = "BridgeBuilders"
-        realm.servicedServers = arrayOf("BRI")
+        info = IRealmService.get().currentRealmInfo
+        info.status = RealmStatus.WAITING_FOR_PLAYERS
+        info.maxPlayers = 1200
+        info.isLobbyServer = true
+        info.readableName = "BridgeBuilders"
+        info.groupName = "BridgeBuilders"
+        info.servicedServers = arrayOf("BRI")
 
         // Создание контента для лобби
         TopManager().runTaskTimer(this, 0, 1)
@@ -117,7 +121,7 @@ class App : JavaPlugin() {
         stand.setGravity(false)
         stand.isCustomNameVisible = true
         B.repeat(20) {
-            realm.servicedServers.forEach { online = IRealmService.get().getOnlineOnRealms(it) }
+            info.servicedServers.forEach { online = IRealmService.get().getOnlineOnRealms(it) }
             stand.customName = "§bОнлайн $online"
         }
 

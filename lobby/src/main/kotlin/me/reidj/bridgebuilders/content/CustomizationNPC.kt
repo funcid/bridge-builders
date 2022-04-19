@@ -8,7 +8,7 @@ import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.donate.DonateHelper
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.impl.*
-import me.reidj.bridgebuilders.realm
+import me.reidj.bridgebuilders.info
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.ParticleHelper
 import me.reidj.bridgebuilders.worldMeta
@@ -238,7 +238,7 @@ object CustomizationNPC {
         val npcLabel = worldMeta.getLabel("guide")
         // Создание подсветки NPC
         B.repeat(5) {
-            if (realm.status == RealmStatus.GAME_STARTED_RESTRICTED)
+            if (info.status == RealmStatus.GAME_STARTED_RESTRICTED)
                 return@repeat
             ParticleHelper.happyVillager(npcLabel)
         }

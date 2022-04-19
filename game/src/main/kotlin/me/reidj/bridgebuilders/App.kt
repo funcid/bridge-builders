@@ -33,21 +33,25 @@ import ru.cristalix.core.formatting.Color
 import ru.cristalix.core.karma.IKarmaService
 import ru.cristalix.core.karma.KarmaService
 import ru.cristalix.core.network.ISocketClient
+import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
+import ru.cristalix.core.realm.RealmInfo
+import ru.cristalix.core.realm.RealmStatus
 import java.util.*
 import java.util.stream.Collectors
 import kotlin.math.max
 
 const val GAMES_STREAK_RESTART = 3
+const val NEED_BLOCKS = 1761
 
 lateinit var app: App
 
 val LOBBY_SERVER: RealmId = RealmId.of("BRIL-1")
 var activeStatus = Status.STARTING
 var games = 0
-const val needBlocks = 1761
 
 lateinit var teams: List<Team>
+lateinit var realm: RealmInfo
 
 class App : JavaPlugin() {
 
@@ -79,10 +83,15 @@ class App : JavaPlugin() {
 
         loadMap()
 
-        BridgeBuildersInstance(this, { getUser(it) }, worldMeta, 16)
+        BridgeBuildersInstance(this, { getUser(it) }, worldMeta)
 
-        realm.readableName = "BridgeBuilders ${realm.realmId.id}"
-        realm.lobbyFallback = LOBBY_SERVER
+        // Конфигурация реалма
+        realm = IRealmService.get().currentRealmInfo
+        val id = IRealmService.get().currentRealmInfo.realmId.id
+        realm.status = RealmStatus.WAITING_FOR_PLAYERS
+        realm.maxPlayers = slots
+        realm.readableName = "BridgeBuilders#$id"
+        realm.groupName = "BridgeBuilders#$id"
 
         teams.forEach { team -> BlockPlan.values().forEach { team.collected[it] = 0 } }
 
@@ -145,7 +154,7 @@ class App : JavaPlugin() {
                                     Bukkit.getOnlinePlayers().forEach { online ->
                                         me.func.mod.conversation.ModTransfer(
                                             teamIndex + 2,
-                                            needBlocks,
+                                            NEED_BLOCKS,
                                             updateTeam.collected.map { block -> block.value }.sum()
                                         ).send("bridge:progressupdate", online)
                                     }
@@ -160,7 +169,7 @@ class App : JavaPlugin() {
                                         index + 2,
                                         block.key.needTotal,
                                         block.value,
-                                        needBlocks,
+                                        NEED_BLOCKS,
                                         team.collected.map { it.value }.sum()
                                     ).send("bridge:tabupdate", whoSend)
                                 }
@@ -328,7 +337,7 @@ class App : JavaPlugin() {
         return blockLocation
     }
 
-    fun getCountBlocksTeam(team: Team): Boolean = team.collected.map { it.value }.sum() < needBlocks
+    fun getCountBlocksTeam(team: Team): Boolean = team.collected.map { it.value }.sum() < NEED_BLOCKS
 
     private fun loadMap() {
         worldMeta = MapLoader.load(MapType.AQUAMARINE.data.title)
