@@ -364,8 +364,8 @@ class App : JavaPlugin() {
     private fun displayCoolDownBar(team: Team) {
         team.players.mapNotNull { Bukkit.getPlayer(it) }
             .forEach {
-                Anime.reload(it, -1.0, "До следующего телепорта", 42, 102, 240)
-                B.postpone(10) { Anime.reload(it, 180.0, "До следующего телепорта", 42, 102, 240) }
+                Anime.reload(it, 0.1, "До следующего телепорта", 42, 102, 240)
+                B.postpone(20 * 2) { Anime.reload(it, 180.0, "До следующего телепорта", 42, 102, 240) }
             }
     }
 
