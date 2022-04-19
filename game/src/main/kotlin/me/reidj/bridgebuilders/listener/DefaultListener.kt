@@ -8,6 +8,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -75,6 +76,9 @@ object DefaultListener : Listener {
         if (activeStatus == Status.STARTING)
             isCancelled = true
     }
+
+    @EventHandler
+    fun FoodLevelChangeEvent.handle() = apply { if (activeStatus == Status.STARTING) level = 20 }
 
     private fun showTeamList(user: User) {
         if (slots > 16)

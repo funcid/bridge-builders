@@ -90,6 +90,7 @@ class App : JavaPlugin() {
         val id = IRealmService.get().currentRealmInfo.realmId.id
         realm.status = RealmStatus.WAITING_FOR_PLAYERS
         realm.maxPlayers = slots
+        realm.lobbyFallback = RealmId.of("BRIL-1")
         realm.readableName = "BridgeBuilders#$id"
         realm.groupName = "BridgeBuilders#$id"
 

@@ -42,7 +42,7 @@ class App : JavaPlugin() {
 
     private var online = 0
 
-    private val balancer = PlayerBalancer("BRIT", 16)
+    private val balancer = PlayerBalancer("BRI", 16)
     private var fixDoubleClick: Player? = null
 
     private val hoverEvent =

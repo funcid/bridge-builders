@@ -29,13 +29,13 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         val players = Bukkit.getOnlinePlayers()
 
         // Обновление шкалы онлайна
-        players.forEach { player -> ModTransfer(me.reidj.bridgebuilders.slots, players.size, true).send("bridge:online", player) }
+        players.forEach { player -> ModTransfer(slots, players.size, true).send("bridge:online", player) }
         var actualTime = it
 
         // Если время вышло и пора играть
         if (it / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
-            if (players.size < me.reidj.bridgebuilders.slots) {
+            if (players.size < slots) {
                 actualTime = 1
             } else {
                 // Обновление статуса реалма, чтобы нельзя было войти
@@ -131,7 +131,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             }
         }
         // Если набралось максимальное количество игроков, то сократить время ожидания до 10 секунд
-        if (players.size == me.reidj.bridgebuilders.slots && it / 20 < STARTING.lastSecond - 10)
+        if (players.size == slots && it / 20 < STARTING.lastSecond - 10)
             actualTime = (STARTING.lastSecond - 10) * 20
         actualTime
     }),

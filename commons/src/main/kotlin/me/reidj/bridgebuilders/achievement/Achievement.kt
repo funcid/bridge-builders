@@ -8,7 +8,7 @@ enum class Achievement(
     val predicate: (User) -> Boolean,
     val reward: (User) -> Any
 ) {
-    BEGINNER("Новичок", "§7Убить 10 игроков\n§f + §b1 лутбокс", { it.stat.kills >= 10 }, { it.stat.lootbox++ }),
+    BEGINNER("Новичок", "§7Убить 10 игроков\n§f + §b1 лутбокс", { it.stat.kills >= 10 }, { it.stat.lootbox++ } ),
     ACCUSTOMED("Освоившийся", "§7Убить 25 игроков\n§f + §e64 монеты", { it.stat.kills >= 25 }, { it.giveMoney(64) }),
     MERCENARY("Наемник", "§7Убить 50 игроков\n§f + §e128 монет", { it.stat.kills >= 50 }, { it.giveMoney(128) }),
     HOPLITE("Гоплит", "§7Убить 100 игроков\n§f + §e128 монет\n + §b1 лутбокс", { it.stat.kills >= 100 }, {

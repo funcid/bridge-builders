@@ -107,9 +107,7 @@ object LobbyHandler : Listener {
     }
 
     @EventHandler
-    fun FoodLevelChangeEvent.handle() {
-        isCancelled = true
-    }
+    fun FoodLevelChangeEvent.handle() = apply { level = 20 }
 
     @EventHandler
     fun BlockBreakEvent.handle() {
