@@ -7,6 +7,7 @@ import me.func.mod.Banners
 import me.func.mod.Banners.shineBlocks
 import me.func.protocol.element.MotionType
 import me.reidj.bridgebuilders.app
+import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.MoneyFormatter
 import me.reidj.bridgebuilders.donate.impl.*
@@ -23,6 +24,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemStack
+import packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.inventory.ClickableItem
 import ru.cristalix.core.inventory.ControlledInventory
@@ -136,6 +138,8 @@ object Lootbox : Listener {
                                 }."
                             )
                         )
+
+                        clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
                     })
                 }
                 contents.add('P', ClickableItem.empty(item {
