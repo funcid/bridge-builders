@@ -363,10 +363,13 @@ class App : JavaPlugin() {
 
     private fun displayCoolDownBar(team: Team) {
         team.players.mapNotNull { Bukkit.getPlayer(it) }
-            .forEach { Anime.reload(it, 180.0, "Перезарядка...", 42, 102, 240) }
+            .forEach {
+                Anime.reload(it, -1.0, "До следующего телепорта", 42, 102, 240)
+                B.postpone(10) { Anime.reload(it, 180.0, "До следующего телепорта", 42, 102, 240) }
+            }
     }
 
-    fun teleportAvailable(team: Team) {
+    private fun teleportAvailable(team: Team) {
         team.players.mapNotNull { Bukkit.getPlayer(it) }
             .forEach {
                 Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
@@ -397,8 +400,8 @@ class App : JavaPlugin() {
     }
 
     fun updateNumbersPlayersInTeam() = teams.forEach { team ->
-        team.players.forEach {
-            Anime.bottomRightMessage(Bukkit.getPlayer(it), "Игроков в команде §8>> §a${team.players.size}")
+        team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
+            Anime.bottomRightMessage(it, "Игроков в команде §8>> §a${team.players.size}")
         }
     }
 }

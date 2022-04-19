@@ -39,7 +39,7 @@ class App : JavaPlugin() {
 
     private var online = 0
 
-    private val balancer = PlayerBalancer()
+    private val balancer = PlayerBalancer("BRI", 16)
     private var fixDoubleClick: Player? = null
 
     private val hoverEvent =
@@ -163,9 +163,9 @@ class App : JavaPlugin() {
             null
         }, "leave")
 
-        val nextGame = PlayerBalancer()
+        // Поиск игры
         B.regCommand({ player: Player, _ ->
-            nextGame.accept(player)
+            balancer.accept(player)
             null
         }, "next")
 
