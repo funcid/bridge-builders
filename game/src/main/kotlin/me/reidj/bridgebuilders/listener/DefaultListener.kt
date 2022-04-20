@@ -6,6 +6,7 @@ import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.Particle
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.FoodLevelChangeEvent
@@ -15,6 +16,8 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import ru.cristalix.core.formatting.Formatting
+import kotlin.math.cos
+import kotlin.math.sin
 
 object DefaultListener : Listener {
 
@@ -111,8 +114,16 @@ object DefaultListener : Listener {
             if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 12 && !app.isSpectator(
                     player
                 )
-            )
+            ) {
+                for (i in 0..360)
+                    player.spawnParticle(
+                        Particle.SPELL_INSTANT,
+                        player.location.clone()
+                            .add(sin(Math.toRadians(i.toDouble())), 0.0, cos(Math.toRadians(i.toDouble()))),
+                        1
+                    )
                 player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
+            }
         }
     }
 
