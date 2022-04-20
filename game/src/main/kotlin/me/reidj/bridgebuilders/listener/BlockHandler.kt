@@ -48,7 +48,7 @@ object BlockHandler : Listener {
             1 to 5.toByte() -> team.breakBlocks[block.location] = idAndData
             12 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
         }
-        if (app.getBridge(team).contains(block.location)) {
+        if (teams.any { app.getBridge(it).contains(block.location) }) {
             isCancelled = true
             return
         } else if (block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
