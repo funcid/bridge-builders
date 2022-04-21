@@ -77,7 +77,7 @@ class App : JavaPlugin() {
 
         clientSocket.connect()
 
-        map = MapType.values().toSet().random()
+        map = MapType.values().random()
 
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
         ModLoader.loadAll("mods")
@@ -96,7 +96,7 @@ class App : JavaPlugin() {
         realm.readableName = "BridgeBuilders#$id"
         realm.groupName = "BridgeBuilders#$id"
 
-        teams.forEach { team -> map.data.blocks.forEach { team.collected[it] = 0 } }
+        teams.forEach { team -> map.blocks.forEach { team.collected[it] = 0 } }
 
         // Запуск игрового таймера
         timer = Timer()
@@ -157,7 +157,7 @@ class App : JavaPlugin() {
                                     Bukkit.getOnlinePlayers().forEach { online ->
                                         me.func.mod.conversation.ModTransfer(
                                             teamIndex + 2,
-                                            map.data.needBlock,
+                                            map.needBlocks,
                                             updateTeam.collected.map { block -> block.value }.sum()
                                         ).send("bridge:progressupdate", online)
                                     }
@@ -172,7 +172,7 @@ class App : JavaPlugin() {
                                         index + 2,
                                         block.key.needTotal,
                                         block.value,
-                                        map.data.needBlock,
+                                        map.needBlocks,
                                         team.collected.map { it.value }.sum()
                                     ).send("bridge:tabupdate", whoSend)
                                 }
@@ -203,7 +203,9 @@ class App : JavaPlugin() {
                     return@addPlace
                 var enemyTeam: Team? = null
                 if (player.location.distanceSquared(playerTeam.teleport) < 4 * 4) {
-                    enemyTeam = teams.filter { enemy -> !enemy.players.contains(player.uniqueId) && enemy.isActiveTeleport }.random()
+                    enemyTeam =
+                        teams.filter { enemy -> !enemy.players.contains(player.uniqueId) && enemy.isActiveTeleport }
+                            .random()
                     teleportAtBase(enemyTeam, player)
                     enemyTeam.players.mapNotNull { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
                         enemy.playSound(
@@ -216,19 +218,14 @@ class App : JavaPlugin() {
                 } else {
                     teleportAtBase(playerTeam, player)
                 }
-                enemyTeam?.isActiveTeleport = false
                 playerTeam.isActiveTeleport = false
 
                 // Ставлю полоску куллдауна
-                enemyTeam?.let { displayCoolDownBar(it) }
                 displayCoolDownBar(playerTeam)
 
                 B.postpone(180 * 20) {
-                    enemyTeam?.isActiveTeleport = true
                     playerTeam.isActiveTeleport = true
-
                     // Отправляю сообщение о том что телепорт доступен
-                    enemyTeam?.let { teleportAvailable(it) }
                     teleportAvailable(playerTeam)
                 }
             }
@@ -261,7 +258,7 @@ class App : JavaPlugin() {
             team.breakBlocks.clear()
             team.collected.clear()
             team.isActiveTeleport = false
-            map.data.blocks.forEach { team.collected[it] = 0 }
+            map.blocks.forEach { team.collected[it] = 0 }
         }
         activeStatus = Status.STARTING
         timer.time = 0
@@ -338,10 +335,10 @@ class App : JavaPlugin() {
         return blockLocation
     }
 
-    fun getCountBlocksTeam(team: Team): Boolean = team.collected.map { it.value }.sum() < map.data.needBlock
+    fun getCountBlocksTeam(team: Team): Boolean = team.collected.map { it.value }.sum() < map.needBlocks
 
     private fun loadMap() {
-        worldMeta = MapLoader.load(map.data.title)
+        worldMeta = MapLoader.load(map.title)
         teams = worldMeta.getLabels("team").map {
             val data = it.tag.split(" ")
             val team = data[0]

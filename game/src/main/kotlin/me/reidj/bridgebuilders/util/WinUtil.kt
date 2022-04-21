@@ -32,12 +32,8 @@ object WinUtil {
         team.players.mapNotNull { app.getUser(it) }.forEach {
             it.apply {
                 player!!.sendMessage(Formatting.fine("Вы получили §e30 монет §fза победу."))
-                println("${player!!.name} ${stat.wins}")
                 stat.wins++
-                println("${player!!.name} ${stat.wins}")
-                println("${player!!.name} ${stat.money}")
                 giveMoney(30)
-                println("${player!!.name} ${stat.money}")
                 Anime.showEnding(
                     player!!,
                     EndStatus.WIN,
