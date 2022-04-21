@@ -54,6 +54,6 @@ enum class Achievement(
         it.stat.lootbox++
     }),
     LOOTER("Счастливчик", "§7Открыть 10 лутбоксов\n§f + 1 §bЛутбокс", { it.stat.lootboxOpenned >= 10 }, { user ->
-        repeat(15) { user.stat.lootbox++ }
+        user.stat.lootbox++
     }),
 }

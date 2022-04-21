@@ -111,10 +111,10 @@ object DamageListener : Listener {
             }
             // Начисление убийце статистики
             killerStatistic.apply {
-                giveMoney(3)
+                giveMoney(5)
                 stat.kills++
                 kills++
-                player!!.sendMessage(Formatting.fine("Вы получили §e3 монеты §fза убийство."))
+                player!!.sendMessage(Formatting.fine("Вы получили §e5 монет §fза убийство."))
             }
             // Создаю гроб, лол
             if (user.stat.activeCorpse != data.Corpse.NONE) {

@@ -225,6 +225,7 @@ object CustomizationNPC {
                                     oldAchievement.reward(user)
                                     user.stat.achievement.add(achievement)
                                     player.sendMessage(Formatting.fine("Вы успешно получили награду!"))
+                                    clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
                                 })
                             }
                     }

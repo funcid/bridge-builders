@@ -5,14 +5,14 @@ import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
-import implario.ListUtils
 import me.func.mod.Anime
+import me.func.mod.Glow
 import me.func.mod.Kit
 import me.func.mod.Npc
 import me.func.mod.Npc.location
 import me.func.mod.Npc.onClick
 import me.func.mod.conversation.ModLoader
-import me.reidj.bridgebuilders.data.BlockPlan
+import me.func.protocol.GlowColor
 import me.reidj.bridgebuilders.data.Bridge
 import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.listener.*
@@ -38,11 +38,9 @@ import ru.cristalix.core.realm.RealmId
 import ru.cristalix.core.realm.RealmInfo
 import ru.cristalix.core.realm.RealmStatus
 import java.util.*
-import java.util.stream.Collectors
 import kotlin.math.max
 
 const val GAMES_STREAK_RESTART = 3
-const val NEED_BLOCKS = 1761
 
 lateinit var app: App
 
@@ -52,6 +50,7 @@ var games = 0
 
 lateinit var teams: List<Team>
 lateinit var realm: RealmInfo
+lateinit var map: MapType
 
 class App : JavaPlugin() {
 
@@ -78,6 +77,8 @@ class App : JavaPlugin() {
 
         clientSocket.connect()
 
+        map = MapType.values().toSet().random()
+
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
         ModLoader.loadAll("mods")
 
@@ -89,12 +90,13 @@ class App : JavaPlugin() {
         realm = IRealmService.get().currentRealmInfo
         val id = IRealmService.get().currentRealmInfo.realmId.id
         realm.status = RealmStatus.WAITING_FOR_PLAYERS
+        realm.extraSlots = 2
         realm.maxPlayers = slots
         realm.lobbyFallback = RealmId.of("BRIL-1")
         realm.readableName = "BridgeBuilders#$id"
         realm.groupName = "BridgeBuilders#$id"
 
-        teams.forEach { team -> BlockPlan.values().forEach { team.collected[it] = 0 } }
+        teams.forEach { team -> map.data.blocks.forEach { team.collected[it] = 0 } }
 
         // Запуск игрового таймера
         timer = Timer()
@@ -155,7 +157,7 @@ class App : JavaPlugin() {
                                     Bukkit.getOnlinePlayers().forEach { online ->
                                         me.func.mod.conversation.ModTransfer(
                                             teamIndex + 2,
-                                            NEED_BLOCKS,
+                                            map.data.needBlock,
                                             updateTeam.collected.map { block -> block.value }.sum()
                                         ).send("bridge:progressupdate", online)
                                     }
@@ -170,7 +172,7 @@ class App : JavaPlugin() {
                                         index + 2,
                                         block.key.needTotal,
                                         block.value,
-                                        NEED_BLOCKS,
+                                        map.data.needBlock,
                                         team.collected.map { it.value }.sum()
                                     ).send("bridge:tabupdate", whoSend)
                                 }
@@ -190,8 +192,8 @@ class App : JavaPlugin() {
 
         // Создаю полигон
         teams.forEach { team ->
-            me.func.mod.Glow.addPlace(
-                me.func.protocol.GlowColor.GREEN,
+            Glow.addPlace(
+                GlowColor.GREEN,
                 team.teleport.x + 0.5,
                 team.teleport.y,
                 team.teleport.z + 0.5
@@ -201,9 +203,7 @@ class App : JavaPlugin() {
                     return@addPlace
                 var enemyTeam: Team? = null
                 if (player.location.distanceSquared(playerTeam.teleport) < 4 * 4) {
-                    enemyTeam = ListUtils.random(teams.stream()
-                        .filter { enemy -> !enemy.players.contains(player.uniqueId) }
-                        .collect(Collectors.toList()))
+                    enemyTeam = teams.filter { enemy -> !enemy.players.contains(player.uniqueId) && enemy.isActiveTeleport }.random()
                     teleportAtBase(enemyTeam, player)
                     enemyTeam.players.mapNotNull { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
                         enemy.playSound(
@@ -261,7 +261,7 @@ class App : JavaPlugin() {
             team.breakBlocks.clear()
             team.collected.clear()
             team.isActiveTeleport = false
-            BlockPlan.values().forEach { team.collected[it] = 0 }
+            map.data.blocks.forEach { team.collected[it] = 0 }
         }
         activeStatus = Status.STARTING
         timer.time = 0
@@ -338,10 +338,10 @@ class App : JavaPlugin() {
         return blockLocation
     }
 
-    fun getCountBlocksTeam(team: Team): Boolean = team.collected.map { it.value }.sum() < NEED_BLOCKS
+    fun getCountBlocksTeam(team: Team): Boolean = team.collected.map { it.value }.sum() < map.data.needBlock
 
     private fun loadMap() {
-        worldMeta = MapLoader.load(MapType.AQUAMARINE.data.title)
+        worldMeta = MapLoader.load(map.data.title)
         teams = worldMeta.getLabels("team").map {
             val data = it.tag.split(" ")
             val team = data[0]

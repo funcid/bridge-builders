@@ -31,12 +31,12 @@ object WinUtil {
     fun end(team: Team) {
         team.players.mapNotNull { app.getUser(it) }.forEach {
             it.apply {
-                player!!.sendMessage(Formatting.fine("Вы получили §e10 монет §fза победу."))
+                player!!.sendMessage(Formatting.fine("Вы получили §e30 монет §fза победу."))
                 println("${player!!.name} ${stat.wins}")
                 stat.wins++
                 println("${player!!.name} ${stat.wins}")
                 println("${player!!.name} ${stat.money}")
-                giveMoney(10)
+                giveMoney(30)
                 println("${player!!.name} ${stat.money}")
                 Anime.showEnding(
                     player!!,
@@ -65,8 +65,8 @@ object WinUtil {
         Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.forEach {
             if (team.players.contains(it.stat.uuid))
                 return@forEach
-            it.giveMoney(5)
-            it.player!!.sendMessage(Formatting.fine("Вы получили §e5 монет§f."))
+            it.giveMoney(15)
+            it.player!!.sendMessage(Formatting.fine("Вы получили §e15 монет§f."))
             Anime.showEnding(
                 it.player!!,
                 EndStatus.LOSE,

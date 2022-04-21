@@ -140,7 +140,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         if (time % 20 == 0) {
             Bukkit.getOnlinePlayers().forEach {
                 ModTransfer(GAME.lastSecond, time, false).send("bridge:online", it)
-                if (time / 20 == 90) {
+                if (time / 20 == 120) {
                     teams.forEach { team -> team.isActiveTeleport = true }
                     Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
                 }
@@ -157,9 +157,9 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             // Получаю команды с количеством принесённых блоков
             teams.forEach { teamsWithBlockCount[it] = it.collected.map { collected -> collected.value }.sum() }
 
-            clepto.bukkit.B.postpone(5 * 20) {
+            B.postpone(5 * 20) {
                 teamsWithBlockCount.clear()
-                me.reidj.bridgebuilders.app.restart()
+                app.restart()
             }
 
             // Победившая команда
