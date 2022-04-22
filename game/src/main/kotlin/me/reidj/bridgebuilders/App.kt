@@ -312,14 +312,12 @@ class App : JavaPlugin() {
     fun getBridge(team: Team): MutableList<Location> {
         val vector = team.bridge.toCenter
         val bridge = Bridge(vector, team.bridge.start, team.bridge.end, team.bridge.blocks)
-        val length = 42
         val width = 16
-        val height = 30
         val blockLocation = mutableListOf<Location>()
 
-        repeat(length) { len ->
+        repeat(map.length) { len ->
             repeat(width) { xOrZ ->
-                repeat(height) { y ->
+                repeat(map.height) { y ->
                     blockLocation.add(
                         Location(
                             worldMeta.world,
