@@ -39,9 +39,9 @@ enum class Achievement(
         user.giveMoney(512)
     }),
     THOUSAND_WIN("Легенда", "§7Победить 1`000 раз\n" +
-            "§f + 20 §bЛутбоксов\n§f + §e1024 монет", { it.stat.wins >= 1000 }, { user ->
+            "§f + 20 §bЛутбоксов\n§f + §e8192 монет", { it.stat.wins >= 1000 }, { user ->
         repeat(20) { user.stat.lootbox++ }
-        user.giveMoney(1024)
+        user.giveMoney(8192)
     }),
     GAMER("Игрок", "§7Сыграть 10 игр\n§f + §e128 монет", { it.stat.games >= 10 }, {
         it.giveMoney(128)
@@ -49,9 +49,9 @@ enum class Achievement(
     GLADIATOR("Гладиатор", "§7Сыграть 100 игр\n§f + §e64 монеты", { it.stat.games >= 100 }, {
         it.giveMoney(64)
     }),
-    MAXIMUS("Максимус", "§7Сыграть 1000 игр\n§f + §e192 монеты\n§f + 1 §bЛутбокс", { it.stat.games >= 1000 }, {
-        it.giveMoney(192)
-        it.stat.lootbox++
+    MAXIMUS("Максимус", "§7Сыграть 1000 игр\n§f + §e4096 монеты\n§f + 10 §bЛутбоксов", { it.stat.games >= 1000 }, { user ->
+        user.giveMoney(4096)
+        repeat(10) { user.stat.lootbox++ }
     }),
     LOOTER("Счастливчик", "§7Открыть 10 лутбоксов\n§f + 1 §bЛутбокс", { it.stat.lootboxOpenned >= 10 }, { user ->
         user.stat.lootbox++
