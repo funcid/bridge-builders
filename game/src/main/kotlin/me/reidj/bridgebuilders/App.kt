@@ -201,9 +201,8 @@ class App : JavaPlugin() {
                 val playerTeam = teams.filter { team -> team.players.contains(player.uniqueId) }[0]
                 if (!playerTeam.isActiveTeleport)
                     return@addPlace
-                var enemyTeam: Team? = null
                 if (player.location.distanceSquared(playerTeam.teleport) < 4 * 4) {
-                    enemyTeam =
+                    val enemyTeam =
                         teams.filter { enemy -> !enemy.players.contains(player.uniqueId) && enemy.isActiveTeleport }
                             .random()
                     teleportAtBase(enemyTeam, player)

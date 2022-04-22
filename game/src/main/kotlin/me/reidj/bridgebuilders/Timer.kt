@@ -25,12 +25,7 @@ class Timer : BukkitRunnable() {
                             )
                         } catch (ex: NullPointerException) {
                             ex.printStackTrace()
-                            println(user)
                             println(user.player)
-                            println(user.player?.world)
-                            println(particle)
-                            println(StepParticle.valueOf(particle.name))
-                            println(StepParticle.valueOf(particle.name).type)
                         }
                     }
                 }
