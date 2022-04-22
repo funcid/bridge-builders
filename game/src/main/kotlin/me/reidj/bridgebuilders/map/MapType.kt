@@ -34,23 +34,22 @@ enum class MapType(
     ),
     BTR(
         "btr",
-        // 123
         HashSet<Block>(
             listOf(
                 Block("Фиолетовая керамика", 10, PURPLE_GLAZED_TERRACOTTA),
-                Block("Глина", 12, CLAY),
-                Block("Гравий", 16, GRAVEL),
-                Block("Булыжник", 18, COBBLESTONE),
-                Block("Тропическая плита", 41, WOOD_STEP, 3),
-                Block("Булыжные ступеньки", 56, COBBLESTONE_STAIRS),
+                Block("Глина", 16, CLAY),
+                Block("Гравий", 106, GRAVEL),
+                Block("Булыжник", 42, COBBLESTONE),
+                Block("Тропическая плита", 42, WOOD_STEP, 3),
+                Block("Булыжные ступеньки", 160, COBBLESTONE_STAIRS),
                 Block("Люк", 68, TRAP_DOOR),
-                Block("Железные прутья", 69, IRON_FENCE),
+                Block("Железные прутья", 90, IRON_FENCE),
                 Block("Незеритовая плита", 87, STEP, 6),
                 Block("Булыжная плита", 123, STEP, 3),
-                Block("Светло-серый цемент", 216, CONCRETE_POWDER, 8),
-                Block("Андезит", 406, STONE, 5),
+                Block("Светло-серый цемент", 322, CONCRETE_POWDER, 8),
+                Block("Андезит", 452, STONE, 5),
             )
         ),
-        1122
+        1518
     )
 }
