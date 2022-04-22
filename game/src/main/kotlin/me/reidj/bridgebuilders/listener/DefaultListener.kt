@@ -110,20 +110,21 @@ object DefaultListener : Listener {
         if (activeStatus == Status.STARTING && player.location.block.y <= 2)
             player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
         // Если мост не достроен откидывать от него игрока
-        teams.forEach { team ->
-            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 12 && !app.isSpectator(
-                    player
+        if (teams.none { it.players.contains(player.uniqueId) })
+            return
+        val team = teams.filter { it.players.contains(player.uniqueId) }[0]
+        if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 12 && !app.isSpectator(
+                player
+            )
+        ) {
+            for (i in 0..360)
+                player.spawnParticle(
+                    Particle.SPELL_INSTANT,
+                    player.location.clone()
+                        .add(sin(Math.toRadians(i.toDouble())), 0.0, cos(Math.toRadians(i.toDouble()))),
+                    1
                 )
-            ) {
-                for (i in 0..360)
-                    player.spawnParticle(
-                        Particle.SPELL_INSTANT,
-                        player.location.clone()
-                            .add(sin(Math.toRadians(i.toDouble())), 0.0, cos(Math.toRadians(i.toDouble()))),
-                        1
-                    )
-                player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
-            }
+            player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
         }
     }
 
