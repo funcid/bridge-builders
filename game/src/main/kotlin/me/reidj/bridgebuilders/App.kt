@@ -20,6 +20,7 @@ import me.reidj.bridgebuilders.map.MapType
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.MapLoader
+import net.minecraft.server.v1_12_R1.MinecraftServer
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -386,7 +387,35 @@ class App : JavaPlugin() {
             }
     }
 
-    override fun onDisable() = playerDataManager.save()
+    override fun onDisable() {
+        playerDataManager.save()
+
+        val worlds = Bukkit.getWorlds()
+
+        println("Start finding any world to find directory.")
+
+        worlds.forEach { world ->
+            println("Start cleaning up worlds.")
+
+            val dir = world.worldFolder.parentFile.walk(FileWalkDirection.TOP_DOWN)
+                .firstOrNull { it.name.contains("tmp") }
+            dir?.listFiles { file -> file.isDirectory && file.parentFile == dir }
+                ?.filter { it.canRead() }
+                ?.firstOrNull { file -> worlds.none { it.uid.toString() == file.name } }?.let { file ->
+                    println("Start cleaning up worlds. File: ${file.absolutePath}")
+
+                    worlds.firstOrNull { it.uid.toString() == file.name }?.let {
+                        Bukkit.unloadWorld(it, false)
+                        println("World was unloaded.")
+                    }
+
+                    MinecraftServer.SERVER.postToNextTick {
+                        if (file.deleteRecursively()) println("World directory successfully deleted.")
+                        else println("World directory delete failure.")
+                    }
+                }
+        }
+    }
 
     fun isSpectator(player: Player): Boolean = player.gameMode == GameMode.SPECTATOR
 
