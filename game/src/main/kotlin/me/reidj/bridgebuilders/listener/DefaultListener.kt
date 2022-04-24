@@ -117,11 +117,13 @@ object DefaultListener : Listener {
                 player
             )
         ) {
-            for (i in 0..360)
+            val location = player.location
+            for (i in 0..60)
                 player.spawnParticle(
                     Particle.SPELL_INSTANT,
-                    player.location.clone()
-                        .add(sin(Math.toRadians(i.toDouble())), 0.0, cos(Math.toRadians(i.toDouble()))),
+                    sin(Math.toRadians(location.x * 6)),
+                    location.x,
+                    cos(Math.toRadians(location.z * 6)),
                     1
                 )
             player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()

@@ -159,9 +159,6 @@ object DamageListener : Listener {
                 )
             }
         }
-
-        if (getEntity().gameMode == GameMode.SPECTATOR)
-            return
     }
 
     @EventHandler

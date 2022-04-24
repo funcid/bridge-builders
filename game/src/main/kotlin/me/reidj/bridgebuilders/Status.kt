@@ -19,12 +19,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     STARTING(70, { it ->
         // Если набор игроков начался, обновить статус реалма
         realm.status = RealmStatus.GAME_STARTED_RESTRICTED
-        ru.cristalix.core.network.ISocketClient.get().write(
-            ru.cristalix.core.network.packages.RealmUpdatePackage(
-                ru.cristalix.core.network.packages.RealmUpdatePackage.UpdateType.UPDATE,
-                realm
-            )
-        )
 
         val players = Bukkit.getOnlinePlayers()
 

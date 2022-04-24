@@ -255,6 +255,7 @@ class App : JavaPlugin() {
         }
         playerDataManager.save()
         Bukkit.getOnlinePlayers().forEach { it.kickPlayer("Выключение сервера.") }
+        ConnectionHandler.markers.clear()
         Bukkit.unloadWorld(worldMeta.world, false)
         loadMap()
         teams.forEach { team ->

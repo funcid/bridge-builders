@@ -31,7 +31,7 @@ object ConnectionHandler : Listener {
         text("§cВернуться")
     }.build()
 
-    private val markers = mutableListOf<Marker>()
+    val markers = mutableListOf<Marker>()
 
     @EventHandler
     fun PlayerJoinEvent.handle() = player.apply {
