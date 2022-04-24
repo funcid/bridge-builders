@@ -91,7 +91,6 @@ class App : JavaPlugin() {
         realm = IRealmService.get().currentRealmInfo
         val id = IRealmService.get().currentRealmInfo.realmId.id
         realm.status = RealmStatus.WAITING_FOR_PLAYERS
-        realm.extraSlots = 2
         realm.maxPlayers = slots
         realm.lobbyFallback = RealmId.of("BRIL-1")
         realm.readableName = "BridgeBuilders#$id"
@@ -202,7 +201,11 @@ class App : JavaPlugin() {
                 val playerTeam = teams.filter { team -> team.players.contains(player.uniqueId) }[0]
                 if (!playerTeam.isActiveTeleport)
                     return@addPlace
-                if (player.location.distanceSquared(playerTeam.teleport) < 4 * 4) {
+                if (player.location.distanceSquared(playerTeam.teleport) < 4 * 4 && teams.any { enemy ->
+                        !enemy.players.contains(
+                            player.uniqueId
+                        ) && enemy.isActiveTeleport
+                    }) {
                     val enemyTeam =
                         teams.filter { enemy -> !enemy.players.contains(player.uniqueId) && enemy.isActiveTeleport }
                             .random()

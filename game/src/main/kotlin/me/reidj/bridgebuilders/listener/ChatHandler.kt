@@ -24,19 +24,22 @@ object ChatHandler : Listener {
         val team = teams.filter { team -> team.players.contains(player.uniqueId) }
         if (team.isNotEmpty() && !app.isSpectator(player)) {
             isCancelled = true
-            val user = app.getUser(player)!!
+            val user = app.getUser(player)
             if (!message.startsWith("!")) {
-                team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
-                    it.sendMessage("§8КОМАНДА ${getPrefix(user, false) + message}")
+                team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach { player ->
+                    user?.let { player.sendMessage("§8КОМАНДА ${getPrefix(it, false) + message}") }
                 }
             } else {
-                Bukkit.getOnlinePlayers().forEach {
-                    it.sendMessage(
-                        "" + team[0].color.chatColor + team[0].color.teamName.substring(
-                            0,
-                            1
-                        ) + " " + getPrefix(user, false) + message.drop(1)
-                    )
+                Bukkit.getOnlinePlayers().forEach { player ->
+                    user?.let {
+                        player.sendMessage(
+                            "" + team[0].color.chatColor + team[0].color.teamName.substring(
+                                0,
+                                1
+                            ) + " " + getPrefix(it, false) + message.drop(1)
+                        )
+                    }
+
                 }
             }
 

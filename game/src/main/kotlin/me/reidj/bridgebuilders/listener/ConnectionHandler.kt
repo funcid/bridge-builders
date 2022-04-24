@@ -37,7 +37,9 @@ object ConnectionHandler : Listener {
     fun PlayerJoinEvent.handle() = player.apply {
         inventory.clear()
 
-        if (app.getUser(this) == null) {
+        val user = app.getUser(uniqueId)
+
+        if (user == null) {
             sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
             B.postpone(3) {
                 Cristalix.transfer(
@@ -47,10 +49,9 @@ object ConnectionHandler : Listener {
             }
         }
 
-        val user = app.getUser(this)!!
 
-        if (user.player == null)
-            user.player = player
+        if (user?.player == null)
+            user?.player = player
 
         ModLoader.send("bridge-mod-bundle.jar", this)
 
