@@ -130,7 +130,7 @@ class App : JavaPlugin() {
                     val team = teams.filter { it.players.contains(player.uniqueId) }[0]
                     team.collected.entries.forEachIndexed { index, block ->
                         val itemHand = player.itemInHand
-                        if (itemHand.i18NDisplayName == block.key.getItem().i18NDisplayName) {
+                        if (itemHand.getType().getId() == block.key.material.getId() && itemHand.getData().getData() == block.key.blockData) {
                             val must = block.key.needTotal - block.value
                             if (must == 0) {
                                 Anime.killboardMessage(player, "Мне больше не нужен этот ресурс")
