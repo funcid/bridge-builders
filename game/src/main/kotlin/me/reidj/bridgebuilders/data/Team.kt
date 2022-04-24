@@ -14,7 +14,8 @@ data class Team(
     var isActiveTeleport: Boolean,
     var breakBlocks: MutableMap<Location, Pair<Int, Byte>>,
     var bridge: Bridge,
-    var collected: MutableMap<Block, Int>
+    var collected: MutableMap<Block, Int>,
+    var blocksToPlace: Int = 0
 ) {
     fun blockReturn() {
         breakBlocks.forEach { block ->

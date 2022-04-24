@@ -11,24 +11,23 @@ class Timer : BukkitRunnable() {
     var time = 0
 
     override fun run() {
-        if (time % 2 == 0) {
-            Bukkit.getOnlinePlayers().filter { it.gameMode != GameMode.SPECTATOR }
-                .mapNotNull { app.getUser(it) }
-                .forEach { user ->
-                    val particle = user.stat.activeParticle
-                    if (particle != data.StepParticle.NONE && user.player!!.world != null) {
-                        try {
-                            user.player!!.world.spawnParticle(
-                                StepParticle.valueOf(particle.name).type,
-                                user.player!!.location.clone().add(0.0, 0.2, 0.0),
-                                1
-                            )
-                        } catch (ex: NullPointerException) {
-                            ex.printStackTrace()
-                            println(user.player)
-                        }
-                    }
+        if (time % 3 == 0) {
+            for (player in Bukkit.getOnlinePlayers()) {
+                if (player.gameMode == GameMode.SPECTATOR)
+                    continue
+                val user = app.getUser(player)!!
+                val particle = user.stat.activeParticle
+                if (particle != data.StepParticle.NONE && player.world != null) {
+                    val location = player.location
+                    player.world.spawnParticle(
+                        StepParticle.valueOf(particle.name).type,
+                        location.x,
+                        location.y + 0.2,
+                        location.z,
+                        1
+                    )
                 }
+            }
         }
         if (time % 5 == 0)
             teams.forEach { app.addBlock(it) }

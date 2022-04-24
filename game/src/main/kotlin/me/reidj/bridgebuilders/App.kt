@@ -144,6 +144,7 @@ class App : JavaPlugin() {
                                 val subtraction = must - itemHand.getAmount()
                                 val collect = must - max(0, subtraction)
                                 team.collected[block.key] = block.key.needTotal - maxOf(0, subtraction)
+                                team.blocksToPlace += collect
                                 itemHand.setAmount(itemHand.getAmount() - must)
                                 user.collectedBlocks += collect
                                 //BattlePassUtil.update(user.player!!, QuestType.POINTS, collect)
@@ -273,6 +274,8 @@ class App : JavaPlugin() {
     }
 
     fun addBlock(team: Team) {
+        if (team.blocksToPlace <= 0)
+            return
         val toPlace = team.collected.filter {
             (team.bridge.blocks[it.key.material.id to it.key.blockData]
                 ?: listOf()).size > it.key.needTotal - it.value
@@ -290,12 +293,15 @@ class App : JavaPlugin() {
         }
         if (nearest != null) {
             nearest?.block?.setTypeIdAndData(data!!.first, data!!.second, false)
+            team.blocksToPlace--
             team.bridge.blocks[data]?.let {
                 if (it.isEmpty())
                     team.bridge.blocks.remove(data)
                 else
                     it.remove(nearest)
             }
+        } else {
+            team.blocksToPlace = 0
         }
     }
 
