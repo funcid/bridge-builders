@@ -6,4 +6,5 @@ include 'lobby'
 include 'mod'
 include 'balance'
 include 'service'
+include 'discord'
 

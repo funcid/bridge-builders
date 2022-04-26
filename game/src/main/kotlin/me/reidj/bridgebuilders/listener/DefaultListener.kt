@@ -112,21 +112,22 @@ object DefaultListener : Listener {
         // Если мост не достроен откидывать от него игрока
         if (teams.none { it.players.contains(player.uniqueId) })
             return
-        val team = teams.filter { it.players.contains(player.uniqueId) }[0]
-        if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 12 && !app.isSpectator(
-                player
-            )
-        ) {
-            val location = player.location
-            for (i in 0..60)
-                player.spawnParticle(
-                    Particle.SPELL_INSTANT,
-                    sin(Math.toRadians(location.x * 6)),
-                    location.x,
-                    cos(Math.toRadians(location.z * 6)),
-                    1
+        teams.forEach { team ->
+            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 12 && !app.isSpectator(
+                    player
                 )
-            player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
+            ) {
+                val location = player.location
+                for (i in 0..60)
+                    player.spawnParticle(
+                        Particle.SPELL_INSTANT,
+                        sin(Math.toRadians(location.x * 6)),
+                        location.x,
+                        cos(Math.toRadians(location.z * 6)),
+                        1
+                    )
+                player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
+            }
         }
     }
 

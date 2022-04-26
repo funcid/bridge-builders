@@ -54,7 +54,7 @@ enum class MapType(
                 Block("Андезит", 452, STONE, 5),
             )
         ),
-        1456,
+        1530,
         43,
         30
     )

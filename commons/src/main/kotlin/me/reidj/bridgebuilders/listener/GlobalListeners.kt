@@ -4,9 +4,10 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.*
 import org.bukkit.event.entity.EntityChangeBlockEvent
-import org.bukkit.event.player.PlayerArmorStandManipulateEvent
-import org.bukkit.event.player.PlayerInteractEntityEvent
-import org.bukkit.event.player.PlayerSwapHandItemsEvent
+import org.bukkit.event.player.*
+import packages.ChatPackage
+import ru.cristalix.core.network.ISocketClient
+import java.util.*
 
 object GlobalListeners : Listener {
 
@@ -39,4 +40,10 @@ object GlobalListeners : Listener {
 
     @EventHandler
     fun PlayerSwapHandItemsEvent.handle() = apply { isCancelled = true }
+
+    @EventHandler
+    fun AsyncPlayerChatEvent.handle() = ISocketClient.get().write(ChatPackage(player.name, message, Date()))
+
+    @EventHandler
+    fun PlayerCommandPreprocessEvent.handle() = ISocketClient.get().write(ChatPackage(player.name, message, Date()))
 }

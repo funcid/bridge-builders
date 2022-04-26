@@ -41,7 +41,7 @@ import ru.cristalix.core.realm.RealmStatus
 import java.util.*
 import kotlin.math.max
 
-const val GAMES_STREAK_RESTART = 3
+const val GAMES_STREAK_RESTART = 5
 
 lateinit var app: App
 
