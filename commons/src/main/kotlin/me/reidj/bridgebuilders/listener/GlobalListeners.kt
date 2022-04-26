@@ -1,5 +1,7 @@
 package me.reidj.bridgebuilders.listener
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.*
@@ -7,7 +9,11 @@ import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.player.*
 import packages.ChatPackage
 import ru.cristalix.core.network.ISocketClient
+import java.text.SimpleDateFormat
 import java.util.*
+
+private val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+var gson: Gson = GsonBuilder().setDateFormat("MMM dd, yyyy HH:mm:ss").create()
 
 object GlobalListeners : Listener {
 
@@ -42,8 +48,10 @@ object GlobalListeners : Listener {
     fun PlayerSwapHandItemsEvent.handle() = apply { isCancelled = true }
 
     @EventHandler
-    fun AsyncPlayerChatEvent.handle() = ISocketClient.get().write(ChatPackage(player.name, message, Date()))
+    fun AsyncPlayerChatEvent.handle() =
+        ISocketClient.get().write(ChatPackage(player.name, message, formatter.format(Date())))
 
     @EventHandler
-    fun PlayerCommandPreprocessEvent.handle() = ISocketClient.get().write(ChatPackage(player.name, message, Date()))
+    fun PlayerCommandPreprocessEvent.handle() =
+        ISocketClient.get().write(ChatPackage(player.name, message, formatter.format(Date())))
 }

@@ -34,8 +34,7 @@ suspend fun main() {
     client.addListener(ChatPackage::class.java) { realm, pckg ->
         scope.launch {
             rest.channel.createMessage(Snowflake(968266478363213834)) {
-                val data = pckg.data
-                content = "${data.month}:${data.day}:${data.hours}:${data.minutes}:${data.seconds} | ${realm.realmName} | ${pckg.sender} | ${pckg.message}"
+                content = "${pckg.data} | ${realm.realmName} | ${pckg.sender} | ${pckg.message}"
             }
         }
     }
