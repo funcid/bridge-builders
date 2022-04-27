@@ -194,13 +194,4 @@ class App : JavaPlugin() {
     fun getUser(player: Player) = getUser(player.uniqueId)
 
     fun getUser(uuid: UUID) = playerDataManager.userMap[uuid]
-
-    private fun getEnv(name: String, defaultValue: String): String {
-        var field = System.getenv(name)
-        if (field == null || field.isEmpty()) {
-            println("No $name environment variable specified!")
-            field = defaultValue
-        }
-        return field
-    }
 }

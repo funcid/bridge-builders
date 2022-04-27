@@ -433,15 +433,6 @@ class App : JavaPlugin() {
 
     fun getUser(uuid: UUID): User? = playerDataManager.userMap[uuid]
 
-    private fun getEnv(name: String, defaultValue: String): String {
-        var field = System.getenv(name)
-        if (field == null || field.isEmpty()) {
-            println("No $name environment variable specified!")
-            field = defaultValue
-        }
-        return field
-    }
-
     fun updateNumbersPlayersInTeam() = teams.forEach { team ->
         team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
             Anime.bottomRightMessage(it, "Игроков в команде §8>> §a${team.players.size}")

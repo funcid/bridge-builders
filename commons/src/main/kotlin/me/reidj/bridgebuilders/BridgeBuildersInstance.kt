@@ -49,3 +49,13 @@ class BridgeBuildersInstance(
         B.repeat(1) { clientSocket }
     }
 }
+
+
+fun getEnv(name: String, defaultValue: String): String {
+    var field = System.getenv(name)
+    if (field == null || field.isEmpty()) {
+        println("No $name environment variable specified!")
+        field = defaultValue
+    }
+    return field
+}
