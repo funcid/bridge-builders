@@ -44,7 +44,7 @@ object ConnectionHandler : Listener {
             B.postpone(3) {
                 Cristalix.transfer(
                     setOf(player.uniqueId),
-                    RealmId.of("BRIL-1")
+                    LOBBY_SERVER
                 )
             }
         }

@@ -38,7 +38,6 @@ import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
 import ru.cristalix.core.realm.RealmInfo
 import ru.cristalix.core.realm.RealmStatus
-import java.time.LocalDate
 import java.util.*
 import kotlin.math.max
 
@@ -255,7 +254,7 @@ class App : JavaPlugin() {
             }
         }
         playerDataManager.save()
-        Bukkit.getOnlinePlayers().forEach { it.kickPlayer("Выключение сервера.") }
+        Cristalix.transfer(Bukkit.getOnlinePlayers().map { it.uniqueId }, LOBBY_SERVER)
         ConnectionHandler.markers.clear()
         Bukkit.unloadWorld(worldMeta.world, false)
         loadMap()

@@ -49,69 +49,67 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     if (!teams.any { it.players.contains(player.uniqueId) })
                         teams.minByOrNull { it.players.size }!!.players.add(player.uniqueId)
                 }
-                B.postpone(10) {
-                    // Телепортация игроков
-                    teams.forEachIndexed { index, team ->
-                        val color = checkColor(team.color)
-                        Bukkit.getOnlinePlayers().forEach {
-                            // Отправка прогресса команд
+                // Телепортация игроков
+                teams.forEachIndexed { index, team ->
+                    val color = checkColor(team.color)
+                    Bukkit.getOnlinePlayers().forEach {
+                        // Отправка прогресса команд
+                        ModTransfer(
+                            index + 2,
+                            color.getRed(),
+                            color.getGreen(),
+                            color.getBlue()
+                        ).send("bridge:progressinit", it)
+                    }
+
+                    app.updateNumbersPlayersInTeam()
+
+                    team.players.forEach {
+                        val player = Bukkit.getPlayer(it) ?: return@forEach
+                        val user = app.getUser(it)!!
+
+                        player.gameMode = org.bukkit.GameMode.SURVIVAL
+                        player.itemOnCursor = null
+
+                        app.teleportAtBase(team, player)
+
+                        player.customName = "${team.color.chatColor}[${
+                            team.color.teamName.substring(
+                                0,
+                                1
+                            )
+                        }] ${me.reidj.bridgebuilders.listener.ChatHandler.getPrefix(user, true)}"
+
+                        player.inventory.armorContents = kit.armor.map { armor ->
+                            val meta = armor.itemMeta as org.bukkit.inventory.meta.LeatherArmorMeta
+                            meta.color = checkColor(team.color)
+                            armor.itemMeta = meta
+                            armor
+                        }.toTypedArray()
+
+                        player.inventory.addItem(kit.sword, kit.pickaxe, kit.axe, kit.spade, kit.bread)
+
+                        StarterKit.valueOf(user.stat.activeKit.name).content.forEach { starter ->
+                            player.inventory.addItem(starter)
+                        }
+
+                        // Отправка таба
+                        team.collected.entries.forEachIndexed { index, block ->
                             ModTransfer(
                                 index + 2,
-                                color.getRed(),
-                                color.getGreen(),
-                                color.getBlue()
-                            ).send("bridge:progressinit", it)
+                                block.key.needTotal,
+                                block.value,
+                                block.key.title,
+                                block.key.getItem()
+                            ).send("bridge:init", player)
                         }
 
-                        app.updateNumbersPlayersInTeam()
-
-                        team.players.forEach {
-                            val player = Bukkit.getPlayer(it) ?: return@forEach
-                            val user = app.getUser(it)!!
-
-                            player.gameMode = org.bukkit.GameMode.SURVIVAL
-                            player.itemOnCursor = null
-
-                            app.teleportAtBase(team, player)
-
-                            player.customName = "${team.color.chatColor}[${
-                                team.color.teamName.substring(
-                                    0,
-                                    1
-                                )
-                            }] ${me.reidj.bridgebuilders.listener.ChatHandler.getPrefix(user, true)}"
-
-                            player.inventory.armorContents = kit.armor.map { armor ->
-                                val meta = armor.itemMeta as org.bukkit.inventory.meta.LeatherArmorMeta
-                                meta.color = checkColor(team.color)
-                                armor.itemMeta = meta
-                                armor
-                            }.toTypedArray()
-
-                            player.inventory.addItem(kit.sword, kit.pickaxe, kit.axe, kit.spade, kit.bread)
-
-                            StarterKit.valueOf(user.stat.activeKit.name).content.forEach { starter ->
-                                player.inventory.addItem(starter)
-                            }
-
-                            // Отправка таба
-                            team.collected.entries.forEachIndexed { index, block ->
-                                ModTransfer(
-                                    index + 2,
-                                    block.key.needTotal,
-                                    block.value,
-                                    block.key.title,
-                                    block.key.getItem()
-                                ).send("bridge:init", player)
-                            }
-
-                            Anime.alert(
-                                player,
-                                "Цель",
-                                "Принесите нужные блоки строителю, \nчтобы построить мост к центру"
-                            )
-                            me.func.mod.Glow.showAllPlaces(player)
-                        }
+                        Anime.alert(
+                            player,
+                            "Цель",
+                            "Принесите нужные блоки строителю, \nчтобы построить мост к центру"
+                        )
+                        me.func.mod.Glow.showAllPlaces(player)
                     }
                 }
                 // Список игроков
