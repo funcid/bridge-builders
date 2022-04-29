@@ -17,7 +17,7 @@ import java.util.*
 import java.util.stream.Collectors
 
 private const val UPDATE_SECONDS = 30
-private const val DATA_COUNT = 15
+private const val DATA_COUNT = 10
 private val TOP_DATA_FORMAT = DecimalFormat("###,###,###")
 
 class TopManager : Listener, BukkitRunnable() {

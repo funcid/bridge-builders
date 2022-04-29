@@ -29,7 +29,7 @@ class Timer : BukkitRunnable() {
                 }
             }
         }
-        if (time % 5 == 0)
+        if (time % 3 == 0)
             teams.forEach { app.addBlock(it) }
         time = activeStatus.now(time) + 1
     }
