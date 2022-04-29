@@ -112,6 +112,6 @@ object LobbyHandler : Listener {
     @EventHandler
     fun AsyncPlayerChatEvent.handle() {
         isCancelled = true
-        Bukkit.getOnlinePlayers().forEach { it.sendMessage(getPrefix(app.getUser(it)!!, false) + message) }
+        Bukkit.getOnlinePlayers().forEach { it.sendMessage(getPrefix(app.getUser(player)!!, false) + message) }
     }
 }
