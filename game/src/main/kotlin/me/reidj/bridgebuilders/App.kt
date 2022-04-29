@@ -129,7 +129,9 @@ class App : JavaPlugin() {
                     val team = teams.filter { it.players.contains(player.uniqueId) }[0]
                     team.collected.entries.forEachIndexed { index, block ->
                         val itemHand = player.itemInHand
-                        if (itemHand.getType().getId() == block.key.material.getId() && itemHand.getData().getData() == block.key.blockData) {
+                        if (itemHand.getType().getId() == block.key.material.getId() && itemHand.getData()
+                                .getData() == block.key.blockData
+                        ) {
                             val must = block.key.needTotal - block.value
                             if (must == 0) {
                                 Anime.killboardMessage(player, "Мне больше не нужен этот ресурс")
@@ -198,41 +200,7 @@ class App : JavaPlugin() {
                 team.teleport.x + 0.5,
                 team.teleport.y,
                 team.teleport.z + 0.5
-            ) { player ->
-                val playerTeam = teams.filter { team -> team.players.contains(player.uniqueId) }[0]
-                if (!playerTeam.isActiveTeleport)
-                    return@addPlace
-                if (player.location.distanceSquared(playerTeam.teleport) < 4 * 4 && teams.any { enemy ->
-                        !enemy.players.contains(
-                            player.uniqueId
-                        ) && enemy.isActiveTeleport
-                    }) {
-                    val enemyTeam =
-                        teams.filter { enemy -> !enemy.players.contains(player.uniqueId) && enemy.isActiveTeleport }
-                            .random()
-                    teleportAtBase(enemyTeam, player)
-                    enemyTeam.players.mapNotNull { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
-                        enemy.playSound(
-                            player.location,
-                            Sound.ENTITY_ENDERDRAGON_GROWL,
-                            1f,
-                            1f
-                        )
-                    }
-                } else {
-                    teleportAtBase(playerTeam, player)
-                }
-                playerTeam.isActiveTeleport = false
-
-                // Ставлю полоску куллдауна
-                displayCoolDownBar(playerTeam)
-
-                B.postpone(180 * 20) {
-                    playerTeam.isActiveTeleport = true
-                    // Отправляю сообщение о том что телепорт доступен
-                    teleportAvailable(playerTeam)
-                }
-            }
+            )
         }
 
         // Создание менеджера топа
@@ -374,27 +342,6 @@ class App : JavaPlugin() {
         spawn.pitch = team.pitch
         spawn.yaw = team.yaw
         player.teleport(spawn)
-    }
-
-    private fun displayCoolDownBar(team: Team) {
-        team.players.mapNotNull { Bukkit.getPlayer(it) }
-            .forEach {
-                Anime.reload(it, 0.1, "До следующего телепорта", 42, 102, 240)
-                B.postpone(20 * 2) { Anime.reload(it, 180.0, "До следующего телепорта", 42, 102, 240) }
-            }
-    }
-
-    private fun teleportAvailable(team: Team) {
-        team.players.mapNotNull { Bukkit.getPlayer(it) }
-            .forEach {
-                Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
-                it.playSound(
-                    it.location,
-                    Sound.BLOCK_PORTAL_AMBIENT,
-                    1.5f,
-                    1.5f
-                )
-            }
     }
 
     override fun onDisable() {

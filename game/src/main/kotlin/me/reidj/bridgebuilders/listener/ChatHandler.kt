@@ -19,7 +19,7 @@ object ChatHandler : Listener {
 
     @EventHandler
     fun AsyncPlayerChatEvent.handle() {
-        if (activeStatus != Status.GAME)
+        if (activeStatus != Status.GAME || app.isSpectator(player))
             return
         val team = teams.filter { team -> team.players.contains(player.uniqueId) }
         if (team.isNotEmpty() && !app.isSpectator(player)) {

@@ -87,11 +87,12 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                             armor
                         }.toTypedArray()
 
-                        player.inventory.addItem(kit.sword, kit.pickaxe, kit.axe, kit.spade, kit.bread)
-
-                        StarterKit.valueOf(user.stat.activeKit.name).content.forEach { starter ->
-                            player.inventory.addItem(starter)
-                        }
+                        if (user.stat.activeKit == data.StarterKit.NONE)
+                            player.inventory.addItem(kit.sword, kit.pickaxe, kit.axe, kit.spade, kit.bread)
+                        else
+                            StarterKit.valueOf(user.stat.activeKit.name).content.forEach { starter ->
+                                player.inventory.addItem(starter)
+                            }
 
                         // Отправка таба
                         team.collected.entries.forEachIndexed { index, block ->

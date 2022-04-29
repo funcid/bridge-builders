@@ -2,11 +2,14 @@ package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
 import clepto.cristalix.Cristalix
+import me.func.mod.Anime
 import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Particle
+import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.FoodLevelChangeEvent
@@ -107,6 +110,7 @@ object DefaultListener : Listener {
 
     @EventHandler
     fun PlayerMoveEvent.handle() {
+        val location = player.location
         if (activeStatus == Status.STARTING && player.location.block.y <= 2)
             player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
         // Если мост не достроен откидывать от него игрока
@@ -117,7 +121,6 @@ object DefaultListener : Listener {
                     player
                 )
             ) {
-                val location = player.location
                 for (i in 0..60)
                     player.spawnParticle(
                         Particle.SPELL_INSTANT,
@@ -129,8 +132,64 @@ object DefaultListener : Listener {
                 player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
             }
         }
+        if (location.subtract(0.0, 1.0, 0.0).block.type == Material.BEDROCK) {
+            val playerTeam = teams.filter { team -> team.players.contains(player.uniqueId) }[0]
+            if (!playerTeam.isActiveTeleport)
+                return
+            if (player.location.distanceSquared(playerTeam.teleport) < 4 * 4 && teams.any { enemy ->
+                    !enemy.players.contains(
+                        player.uniqueId
+                    ) && enemy.isActiveTeleport
+                }) {
+                val enemyTeam =
+                    teams.filter { enemy -> !enemy.players.contains(player.uniqueId) && enemy.isActiveTeleport }
+                        .random()
+                app.teleportAtBase(enemyTeam, player)
+                enemyTeam.players.mapNotNull { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
+                    enemy.playSound(
+                        player.location,
+                        Sound.ENTITY_ENDERDRAGON_GROWL,
+                        1f,
+                        1f
+                    )
+                }
+            } else {
+                app.teleportAtBase(playerTeam, player)
+            }
+            playerTeam.isActiveTeleport = false
+
+            // Ставлю полоску куллдауна
+            displayCoolDownBar(playerTeam)
+
+            B.postpone(120 * 20) {
+                playerTeam.isActiveTeleport = true
+                // Отправляю сообщение о том что телепорт доступен
+                teleportAvailable(playerTeam)
+            }
+        }
     }
 
     @EventHandler
     fun PlayerDropItemEvent.handle() = apply { cancel = activeStatus == Status.STARTING }
+
+    private fun displayCoolDownBar(team: Team) {
+        team.players.mapNotNull { Bukkit.getPlayer(it) }
+            .forEach {
+                Anime.reload(it, 0.1, "До следующего телепорта", 42, 102, 240)
+                B.postpone(20 * 2) { Anime.reload(it, 120.0, "До следующего телепорта", 42, 102, 240) }
+            }
+    }
+
+    private fun teleportAvailable(team: Team) {
+        team.players.mapNotNull { Bukkit.getPlayer(it) }
+            .forEach {
+                Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
+                it.playSound(
+                    it.location,
+                    Sound.BLOCK_PORTAL_AMBIENT,
+                    1.5f,
+                    1.5f
+                )
+            }
+    }
 }
