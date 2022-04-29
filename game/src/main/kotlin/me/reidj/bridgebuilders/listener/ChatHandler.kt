@@ -1,18 +1,12 @@
 package me.reidj.bridgebuilders.listener
 
 import me.reidj.bridgebuilders.*
-import me.reidj.bridgebuilders.donate.impl.NameTag
-import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
-import ru.cristalix.core.formatting.Formatting
-import ru.cristalix.core.permissions.IPermissionService
 
 object ChatHandler : Listener {
-
-    private val permissionService: IPermissionService = IPermissionService.get()
 
     @EventHandler
     fun AsyncPlayerChatEvent.handle() {
@@ -41,20 +35,5 @@ object ChatHandler : Listener {
             }
 
         }
-    }
-
-    fun getPrefix(user: User, isTab: Boolean): String {
-        var finalPrefix = ""
-        permissionService.getBestGroup(user.stat.uuid).thenAccept { group ->
-            permissionService.getNameColor(user.stat.uuid).thenApply {
-                finalPrefix =
-                    (if (user.stat.activeNameTag == data.NameTag.NONE) "" else NameTag.valueOf(user.stat.activeNameTag.name)
-                        .getRare()
-                        .getColor() + NameTag.valueOf(user.stat.activeNameTag.name)
-                        .getTitle() + "§8 ┃ ") + (if (group.prefix == "") "" else group.nameColor + group.prefix + "§8 ┃ §f") + (it
-                        ?: group.nameColor) + user.player!!.name + if (!isTab) " §8${Formatting.ARROW_SYMBOL + group.chatMessageColor} " else ""
-            }
-        }
-        return finalPrefix
     }
 }

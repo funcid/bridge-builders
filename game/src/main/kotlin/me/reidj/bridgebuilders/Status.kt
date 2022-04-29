@@ -78,7 +78,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                                 0,
                                 1
                             )
-                        }] ${me.reidj.bridgebuilders.listener.ChatHandler.getPrefix(user, true)}"
+                        }] ${getPrefix(user, true)}"
 
                         player.inventory.armorContents = kit.armor.map { armor ->
                             val meta = armor.itemMeta as org.bukkit.inventory.meta.LeatherArmorMeta

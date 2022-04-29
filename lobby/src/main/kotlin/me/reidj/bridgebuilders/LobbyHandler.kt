@@ -7,6 +7,7 @@ import dev.implario.bukkit.item.item
 import me.func.mod.Banners
 import me.func.mod.Npc
 import me.func.mod.conversation.ModLoader
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 import org.bukkit.event.EventHandler
@@ -15,10 +16,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPhysicsEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
-import org.bukkit.event.player.PlayerDropItemEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.event.player.*
 import org.bukkit.inventory.ItemStack
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
 import ru.cristalix.core.formatting.Formatting
@@ -97,25 +95,23 @@ object LobbyHandler : Listener {
     }
 
     @EventHandler
-    fun EntityDamageEvent.handle() {
-        cancelled = true
-    }
+    fun EntityDamageEvent.handle() = apply { isCancelled = true }
 
     @EventHandler
-    fun BlockPhysicsEvent.handle() {
-        isCancelled = true
-    }
+    fun BlockPhysicsEvent.handle() = apply { cancel = true }
 
     @EventHandler
     fun FoodLevelChangeEvent.handle() = apply { level = 20 }
 
     @EventHandler
-    fun BlockBreakEvent.handle() {
-        cancel = true
-    }
+    fun BlockBreakEvent.handle() = apply { cancel = true }
 
     @EventHandler
-    fun PlayerDropItemEvent.handle() {
-        cancel = true
+    fun PlayerDropItemEvent.handle() = apply { cancel = true }
+
+    @EventHandler
+    fun AsyncPlayerChatEvent.handle() {
+        isCancelled = true
+        Bukkit.getOnlinePlayers().forEach { it.sendMessage(getPrefix(app.getUser(it)!!, false) + message) }
     }
 }

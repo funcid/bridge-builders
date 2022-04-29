@@ -60,7 +60,7 @@ object GlobalListeners : Listener {
         if (isSpectator(player))
             return
         val particle = getByPlayer.invoke(player)!!.stat.activeParticle
-        if (particle != data.StepParticle.NONE && player.world != null) {
+        if (particle != data.StepParticle.NONE) {
             val location = player.location
             player.world.spawnParticle(
                 StepParticle.valueOf(particle.name).type,
