@@ -117,7 +117,7 @@ object DefaultListener : Listener {
         if (teams.none { it.players.contains(player.uniqueId) })
             return
         teams.forEach { team ->
-            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 12 && !app.isSpectator(
+            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 12 && !isSpectator(
                     player
                 )
             ) {

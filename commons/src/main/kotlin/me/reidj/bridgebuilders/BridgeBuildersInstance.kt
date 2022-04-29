@@ -5,6 +5,7 @@ import clepto.bukkit.B
 import clepto.cristalix.WorldMeta
 import me.reidj.bridgebuilders.command.AdminCommand
 import me.reidj.bridgebuilders.user.User
+import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import ru.cristalix.core.CoreApi
@@ -59,3 +60,5 @@ fun getEnv(name: String, defaultValue: String): String {
     }
     return field
 }
+
+fun isSpectator(player: Player): Boolean = player.gameMode == GameMode.SPECTATOR

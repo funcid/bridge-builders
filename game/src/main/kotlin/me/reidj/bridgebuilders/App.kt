@@ -22,7 +22,6 @@ import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.MapLoader
 import net.minecraft.server.v1_12_R1.MinecraftServer
 import org.bukkit.Bukkit
-import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -373,8 +372,6 @@ class App : JavaPlugin() {
                 }
         }
     }
-
-    fun isSpectator(player: Player): Boolean = player.gameMode == GameMode.SPECTATOR
 
     fun getUser(player: Player): User? = getUser(player.uniqueId)
 

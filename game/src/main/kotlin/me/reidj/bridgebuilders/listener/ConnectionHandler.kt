@@ -109,7 +109,7 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun PlayerQuitEvent.handle() {
-        if (app.isSpectator(player))
+        if (isSpectator(player))
             return
         teams.forEach { it.players.remove(player.uniqueId) }
         app.updateNumbersPlayersInTeam()
@@ -119,12 +119,10 @@ object ConnectionHandler : Listener {
     fun AsyncPlayerPreLoginEvent.handle() {
         if (activeStatus != Status.STARTING) {
             playerProfile.properties.forEach { profileProperty ->
-                if (profileProperty.value == "PARTY_WARP") {
-                    if (IRealmService.get().currentRealmInfo.status != RealmStatus.WAITING_FOR_PLAYERS) {
-                        disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Сейчас нельзя зайти на этот сервер")
-                        loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
-                        playerDataManager.userMap.remove(uniqueId)
-                    }
+                if (profileProperty.value == "PARTY_WARP" && IRealmService.get().currentRealmInfo.status != RealmStatus.WAITING_FOR_PLAYERS) {
+                    disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Сейчас нельзя зайти на этот сервер")
+                    loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
+                    playerDataManager.userMap.remove(uniqueId)
                 }
             }
         }

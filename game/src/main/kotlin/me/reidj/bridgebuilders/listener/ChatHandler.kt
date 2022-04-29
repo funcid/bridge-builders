@@ -1,10 +1,7 @@
 package me.reidj.bridgebuilders.listener
 
-import me.reidj.bridgebuilders.Status
-import me.reidj.bridgebuilders.activeStatus
-import me.reidj.bridgebuilders.app
+import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.donate.impl.NameTag
-import me.reidj.bridgebuilders.teams
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
@@ -19,10 +16,10 @@ object ChatHandler : Listener {
 
     @EventHandler
     fun AsyncPlayerChatEvent.handle() {
-        if (activeStatus != Status.GAME || app.isSpectator(player))
+        if (activeStatus != Status.GAME || isSpectator(player))
             return
         val team = teams.filter { team -> team.players.contains(player.uniqueId) }
-        if (team.isNotEmpty() && !app.isSpectator(player)) {
+        if (team.isNotEmpty() && !isSpectator(player)) {
             isCancelled = true
             val user = app.getUser(player)
             if (!message.startsWith("!")) {
