@@ -3,10 +3,13 @@ package me.reidj.bridgebuilders.listener
 import me.reidj.bridgebuilders.donate.impl.StepParticle
 import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.isSpectator
+import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.*
 import org.bukkit.event.entity.EntityChangeBlockEvent
+import org.bukkit.event.entity.EntitySpawnEvent
+import org.bukkit.event.entity.ExplosionPrimeEvent
 import org.bukkit.event.player.*
 import packages.ChatPackage
 import ru.cristalix.core.network.ISocketClient
@@ -54,6 +57,9 @@ object GlobalListeners : Listener {
     @EventHandler
     fun PlayerCommandPreprocessEvent.handle() =
         ISocketClient.get().write(ChatPackage(player.name, message, formatter.format(Date())))
+
+    @EventHandler
+    fun ExplosionPrimeEvent.handle() = apply { isCancelled = true }
 
     @EventHandler
     fun PlayerMoveEvent.handle() {

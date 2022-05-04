@@ -57,7 +57,7 @@ enum class StarterKit(
         arrayOf(
             ItemStack(Material.IRON_PICKAXE),
             ItemStack(Material.CHAINMAIL_HELMET),
-            ItemStack(Material.CARROT, 6)
+            ItemStack(Material.CARROT_ITEM, 6)
         )
     ),
     BLACKSMITH(

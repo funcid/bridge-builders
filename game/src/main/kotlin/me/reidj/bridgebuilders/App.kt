@@ -3,6 +3,7 @@ package me.reidj.bridgebuilders
 import PlayerDataManager
 import clepto.bukkit.B
 import clepto.cristalix.Cristalix
+import com.google.common.collect.Maps
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
@@ -13,10 +14,10 @@ import me.func.mod.Npc.location
 import me.func.mod.Npc.onClick
 import me.func.mod.conversation.ModLoader
 import me.func.protocol.GlowColor
-import me.reidj.bridgebuilders.data.Bridge
-import me.reidj.bridgebuilders.data.Team
 import me.reidj.bridgebuilders.listener.*
 import me.reidj.bridgebuilders.map.MapType
+import me.reidj.bridgebuilders.team.Bridge
+import me.reidj.bridgebuilders.team.Team
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.MapLoader
@@ -27,6 +28,7 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
+import packages.ResetRejoinPackage
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.datasync.EntityDataParameters
 import ru.cristalix.core.formatting.Color
@@ -77,9 +79,14 @@ class App : JavaPlugin() {
 
         clientSocket.connect()
 
+        clientSocket.registerHandler(ResetRejoinPackage::class.java) { pckg ->
+            val user = getUser(pckg.uuid) ?: return@registerHandler
+            user.stat.realm = ""
+        }
+
         map = MapType.values().random()
 
-        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
+        Anime.include(false, Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
         ModLoader.loadAll("mods")
 
         loadMap()
@@ -94,6 +101,7 @@ class App : JavaPlugin() {
         realm.lobbyFallback = RealmId.of("BRIL-1")
         realm.readableName = "BridgeBuilders#$id"
         realm.groupName = "BridgeBuilders#$id"
+        realm.isCanReconnect = true
 
         teams.forEach { team -> map.blocks.forEach { team.collected[it] = 0 } }
 
@@ -215,13 +223,18 @@ class App : JavaPlugin() {
         Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.map { app.getUser(it)!! }.forEach {
             it.stat.games++
             //me.reidj.bridgebuilders.battlepass.BattlePassUtil.update(it, me.reidj.bridgebuilders.battlepass.quest.QuestType.PLAY, 1)
-            if (Math.random() < 0.11) {
+            if (Math.random() < 0.05) {
                 it.stat.lootbox++
                 B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${it.player!!.name} §fполучил §bлутбокс§f!"))
             }
         }
+        playerDataManager.userMap.entries.forEach {
+            it.value.stat.realm = ""
+            clientSocket.write(ResetRejoinPackage(it.key))
+        }
         playerDataManager.save()
         Cristalix.transfer(Bukkit.getOnlinePlayers().map { it.uniqueId }, LOBBY_SERVER)
+        playerDataManager.userMap.clear()
         ConnectionHandler.markers.clear()
         Bukkit.unloadWorld(worldMeta.world, false)
         loadMap()
@@ -234,6 +247,7 @@ class App : JavaPlugin() {
         }
         activeStatus = Status.STARTING
         timer.time = 0
+
         teams.forEach { generateBridge(it) }
 
         // Полная перезагрузка если много игр наиграно
@@ -325,7 +339,7 @@ class App : JavaPlugin() {
                 data[3].toFloat(),
                 data[4].toFloat(),
                 false,
-                com.google.common.collect.Maps.newConcurrentMap(),
+                Maps.newConcurrentMap(),
                 Bridge(
                     Vector(data[1].toInt(), 0, data[2].toInt()),
                     worldMeta.getLabel("$team-x"),

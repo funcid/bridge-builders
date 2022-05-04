@@ -12,6 +12,7 @@ import packages.SaveUserPackage;
 import packages.StatPackage;
 import ru.cristalix.core.CoreApi;
 import ru.cristalix.core.event.AccountEvent;
+import ru.cristalix.core.realm.IRealmService;
 import user.Stat;
 
 import java.util.*;
@@ -32,6 +33,8 @@ public class PlayerDataManager implements Listener {
             if (event.isCancelled())
                 return;
             UUID uuid = event.getUuid();
+            if (userMap.containsKey(uuid))
+                return;
             try {
                 StatPackage statPackage = BridgeBuildersInstanceKt.getClientSocket().writeAndAwaitResponse(new StatPackage(uuid))
                         .get(5L, TimeUnit.SECONDS);
@@ -39,7 +42,7 @@ public class PlayerDataManager implements Listener {
                 if (stat == null)
                     stat = new Stat(
                             uuid,
-                            null,
+                            "",
                             0,
                             0,
                             0,
@@ -89,7 +92,6 @@ public class PlayerDataManager implements Listener {
 
                 if (stat.getTimePlayedTotal() == null)
                     stat.setTimePlayedTotal(0L);
-
                 userMap.put(uuid, new User(stat));
             } catch (Exception ex) {
                 event.setCancelReason("Не удалось загрузить статистику.");
@@ -98,10 +100,14 @@ public class PlayerDataManager implements Listener {
             }
         }, 400);
         core.bus().register(this, AccountEvent.Unload.class, event -> {
-            User user = userMap.remove(event.getUuid());
+            User user = userMap.get(event.getUuid());
             if (user == null)
                 return;
             Stat info = user.getStat();
+            if (!user.getInGame())
+                userMap.remove(event.getUuid());
+            else
+                info.setRealm(IRealmService.get().getCurrentRealmInfo().getRealmId().getRealmName());
             BridgeBuildersInstanceKt.getClientSocket().write(new SaveUserPackage(event.getUuid(), info));
         }, 100);
     }
@@ -112,10 +118,10 @@ public class PlayerDataManager implements Listener {
             userMap.remove(event.getPlayer().getUniqueId());
     }
 
-    public BulkSaveUserPackage bulk(boolean remove) {
+    public BulkSaveUserPackage bulk() {
         return new BulkSaveUserPackage(Bukkit.getOnlinePlayers().stream().map(pl -> {
             UUID uuid = pl.getUniqueId();
-            User user = remove ? userMap.remove(uuid) : userMap.get(uuid);
+            User user = userMap.remove(uuid);
             if (user == null)
                 return null;
             return new SaveUserPackage(uuid, user.getStat());
@@ -123,7 +129,7 @@ public class PlayerDataManager implements Listener {
     }
 
     public void save() {
-        BridgeBuildersInstanceKt.getClientSocket().write(bulk(true));
+        BridgeBuildersInstanceKt.getClientSocket().write(bulk());
         try {
             Thread.sleep(1000L); // Если вдруг он не успеет написать в сокет(хотя вряд ли, конечно)
         } catch (Exception exception) {

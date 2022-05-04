@@ -13,6 +13,7 @@ import ru.cristalix.core.network.Capability
 import ru.cristalix.core.network.ISocketClient
 
 private const val TOKEN = "Nzk5NzI5MjE2NTMwNjc3ODEx.YAHz3w._ExUOfYSUf9jvjK26Q-SfBk1db4"
+private const val SYMBOL = "."
 
 suspend fun main() {
     val kord = Kord(TOKEN)

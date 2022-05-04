@@ -4,7 +4,7 @@ import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import me.func.mod.Anime
 import me.reidj.bridgebuilders.*
-import me.reidj.bridgebuilders.data.Team
+import me.reidj.bridgebuilders.team.Team
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -19,40 +19,46 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import ru.cristalix.core.formatting.Formatting
-import kotlin.math.cos
-import kotlin.math.sin
+import java.lang.Math.cos
+import java.lang.Math.sin
 
 object DefaultListener : Listener {
 
     @EventHandler
     fun PlayerInteractEvent.handle() {
         if (activeStatus == Status.STARTING) {
-            if (material == Material.WOOL) {
-                teams.filter {
-                    !it.players.contains(player.uniqueId) && it.color.woolData.toByte() == player.itemInHand.getData().data
-                }.forEach { team ->
-                    if (team.players.size >= slots / teams.size) {
-                        player.sendMessage(Formatting.error("Ошибка! Команда заполнена."))
-                        return@forEach
-                    }
-                    val prevTeam = teams.firstOrNull { it.players.contains(player.uniqueId) }
-                    prevTeam?.players?.remove(player.uniqueId)
-                    team.players.add(player.uniqueId)
-
-                    // Удаляем у всех игрока из команды и добавляем в другую
-                    val prevTeamIndex = teams.indexOf(prevTeam)
-                    Bukkit.getOnlinePlayers()
-                        .filter {
-                            it.inventory.heldItemSlot == prevTeamIndex || it.inventory.heldItemSlot == teams.indexOf(
-                                team
-                            )
+            when (material) {
+                Material.WOOL -> {
+                    teams.filter {
+                        !it.players.contains(player.uniqueId) && it.color.woolData.toByte() == player.itemInHand.getData().data
+                    }.forEach { team ->
+                        if (team.players.size >= slots / teams.size) {
+                            player.sendMessage(Formatting.error("Ошибка! Команда заполнена."))
+                            return@forEach
                         }
-                        .mapNotNull { app.getUser(it) }
-                        .forEach { showTeamList(it) }
-                    player.sendMessage(Formatting.fine("Вы выбрали команду: " + team.color.chatFormat + team.color.teamName))
+                        val prevTeam = teams.firstOrNull { it.players.contains(player.uniqueId) }
+                        prevTeam?.players?.remove(player.uniqueId)
+                        team.players.add(player.uniqueId)
+
+                        // Удаляем у всех игрока из команды и добавляем в другую
+                        val prevTeamIndex = teams.indexOf(prevTeam)
+                        Bukkit.getOnlinePlayers()
+                            .filter {
+                                it.inventory.heldItemSlot == prevTeamIndex || it.inventory.heldItemSlot == teams.indexOf(
+                                    team
+                                )
+                            }
+                            .mapNotNull { app.getUser(it) }
+                            .forEach { showTeamList(it) }
+                        player.sendMessage(Formatting.fine("Вы выбрали команду: " + team.color.chatFormat + team.color.teamName))
+                    }
                 }
-            } else if (material == Material.CLAY_BALL)
-                Cristalix.transfer(listOf(player.uniqueId), LOBBY_SERVER)
+                Material.CLAY_BALL -> {
+                    Cristalix.transfer(listOf(player.uniqueId), LOBBY_SERVER)
+                }
+            }
+        } else {
+            isCancelled = clickedBlock != null && clickedBlock.type == Material.TNT
         }
     }
 
@@ -64,18 +70,6 @@ object DefaultListener : Listener {
         if (newItem != player.inventory.getItem(previousSlot))
             B.postpone(1) { app.getUser(player)?.let { showTeamList(it) } }
     }
-
-    /*@EventHandler
-    fun CraftItemEvent.handle() {
-        val player = whoClicked as Player
-        //BattlePassUtil.update(player, CRAFT, 1)
-        val has = recipe.result
-        if (has.getType().name.endsWith("AXE"))
-            has.
-        if (has == Material.DIAMOND_BOOTS || has == Material.IRON_CHESTPLATE || has == Material.DIAMOND_HELMET
-            || has == Material.IRON_LEGGINGS || has == Material.DIAMOND_SWORD)
-            BattlePassUtil.update(player, CRAFT, 1)
-    }*/
 
     @EventHandler
     fun InventoryClickEvent.handle() {
@@ -93,8 +87,7 @@ object DefaultListener : Listener {
         val teamIndex = user.player!!.inventory.heldItemSlot
         val item = user.player!!.inventory.getItem(teamIndex)
 
-        val template = me.func.mod.conversation.ModTransfer()
-            .integer(teamIndex)
+        val template = me.func.mod.conversation.ModTransfer().integer(teamIndex)
 
         if (item != null && item.getType() == Material.WOOL) {
             val players = teams[teamIndex].players
@@ -132,6 +125,7 @@ object DefaultListener : Listener {
                 player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
             }
         }
+        // Телепортация на вражескую базу
         if (location.subtract(0.0, 1.0, 0.0).block.type == Material.BEDROCK) {
             val playerTeam = teams.filter { team -> team.players.contains(player.uniqueId) }[0]
             if (!playerTeam.isActiveTeleport)

@@ -5,7 +5,7 @@ import me.func.protocol.EndStatus
 import me.reidj.bridgebuilders.Status
 import me.reidj.bridgebuilders.activeStatus
 import me.reidj.bridgebuilders.app
-import me.reidj.bridgebuilders.data.Team
+import me.reidj.bridgebuilders.team.Team
 import me.reidj.bridgebuilders.timer
 import org.bukkit.Bukkit
 import org.bukkit.Color

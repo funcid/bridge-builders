@@ -6,9 +6,11 @@ import dev.implario.bukkit.item.item
 import me.func.mod.Anime
 import me.func.mod.Npc
 import me.func.mod.conversation.ModLoader
+import me.func.mod.conversation.ModTransfer
 import me.func.protocol.Marker
 import me.func.protocol.MarkerSign
 import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.util.DefaultKit
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
@@ -48,13 +50,45 @@ object ConnectionHandler : Listener {
             }
         }
 
+        if (user!!.player == null)
+            user.player = player
 
-        if (user?.player == null)
-            user?.player = player
-
-        ModLoader.send("bridge-mod-bundle.jar", this)
-
-        B.postpone(5) { teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
+        B.postpone(5) {
+            ModLoader.send("bridge-mod-bundle.jar", this)
+            teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+            // Создание маркера
+            teams.forEach {
+                markers.add(
+                    Anime.marker(
+                        this,
+                        Marker(
+                            UUID.randomUUID(),
+                            it.teleport.x + 0.5,
+                            it.teleport.y + 1.5,
+                            it.teleport.z + 0.5,
+                            16.0,
+                            MarkerSign.ARROW_DOWN.texture
+                        )
+                    )
+                )
+            }
+            // Движение маркера
+            markers.forEach { marker ->
+                var up = false
+                B.repeat(15) {
+                    up = !up
+                    Anime.moveMarker(
+                        this,
+                        marker.uuid,
+                        marker.x,
+                        marker.y - if (up) 0.0 else 0.7,
+                        marker.z,
+                        0.75
+                    )
+                }
+            }
+            Npc.npcs.values.forEach { it.spawn(this) }
+        }
 
         if (activeStatus == Status.STARTING) {
             gameMode = GameMode.ADVENTURE
@@ -68,39 +102,13 @@ object ConnectionHandler : Listener {
                         .build()
                 )
             }
+        } else if (user.inGame) {
+            user.team!!.players.add(uniqueId)
             B.postpone(5) {
-                // Создание маркера
-                teams.forEach {
-                    markers.add(
-                        Anime.marker(
-                            this,
-                            Marker(
-                                UUID.randomUUID(),
-                                it.teleport.x + 0.5,
-                                it.teleport.y + 1.5,
-                                it.teleport.z + 0.5,
-                                16.0,
-                                MarkerSign.ARROW_DOWN.texture
-                            )
-                        )
-                    )
-                }
-                // Движение маркера
-                markers.forEach { marker ->
-                    var up = false
-                    B.repeat(15) {
-                        up = !up
-                        Anime.moveMarker(
-                            this,
-                            marker.uuid,
-                            marker.x,
-                            marker.y - if (up) 0.0 else 0.7,
-                            marker.z,
-                            0.75
-                        )
-                    }
-                }
-                Npc.npcs.values.forEach { it.spawn(this) }
+                DefaultKit.init(player)
+                ModTransfer().send("bridge:start", player)
+                app.updateNumbersPlayersInTeam()
+                user.inventory!!.forEachIndexed { index, itemStack -> player.inventory.setItem(index, itemStack) }
             }
         } else {
             gameMode = GameMode.SPECTATOR
@@ -112,6 +120,7 @@ object ConnectionHandler : Listener {
         if (isSpectator(player))
             return
         teams.forEach { it.players.remove(player.uniqueId) }
+        app.getUser(player)!!.inventory = player.inventory
         app.updateNumbersPlayersInTeam()
     }
 

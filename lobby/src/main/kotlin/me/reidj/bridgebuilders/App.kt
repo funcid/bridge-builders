@@ -22,6 +22,7 @@ import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import packages.ResetRejoinPackage
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.realm.IRealmService
@@ -82,6 +83,11 @@ class App : JavaPlugin() {
         )
 
         clientSocket.connect()
+
+        clientSocket.registerHandler(ResetRejoinPackage::class.java) { pckg ->
+            val user = getUser(pckg.uuid) ?: return@registerHandler
+            user.stat.realm = ""
+        }
 
         val core = CoreApi.get()
         core.registerService(IRenderService::class.java, BukkitRenderService(getServer()))
@@ -172,6 +178,15 @@ class App : JavaPlugin() {
             balancer.accept(player)
             null
         }, "next")
+
+        // Вернуться в игру
+        B.regCommand({ player: Player, _ ->
+            val user = getUser(player)
+            if (user?.stat?.realm == null)
+                return@regCommand Formatting.error("У Вас нету незаконченной игры.")
+            Cristalix.transfer(listOf(player.uniqueId), RealmId.of(user.stat.realm))
+            null
+        }, "rejoin")
 
         B.regCommand({ player, args ->
             val realmId =

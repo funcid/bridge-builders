@@ -1,4 +1,4 @@
-package me.reidj.bridgebuilders.data
+package me.reidj.bridgebuilders.team
 
 import org.bukkit.Location
 import org.bukkit.util.Vector

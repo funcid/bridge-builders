@@ -1,6 +1,6 @@
 package me.reidj.bridgebuilders.map
 
-import me.reidj.bridgebuilders.data.Block
+import me.reidj.bridgebuilders.team.Block
 import org.bukkit.Material.*
 
 enum class MapType(
@@ -57,5 +57,28 @@ enum class MapType(
         1530,
         43,
         30
-    )
+    ),
+    COSMOS(
+        "Cosmos",
+        HashSet<Block>(
+            listOf(
+                Block("Динамит", 4, TNT),
+                Block("Котёл", 4, CAULDRON_ITEM),
+                Block("Плита из кирпичей", 20, STEP, 5),
+                Block("Датчик дневного света", 28, DAYLIGHT_DETECTOR),
+                Block("Чёрная керамика", 32, BLACK_GLAZED_TERRACOTTA),
+                Block("Глина", 36, CLAY),
+                Block("Андезит", 47, STONE, 5),
+                Block("Булыжные ступеньки", 56, COBBLESTONE_STAIRS),
+                Block("Незеритовая плита", 56, STEP, 6),
+                Block("Булыжная плита", 56, STEP, 3),
+                Block("Гравий", 113, GRAVEL),
+                Block("Светло-серый бетон", 308, CONCRETE, 8),
+                Block("Бирюзовая керамика", 348, STAINED_CLAY, 9),
+            )
+        ),
+        1096,
+        42,
+        40
+    ),
 }

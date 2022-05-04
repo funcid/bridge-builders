@@ -76,6 +76,9 @@ object LobbyHandler : Listener {
             }
         }
 
+        if (!user!!.stat.realm.equals(""))
+            sendMessage(Formatting.fine("У вас есть незаконченная игра! Вернуться /rejoin."))
+
         allowFlight = IPermissionService.get().isDonator(uniqueId)
         ModLoader.send("balance-bundle.jar", this)
         B.postpone(5) {
@@ -83,7 +86,7 @@ object LobbyHandler : Listener {
             Npc.npcs.values.forEach { it.spawn(this) }
             Banners.banners.values.forEach { Banners.show(this, it) }
         }
-        user!!.player = this
+        user.player = this
         user.giveMoney(0)
     }
 
