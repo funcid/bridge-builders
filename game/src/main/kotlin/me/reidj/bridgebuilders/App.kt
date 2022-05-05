@@ -268,8 +268,8 @@ class App : JavaPlugin() {
             toPlace.keys.any { it.material.id == key.first }
         }.forEach { (key, value) ->
             val tempNearest = value.minByOrNull { it.distanceSquared(team.spawn) }
-            if (nearest == null || tempNearest != null) {
-                nearest = tempNearest
+            if (nearest == null) {
+                value.forEach { nearest = it }
                 data = key
             }
         }

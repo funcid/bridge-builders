@@ -42,6 +42,7 @@ enum class MapType(
             listOf(
                 Block("Фиолетовая керамика", 10, PURPLE_GLAZED_TERRACOTTA),
                 Block("Незеритовая плита", 12, STEP, 6),
+                Block("Люк", 28, TRAP_DOOR),
                 Block("Булыжник", 42, COBBLESTONE),
                 Block("Тропическая плита", 42, WOOD_STEP, 3),
                 Block("Люк", 68, TRAP_DOOR),
@@ -58,27 +59,25 @@ enum class MapType(
         43,
         30
     ),
-    /*COSMOS(
+    COSMOS(
         "Cosmos",
         HashSet<Block>(
             listOf(
                 Block("Динамит", 4, TNT),
                 Block("Котёл", 4, CAULDRON_ITEM),
                 Block("Плита из кирпичей", 20, STEP, 5),
-                Block("Датчик дневного света", 28, DAYLIGHT_DETECTOR),
-                Block("Чёрная керамика", 32, BLACK_GLAZED_TERRACOTTA),
-                Block("Глина", 36, CLAY),
-                Block("Андезит", 47, STONE, 5),
-                Block("Булыжные ступеньки", 56, COBBLESTONE_STAIRS),
+                Block("Андезит", 48, STONE, 5),
                 Block("Незеритовая плита", 56, STEP, 6),
+                Block("Булыжные ступеньки", 56, COBBLESTONE_STAIRS),
                 Block("Булыжная плита", 56, STEP, 3),
-                Block("Гравий", 113, GRAVEL),
+                Block("Глина", 68, CLAY),
+                Block("Гравий", 112, GRAVEL),
                 Block("Светло-серый бетон", 308, CONCRETE, 8),
-                Block("Бирюзовая керамика", 348, STAINED_CLAY, 9),
+                Block("Бирюзовая керамика", 336, STAINED_CLAY, 9),
             )
         ),
-        1096,
+        1068,
         42,
-        40
-    ),*/
+        30
+    ),
 }

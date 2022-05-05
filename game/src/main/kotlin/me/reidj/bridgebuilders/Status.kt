@@ -9,6 +9,7 @@ import me.reidj.bridgebuilders.util.WinUtil
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Color.*
+import org.bukkit.inventory.meta.LeatherArmorMeta
 import ru.cristalix.core.realm.RealmStatus
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_SPACTATE
 
@@ -61,9 +62,9 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
 
                         DefaultKit.init(player)
 
-                        player.inventory.armorContents = me.reidj.bridgebuilders.kit.armor.map { armor ->
-                            val meta = armor.itemMeta as org.bukkit.inventory.meta.LeatherArmorMeta
-                            meta.color = me.reidj.bridgebuilders.checkColor(team.color)
+                        player.inventory.armorContents = kit.armor.map { armor ->
+                            val meta = armor.itemMeta as LeatherArmorMeta
+                            meta.color = checkColor(team.color)
                             armor.itemMeta = meta
                             armor
                         }.toTypedArray()
