@@ -120,8 +120,10 @@ object ConnectionHandler : Listener {
         if (isSpectator(player))
             return
         teams.forEach { it.players.remove(player.uniqueId) }
-        app.getUser(player)!!.inventory = player.inventory
-        app.updateNumbersPlayersInTeam()
+        if (activeStatus != Status.STARTING) {
+            app.getUser(player)?.inventory = player.inventory
+            app.updateNumbersPlayersInTeam()
+        }
     }
 
     @EventHandler

@@ -58,7 +58,7 @@ enum class MapType(
         43,
         30
     ),
-    COSMOS(
+    /*COSMOS(
         "Cosmos",
         HashSet<Block>(
             listOf(
@@ -80,5 +80,5 @@ enum class MapType(
         1096,
         42,
         40
-    ),
+    ),*/
 }

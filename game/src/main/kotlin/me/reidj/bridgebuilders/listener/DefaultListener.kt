@@ -27,38 +27,32 @@ object DefaultListener : Listener {
     @EventHandler
     fun PlayerInteractEvent.handle() {
         if (activeStatus == Status.STARTING) {
-            when (material) {
-                Material.WOOL -> {
-                    teams.filter {
-                        !it.players.contains(player.uniqueId) && it.color.woolData.toByte() == player.itemInHand.getData().data
-                    }.forEach { team ->
-                        if (team.players.size >= slots / teams.size) {
-                            player.sendMessage(Formatting.error("Ошибка! Команда заполнена."))
-                            return@forEach
-                        }
-                        val prevTeam = teams.firstOrNull { it.players.contains(player.uniqueId) }
-                        prevTeam?.players?.remove(player.uniqueId)
-                        team.players.add(player.uniqueId)
-
-                        // Удаляем у всех игрока из команды и добавляем в другую
-                        val prevTeamIndex = teams.indexOf(prevTeam)
-                        Bukkit.getOnlinePlayers()
-                            .filter {
-                                it.inventory.heldItemSlot == prevTeamIndex || it.inventory.heldItemSlot == teams.indexOf(
-                                    team
-                                )
-                            }
-                            .mapNotNull { app.getUser(it) }
-                            .forEach { showTeamList(it) }
-                        player.sendMessage(Formatting.fine("Вы выбрали команду: " + team.color.chatFormat + team.color.teamName))
+            if (material == Material.WOOL) {
+                teams.filter {
+                    !it.players.contains(player.uniqueId) && it.color.woolData.toByte() == player.itemInHand.getData().data
+                }.forEach { team ->
+                    if (team.players.size >= slots / teams.size) {
+                        player.sendMessage(Formatting.error("Ошибка! Команда заполнена."))
+                        return@forEach
                     }
+                    val prevTeam = teams.firstOrNull { it.players.contains(player.uniqueId) }
+                    prevTeam?.players?.remove(player.uniqueId)
+                    team.players.add(player.uniqueId)
+
+                    // Удаляем у всех игрока из команды и добавляем в другую
+                    val prevTeamIndex = teams.indexOf(prevTeam)
+                    Bukkit.getOnlinePlayers()
+                        .filter {
+                            it.inventory.heldItemSlot == prevTeamIndex || it.inventory.heldItemSlot == teams.indexOf(
+                                team
+                            )
+                        }
+                        .mapNotNull { app.getUser(it) }
+                        .forEach { showTeamList(it) }
+                    player.sendMessage(Formatting.fine("Вы выбрали команду: " + team.color.chatFormat + team.color.teamName))
                 }
-                Material.CLAY_BALL -> {
-                    Cristalix.transfer(listOf(player.uniqueId), LOBBY_SERVER)
-                }
-            }
-        } else {
-            isCancelled = clickedBlock != null && clickedBlock.type == Material.TNT
+            } else if (material == Material.CLAY_BALL)
+                Cristalix.transfer(listOf(player.uniqueId), LOBBY_SERVER)
         }
     }
 
