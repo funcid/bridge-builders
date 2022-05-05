@@ -8,7 +8,6 @@ import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.donate.DonateHelper
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.impl.*
-import me.reidj.bridgebuilders.info
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.ParticleHelper
 import me.reidj.bridgebuilders.worldMeta
@@ -26,12 +25,11 @@ import ru.cristalix.core.inventory.InventoryProvider
 import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.network.packages.MoneyTransactionRequestPackage
 import ru.cristalix.core.network.packages.MoneyTransactionResponsePackage
-import ru.cristalix.core.realm.RealmStatus
 import java.util.function.Consumer
 
 object CustomizationNPC {
 
-    val backItem = item {
+    private val backItem = item {
         type = Material.CLAY_BALL
         text("§cНазад")
         nbt("other", "cancel")
@@ -238,11 +236,7 @@ object CustomizationNPC {
     init {
         val npcLabel = worldMeta.getLabel("guide")
         // Создание подсветки NPC
-        B.repeat(5) {
-            if (info.status == RealmStatus.GAME_STARTED_RESTRICTED)
-                return@repeat
-            ParticleHelper.happyVillager(npcLabel)
-        }
+        B.repeat(5) { ParticleHelper.happyVillager(npcLabel) }
 
         // Команда для открытия меню
         B.regCommand({ player, _ ->

@@ -27,7 +27,6 @@ import ru.cristalix.core.CoreApi
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
-import ru.cristalix.core.realm.RealmInfo
 import ru.cristalix.core.realm.RealmStatus
 import ru.cristalix.core.render.BukkitRenderService
 import ru.cristalix.core.render.IRenderService
@@ -37,7 +36,6 @@ import java.util.concurrent.TimeUnit
 const val SKIN: String = "ca87474e-b15c-11e9-80c4-1cb72caa35fd"
 
 lateinit var app: App
-lateinit var info: RealmInfo
 
 class App : JavaPlugin() {
 
@@ -96,7 +94,7 @@ class App : JavaPlugin() {
         }, 10, TimeUnit.MINUTES)
 
         // Конфигурация реалма
-        info = IRealmService.get().currentRealmInfo
+        val info = IRealmService.get().currentRealmInfo
         info.status = RealmStatus.WAITING_FOR_PLAYERS
         info.maxPlayers = 1200
         info.isLobbyServer = true
