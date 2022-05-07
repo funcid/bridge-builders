@@ -42,7 +42,6 @@ enum class MapType(
             listOf(
                 Block("Фиолетовая керамика", 10, PURPLE_GLAZED_TERRACOTTA),
                 Block("Незеритовая плита", 12, STEP, 6),
-                Block("Люк", 28, TRAP_DOOR),
                 Block("Булыжник", 42, COBBLESTONE),
                 Block("Тропическая плита", 42, WOOD_STEP, 3),
                 Block("Люк", 68, TRAP_DOOR),
@@ -55,7 +54,7 @@ enum class MapType(
                 Block("Андезит", 452, STONE, 5),
             )
         ),
-        1530,
+        1502,
         43,
         30
     ),

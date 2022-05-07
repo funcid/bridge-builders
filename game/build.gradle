@@ -1,24 +1,7 @@
-plugins {
-    id 'dev.implario.mcgradle' version '1.0.4'
-}
-
-apply plugin: 'org.jetbrains.kotlin.jvm'
-
-bukkitPlugin {
-    main = 'me.reidj.bridgebuilders.App'
-    depend << 'CoreAPI'
-}
+apply plugin: 'kotlin'
 
 group = 'me.reidj'
 version = '1.0-SNAPSHOT'
-
-afterEvaluate {
-    jar {
-        archiveBaseName.set 'bridgebuilders'
-        from configurations.runtimeClasspath.collect { it.directory ? it : zipTree(it) }
-        duplicatesStrategy DuplicatesStrategy.EXCLUDE
-    }
-}
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -33,9 +16,15 @@ compileKotlin {
     kotlinOptions.jvmTarget = '1.8'
 }
 
+afterEvaluate {
+    jar {
+        archiveBaseName.set 'bridgebuilders'
+        from configurations.runtimeClasspath.collect { it.directory ? it : zipTree(it) }
+        duplicatesStrategy DuplicatesStrategy.EXCLUDE
+    }
+}
+
 dependencies {
-    implementation project(':commons')
-    implementation project(':service-common')
     compileOnly group: 'org.codehaus.groovy', name: 'groovy', version: '3.0.7'
 
     compileOnly 'cristalix:bukkit-core:21.01.30'
@@ -50,5 +39,7 @@ dependencies {
     implementation 'clepto:clepto-cristalix:3.0.2'
 
     implementation 'me.func.animation-api:animation-api:live-SNAPSHOT'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21'
+    implementation project(':commons')
+    implementation project(':service-common')
 }

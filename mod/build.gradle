@@ -10,7 +10,7 @@ dependencies {
     compileOnly 'ru.cristalix:client-api:live-SNAPSHOT'
     implementation 'ru.cristalix:uiengine:live-SNAPSHOT'
     implementation 'ru.cristalix:client-sdk:live-SNAPSHOT'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.5.20'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.21'
     implementation 'implario:humanize:1.1.3'
 }
 

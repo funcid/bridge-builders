@@ -1,5 +1,6 @@
 package me.reidj.bridgebuilders.user
 
+import me.func.mod.conversation.ModTransfer
 import me.reidj.bridgebuilders.team.Team
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -29,6 +30,6 @@ class User(stat: Stat) {
 
     private fun changeMoney(dMoney: Int) {
         stat.money += dMoney
-        me.func.mod.conversation.ModTransfer(stat.money).send("bridge:balance", player)
+        ModTransfer(stat.money).send("bridge:balance", player)
     }
 }
