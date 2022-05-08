@@ -79,4 +79,27 @@ enum class MapType(
         42,
         30
     ),
+    /*PESOK(
+        "pesok",
+        HashSet<Block>(
+            listOf(
+                Block("Табличка", 2, SIGN),
+                Block("Кнопка", 14, WOOD_BUTTON),
+                Block("Люк", 16, TRAP_DOOR),
+                Block("Еловые ступеньки", 16, SPRUCE_WOOD_STAIRS),
+                Block("Гранит", 28, STONE, 1),
+                Block("Зелёная панель", 42, STAINED_GLASS_PANE, 13),
+                Block("Дубовые ступеньки", 42, WOOD_STAIRS),
+                Block("Еловая плита", 42, WOOD_STEP, 1),
+                Block("Песок", 63, SAND),
+                Block("Песчаниковые ступеньки", 84, SANDSTONE_STAIRS),
+                Block("Песчаник", 140, SANDSTONE),
+                Block("Терракота", 174, HARD_CLAY),
+                Block("Светло-серая керамика", 224, STAINED_CLAY, 8),
+            )
+        ),
+        887,
+        42,
+        30
+    ),*/
 }

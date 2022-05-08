@@ -115,6 +115,7 @@ object CustomizationNPC {
                         currentContent.setLayout(
                             "XIIIIIIIX",
                             "XIIIIIIIX",
+                            "XIIIIIIIX",
                             "XXXXBXXXX"
                         )
                         pasteItems(user, false, currentContent, NameTag.values().asIterable()) {

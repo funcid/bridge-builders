@@ -76,6 +76,23 @@ enum class StarterKit(
             ItemStack(Material.COOKED_MUTTON, 10)
         )
     ),
+    ENCHANTER(
+        "Зачарователь",
+        2048,
+        Rare.EPIC,
+        Material.CLAY_BALL,
+        "skyblock:yield",
+        "§b Книги х16\n§b Наковальня\n§b Книжные полки х18\n§b Стол зачарования\n§b Бутыльки опыта х192\n§b Блоки лазурита х7\n§b Хлеб х16",
+        arrayOf(
+            ItemStack(Material.BOOK, 16),
+            ItemStack(Material.ANVIL),
+            ItemStack(Material.BOOKSHELF, 18),
+            ItemStack(Material.ENCHANTMENT_TABLE),
+            ItemStack(Material.EXP_BOTTLE, 192),
+            ItemStack(Material.LAPIS_BLOCK, 7),
+            ItemStack(Material.BREAD, 16)
+        )
+    ),
     COOK(
         "Повар",
         2048,
@@ -140,7 +157,7 @@ enum class StarterKit(
         4096,
         Rare.LEGENDARY,
         Material.IRON_SWORD,
-        "weapons:dragon",
+        "weapons_other:evil_trident",
         "§b  Кольчужный шлем\n§b  Кольчужный нагрудник\n§b  Кольчужные поножи\n§b  Кольчужные ботинки\n§b  Железный меч\n§b  Золотое яблоко х2",
         arrayOf(
             ItemStack(Material.CHAINMAIL_HELMET),
@@ -149,6 +166,24 @@ enum class StarterKit(
             ItemStack(Material.CHAINMAIL_BOOTS),
             ItemStack(Material.IRON_SWORD),
             ItemStack(Material.GOLDEN_APPLE, 2)
+        )
+    ),
+    PALADIN(
+        "Паладин",
+        4096,
+        Rare.LEGENDARY,
+        Material.IRON_SWORD,
+        "weapons_other:wood_staff",
+        "§b Алмазный меч\n§b Железную кирку\n§b Золотая морковь х24\n§b Золотые яблоки х6\n§b Алмазный шлем \n§b Алмазные ботинки",
+        arrayOf(
+            ItemStack(Material.DIAMOND_SWORD),
+            ItemStack(Material.IRON_PICKAXE),
+            ItemStack(Material.GOLDEN_CARROT, 24),
+            ItemStack(Material.DIAMOND_HELMET),
+            ItemStack(Material.GOLD_CHESTPLATE),
+            ItemStack(Material.GOLD_LEGGINGS),
+            ItemStack(Material.DIAMOND_BOOTS),
+            ItemStack(Material.GOLDEN_APPLE, 6)
         )
     ),
     ;

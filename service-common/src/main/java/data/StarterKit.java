@@ -8,9 +8,11 @@ public enum StarterKit {
     MINER,
     BLACKSMITH,
     COOK,
+    ENCHANTER,
     HEALER,
     ASSASSIN,
     COLLECTOR,
     LUCIFER,
+    PALADIN,
     ;
 }

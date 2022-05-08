@@ -24,6 +24,7 @@ import me.reidj.bridgebuilders.util.MapLoader
 import net.minecraft.server.v1_12_R1.MinecraftServer
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
@@ -267,7 +268,6 @@ class App : JavaPlugin() {
         team.bridge.blocks.filter { (key, _) ->
             toPlace.keys.any { it.material.id == key.first }
         }.forEach { (key, value) ->
-            val tempNearest = value.minByOrNull { it.distanceSquared(team.spawn) }
             if (nearest == null) {
                 value.forEach { nearest = it }
                 data = key
