@@ -87,7 +87,7 @@ class App : JavaPlugin() {
 
         map = MapType.values().random()
 
-        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC)
+        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC, Kit.HEALTH_BAR)
         ModLoader.loadAll("mods")
 
         loadMap()

@@ -3,9 +3,6 @@ import dev.xdark.clientapi.event.render.*
 import ru.cristalix.clientapi.KotlinMod
 import ru.cristalix.uiengine.UIEngine
 
-const val NAMESPACE = "bridge"
-const val FILE_STORE = "http://51.38.128.132"
-
 lateinit var mod: App
 
 class App : KotlinMod() {
@@ -18,7 +15,6 @@ class App : KotlinMod() {
         TeamProgress
         OnlineBar
         CommandChoose
-        Indicator
         BoardBlocks
 
         registerHandler<HealthRender> { isCancelled = true }
