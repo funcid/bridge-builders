@@ -33,7 +33,8 @@ import ru.cristalix.core.render.IRenderService
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-const val SKIN: String = "ca87474e-b15c-11e9-80c4-1cb72caa35fd"
+const val MOISEI: String = "ca87474e-b15c-11e9-80c4-1cb72caa35fd"
+const val REIDJ: String = "bf30a1df-85de-11e8-a6de-1cb72caa35fd"
 
 lateinit var app: App
 
@@ -41,7 +42,6 @@ class App : JavaPlugin() {
 
     private var online = 0
 
-    private val balancer = PlayerBalancer("BRI", 16)
     private var fixDoubleClick: Player? = null
 
     private val hoverEvent =
@@ -58,6 +58,8 @@ class App : JavaPlugin() {
         .event(clickUrl)
         .append("\n================\n").color(ChatColor.YELLOW)
         .create()
+
+    private val armorStand = mutableMapOf<Int, ArmorStand>()
 
     override fun onEnable() {
         B.plugin = this
@@ -96,11 +98,11 @@ class App : JavaPlugin() {
         // Конфигурация реалма
         val info = IRealmService.get().currentRealmInfo
         info.status = RealmStatus.WAITING_FOR_PLAYERS
-        info.maxPlayers = 1200
+        info.maxPlayers = slots
         info.isLobbyServer = true
         info.readableName = "BridgeBuilders"
         info.groupName = "BridgeBuilders"
-        info.servicedServers = arrayOf("BRI")
+        info.servicedServers = arrayOf("BRI", "BRD")
 
         // Создание контента для лобби
         TopManager().runTaskTimer(this, 0, 1)
@@ -115,53 +117,58 @@ class App : JavaPlugin() {
             playerDataManager
         )
 
-        val npcLabel = worldMeta.getLabel("play")
-        val stand = worldMeta.world.spawnEntity(
-            npcLabel.clone().add(0.5, 2.3, 0.5),
-            EntityType.ARMOR_STAND
-        ) as ArmorStand
-        stand.isMarker = true
-        stand.isVisible = false
-        stand.setGravity(false)
-        stand.isCustomNameVisible = true
-        B.repeat(20) {
-            info.servicedServers.forEach { online = IRealmService.get().getOnlineOnRealms(it) }
-            stand.customName = "§bОнлайн $online"
-        }
-
         // NPC поиска игры
-        B.postpone(5) {
-            worldMeta.getLabels("play").forEach { npcLabel ->
-                val npcArgs = npcLabel.tag.split(" ")
-                Npc.npc {
-                    onClick {
-                        val player = it.player
-                        if (fixDoubleClick != null && fixDoubleClick == player)
-                            return@onClick
-                        balancer.accept(player)
-                        fixDoubleClick = player
-                    }
-                    name = "§e§lНАЖМИТЕ ЧТОБЫ ИГРАТЬ"
-                    behaviour = NpcBehaviour.STARE_AT_PLAYER
-                    skinUrl = "https://webdata.c7x.dev/textures/skin/$SKIN"
-                    skinDigest = SKIN
-                    location(npcLabel.clone().add(0.5, 0.0, 0.5))
-                    yaw = npcArgs[0].toFloat()
-                    pitch = npcArgs[1].toFloat()
-                }
-            }
-            // Создание NPC
-            val guide = worldMeta.getLabel("guide")
-            val npcArgs = guide.tag.split(" ")
+        worldMeta.getLabels("play").forEachIndexed { index, npcLabel ->
+            val npcArgs = npcLabel.tag.split(" ")
+            val stand = worldMeta.world.spawnEntity(
+                npcLabel.clone().add(0.5, 2.3, 0.5),
+                EntityType.ARMOR_STAND
+            ) as ArmorStand
+            stand.isMarker = true
+            stand.isVisible = false
+            stand.setGravity(false)
+            stand.isCustomNameVisible = true
+            armorStand[index] = stand
             Npc.npc {
-                onClick { it.player.performCommand("menu") }
-                location(guide.clone().add(0.5, 0.0, 0.5))
-                name = "§dПерсонализация"
+                onClick {
+                    val player = it.player
+                    if (fixDoubleClick != null && fixDoubleClick == player)
+                        return@onClick
+                    fixDoubleClick = player
+                    if (npcArgs[2].toInt() == 8)
+                        PlayerBalancer("BRD", 8).accept(player)
+                    else
+                        PlayerBalancer("BRI", 16).accept(player)
+                }
+                name = "§e§lНАЖМИТЕ ЧТОБЫ ИГРАТЬ"
                 behaviour = NpcBehaviour.STARE_AT_PLAYER
-                skinUrl = "https://webdata.c7x.dev/textures/skin/$SKIN"
-                skinDigest = SKIN
+                skinUrl = "https://webdata.c7x.dev/textures/skin/$MOISEI"
+                skinDigest = MOISEI
+                location(npcLabel.clone().add(0.5, 0.0, 0.5))
                 yaw = npcArgs[0].toFloat()
                 pitch = npcArgs[1].toFloat()
+            }
+        }
+        // Создание NPC
+        val guide = worldMeta.getLabel("guide")
+        val npcArgs = guide.tag.split(" ")
+        Npc.npc {
+            onClick { it.player.performCommand("menu") }
+            location(guide.clone().add(0.5, 0.0, 0.5))
+            name = "§dПерсонализация"
+            behaviour = NpcBehaviour.STARE_AT_PLAYER
+            skinUrl = "https://webdata.c7x.dev/textures/skin/$REIDJ"
+            skinDigest = REIDJ
+            yaw = npcArgs[0].toFloat()
+            pitch = npcArgs[1].toFloat()
+        }
+
+        B.repeat(20) {
+            info.servicedServers.forEach {
+                if (RealmId.of(it).typeName == "BRI")
+                    armorStand[0]?.customName = "§l4x16 §bОнлайн ${IRealmService.get().getOnlineOnRealms("BRI")}"
+                else
+                    armorStand[1]?.customName = "§l2х8 §bОнлайн ${IRealmService.get().getOnlineOnRealms("BRD")}"
             }
         }
 
@@ -170,12 +177,6 @@ class App : JavaPlugin() {
             Cristalix.transfer(listOf(player.uniqueId), RealmId.of(HUB))
             null
         }, "leave")
-
-        // Поиск игры
-        B.regCommand({ player: Player, _ ->
-            balancer.accept(player)
-            null
-        }, "next")
 
         // Вернуться в игру
         B.regCommand({ player: Player, _ ->

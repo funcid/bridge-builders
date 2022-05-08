@@ -6,6 +6,8 @@ public enum NameTag {
     BUILDER,
     HARD_WORKER,
     PAVEMENT,
+    STIL,
+    CHOOPER,
     MASON,
     RALPH,
     DESIGNER,
@@ -14,5 +16,6 @@ public enum NameTag {
     MUSKETEER,
     ARCHITECT,
     ANARCHIST,
+    VALLI,
     ;
 }

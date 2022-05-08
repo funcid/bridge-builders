@@ -13,6 +13,8 @@ enum class NameTag(private val title: String, private val price: Int, private va
     BUILDER("Строитель", 128, Rare.COMMON),
     HARD_WORKER("Работяга", 480, Rare.COMMON),
     PAVEMENT("Мостовой", 640, Rare.COMMON),
+    STIL("Стиляга", 832, Rare.RARE),
+    CHOOPER("Чоппер", 1280, Rare.RARE),
     MASON("Каменщик", 1280, Rare.RARE),
     RALPH("Ральф", 1280, Rare.RARE),
     DESIGNER("Дизайнер", 1600, Rare.RARE),
@@ -20,7 +22,9 @@ enum class NameTag(private val title: String, private val price: Int, private va
     CHIROPRACTOR("Костоправ", 2048, Rare.EPIC),
     MUSKETEER("Мушкетёр", 2048, Rare.EPIC),
     ARCHITECT("Архитектор", 4096, Rare.LEGENDARY),
-    ANARCHIST("Анархист", 4864, Rare.LEGENDARY);
+    ANARCHIST("Анархист", 4864, Rare.LEGENDARY),
+    VALLI("Валли", 4864, Rare.LEGENDARY),
+    ;
 
     override fun getTitle(): String {
         return title

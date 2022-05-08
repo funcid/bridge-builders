@@ -21,7 +21,8 @@ enum class KillMessage(private val title: String, private val price: Int, privat
     ROOM("Насекомое", 2048, Rare.EPIC, "истреблён"),
     BLACK("Забычен", 2048, Rare.EPIC, "растоптан"),
     X("Банан", 8192, Rare.LEGENDARY, "очищен от кожуры"),
-    KIRA("Компьютер", 8192, Rare.LEGENDARY, "был удалён"),;
+    KIRA("Компьютер", 8192, Rare.LEGENDARY, "был удалён"),
+    ;
 
     override fun getTitle(): String {
         return title

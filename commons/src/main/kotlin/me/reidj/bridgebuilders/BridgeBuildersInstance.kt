@@ -27,7 +27,7 @@ lateinit var getByPlayer: (Player) -> User?
 lateinit var worldMeta: WorldMeta
 lateinit var clientSocket: client.ClientSocket
 lateinit var playerDataManager: PlayerDataManager
-var slots: Int = 16
+var slots: Int = System.getenv("SLOT").toInt()
 
 private val permissionService: IPermissionService = IPermissionService.get()
 

@@ -18,11 +18,11 @@ class PlayerBalancer(private val server: String, private val maxPlayers: Int) : 
 
     @Throws(ExecutionException::class, InterruptedException::class)
     private fun sendToServer(player: Player) {
-        playerJoinRandomGAme(player)
+        playerJoinRandomGame(player)
     }
 
     @Throws(InterruptedException::class, ExecutionException::class)
-    private fun playerJoinRandomGAme(p: Player) {
+    private fun playerJoinRandomGame(p: Player) {
         val party: Optional<*> = IPartyService.get().getPartyByMember(p.uniqueId).get()
         if (party.isPresent) {
             val party1 = party.get() as PartySnapshot
