@@ -10,10 +10,14 @@ import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Color.*
 import org.bukkit.inventory.meta.LeatherArmorMeta
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
+import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmStatus
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_SPACTATE
 
 val kit = DefaultKit
+val fastDigging = PotionEffect(PotionEffectType.FAST_DIGGING, Int.MAX_VALUE, 1)
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     STARTING(70, { it ->
@@ -63,6 +67,9 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         DefaultKit.init(player)
                         Anime.timer(player, "Конец игры через", GAME.lastSecond)
                         Anime.sendEmptyBuffer("online:hide", player)
+
+                        if (IRealmService.get().currentRealmInfo.maxPlayers == 8)
+                            player.addPotionEffect(fastDigging)
 
                         player.inventory.armorContents = kit.armor.map { armor ->
                             val meta = armor.itemMeta as LeatherArmorMeta
