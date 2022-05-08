@@ -1,4 +1,3 @@
-
 import dev.xdark.clientapi.event.lifecycle.GameLoop
 import dev.xdark.clientapi.item.ItemTools
 import dev.xdark.feder.NetUtil
@@ -89,11 +88,16 @@ object BoardBlocks {
 
         registerHandler<GameLoop> {
             // Таб
-            if (inGame && tab.children.isNotEmpty() && (!tab.enabled && Keyboard.isKeyDown(Keyboard.KEY_TAB))
-                || (tab.enabled && !Keyboard.isKeyDown(Keyboard.KEY_TAB))) {
-                tab.enabled = !tab.enabled
+            if (inGame) {
+                if (tab.children.isNotEmpty() && (!tab.enabled && Keyboard.isKeyDown(Keyboard.KEY_TAB)) || (tab.enabled && !Keyboard.isKeyDown(
+                        Keyboard.KEY_TAB
+                    ))
+                ) {
+                    tab.enabled = !tab.enabled
+                }
+            } else {
+                OnlineBar.online.enabled = !(!inGame && Keyboard.isKeyDown(Keyboard.KEY_TAB))
             }
-            OnlineBar.online.enabled = !(!inGame && Keyboard.isKeyDown(Keyboard.KEY_TAB))
         }
     }
 }

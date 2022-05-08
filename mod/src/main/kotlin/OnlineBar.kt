@@ -1,4 +1,3 @@
-
 import ru.cristalix.uiengine.UIEngine
 import ru.cristalix.uiengine.element.RectangleElement
 import ru.cristalix.uiengine.element.TextElement
@@ -8,6 +7,7 @@ import ru.cristalix.uiengine.utility.*
 object OnlineBar {
 
     val online = rectangle {
+        enabled = false
         offset = V3(0.0, 25.0)
         origin = TOP
         align = TOP
@@ -34,21 +34,16 @@ object OnlineBar {
     init {
         UIEngine.overlayContext.addChild(online)
 
+        mod.registerChannel("online:hide") {
+            online.enabled = false
+        }
+
         mod.registerChannel("bridge:online") {
             val max = readInt()
             val current = readInt()
-            val waiting = readBoolean()
-            if (waiting) {
-                (online.children[0] as RectangleElement).animate(1) { size.x = 180.0 / max * current }
-                (online.children[1] as TextElement).content = "Ожидание игроков... [$current из $max]"
-            } else {
-                (online.children[0] as RectangleElement).animate(1, Easings.BACK_BOTH) {
-                    size.x = 180.0 - 180.0 / max * (current / 20)
-                }
-                val timeLess = max - current / 20
-                (online.children[1] as TextElement).content =
-                    "Конец игры через ${String.format("%02d:%02d", timeLess / 60, timeLess % 60)}"
-            }
+            online.enabled = true
+            (online.children[0] as RectangleElement).animate(1) { size.x = 180.0 / max * current }
+            (online.children[1] as TextElement).content = "Ожидание игроков... [$current из $max]"
         }
     }
 }

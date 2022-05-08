@@ -82,13 +82,13 @@ enum class StarterKit(
         Rare.EPIC,
         Material.CLAY_BALL,
         "skyblock:yield",
-        "§b Книги х16\n§b Наковальня\n§b Книжные полки х18\n§b Стол зачарования\n§b Бутыльки опыта х192\n§b Блоки лазурита х7\n§b Хлеб х16",
+        "§b Книги х16\n§b Наковальня\n§b Книжные полки х18\n§b Стол зачарования\n§b Бутыльки опыта х256\n§b Блоки лазурита х7\n§b Хлеб х16",
         arrayOf(
             ItemStack(Material.BOOK, 16),
             ItemStack(Material.ANVIL),
             ItemStack(Material.BOOKSHELF, 18),
             ItemStack(Material.ENCHANTMENT_TABLE),
-            ItemStack(Material.EXP_BOTTLE, 192),
+            ItemStack(Material.EXP_BOTTLE, 256),
             ItemStack(Material.LAPIS_BLOCK, 7),
             ItemStack(Material.BREAD, 16)
         )

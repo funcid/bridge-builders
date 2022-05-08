@@ -23,7 +23,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         val players = Bukkit.getOnlinePlayers()
 
         // Обновление шкалы онлайна
-        players.forEach { player -> ModTransfer(slots, players.size, true).send("bridge:online", player) }
+        players.forEach { player -> ModTransfer(slots, players.size).send("bridge:online", player) }
         var actualTime = it
 
         // Если время вышло и пора играть
@@ -61,6 +61,8 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         user.team = team
 
                         DefaultKit.init(player)
+                        Anime.timer(player, "Конец игры через", GAME.lastSecond)
+                        Anime.sendEmptyBuffer("online:hide", player)
 
                         player.inventory.armorContents = kit.armor.map { armor ->
                             val meta = armor.itemMeta as LeatherArmorMeta
@@ -103,7 +105,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         // Обновление шкалы времени
         if (time % 20 == 0) {
             Bukkit.getOnlinePlayers().forEach {
-                ModTransfer(GAME.lastSecond, time, false).send("bridge:online", it)
                 if (time / 20 == 120) {
                     teams.forEach { team -> team.isActiveTeleport = true }
                     Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")

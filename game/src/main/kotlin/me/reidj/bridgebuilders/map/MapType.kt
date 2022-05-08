@@ -14,7 +14,7 @@ enum class MapType(
         "Aquamarine",
         HashSet<Block>(
             listOf(
-                Block("Булыжная ограда", 1, COBBLE_WALL),
+                Block("Булыжная ограда", 2, COBBLE_WALL),
                 Block("Еловый забор", 2, SPRUCE_FENCE),
                 Block("Призмарин", 10, PRISMARINE),
                 Block("Фиолетовая керамика", 24, STAINED_CLAY, 10),
@@ -32,7 +32,7 @@ enum class MapType(
                 Block("Андезит", 406, STONE, 5)
             )
         ),
-        1761,
+        1762,
         42,
         30
     ),
