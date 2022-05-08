@@ -153,11 +153,10 @@ class App : JavaPlugin() {
                             } else {
                                 val subtraction = must - itemHand.getAmount()
                                 val collect = must - max(0, subtraction)
-                                team.collected[block.key] = block.key.needTotal - maxOf(0, subtraction)
-                                team.blocksToPlace += collect
+                                team.collected[block.key] = (block.key.needTotal - maxOf(0, subtraction)) * if (IRealmService.get().currentRealmInfo.maxPlayers == 8) 2 else 1
+                                team.blocksToPlace += collect * if (IRealmService.get().currentRealmInfo.maxPlayers == 8) 2 else 1
                                 itemHand.setAmount(itemHand.getAmount() - must)
-                                user.collectedBlocks += collect
-                                //BattlePassUtil.update(user.player!!, QuestType.POINTS, collect)
+                                user.collectedBlocks += collect * if (IRealmService.get().currentRealmInfo.maxPlayers == 8) 2 else 1
                                 player.playSound(
                                     player.location,
                                     Sound.ENTITY_PLAYER_LEVELUP,
