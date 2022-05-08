@@ -1,13 +1,17 @@
 package bridge;
 
+import bridge.handlers.PackageHandler;
+import bridge.realm.RealmsController;
+import bridge.socket.ServerSocket;
+import bridge.socket.ServerSocketHandler;
 import com.google.common.collect.Maps;
 import com.mongodb.async.client.MongoClient;
 import com.mongodb.async.client.MongoClients;
-import bridge.handlers.PackageHandler;
+import com.mongodb.client.model.Filters;
 import io.javalin.Javalin;
 import io.netty.channel.Channel;
+import lombok.val;
 import packages.*;
-import bridge.realm.RealmsController;
 import ru.cristalix.core.CoreApi;
 import ru.cristalix.core.GlobalSerializers;
 import ru.cristalix.core.microservice.MicroServicePlatform;
@@ -17,8 +21,6 @@ import ru.cristalix.core.network.packages.TransferPlayerPackage;
 import ru.cristalix.core.permissions.IPermissionService;
 import ru.cristalix.core.permissions.PermissionService;
 import ru.cristalix.core.realm.RealmInfo;
-import bridge.socket.ServerSocket;
-import bridge.socket.ServerSocketHandler;
 import user.Stat;
 
 import java.util.*;
@@ -27,7 +29,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Рейдж 03.10.2021
- * @project ThePit
+ * @project BridgeBuilders
  */
 public class BridgeService {
 
@@ -141,6 +143,23 @@ public class BridgeService {
                     e.printStackTrace();
                 }
 
+            }
+            if (s.equals("vipe")) {
+                userData.getData().find().forEach(document -> {
+                    val list = new ArrayList<>(Arrays.asList(
+                            Filters.eq("money", 0),
+                            Filters.eq("achievement", new ArrayList<>()),
+                            Filters.eq("games", 0),
+                            Filters.eq("kills", 0),
+                            Filters.eq("lootbox", 0),
+                            Filters.eq("lootboxOpenned", 0),
+                            Filters.eq("wins", 0)
+                    ));
+                    list.forEach(bson -> userData.getData().updateMany(
+                            Filters.eq("_id", document.get("_id")),
+                            Filters.eq("$set", bson)
+                            , (result, t) -> t.printStackTrace()));
+                }, (result, t) -> t.printStackTrace());
             }
             if (args[0].equals("delete")) {
                 if (args.length < 2) System.out.println("Usage: delete [uuid]");
