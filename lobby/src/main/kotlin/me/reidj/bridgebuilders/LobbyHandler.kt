@@ -31,12 +31,6 @@ object LobbyHandler : Listener {
         nbt("other", "clothes")
         nbt("click", "menu")
     }.build()
-    private var startItem: ItemStack = item {
-        type = Material.CLAY_BALL
-        text("§bИграть")
-        nbt("other", "guild_members")
-        nbt("click", "next")
-    }.build()
     private var backItem: ItemStack = item {
         type = Material.CLAY_BALL
         text("§cВыйти")
@@ -92,8 +86,7 @@ object LobbyHandler : Listener {
 
     @EventHandler
     fun PlayerSpawnLocationEvent.handle() {
-        player.inventory.setItem(0, startItem)
-        player.inventory.setItem(4, cosmeticItem)
+        player.inventory.setItem(0, cosmeticItem)
         player.inventory.setItem(8, backItem)
     }
 

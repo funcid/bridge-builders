@@ -11,6 +11,7 @@ import com.mongodb.client.model.Filters;
 import io.javalin.Javalin;
 import io.netty.channel.Channel;
 import lombok.val;
+import org.bson.conversions.Bson;
 import packages.*;
 import ru.cristalix.core.CoreApi;
 import ru.cristalix.core.GlobalSerializers;
@@ -26,6 +27,8 @@ import user.Stat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.mongodb.client.model.Updates.unset;
 
 /**
  * @author Рейдж 03.10.2021
@@ -145,21 +148,16 @@ public class BridgeService {
 
             }
             if (s.equals("vipe")) {
-                userData.getData().find().forEach(document -> {
-                    val list = new ArrayList<>(Arrays.asList(
-                            Filters.eq("money", 0),
-                            Filters.eq("achievement", new ArrayList<>()),
-                            Filters.eq("games", 0),
-                            Filters.eq("kills", 0),
-                            Filters.eq("lootbox", 0),
-                            Filters.eq("lootboxOpenned", 0),
-                            Filters.eq("wins", 0)
-                    ));
-                    list.forEach(bson -> userData.getData().updateMany(
-                            Filters.eq("_id", document.get("_id")),
-                            Filters.eq("$set", bson)
-                            , (result, t) -> t.printStackTrace()));
-                }, (result, t) -> t.printStackTrace());
+                val map = new HashMap<Bson, Bson>() {{
+                    put(Filters.gt("money", 0), unset("money"));
+                    put(Filters.gt("achievement", new ArrayList<>()), unset("achievement"));
+                    put(Filters.gt("games", 0), unset("games"));
+                    put(Filters.gt("kills", 0), unset("kills"));
+                    put(Filters.gt("lootbox", 0), unset("lootbox"));
+                    put(Filters.gt("lootboxOpenned", 0), unset("lootboxOpenned"));
+                    put(Filters.gt("wins", 0), unset("wins"));
+                }};
+                map.forEach((key, value) -> userData.getData().updateMany(key, value, (result, t) -> t.printStackTrace()));
             }
             if (args[0].equals("delete")) {
                 if (args.length < 2) System.out.println("Usage: delete [uuid]");
@@ -177,6 +175,7 @@ public class BridgeService {
                 }
             }
         }
+
     }
 
     private static String createMetrics() {

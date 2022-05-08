@@ -203,7 +203,10 @@ class App : JavaPlugin() {
         Runtime.getRuntime().addShutdownHook(Thread { playerDataManager.save() })
     }
 
-    override fun onDisable() = playerDataManager.save()
+    override fun onDisable() {
+        Bukkit.getOnlinePlayers().map { getUser(it)!!.stat }.forEach { it.realm = "" }
+        playerDataManager.save()
+    }
 
     fun getUser(player: Player) = getUser(player.uniqueId)
 

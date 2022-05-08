@@ -217,7 +217,10 @@ class App : JavaPlugin() {
         // Ломаю мосты
         teams.forEach { generateBridge(it) }
 
-        Runtime.getRuntime().addShutdownHook(Thread { playerDataManager.save() })
+        Runtime.getRuntime().addShutdownHook(Thread {
+            Bukkit.getOnlinePlayers().map { getUser(it)!!.stat }.forEach { it.realm = "" }
+            playerDataManager.save()
+        })
     }
 
     fun restart() {
