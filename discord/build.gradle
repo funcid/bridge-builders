@@ -4,11 +4,6 @@ plugins {
     id 'java'
 }
 
-apply plugin: 'kotlin'
-
-group 'me.reidj'
-version '1.0-SNAPSHOT'
-
 repositories {
     mavenCentral()
     maven {
