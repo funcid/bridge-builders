@@ -88,7 +88,10 @@ enum class StarterKit(
             ItemStack(Material.ANVIL),
             ItemStack(Material.BOOKSHELF, 18),
             ItemStack(Material.ENCHANTMENT_TABLE),
-            ItemStack(Material.EXP_BOTTLE, 256),
+            ItemStack(Material.EXP_BOTTLE, 64),
+            ItemStack(Material.EXP_BOTTLE, 64),
+            ItemStack(Material.EXP_BOTTLE, 64),
+            ItemStack(Material.EXP_BOTTLE, 64),
             ItemStack(Material.LAPIS_BLOCK, 7),
             ItemStack(Material.BREAD, 16)
         )
