@@ -79,6 +79,8 @@ object LobbyHandler : Listener {
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
             Npc.npcs.values.forEach { it.spawn(this) }
             Banners.banners.values.forEach { Banners.show(this, it) }
+            // TODO Вынести в переменные среды
+            player.setResourcePack("https://storage.c7x.ru/reidj/BridgeBuilders.zip", "100")
         }
         user.player = this
         user.giveMoney(0)
