@@ -11,6 +11,7 @@ import me.func.protocol.Marker
 import me.func.protocol.MarkerSign
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.util.DefaultKit
+import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
@@ -112,6 +113,7 @@ object ConnectionHandler : Listener {
             }
         } else {
             gameMode = GameMode.SPECTATOR
+            Bukkit.getOnlinePlayers().forEach { it.hidePlayer(app, this) }
         }
     }
 
