@@ -38,6 +38,8 @@ object LobbyHandler : Listener {
         nbt("other", "cancel")
         nbt("click", "leave")
     }.build()
+    private val confirmation =
+        Confirmation("Рекомендуем установить", "ресурспак") { send -> send.performCommand("resourcepack") }
 
     @EventHandler
     fun PlayerInteractEvent.handle() {
@@ -80,8 +82,8 @@ object LobbyHandler : Listener {
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
             Npc.npcs.values.forEach { it.spawn(this) }
             Banners.banners.values.forEach { Banners.show(this, it) }
-            Confirmation("Рекомендуем установить", "ресурспак") {
-                    send -> send.performCommand("resourcepack") }.open(this)
+            confirmation.open(this)
+
         }
         user.player = this
         user.giveMoney(0)

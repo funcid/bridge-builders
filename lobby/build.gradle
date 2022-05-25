@@ -22,7 +22,7 @@ dependencies {
     implementation 'implario:kotlin-api:1.0.0'
     implementation 'dev.implario.bukkit:dark-paper:1.0.0'
 
-    implementation 'me.func.animation-api:animation-api:live-SNAPSHOT'
+    implementation 'me.func:animation-api:reid-SNAPSHOT'
     implementation project(':commons')
     implementation project(':service-common')
 }
