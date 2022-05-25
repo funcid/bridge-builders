@@ -110,6 +110,7 @@ object ConnectionHandler : Listener {
                 ModTransfer().send("bridge:start", player)
                 app.updateNumbersPlayersInTeam()
                 user.inventory!!.forEachIndexed { index, itemStack -> player.inventory.setItem(index, itemStack) }
+                player.exp = user.exp
             }
         } else {
             gameMode = GameMode.SPECTATOR
@@ -123,7 +124,9 @@ object ConnectionHandler : Listener {
             return
         teams.forEach { it.players.remove(player.uniqueId) }
         if (activeStatus != Status.STARTING) {
-            app.getUser(player)?.inventory = player.inventory
+            val user = app.getUser(player)!!
+            user.inventory = player.inventory
+            user.exp = player.exp
             app.updateNumbersPlayersInTeam()
         }
     }

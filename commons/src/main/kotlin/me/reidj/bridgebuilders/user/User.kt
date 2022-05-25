@@ -10,6 +10,7 @@ class User(stat: Stat) {
 
     var collectedBlocks = 0
     var kills = 0
+    var exp = 0F
     var activeHand = false
     var inGame = false
 

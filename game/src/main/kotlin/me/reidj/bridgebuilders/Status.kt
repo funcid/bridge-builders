@@ -68,9 +68,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         Anime.timer(player, "Конец игры через", GAME.lastSecond)
                         Anime.sendEmptyBuffer("online:hide", player)
 
-                        if (IRealmService.get().currentRealmInfo.maxPlayers == 8)
-                            player.addPotionEffect(fastDigging)
-
                         player.inventory.armorContents = kit.armor.map { armor ->
                             val meta = armor.itemMeta as LeatherArmorMeta
                             meta.color = checkColor(team.color)

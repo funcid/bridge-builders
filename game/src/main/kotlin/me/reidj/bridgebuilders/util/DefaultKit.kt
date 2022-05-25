@@ -6,6 +6,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import ru.cristalix.core.realm.IRealmService
 
 object DefaultKit {
 
@@ -24,6 +25,9 @@ object DefaultKit {
     fun init(player: Player) = player.apply {
         val playerTeam = teams.filter { it.players.contains(player.uniqueId) }[0]
         val user = app.getUser(this)!!
+
+        if (IRealmService.get().currentRealmInfo.maxPlayers == 8)
+            player.addPotionEffect(fastDigging)
 
         player.gameMode = org.bukkit.GameMode.SURVIVAL
         player.itemOnCursor = null
