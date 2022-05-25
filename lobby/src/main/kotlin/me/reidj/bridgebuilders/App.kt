@@ -187,6 +187,11 @@ class App : JavaPlugin() {
             null
         }, "rejoin")
 
+        B.regCommand({ player: Player, _ ->
+            player.setResourcePack("https://storage.c7x.ru/reidj/BridgeBuilders.zip", "100")
+            null
+        }, "resourcepack")
+
         B.regCommand({ player, args ->
             val realmId =
                 IRealmService.get().getRealmsOfType("BRI")

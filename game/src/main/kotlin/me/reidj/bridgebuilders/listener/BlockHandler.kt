@@ -91,6 +91,9 @@ object BlockHandler : Listener {
         } else if (block.type == Material.GOLD_ORE) {
             block.type = Material.AIR
             player.inventory.addItem(ItemStack(Material.GOLD_ORE))
+        } else if (block.type == Material.DIAMOND_ORE) {
+            block.type = Material.AIR
+            player.inventory.addItem(ItemStack(Material.DIAMOND))
         }
     }
 }

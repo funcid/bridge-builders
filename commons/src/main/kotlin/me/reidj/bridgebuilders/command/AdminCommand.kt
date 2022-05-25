@@ -13,6 +13,7 @@ class AdminCommand {
         "307264a1-2c69-11e8-b5ea-1cb72caa35fd", // Func
         "bf30a1df-85de-11e8-a6de-1cb72caa35fd", // Reidj
         "ca87474e-b15c-11e9-80c4-1cb72caa35fd", // Moisei
+        "0e7c0015-b27b-11eb-acca-1cb72caa35fd" // 3а6ив
     )
 
     init {
