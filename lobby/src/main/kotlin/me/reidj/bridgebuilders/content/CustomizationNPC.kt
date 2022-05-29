@@ -103,6 +103,7 @@ object CustomizationNPC {
                         user.giveMoney(-pos.getPrice())
                         pos.give(user)
                         Glow.animate(player, 0.4, GlowColor.GREEN)
+                        clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
                     }
                     title = if (current) "[ Выбрано ]" else if (has) "§7Выбрать" else "§bКупить"
                     description = pos.getTitle()
