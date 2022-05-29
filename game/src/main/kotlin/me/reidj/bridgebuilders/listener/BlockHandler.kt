@@ -29,18 +29,9 @@ object BlockHandler : Listener {
     fun BlockBreakEvent.handle() {
         val team = teams.filter { it.players.contains(player.uniqueId) }[0]
         when (val idAndData = block.typeId to block.data) {
-            15 to 0.toByte() -> {
-                //BattlePassUtil.update(player, BREAK, 1)
-                team.breakBlocks[block.location] = idAndData
-            }
-            56 to 0.toByte() -> {
-                //BattlePassUtil.update(player, BREAK, 1)
-                team.breakBlocks[block.location] = idAndData
-            }
-            16 to 0.toByte() -> {
-                //BattlePassUtil.update(player, BREAK, 1)
-                team.breakBlocks[block.location] = idAndData
-            }
+            15 to 0.toByte() -> { team.breakBlocks[block.location] = idAndData }
+            56 to 0.toByte() -> { team.breakBlocks[block.location] = idAndData }
+            16 to 0.toByte() -> { team.breakBlocks[block.location] = idAndData }
             14 to block.data -> team.breakBlocks[block.location] = idAndData
             17 to block.data -> team.breakBlocks[block.location] = idAndData
             5 to block.data -> team.breakBlocks[block.location] = idAndData
@@ -59,7 +50,6 @@ object BlockHandler : Listener {
             return
         }
         if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
-            //BattlePassUtil.update(player, BREAK, 1)
             val winner = teams.filter { it.players.contains(player.uniqueId) }[0]
             Bukkit.getOnlinePlayers().forEach {
                 Anime.killboardMessage(
@@ -91,6 +81,9 @@ object BlockHandler : Listener {
         } else if (block.type == Material.GOLD_ORE) {
             block.type = Material.AIR
             player.inventory.addItem(ItemStack(Material.GOLD_ORE))
+        } else if (block.type == Material.DIAMOND_ORE) {
+            block.type = Material.AIR
+            player.inventory.addItem(ItemStack(Material.DIAMOND))
         }
     }
 }

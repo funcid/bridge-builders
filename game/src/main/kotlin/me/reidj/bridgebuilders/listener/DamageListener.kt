@@ -44,8 +44,6 @@ object DamageListener : Listener {
         val cause = getEntity().lastDamageCause
         val victim = teams.filter { team -> team.players.contains(getEntity().uniqueId) }[0]
 
-        //BattlePassUtil.update(player.killer, QuestType.KILL, 1)
-
         val user = app.getUser(getEntity())!!
 
         if (cause.cause == EntityDamageEvent.DamageCause.FALL)

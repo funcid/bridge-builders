@@ -76,7 +76,7 @@ object CustomizationNPC {
                         is StepParticle -> stat.activeParticle == data.StepParticle.valueOf(pos.objectName)
                         else -> false
                     }
-                    hint(if (current) "Выбрано" else if(has) "Выбрать" else "Купить")
+                    hint(if (current) "Выбрано" else if (has) "Выбрать" else "Купить")
                     onClick { player, _, _ ->
                         if (current)
                             return@onClick
@@ -117,180 +117,180 @@ object CustomizationNPC {
 
     private val all = selection {
         title = "BridgBuilders"
-        rows = 5
-        columns = 2
+        rows = 3
+        columns = 1
         hint = "Открыть"
-        buttons(
-            button {
-                title = "Монеты"
-                description = "§7Приобретите монеты, §7и ни в чем себе §7не отказывайте."
-                item = item {
-                    type = Material.CLAY_BALL
-                    enchant(Enchantment.LUCK, 0)
-                    nbt("Монеты", 63)
-                    nbt("other", "new_lvl_rare_close")
-                }.build()
-                onClick { player, _, _ ->
-                    temp(
-                        player,
-                        "BridgeBuilders",
-                        true,
-                        3,
-                        3,
-                        *MoneyKit.values()
-                    ) { button, money -> button.item(money.getIcon()) }
-                }
-            }, button {
-                title = "Могилы"
-                description = "§7Выберите могилу, которая §7появится на месте §7вашей смерти."
-                item = item {
-                    type = Material.CLAY_BALL
-                    nbt("other", "g2")
-                    nbt("HideFlags", 63)
-                }.build()
-                onClick { player, _, _ ->
-                    temp(
-                        player,
-                        "Могилы",
-                        false,
-                        3,
-                        3,
-                        *me.reidj.bridgebuilders.donate.impl.Corpse.values()
-                    ) { button, corpse -> button.item(corpse.getIcon()) }
-                }
-            }, button {
-                title = "Частицы ходьбы"
-                description = "§7Выберите тип частиц, §7которые будут появлять §7следом за вами."
-                item = item {
-                    type = Material.CLAY_BALL
-                    nbt("other", "guild_members_add")
-                    nbt("HideFlags", 63)
-                }.build()
-                onClick { player, _, _ ->
-                    temp(
-                        player,
-                        "Частицы ходьбы",
-                        false,
-                        3,
-                        3,
-                        *StepParticle.values()
-                    ) { button, step -> button.item(step.getIcon()) }
-                }
-            }, button {
-                title = "Псевдонимы"
-                description = "§7Выберите псевдоним, §7который появится в §7табе."
-                item = item {
-                    type = Material.CLAY_BALL
-                    nbt("other", "new_booster_2")
-                    nbt("HideFlags", 63)
-                }.build()
-                onClick { player, _, _ ->
-                    temp(player, "Псевдонимы", false, 3, 3, *NameTag.values()) { button, tag ->
-                        button.item(tag.getIcon())
-                    }
-                }
-            }, button {
-                title = "Сообщения об убийстве"
-                description = "§7Выберите сообщение, §7которое будет написано, когда §7вы убьете кого-то."
-                item = item {
-                    type = Material.IRON_SPADE
-                    nbt("simulators", "luck_shovel")
-                    nbt("HideFlags", 63)
-                }.build()
-                onClick { player, _, _ ->
-                    temp(
-                        player,
-                        "Сообщения об убийстве",
-                        false,
-                        3,
-                        2,
-                        *KillMessage.values()
-                    ) { button, message -> button.item(message.getIcon()) }
-                }
-            }, button {
-                title = "Стартовые наборы"
-                description = "§7Выберите набор, который §7поможет вам в игре."
-                item = item {
-                    type = Material.CLAY_BALL
-                    nbt("other", "bag")
-                    nbt("HideFlags", 63)
-                }.build()
-                onClick { player, _, _ ->
-                    temp(
-                        player,
-                        "Стартовые наборы",
-                        false,
-                        3,
-                        3,
-                        *StarterKit.values()
-                    ) { button, kit -> button.item(kit.getIcon()) }
-                }
-            }, button {
-                title = "Стартовый набор"
-                item = item {
-                    type = Material.CLAY_BALL
-                    nbt("other", "unique")
-                    nbt("HideFlags", 63)
-                }.build()
-                onClick { player, _, _ ->
-                    temp(
-                        player,
-                        "Стартовый набор",
-                        true,
-                        3,
-                        3,
-                        *StarterPack.values()
-                    ) { button, kit -> button.item(kit.getIcon()) }
-                }
-            }, button {
-                title = "Достижения"
-                description = ""
-                item = dev.implario.bukkit.item.item {
-                    type = Material.CLAY_BALL
-                    nbt("other", "new_booster_1")
-                    nbt("HideFlags", 63)
-                }.build()
-                onClick { player, _, _ ->
-                    val user = app.getUser(player)!!
-                    selection {
-                        title = "Достижения"
-                        money = ""
-                        hint = ""
-                        rows = 3
-                        columns = 2
-                        storage = Achievement.values().map { oldAchievement ->
-                            val achievement = data.Achievement.valueOf(oldAchievement.name)
-                            val playerHas = user.stat.achievement.contains(achievement)
-                            val canGet = oldAchievement.predicate(user)
-                            button {
-                                item = item {
-                                    type = Material.CLAY_BALL
-                                    if (playerHas) nbt("other", "new_booster_0") else nbt(
-                                        "other",
-                                        "new_booster_1"
-                                    )
-                                }.build()
-                                title =
-                                    if (playerHas) "§aНаграда получена §7${oldAchievement.title}" else "§b${oldAchievement.title}"
-                                hint(if (canGet && !playerHas) "Забрать награду!" else "")
-                                description = oldAchievement.lore
-                                onClick { player, _, _ ->
-                                    if (!canGet || playerHas)
-                                        return@onClick
-                                    player.closeInventory()
-                                    player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1f)
-                                    oldAchievement.reward(user)
-                                    user.stat.achievement.add(achievement)
-                                    player.sendMessage(Formatting.fine("Вы успешно получили награду!"))
-                                    clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
-                                }
-                            }
-                        }.toMutableList()
-                    }.open(player)
+    }
+
+    private val buttons = listOf(
+        button {
+            title = "Монеты"
+            description = "§7Приобретите монеты, §7и ни в чем себе §7не отказывайте."
+            item = item {
+                type = Material.CLAY_BALL
+                enchant(Enchantment.LUCK, 0)
+                nbt("Монеты", 63)
+                nbt("other", "new_lvl_rare_close")
+            }.build()
+            onClick { player, _, _ ->
+                temp(
+                    player,
+                    "BridgeBuilders",
+                    true,
+                    3,
+                    3,
+                    *MoneyKit.values()
+                ) { button, money -> button.item(money.getIcon()) }
+            }
+        }, button {
+            title = "Могилы"
+            description = "§7Выберите могилу, которая §7появится на месте §7вашей смерти."
+            item = item {
+                type = Material.CLAY_BALL
+                nbt("other", "g2")
+                nbt("HideFlags", 63)
+            }.build()
+            onClick { player, _, _ ->
+                temp(
+                    player,
+                    "Могилы",
+                    false,
+                    3,
+                    3,
+                    *me.reidj.bridgebuilders.donate.impl.Corpse.values()
+                ) { button, corpse -> button.item(corpse.getIcon()) }
+            }
+        }, button {
+            title = "Частицы ходьбы"
+            description = "§7Выберите тип частиц, §7которые будут появлять §7следом за вами."
+            item = item {
+                type = Material.CLAY_BALL
+                nbt("other", "guild_members_add")
+                nbt("HideFlags", 63)
+            }.build()
+            onClick { player, _, _ ->
+                temp(
+                    player,
+                    "Частицы ходьбы",
+                    false,
+                    3,
+                    3,
+                    *StepParticle.values()
+                ) { button, step -> button.item(step.getIcon()) }
+            }
+        }, button {
+            title = "Псевдонимы"
+            description = "§7Выберите псевдоним, §7который появится в §7табе."
+            item = item {
+                type = Material.CLAY_BALL
+                nbt("other", "new_booster_2")
+                nbt("HideFlags", 63)
+            }.build()
+            onClick { player, _, _ ->
+                temp(player, "Псевдонимы", false, 3, 3, *NameTag.values()) { button, tag ->
+                    button.item(tag.getIcon())
                 }
             }
-        )
-    }
+        }, button {
+            title = "Сообщения об убийстве"
+            description = "§7Выберите сообщение, §7которое будет написано, когда §7вы убьете кого-то."
+            item = item {
+                type = Material.IRON_SPADE
+                nbt("simulators", "luck_shovel")
+                nbt("HideFlags", 63)
+            }.build()
+            onClick { player, _, _ ->
+                temp(
+                    player,
+                    "Сообщения об убийстве",
+                    false,
+                    3,
+                    2,
+                    *KillMessage.values()
+                ) { button, message -> button.item(message.getIcon()) }
+            }
+        }, button {
+            title = "Стартовые наборы"
+            description = "§7Выберите набор, который §7поможет вам в игре."
+            item = item {
+                type = Material.CLAY_BALL
+                nbt("other", "bag")
+                nbt("HideFlags", 63)
+            }.build()
+            onClick { player, _, _ ->
+                temp(
+                    player,
+                    "Стартовые наборы",
+                    false,
+                    3,
+                    1,
+                    *StarterKit.values()
+                ) { button, kit -> button.item(kit.getIcon()) }
+            }
+        }, button {
+            title = "Стартовый набор"
+            item = item {
+                type = Material.CLAY_BALL
+                nbt("other", "unique")
+                nbt("HideFlags", 63)
+            }.build()
+            onClick { player, _, _ ->
+                temp(
+                    player,
+                    "Стартовый набор",
+                    true,
+                    3,
+                    3,
+                    *StarterPack.values()
+                ) { button, kit -> button.item(kit.getIcon()) }
+            }
+        }, button {
+            title = "Достижения"
+            description = ""
+            item = item {
+                type = Material.CLAY_BALL
+                nbt("other", "new_booster_1")
+                nbt("HideFlags", 63)
+            }.build()
+            onClick { player, _, _ ->
+                val user = app.getUser(player)!!
+                selection {
+                    title = "Достижения"
+                    money = ""
+                    rows = 3
+                    columns = 2
+                    storage = Achievement.values().map { oldAchievement ->
+                        val achievement = data.Achievement.valueOf(oldAchievement.name)
+                        val playerHas = user.stat.achievement.contains(achievement)
+                        val canGet = oldAchievement.predicate(user)
+                        button {
+                            item = item {
+                                type = Material.CLAY_BALL
+                                if (playerHas) nbt("other", "new_booster_0") else nbt(
+                                    "other",
+                                    "new_booster_1"
+                                )
+                            }.build()
+                            title =
+                                if (playerHas) "§aНаграда получена §7${oldAchievement.title}" else "§b${oldAchievement.title}"
+                            hint(if (canGet && !playerHas) "Забрать награду!" else "")
+                            description = oldAchievement.lore
+                            onClick { player, _, _ ->
+                                if (!canGet || playerHas)
+                                    return@onClick
+                                player.closeInventory()
+                                player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1f)
+                                oldAchievement.reward(user)
+                                user.stat.achievement.add(achievement)
+                                player.sendMessage(Formatting.fine("Вы успешно получили награду!"))
+                                clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
+                            }
+                        }
+                    }.toMutableList()
+                }.open(player)
+            }
+        }
+    )
 
     init {
         val npcLabel = worldMeta.getLabel("guide")
@@ -299,6 +299,21 @@ object CustomizationNPC {
 
         // Команда для открытия меню
         B.regCommand({ player, _ ->
+            val stat = app.getUser(player)!!.stat
+            all.storage.clear()
+            all.storage.add(button {
+                item = item {
+                    type = Material.CLAY_BALL
+                    nbt("other", "quest_week")
+                }.build()
+                title = "Общая статистика"
+                description = "§7    Награды: §f${stat.achievement.size}§7/${Achievement.values().size}\n" +
+                        "§7    Лутбоксов открыто: §f${stat.lootboxOpenned}\n" +
+                        "§7    Победы: §b${stat.wins}\n" +
+                        "§7    Убийств: §c${stat.kills}\n" +
+                        "§7    Сыграно: §f${stat.games} §7игр(ы)\n"
+            })
+            all.storage.addAll(buttons.toMutableList())
             all.open(player)
             null
         }, "menu", "help")
