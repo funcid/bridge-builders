@@ -2,6 +2,7 @@ package me.reidj.bridgebuilders.content
 
 import clepto.bukkit.B
 import data.Corpse
+import dev.implario.bukkit.item.item
 import me.func.mod.Anime
 import me.func.mod.Glow
 import me.func.mod.selection.Button
@@ -9,6 +10,7 @@ import me.func.mod.selection.Confirmation
 import me.func.mod.selection.button
 import me.func.mod.selection.selection
 import me.func.protocol.GlowColor
+import me.reidj.bridgebuilders.achievement.Achievement
 import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.donate.DonatePosition
@@ -16,6 +18,7 @@ import me.reidj.bridgebuilders.donate.impl.*
 import me.reidj.bridgebuilders.util.ParticleHelper
 import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import packages.SaveUserPackage
@@ -28,7 +31,7 @@ import java.util.concurrent.TimeUnit
 
 object CustomizationNPC {
 
-    fun <T : DonatePosition> temp(
+    private fun <T : DonatePosition> temp(
         player: Player,
         name: String,
         isDonate: Boolean,
@@ -78,7 +81,8 @@ object CustomizationNPC {
                         Anime.close(player)
                         if (has) {
                             when (pos) {
-                                is me.reidj.bridgebuilders.donate.impl.Corpse -> stat.activeCorpse = Corpse.valueOf(pos.objectName)
+                                is me.reidj.bridgebuilders.donate.impl.Corpse -> stat.activeCorpse =
+                                    Corpse.valueOf(pos.objectName)
                                 is KillMessage -> stat.activeKillMessage = data.KillMessage.valueOf(pos.objectName)
                                 is NameTag -> stat.activeNameTag = data.NameTag.valueOf(pos.objectName)
                                 is StarterKit -> stat.activeKit = data.StarterKit.valueOf(pos.objectName)
@@ -112,7 +116,6 @@ object CustomizationNPC {
         rows = 5
         columns = 2
         hint = "Открыть"
-
         buttons(
             button {
                 title = "Монеты"
@@ -124,7 +127,12 @@ object CustomizationNPC {
                     nbt("other", "new_lvl_rare_close")
                 }.build()
                 onClick { player, _, _ ->
-                    temp(player, "BridgeBuilders", true, *MoneyKit.values()) { button, money -> button.item(money.getIcon()) }
+                    temp(
+                        player,
+                        "BridgeBuilders",
+                        true,
+                        *MoneyKit.values()
+                    ) { button, money -> button.item(money.getIcon()) }
                 }
             }, button {
                 title = "Могилы"
@@ -151,7 +159,12 @@ object CustomizationNPC {
                     nbt("HideFlags", 63)
                 }.build()
                 onClick { player, _, _ ->
-                    temp(player, "Частицы ходьбы", false, *StepParticle.values()) { button, step -> button.item(step.getIcon()) }
+                    temp(
+                        player,
+                        "Частицы ходьбы",
+                        false,
+                        *StepParticle.values()
+                    ) { button, step -> button.item(step.getIcon()) }
                 }
             }, button {
                 title = "Псевдонимы"
@@ -162,7 +175,8 @@ object CustomizationNPC {
                     nbt("HideFlags", 63)
                 }.build()
                 onClick { player, _, _ ->
-                    temp(player, "Псевдонимы", false, *NameTag.values()) { button, tag -> button.item(tag.getIcon())
+                    temp(player, "Псевдонимы", false, *NameTag.values()) { button, tag ->
+                        button.item(tag.getIcon())
                     }
                 }
             }, button {
@@ -174,7 +188,12 @@ object CustomizationNPC {
                     nbt("HideFlags", 63)
                 }.build()
                 onClick { player, _, _ ->
-                    temp(player, "Сообщения об убийстве", false, *KillMessage.values()) { button, message -> button.item(message.getIcon()) }
+                    temp(
+                        player,
+                        "Сообщения об убийстве",
+                        false,
+                        *KillMessage.values()
+                    ) { button, message -> button.item(message.getIcon()) }
                 }
             }, button {
                 title = "Стартовые наборы"
@@ -207,6 +226,52 @@ object CustomizationNPC {
                         true,
                         *StarterPack.values()
                     ) { button, kit -> button.item(kit.getIcon()) }
+                }
+            }, button {
+                title = "Достижения"
+                description = ""
+                item = dev.implario.bukkit.item.item {
+                    type = Material.CLAY_BALL
+                    nbt("other", "new_booster_1")
+                    nbt("HideFlags", 63)
+                }.build()
+                onClick { player, _, _ ->
+                    val user = app.getUser(player)!!
+                    selection {
+                        title = "Достижения"
+                        money = ""
+                        hint = ""
+                        rows = 3
+                        columns = 2
+                        storage = Achievement.values().map { oldAchievement ->
+                            val achievement = data.Achievement.valueOf(oldAchievement.name)
+                            val playerHas = user.stat.achievement.contains(achievement)
+                            val canGet = oldAchievement.predicate(user)
+                            button {
+                                item = item {
+                                    type = Material.CLAY_BALL
+                                    if (playerHas) nbt("other", "new_booster_0") else nbt(
+                                        "other",
+                                        "new_booster_1"
+                                    )
+                                }.build()
+                                title =
+                                    if (playerHas) "§aНаграда получена §7${oldAchievement.title}" else "§b${oldAchievement.title}"
+                                hint(if (canGet && !playerHas) "Забрать награду!" else "")
+                                description = oldAchievement.lore
+                                onClick { player, _, _ ->
+                                    if (!canGet || playerHas)
+                                        return@onClick
+                                    player.closeInventory()
+                                    player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1f)
+                                    oldAchievement.reward(user)
+                                    user.stat.achievement.add(achievement)
+                                    player.sendMessage(Formatting.fine("Вы успешно получили награду!"))
+                                    clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
+                                }
+                            }
+                        }.toMutableList()
+                    }.open(player)
                 }
             }
         )
