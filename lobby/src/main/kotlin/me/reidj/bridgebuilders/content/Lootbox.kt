@@ -3,8 +3,10 @@ package me.reidj.bridgebuilders.content
 import clepto.bukkit.B
 import dev.implario.bukkit.item.item
 import implario.humanize.Humanize
+import me.func.mod.Anime
 import me.func.mod.Banners
 import me.func.mod.Banners.shineBlocks
+import me.func.mod.data.LootDrop
 import me.func.mod.selection.button
 import me.func.mod.selection.selection
 import me.func.protocol.element.MotionType
@@ -19,13 +21,11 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
-import org.bukkit.inventory.ItemStack
 import packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 
@@ -88,66 +88,67 @@ object Lootbox : Listener {
         }, "lootboxsound")
     }
 
+    private val menu = selection {
+        title = "Ваши лутбоксы"
+        hint = "Открыть"
+        rows = 4
+        columns = 5
+    }
+
     @EventHandler
     fun InventoryOpenEvent.handle() {
         if (inventory.type == InventoryType.ENDER_CHEST) {
             isCancelled = true
             val player = player as Player
             val user = app.getUser(player)!!
-            selection {
-                title = "Ваши лутбоксы"
-                money = "Монет ${user.stat.money}"
-                hint = "Открыть"
-                rows = 4
-                columns = 5
-                storage = MutableList(user.stat.lootbox) {
-                    button {
-                        item = lootboxItem
-                        price = lootboxPrice.toLong()
-                        title = "§bЛутбокс"
-                        onClick { player, _, _ ->
-                            if (user.stat.money < lootboxPrice) {
-                                player.sendMessage(Formatting.error("Не хватает монет :("))
-                                return@onClick
-                            }
-                            user.minusMoney(lootboxPrice)
-                            user.stat.lootbox--
-                            user.stat.lootboxOpenned++
-
-                            val drop = dropList.random() as DonatePosition
-                            val moneyDrop = (Math.random() * 20 + 10).toInt()
-
-                            me.func.mod.conversation.ModTransfer(
-                                2,
-                                CraftItemStack.asNMSCopy(drop.getIcon()),
-                                drop.getTitle(),
-                                drop.getRare().name,
-                                CraftItemStack.asNMSCopy(ItemStack(Material.GOLD_INGOT)),
-                                "§e$moneyDrop монет",
-                                ""
-                            ).send("lootbox", player)
-
-                            if (user.stat.donates.contains(drop.objectName)) {
-                                val giveBack = (drop.getRare().ordinal + 1) * 48
-                                player.sendMessage(Formatting.fine("§aДубликат! §fЗаменен на §e$giveBack монет§f."))
-                                user.giveMoney(giveBack)
-                            } else {
-                                drop.give(user)
-                            }
-                            user.giveMoney(moneyDrop)
-
-                            B.bc(
-                                Formatting.fine(
-                                    "§e${player.name} §fполучил §b${
-                                        drop.getRare().with(drop.getTitle())
-                                    }."
-                                )
-                            )
-                            clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
+            menu.money = "Монет ${user.stat.money}"
+            menu.storage = MutableList(user.stat.lootbox) {
+                button {
+                    item = lootboxItem
+                    price = lootboxPrice.toLong()
+                    title = "§bЛутбокс"
+                    onClick { player, _, _ ->
+                        if (user.stat.money < lootboxPrice) {
+                            player.sendMessage(Formatting.error("Не хватает монет :("))
+                            return@onClick
                         }
+                        Anime.close(player)
+                        user.minusMoney(lootboxPrice)
+                        user.stat.lootbox--
+                        user.stat.lootboxOpenned++
+
+                        val drop = dropList.random() as DonatePosition
+                        val moneyDrop = (Math.random() * 20 + 10).toInt()
+
+                        Anime.openLootBox(
+                            player, LootDrop(
+                                drop.getIcon(),
+                                drop.getTitle(),
+                                drop.getRare().title
+                            )
+                        )
+
+                        if (user.stat.donates.contains(drop.objectName)) {
+                            val giveBack = (drop.getRare().ordinal + 1) * 48
+                            player.sendMessage(Formatting.fine("§aДубликат! §fЗаменен на §e$giveBack монет§f."))
+                            user.giveMoney(giveBack)
+                        } else {
+                            drop.give(user)
+                        }
+                        user.giveMoney(moneyDrop)
+
+                        B.bc(
+                            Formatting.fine(
+                                "§e${player.name} §fполучил §b${
+                                    drop.getRare().with(drop.getTitle())
+                                }."
+                            )
+                        )
+                        clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
                     }
                 }
-            }.open(player)
+            }
+            menu.open(player)
         }
     }
 }

@@ -35,15 +35,17 @@ object CustomizationNPC {
         player: Player,
         name: String,
         isDonate: Boolean,
+        rows: Int,
+        columns: Int,
         vararg donate: T,
-        converter: (Button, T) -> Button = { button, _ -> button }
+        converter: (Button, T) -> Button = { button, _ -> button },
     ) {
         selection {
             val user = app.getUser(player)!!
             val stat = user.stat
             title = name
-            rows = 3
-            columns = 3
+            this.rows = rows
+            this.columns = columns
             if (isDonate)
                 vault = "donate"
             money = if (isDonate) {
@@ -66,7 +68,6 @@ object CustomizationNPC {
                         else -> false
                     }
                     if (!has) price = pos.getPrice().toLong()
-                    else hint = "Выбрать"
                     val current = has && when (pos) {
                         is me.reidj.bridgebuilders.donate.impl.Corpse -> stat.activeCorpse == Corpse.valueOf(pos.objectName)
                         is KillMessage -> stat.activeKillMessage == data.KillMessage.valueOf(pos.objectName)
@@ -75,6 +76,7 @@ object CustomizationNPC {
                         is StepParticle -> stat.activeParticle == data.StepParticle.valueOf(pos.objectName)
                         else -> false
                     }
+                    hint(if (current) "Выбрано" else if(has) "Выбрать" else "Купить")
                     onClick { player, _, _ ->
                         if (current)
                             return@onClick
@@ -89,6 +91,7 @@ object CustomizationNPC {
                                 is StepParticle -> stat.activeParticle = data.StepParticle.valueOf(pos.objectName)
                             }
                             Anime.title(player, "Выбрано!")
+                            clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
                             return@onClick
                         }
                         if (isDonate) {
@@ -105,8 +108,8 @@ object CustomizationNPC {
                         Glow.animate(player, 0.4, GlowColor.GREEN)
                         clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
                     }
-                    title = if (current) "[ Выбрано ]" else if (has) "§7Выбрать" else "§bКупить"
-                    description = pos.getTitle()
+                    title = pos.getTitle()
+                    description = pos.getDescription()
                 }, pos).apply { if (pos is MoneyKit) sale(pos.percent) }
             }.toMutableList()
         }.open(player)
@@ -121,7 +124,7 @@ object CustomizationNPC {
             button {
                 title = "Монеты"
                 description = "§7Приобретите монеты, §7и ни в чем себе §7не отказывайте."
-                item = dev.implario.bukkit.item.item {
+                item = item {
                     type = Material.CLAY_BALL
                     enchant(Enchantment.LUCK, 0)
                     nbt("Монеты", 63)
@@ -132,13 +135,15 @@ object CustomizationNPC {
                         player,
                         "BridgeBuilders",
                         true,
-                        *MoneyKit.values()
+                        3,
+                        3,
+                        *MoneyKit.values(),
                     ) { button, money -> button.item(money.getIcon()) }
                 }
             }, button {
                 title = "Могилы"
                 description = "§7Выберите могилу, которая §7появится на месте §7вашей смерти."
-                item = dev.implario.bukkit.item.item {
+                item = item {
                     type = Material.CLAY_BALL
                     nbt("other", "g2")
                     nbt("HideFlags", 63)
@@ -148,13 +153,15 @@ object CustomizationNPC {
                         player,
                         "Могилы",
                         false,
+                        3,
+                        3,
                         *me.reidj.bridgebuilders.donate.impl.Corpse.values()
                     ) { button, corpse -> button.item(corpse.getIcon()) }
                 }
             }, button {
                 title = "Частицы ходьбы"
                 description = "§7Выберите тип частиц, §7которые будут появлять §7следом за вами."
-                item = dev.implario.bukkit.item.item {
+                item = item {
                     type = Material.CLAY_BALL
                     nbt("other", "guild_members_add")
                     nbt("HideFlags", 63)
@@ -164,26 +171,28 @@ object CustomizationNPC {
                         player,
                         "Частицы ходьбы",
                         false,
+                        3,
+                        3,
                         *StepParticle.values()
                     ) { button, step -> button.item(step.getIcon()) }
                 }
             }, button {
                 title = "Псевдонимы"
                 description = "§7Выберите псевдоним, §7который появится в §7табе."
-                item = dev.implario.bukkit.item.item {
+                item = item {
                     type = Material.CLAY_BALL
                     nbt("other", "new_booster_2")
                     nbt("HideFlags", 63)
                 }.build()
                 onClick { player, _, _ ->
-                    temp(player, "Псевдонимы", false, *NameTag.values()) { button, tag ->
+                    temp(player, "Псевдонимы", false, 3,3, *NameTag.values()) { button, tag ->
                         button.item(tag.getIcon())
                     }
                 }
             }, button {
                 title = "Сообщения об убийстве"
                 description = "§7Выберите сообщение, §7которое будет написано, когда §7вы убьете кого-то."
-                item = dev.implario.bukkit.item.item {
+                item = item {
                     type = Material.IRON_SPADE
                     nbt("simulators", "luck_shovel")
                     nbt("HideFlags", 63)
@@ -193,13 +202,15 @@ object CustomizationNPC {
                         player,
                         "Сообщения об убийстве",
                         false,
+                        3,
+                        3,
                         *KillMessage.values()
                     ) { button, message -> button.item(message.getIcon()) }
                 }
             }, button {
                 title = "Стартовые наборы"
                 description = "§7Выберите набор, который §7поможет вам в игре."
-                item = dev.implario.bukkit.item.item {
+                item = item {
                     type = Material.CLAY_BALL
                     nbt("other", "bag")
                     nbt("HideFlags", 63)
@@ -209,13 +220,14 @@ object CustomizationNPC {
                         player,
                         "Стартовые наборы",
                         false,
+                        5,
+                        1,
                         *StarterKit.values()
                     ) { button, kit -> button.item(kit.getIcon()) }
                 }
             }, button {
                 title = "Стартовый набор"
-                description = "Вы получите §b3 лутбокса §7и §e512 монет§7."
-                item = dev.implario.bukkit.item.item {
+                item = item {
                     type = Material.CLAY_BALL
                     nbt("other", "unique")
                     nbt("HideFlags", 63)
@@ -225,6 +237,8 @@ object CustomizationNPC {
                         player,
                         "Стартовый набор",
                         true,
+                        3,
+                        3,
                         *StarterPack.values()
                     ) { button, kit -> button.item(kit.getIcon()) }
                 }

@@ -11,8 +11,10 @@ import org.bukkit.inventory.ItemStack
 enum class StarterPack(
     private val title: String,
     private val price: Int,
+    private val description: String,
 ) : DonatePosition {
-    STARTER_PACK("§bСтартовый набор", 89),
+    STARTER_PACK("§bСтартовый набор", 89, "§7Вы получите §b3 лутбокса\n" +
+            "§7и §e512 монет§7."),
     ;
     override fun getTitle(): String = title
 
@@ -25,8 +27,9 @@ enum class StarterPack(
         enchant(Enchantment.LUCK, 0)
         nbt("other", "unique")
         nbt("HideFlags", 63)
-        text("§bСтартовый набор\n\n§7Вы получите §b3 лутбокса\n§7и §e512 монет§7.\n\n§7Купить за §b89 кристаликов")
     }.build()
+
+    override fun getDescription(): String = description
 
     override fun give(user: User) {
         user.stat.lootbox += 3

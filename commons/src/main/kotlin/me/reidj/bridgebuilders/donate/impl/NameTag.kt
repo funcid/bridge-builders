@@ -30,6 +30,8 @@ enum class NameTag(private val title: String, private val price: Int, private va
         return title
     }
 
+    override fun getDescription(): String = ""
+
     override fun getPrice(): Int {
         return price
     }

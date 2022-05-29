@@ -8,6 +8,8 @@ interface DonatePosition : Donate {
 
     fun getTitle(): String
 
+    fun getDescription(): String
+
     fun getPrice(): Int
 
     fun getRare(): Rare

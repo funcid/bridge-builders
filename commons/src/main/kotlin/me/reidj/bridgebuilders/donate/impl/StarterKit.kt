@@ -27,7 +27,7 @@ enum class StarterKit(
         Rare.COMMON,
         Material.IRON_AXE,
         "weapons:iron_aztec_axe",
-        "§b  Железный топор\n§b  Кольчужный нагрудник\n§b  Яблоко х16",
+        "§bЖелезный топор, §bКольчужный нагрудник, §bЯблоко х16",
         arrayOf(
             ItemStack(Material.IRON_AXE),
             ItemStack(Material.CHAINMAIL_CHESTPLATE),
@@ -40,7 +40,7 @@ enum class StarterKit(
         Rare.RARE,
         Material.IRON_SPADE,
         "weapons:iron_aztec_shovel",
-        "§b  Железную лопату\n§b  Кольчужные поножи\n§b  Хлеб х16",
+        "§bЖелезную лопату, §bКольчужные поножи, §bХлеб х16",
         arrayOf(
             ItemStack(Material.IRON_SPADE),
             ItemStack(Material.CHAINMAIL_LEGGINGS),
@@ -53,7 +53,7 @@ enum class StarterKit(
         Rare.RARE,
         Material.IRON_PICKAXE,
         "weapons:iron_aztec_pickaxe",
-        "§b  Железную кирку\n§b  Кольчужный шлем\n§b  Морковь х6",
+        "§bЖелезную кирку, §bКольчужный шлем, §bМорковь х6",
         arrayOf(
             ItemStack(Material.IRON_PICKAXE),
             ItemStack(Material.CHAINMAIL_HELMET),
@@ -66,7 +66,7 @@ enum class StarterKit(
         Rare.EPIC,
         Material.DIAMOND_SWORD,
         "weapons:titan_axe",
-        "§b  Печка х2\n§b  Железная руда х16\n§b  Уголь х16\n§b  Золотой слиток х16\n§b  Алмаз х2\n§b  Жареная баранина х2",
+        "§bПечка х2, §bЖелезная руда х16, §bУголь х16, §bЗолотой слиток х16, §bАлмаз х2, §bЖареная баранина х2",
         arrayOf(
             ItemStack(Material.FURNACE, 2),
             ItemStack(Material.IRON_ORE, 16),
@@ -82,7 +82,7 @@ enum class StarterKit(
         Rare.EPIC,
         Material.CLAY_BALL,
         "skyblock:yield",
-        "§b Книги х16\n§b Наковальня\n§b Книжные полки х18\n§b Стол зачарования\n§b Бутыльки опыта х256\n§b Блоки лазурита х7\n§b Хлеб х16",
+        "§bКниги х16, §bНаковальня, §bКнижные полки х18, §bСтол зачарования, §bБутыльки опыта х256, §bБлоки лазурита х7, §bХлеб х16",
         arrayOf(
             ItemStack(Material.BOOK, 16),
             ItemStack(Material.ANVIL),
@@ -102,7 +102,7 @@ enum class StarterKit(
         Rare.EPIC,
         Material.CAKE,
         null,
-        "§b  Хлеб х32\n§b  Яблоко х32\n§b  Торт х5\n§b  Жареная баранина х16\n§b  Стейк х16",
+        "§bХлеб х32, §bЯблоко х32, §bТорт х5, §bЖареная баранина х16, §bСтейк х16",
         arrayOf(
             ItemStack(Material.BREAD, 32),
             ItemStack(Material.APPLE, 32),
@@ -117,7 +117,7 @@ enum class StarterKit(
         Rare.EPIC,
         Material.CLAY_BALL,
         "other:heart",
-        "§b  Зелье регенерации I х2\n§b  Зелье лечения I х3\n§b  Золотое яблоко х2\n§b  Хлеб х16",
+        "§bЗелье регенерации I х2, §bЗелье лечения I х3, §bЗолотое яблоко х2, §bХлеб х16",
         arrayOf(
             createPotion(PotionEffectType.REGENERATION, 60, 0, 2, "регенерации"),
             createPotion(PotionEffectType.HEAL, 0, 0, 3, "лечения"),
@@ -131,7 +131,7 @@ enum class StarterKit(
         Rare.EPIC,
         Material.IRON_SWORD,
         "weapons_other:42",
-        "§b  Зелье невидимости х2\n§b  Зелье скорости I x2\n§b  Лук\n§b  Стрелы х32\n§b  Каменный меч\n§b  Стейк х12",
+        "§bЗелье невидимости х2, §bЗелье скорости I x2, §bЛук, §bСтрелы х32, §bКаменный меч, §bСтейк х12",
         arrayOf(
             createPotion(PotionEffectType.INVISIBILITY, 15, 0, 2, "невидимости"),
             createPotion(PotionEffectType.SPEED, 60, 0, 2, "скорости"),
@@ -147,7 +147,7 @@ enum class StarterKit(
         Rare.LEGENDARY,
         Material.GOLD_PICKAXE,
         "simulators:donate_pickaxe",
-        "§b  Алмазная кирка\n§b  Алмазный топор\n§b  Алмазная лопата\n§b  Жареная баранина х16",
+        "§bАлмазная кирка, §bАлмазный топор, §bАлмазная лопата, §bЖареная баранина х16",
         arrayOf(
             ItemStack(Material.DIAMOND_PICKAXE),
             ItemStack(Material.DIAMOND_AXE),
@@ -161,7 +161,7 @@ enum class StarterKit(
         Rare.LEGENDARY,
         Material.IRON_SWORD,
         "weapons_other:evil_trident",
-        "§b  Кольчужный шлем\n§b  Кольчужный нагрудник\n§b  Кольчужные поножи\n§b  Кольчужные ботинки\n§b  Железный меч\n§b  Золотое яблоко х2",
+        "§bКольчужный шлем, §bКольчужный нагрудник, §bКольчужные поножи, §bКольчужные ботинки, §bЖелезный меч, §bЗолотое яблоко х2",
         arrayOf(
             ItemStack(Material.CHAINMAIL_HELMET),
             ItemStack(Material.CHAINMAIL_CHESTPLATE),
@@ -177,7 +177,7 @@ enum class StarterKit(
         Rare.LEGENDARY,
         Material.IRON_SWORD,
         "weapons_other:wood_staff",
-        "§b Алмазный меч\n§b Железную кирку\n§b Золотая морковь х24\n§b Золотые яблоки х6\n§b Алмазный шлем \n§b Алмазные ботинки",
+        "§bАлмазный меч, §bЖелезную кирку, §bЗолотая морковь х24, §bЗолотые яблоки х4, §bАлмазный шлем, §bАлмазные ботинки",
         arrayOf(
             ItemStack(Material.DIAMOND_SWORD),
             ItemStack(Material.IRON_PICKAXE),
@@ -186,12 +186,14 @@ enum class StarterKit(
             ItemStack(Material.GOLD_CHESTPLATE),
             ItemStack(Material.GOLD_LEGGINGS),
             ItemStack(Material.DIAMOND_BOOTS),
-            ItemStack(Material.GOLDEN_APPLE, 6)
+            ItemStack(Material.GOLDEN_APPLE, 4)
         )
     ),
     ;
 
     override fun getTitle() = title
+
+    override fun getDescription(): String = lore
 
     override fun getPrice() = price
 

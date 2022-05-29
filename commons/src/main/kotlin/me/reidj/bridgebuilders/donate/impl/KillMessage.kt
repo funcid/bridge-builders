@@ -2,13 +2,17 @@ package me.reidj.bridgebuilders.donate.impl
 
 import dev.implario.bukkit.item.item
 import me.reidj.bridgebuilders.donate.DonatePosition
-import me.reidj.bridgebuilders.donate.MoneyFormatter
 import me.reidj.bridgebuilders.donate.Rare
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-enum class KillMessage(private val title: String, private val price: Int, private val rare: Rare, private val format: String) :
+enum class KillMessage(
+    private val title: String,
+    private val price: Int,
+    private val rare: Rare,
+    private val format: String
+) :
     DonatePosition {
 
     NONE("Отсутствует", 0, Rare.COMMON, "убит"),
@@ -28,6 +32,8 @@ enum class KillMessage(private val title: String, private val price: Int, privat
         return title
     }
 
+    override fun getDescription(): String = "§fПример: func $format игроком reidj"
+
     override fun getPrice(): Int {
         return price
     }
@@ -44,7 +50,6 @@ enum class KillMessage(private val title: String, private val price: Int, privat
         return item {
             type = Material.CLAY_BALL
             nbt("other", "pets1")
-            text(rare.with("сообщение $title") + "\n\n§fРедкость: ${rare.getColored()}\n§fСтоимость: ${MoneyFormatter.texted(price)}\n§fПример: func $format игроком reidj")
         }.build()
     }
 

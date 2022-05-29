@@ -13,32 +13,32 @@ enum class MoneyKit(
     private val rare: Rare,
     private val reward: Int,
     private val item: ItemStack,
-    val percent: Int = 0
+    val percent: Int,
+    private val description: String,
 ) : DonatePosition {
     SMALL("Пара монет", 10, Rare.COMMON, 32, item {
         type = Material.CLAY_BALL
-        text("§eПара монет §7> §f32\n\n§7Получите §e32 монеты\n§7за §b10 кристаликов§7.")
         nbt("other", "coin2")
-    }.build()),
+    }.build(), 0,"§7Получите §e32 монеты"),
     NORMAL("Мешок монет", 39, Rare.RARE, 256, item {
         type = Material.CLAY_BALL
-        text("§eПара монет §7> §f128\n\n§7Получите §e256 монет\n§7за §b39 кристаликов§7.")
         nbt("other", "bag1")
-    }.build()),
+    }.build(), 0, "§7Получите §e256 монет"),
     BIG("Коробка монет", 119, Rare.EPIC, 1024, item {
         type = Material.CLAY_BALL
-        text("§eПара монет §7> §f1024\n\n§7Получите §e1024 монеты\n§7за §b119 кристаликов§7.")
         nbt("other", "new_lvl_rare_close")
-    }.build()),
+    }.build(), 0, "§7Получите §e1024 монеты"),
     HUGE("Гора монет", 499, Rare.LEGENDARY, 8192, item {
         type = Material.TOTEM
-        text("§eПара монет §7> §f8192\n\n§7Получите §e8192 монеты\n§7за §b499 кристаликов§7.")
         nbt("other", "knight")
-    }.build()), ;
+    }.build(), 0, "§7Получите §e8192 монеты"),
+    ;
 
     override fun getTitle(): String {
         return title
     }
+
+    override fun getDescription(): String = description
 
     override fun getPrice(): Int {
         return price

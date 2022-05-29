@@ -33,6 +33,8 @@ enum class StepParticle(
         return title
     }
 
+    override fun getDescription(): String = ""
+
     override fun getPrice(): Int {
         return price
     }

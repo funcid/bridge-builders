@@ -21,6 +21,8 @@ enum class Corpse(private val title: String, private val price: Int, private val
         return title
     }
 
+    override fun getDescription(): String = ""
+
     override fun getPrice(): Int {
         return price
     }
