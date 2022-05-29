@@ -38,7 +38,7 @@ object CustomizationNPC {
         rows: Int,
         columns: Int,
         vararg donate: T,
-        converter: (Button, T) -> Button = { button, _ -> button },
+        converter: (Button, T) -> Button = { button, _ -> button }
     ) {
         selection {
             val user = app.getUser(player)!!
@@ -67,7 +67,7 @@ object CustomizationNPC {
                         is StepParticle -> stat.donates.contains(pos.objectName)
                         else -> false
                     }
-                    if (!has) price = pos.getPrice().toLong()
+                    price = pos.getPrice().toLong()
                     val current = has && when (pos) {
                         is me.reidj.bridgebuilders.donate.impl.Corpse -> stat.activeCorpse == Corpse.valueOf(pos.objectName)
                         is KillMessage -> stat.activeKillMessage == data.KillMessage.valueOf(pos.objectName)
@@ -137,7 +137,7 @@ object CustomizationNPC {
                         true,
                         3,
                         3,
-                        *MoneyKit.values(),
+                        *MoneyKit.values()
                     ) { button, money -> button.item(money.getIcon()) }
                 }
             }, button {
@@ -185,7 +185,7 @@ object CustomizationNPC {
                     nbt("HideFlags", 63)
                 }.build()
                 onClick { player, _, _ ->
-                    temp(player, "Псевдонимы", false, 3,3, *NameTag.values()) { button, tag ->
+                    temp(player, "Псевдонимы", false, 3, 3, *NameTag.values()) { button, tag ->
                         button.item(tag.getIcon())
                     }
                 }
@@ -203,7 +203,7 @@ object CustomizationNPC {
                         "Сообщения об убийстве",
                         false,
                         3,
-                        3,
+                        2,
                         *KillMessage.values()
                     ) { button, message -> button.item(message.getIcon()) }
                 }
@@ -220,8 +220,8 @@ object CustomizationNPC {
                         player,
                         "Стартовые наборы",
                         false,
-                        5,
-                        1,
+                        3,
+                        3,
                         *StarterKit.values()
                     ) { button, kit -> button.item(kit.getIcon()) }
                 }

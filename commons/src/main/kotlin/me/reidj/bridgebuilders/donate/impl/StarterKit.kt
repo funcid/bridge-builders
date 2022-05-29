@@ -193,7 +193,7 @@ enum class StarterKit(
 
     override fun getTitle() = title
 
-    override fun getDescription(): String = lore
+    override fun getDescription(): String = ""
 
     override fun getPrice() = price
 
