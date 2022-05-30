@@ -275,10 +275,10 @@ object CustomizationNPC {
                                 if (playerHas) "§aНаграда получена §7${oldAchievement.title}" else "§b${oldAchievement.title}"
                             hint(if (canGet && !playerHas) "Забрать награду!" else "")
                             description = oldAchievement.lore
-                            onClick { player, _, _ ->
+                            onClick top@{ player, _, _ ->
                                 if (!canGet || playerHas)
-                                    return@onClick
-                                player.closeInventory()
+                                    return@top
+                                Anime.close(player)
                                 player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1f)
                                 oldAchievement.reward(user)
                                 user.stat.achievement.add(achievement)
