@@ -77,7 +77,7 @@ object LobbyHandler : Listener {
             sendMessage(Formatting.fine("У вас есть незаконченная игра! Вернуться /rejoin."))
 
         allowFlight = IPermissionService.get().isDonator(uniqueId)
-        ModLoader.send("balance-bundle.jar", this)
+        ModLoader.send("balance-bundle-1.0-SNAPSHOT.jar", this)
         B.postpone(5) {
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
             Npc.npcs.values.forEach { it.spawn(this) }

@@ -42,8 +42,6 @@ lateinit var app: App
 
 class App : JavaPlugin() {
 
-    private var online = 0
-
     private var fixDoubleClick: Player? = null
 
     private val hoverEvent =
@@ -68,7 +66,7 @@ class App : JavaPlugin() {
         app = this
         Platforms.set(PlatformDarkPaper())
 
-        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD)
+        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC, Kit.LOOTBOX)
         ModLoader.loadAll("mods")
 
         BridgeBuildersInstance(this, { getUser(it) }, MapLoader.load("LOBB"))
