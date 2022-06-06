@@ -4,8 +4,6 @@ plugins {
     id 'dev.implario.bundler' version '4.0.1'
 }
 
-apply plugin: 'kotlin'
-
 dependencies {
     implementation 'ru.cristalix:client-api:live-SNAPSHOT'
     implementation 'ru.cristalix:uiengine:4.87-SNAPSHOT'

@@ -120,8 +120,6 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun PlayerQuitEvent.handle() {
-        if (isSpectator(player))
-            return
         teams.forEach { it.players.remove(player.uniqueId) }
         if (activeStatus != Status.STARTING) {
             val user = app.getUser(player)!!
