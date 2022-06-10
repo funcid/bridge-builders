@@ -18,6 +18,7 @@ class User(stat: Stat) {
     var player: Player? = null
     var lastDamager: Player? = null
     var team: Team? = null
+    var isArmLock = false
 
     var inventory: Inventory? = null
 

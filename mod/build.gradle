@@ -1,35 +1,31 @@
 plugins {
     id 'java'
-    id 'dev.implario.bundler' version '3.0.3' apply false
+    id 'org.jetbrains.kotlin.jvm'
+    id 'dev.implario.bundler' version '4.0.1'
 }
 
 apply plugin: 'dev.implario.bundler'
 
 dependencies {
     compileOnly 'ru.cristalix:client-api:live-SNAPSHOT'
-    implementation 'ru.cristalix:uiengine:live-SNAPSHOT'
+    implementation 'ru.cristalix:uiengine:4.87-SNAPSHOT'
     implementation 'ru.cristalix:client-sdk:live-SNAPSHOT'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.21'
     implementation 'implario:humanize:1.1.3'
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += '-Xcontext-receivers'
     }
 }
 
-bundler {
-    name 'BridgeBuildersMod'
+jar.from configurations.runtimeClasspath.collect(project.&zipTree)
+
+bundle {
+    modName 'BridgeBuilders'
     mainClass 'App'
-    version '1.0'
     author 'Reidj'
-}
-
-jar {
-    archiveBaseName.set 'bridge-mod'
-    duplicatesStrategy DuplicatesStrategy.EXCLUDE
-    from {
-        configurations.runtimeClasspath.collect { it.directory ? it : zipTree(it) }
-    }
+    keep('class ru.cristalix.data.** { *; }')
+    keep('class ru.cristalix.** { *; }')
 }

@@ -177,12 +177,11 @@ enum class StarterKit(
         Rare.LEGENDARY,
         Material.IRON_SWORD,
         "weapons_other:wood_staff",
-        "§bАлмазный меч, §bЖелезную кирку, §bЗолотая морковь х24, §bЗолотые яблоки х4, §bАлмазный шлем, §bАлмазные ботинки",
+        "§bАлмазный меч, §bЖелезную кирку, §bЗолотая морковь х24, §bЗолотые яблоки х4, §bАлмазные ботинки",
         arrayOf(
             ItemStack(Material.DIAMOND_SWORD),
             ItemStack(Material.IRON_PICKAXE),
             ItemStack(Material.GOLDEN_CARROT, 24),
-            ItemStack(Material.DIAMOND_HELMET),
             ItemStack(Material.GOLD_CHESTPLATE),
             ItemStack(Material.GOLD_LEGGINGS),
             ItemStack(Material.DIAMOND_BOOTS),

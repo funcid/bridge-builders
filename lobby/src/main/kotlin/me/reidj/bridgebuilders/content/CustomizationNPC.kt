@@ -276,14 +276,16 @@ object CustomizationNPC {
                             hint(if (canGet && !playerHas) "Забрать награду!" else "")
                             description = oldAchievement.lore
                             onClick top@{ player, _, _ ->
-                                if (!canGet || playerHas)
+                                if (!canGet || playerHas || user.isArmLock)
                                     return@top
+                                user.isArmLock = true
                                 Anime.close(player)
                                 player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1f)
                                 oldAchievement.reward(user)
                                 user.stat.achievement.add(achievement)
                                 player.sendMessage(Formatting.fine("Вы успешно получили награду!"))
                                 clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
+                                B.postpone(5) { user.isArmLock = false }
                             }
                         }
                     }.toMutableList()

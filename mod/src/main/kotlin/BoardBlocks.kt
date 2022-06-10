@@ -86,7 +86,7 @@ object BoardBlocks {
             (box.children[1] as TextElement).content = "${(sum * 1.0 / needBlocks * 100.0).toInt()}%"
         }
 
-        registerHandler<GameLoop> {
+        mod.registerHandler<GameLoop> {
             // Таб
             if (inGame) {
                 if (tab.children.isNotEmpty() && (!tab.enabled && Keyboard.isKeyDown(Keyboard.KEY_TAB)) || (tab.enabled && !Keyboard.isKeyDown(

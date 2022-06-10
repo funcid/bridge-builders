@@ -78,11 +78,11 @@ object CommandChoose {
             }
         }
 
-        registerHandler<HealthRender> { isCancelled = waiting }
-        registerHandler<ExpBarRender> { isCancelled = waiting }
-        registerHandler<HungerRender> { isCancelled = waiting }
-        registerHandler<ArmorRender> { isCancelled = waiting }
-        registerHandler<VehicleHealthRender> { isCancelled = waiting }
+        mod.registerHandler<HealthRender> { isCancelled = waiting }
+        mod.registerHandler<ExpBarRender> { isCancelled = waiting }
+        mod.registerHandler<HungerRender> { isCancelled = waiting }
+        mod.registerHandler<ArmorRender> { isCancelled = waiting }
+        mod.registerHandler<VehicleHealthRender> { isCancelled = waiting }
 
         mod.registerChannel("bridge:start") {
             waiting = false

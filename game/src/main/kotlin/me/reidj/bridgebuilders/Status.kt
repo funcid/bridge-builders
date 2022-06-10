@@ -1,6 +1,7 @@
 package me.reidj.bridgebuilders
 
 import clepto.bukkit.B
+import data.StarterKit
 import me.func.mod.Anime
 import me.func.mod.conversation.ModTransfer
 import me.reidj.bridgebuilders.team.Team
@@ -12,7 +13,6 @@ import org.bukkit.Color.*
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmStatus
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_SPACTATE
 
@@ -57,37 +57,36 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 teams.forEach { team ->
                     app.updateNumbersPlayersInTeam()
 
-                    team.players.forEach {
-                        val player = Bukkit.getPlayer(it) ?: return@forEach
+                    team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach uuid@{
                         val user = app.getUser(it)!!
 
                         user.inGame = true
                         user.team = team
 
-                        DefaultKit.init(player)
-                        Anime.timer(player, "Конец игры через", GAME.lastSecond)
-                        Anime.sendEmptyBuffer("online:hide", player)
+                        DefaultKit.init(it)
+                        Anime.timer(it, "Конец игры через", GAME.lastSecond)
+                        Anime.sendEmptyBuffer("online:hide", it)
 
-                        player.inventory.armorContents = kit.armor.map { armor ->
+                        it.inventory.armorContents = kit.armor.map { armor ->
                             val meta = armor.itemMeta as LeatherArmorMeta
                             meta.color = checkColor(team.color)
                             armor.itemMeta = meta
                             armor
                         }.toTypedArray()
 
-                        if (user.stat.activeKit == data.StarterKit.NONE)
-                            player.inventory.addItem(kit.sword, kit.pickaxe, kit.axe, kit.spade, kit.bread)
+                        if (user.stat.activeKit == StarterKit.NONE)
+                            it.inventory.addItem(kit.sword, kit.pickaxe, kit.axe, kit.spade, kit.bread)
                         else
                             me.reidj.bridgebuilders.donate.impl.StarterKit.valueOf(user.stat.activeKit.name).content.forEach { starter ->
-                                player.inventory.addItem(starter)
+                                it.inventory.addItem(starter)
                             }
 
                         Anime.alert(
-                            player,
+                            it,
                             "Цель",
                             "Принесите нужные блоки строителю, \nчтобы построить мост к центру\nи разрушить маяк"
                         )
-                        me.func.mod.Glow.showAllPlaces(player)
+                        me.func.mod.Glow.showAllPlaces(it)
                     }
                 }
                 // Список игроков

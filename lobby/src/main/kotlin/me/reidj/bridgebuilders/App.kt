@@ -166,7 +166,7 @@ class App : JavaPlugin() {
 
         B.repeat(20) {
             info.servicedServers.forEach {
-                if (RealmId.of(it).typeName == "BRI")
+                if (RealmId.of(it).typeName == "BRD")
                     armorStand[0]?.customName = "§l4x4 §bОнлайн ${IRealmService.get().getOnlineOnRealms("BRI")}"
                 else
                     armorStand[1]?.customName = "§l4х2 §bОнлайн ${IRealmService.get().getOnlineOnRealms("BRD")}"
