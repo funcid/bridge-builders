@@ -57,7 +57,8 @@ public class PlayerDataManager implements Listener {
                             NameTag.NONE,
                             Corpse.NONE,
                             StarterKit.NONE,
-                            0L
+                            0L,
+                            true
                     );
 
                 if (stat.getUuid() == null)
@@ -92,6 +93,10 @@ public class PlayerDataManager implements Listener {
 
                 if (stat.getTimePlayedTotal() == null)
                     stat.setTimePlayedTotal(0L);
+
+                if (stat.getIsApprovedResourcepack() == null)
+                    stat.setIsApprovedResourcepack(true);
+
                 userMap.put(uuid, new User(stat));
             } catch (Exception ex) {
                 event.setCancelReason("Не удалось загрузить статистику.");

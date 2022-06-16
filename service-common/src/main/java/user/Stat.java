@@ -33,4 +33,6 @@ public class Stat implements Unique {
     private StarterKit activeKit;
 
     private Long timePlayedTotal;
+
+    private Boolean isApprovedResourcepack;
 }

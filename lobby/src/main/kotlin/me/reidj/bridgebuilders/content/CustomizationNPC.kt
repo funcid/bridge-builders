@@ -291,6 +291,20 @@ object CustomizationNPC {
                     }.toMutableList()
                 }.open(player)
             }
+        },
+        button {
+            title = "Включить/Выключить установку ресурспака"
+            description = ""
+            item = item {
+                type = Material.CLAY_BALL
+                nbt("other", "settings")
+            }.build()
+            onClick { player, _, button ->
+                app.getUser(player)!!.stat.apply {
+                    isApprovedResourcepack = !isApprovedResourcepack
+                    button.hint(if (isApprovedResourcepack) "Выключить" else "Включить")
+                }
+            }
         }
     )
 

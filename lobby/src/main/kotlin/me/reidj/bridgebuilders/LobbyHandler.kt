@@ -82,7 +82,9 @@ object LobbyHandler : Listener {
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
             Npc.npcs.values.forEach { it.spawn(this) }
             Banners.banners.values.forEach { Banners.show(this, it) }
-            confirmation.open(this)
+
+            if (user.stat.isApprovedResourcepack)
+                confirmation.open(this)
 
         }
         user.player = this
