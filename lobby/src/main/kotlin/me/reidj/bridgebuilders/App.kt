@@ -182,7 +182,9 @@ class App : JavaPlugin() {
         // Вернуться в игру
         B.regCommand({ player: Player, _ ->
             val user = getUser(player)!!
-            if (user.stat.realm == "")
+            if (user.stat.realm == "" || IRealmService.get()
+                    .getRealmById(RealmId.of(user.stat.realm)).status == RealmStatus.WAITING_FOR_PLAYERS
+            )
                 return@regCommand Formatting.error("У Вас нету незаконченной игры.")
             Cristalix.transfer(listOf(player.uniqueId), RealmId.of(user.stat.realm))
             null

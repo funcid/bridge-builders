@@ -76,7 +76,8 @@ object CustomizationNPC {
                         is StepParticle -> stat.activeParticle == data.StepParticle.valueOf(pos.objectName)
                         else -> false
                     }
-                    hint(if (current) "Выбрано" else if (has) "Выбрать" else "Купить")
+                    if (!has) price = pos.getPrice().toLong()
+                    else hint = "Выбрать"
                     onClick { player, _, _ ->
                         if (current)
                             return@onClick
@@ -108,7 +109,7 @@ object CustomizationNPC {
                         Glow.animate(player, 0.4, GlowColor.GREEN)
                         clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
                     }
-                    title = pos.getTitle()
+                    title = (if (current) "[ Выбрано ]" else if (has) "§7Выбрать" else "§bКупить") + " " + pos.getTitle()
                     description = pos.getDescription()
                 }, pos).apply { if (pos is MoneyKit) sale(pos.percent) }
             }.toMutableList()
@@ -119,13 +120,14 @@ object CustomizationNPC {
         title = "BridgBuilders"
         rows = 3
         columns = 1
-        hint = "Открыть"
+        hint = ""
     }
 
     private val buttons = listOf(
         button {
             title = "Монеты"
             description = "§7Приобретите монеты, §7и ни в чем себе §7не отказывайте."
+            hint("Открыть")
             item = item {
                 type = Material.CLAY_BALL
                 enchant(Enchantment.LUCK, 0)
@@ -138,13 +140,14 @@ object CustomizationNPC {
                     "BridgeBuilders",
                     true,
                     3,
-                    3,
+                    2,
                     *MoneyKit.values()
                 ) { button, money -> button.item(money.getIcon()) }
             }
         }, button {
             title = "Могилы"
             description = "§7Выберите могилу, которая §7появится на месте §7вашей смерти."
+            hint("Открыть")
             item = item {
                 type = Material.CLAY_BALL
                 nbt("other", "g2")
@@ -156,13 +159,14 @@ object CustomizationNPC {
                     "Могилы",
                     false,
                     3,
-                    3,
+                    2,
                     *me.reidj.bridgebuilders.donate.impl.Corpse.values()
                 ) { button, corpse -> button.item(corpse.getIcon()) }
             }
         }, button {
             title = "Частицы ходьбы"
             description = "§7Выберите тип частиц, §7которые будут появлять §7следом за вами."
+            hint("Открыть")
             item = item {
                 type = Material.CLAY_BALL
                 nbt("other", "guild_members_add")
@@ -174,13 +178,14 @@ object CustomizationNPC {
                     "Частицы ходьбы",
                     false,
                     3,
-                    3,
+                    2,
                     *StepParticle.values()
                 ) { button, step -> button.item(step.getIcon()) }
             }
         }, button {
             title = "Псевдонимы"
             description = "§7Выберите псевдоним, §7который появится в §7табе."
+            hint("Открыть")
             item = item {
                 type = Material.CLAY_BALL
                 nbt("other", "new_booster_2")
@@ -194,6 +199,7 @@ object CustomizationNPC {
         }, button {
             title = "Сообщения об убийстве"
             description = "§7Выберите сообщение, §7которое будет написано, когда §7вы убьете кого-то."
+            hint("Открыть")
             item = item {
                 type = Material.IRON_SPADE
                 nbt("simulators", "luck_shovel")
@@ -212,6 +218,7 @@ object CustomizationNPC {
         }, button {
             title = "Стартовые наборы"
             description = "§7Выберите набор, который §7поможет вам в игре."
+            hint("Открыть")
             item = item {
                 type = Material.CLAY_BALL
                 nbt("other", "bag")
@@ -229,6 +236,7 @@ object CustomizationNPC {
             }
         }, button {
             title = "Стартовый набор"
+            hint("Открыть")
             item = item {
                 type = Material.CLAY_BALL
                 nbt("other", "unique")
@@ -247,6 +255,7 @@ object CustomizationNPC {
         }, button {
             title = "Достижения"
             description = ""
+            hint("Открыть")
             item = item {
                 type = Material.CLAY_BALL
                 nbt("other", "new_booster_1")
@@ -273,7 +282,7 @@ object CustomizationNPC {
                             }.build()
                             title =
                                 if (playerHas) "§aНаграда получена §7${oldAchievement.title}" else "§b${oldAchievement.title}"
-                            hint(if (canGet && !playerHas) "Забрать награду!" else "")
+                            hint(if (canGet && !playerHas) "Забрать награду!" else if (!canGet && !playerHas) "" else "")
                             description = oldAchievement.lore
                             onClick top@{ player, _, _ ->
                                 if (!canGet || playerHas || user.isArmLock)
@@ -295,6 +304,7 @@ object CustomizationNPC {
         button {
             title = "Включить/Выключить установку ресурспака"
             description = ""
+            hint("Переключить")
             item = item {
                 type = Material.CLAY_BALL
                 nbt("other", "settings")

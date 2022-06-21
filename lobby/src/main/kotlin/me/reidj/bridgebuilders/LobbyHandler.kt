@@ -22,7 +22,9 @@ import org.bukkit.inventory.ItemStack
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.permissions.IPermissionService
+import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
+import ru.cristalix.core.realm.RealmStatus
 
 object LobbyHandler : Listener {
 
@@ -65,15 +67,18 @@ object LobbyHandler : Listener {
 
         if (user == null) {
             sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
-            B.postpone(3) {
+            B.postpone(20) {
                 Cristalix.transfer(
-                    setOf(uniqueId),
+                    listOf(uniqueId),
                     RealmId.of(HUB)
                 )
             }
         }
 
-        if (!user!!.stat.realm.equals(""))
+        if (IRealmService.get()
+                .getRealmById(RealmId.of(user!!.stat.realm)) != null && (user.stat.realm != "" || IRealmService.get()
+                .getRealmById(RealmId.of(user.stat.realm)).status != RealmStatus.WAITING_FOR_PLAYERS)
+        )
             sendMessage(Formatting.fine("У вас есть незаконченная игра! Вернуться /rejoin."))
 
         allowFlight = IPermissionService.get().isDonator(uniqueId)
@@ -85,7 +90,6 @@ object LobbyHandler : Listener {
 
             if (user.stat.isApprovedResourcepack)
                 confirmation.open(this)
-
         }
         user.player = this
         user.giveMoney(0)
