@@ -38,6 +38,7 @@ object BlockHandler : Listener {
             17 to block.data -> team.breakBlocks[block.location] = idAndData
             1 to 5.toByte() -> team.breakBlocks[block.location] = idAndData
             12 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
+            159 to 10.toByte() -> team.breakBlocks[block.location] = idAndData
         }
         if (teams.any { app.getBridge(it).contains(block.location) }) {
             isCancelled = true

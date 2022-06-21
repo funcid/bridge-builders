@@ -19,7 +19,7 @@ enum class StepParticle(
     NONE("Отсутствует", 0, Rare.COMMON, Particle.SPELL_INSTANT, Material.BARRIER),
     SLIME("Слизь", 192, Rare.COMMON, Particle.SLIME, Material.SLIME_BALL),
     WATER_DROP("Капли воды", 256, Rare.COMMON, Particle.DRIP_WATER, Material.WATER_BUCKET),
-    SPELL_INSTANT("Феерверк", 512, Rare.RARE, Particle.SPELL_INSTANT, Material.FIREWORK),
+    SPELL_INSTANT("Фейерверк", 512, Rare.RARE, Particle.SPELL_INSTANT, Material.FIREWORK),
     REDSTONE("Красный камень", 768, Rare.RARE, Particle.REDSTONE, Material.REDSTONE),
     VILLAGER_ANGRY("Злой житель", 1024, Rare.EPIC, Particle.VILLAGER_ANGRY, Material.FIREWORK_CHARGE),
     SPELL_WITCH("Колдунья", 2048, Rare.EPIC, Particle.SPELL_WITCH, Material.NETHER_STALK),

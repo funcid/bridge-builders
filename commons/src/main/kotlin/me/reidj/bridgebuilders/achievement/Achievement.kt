@@ -23,7 +23,7 @@ enum class Achievement(
         repeat(3) { user.stat.lootbox++ }
         user.giveMoney(1024)
     }),
-    CENTURION("Центурин", "§7Убить 1000 игроков\n+ §e2048 монет\n + §b3 лутбокса", { it.stat.kills >= 1000}, { user ->
+    CENTURION("Центурион", "§7Убить 1000 игроков\n+ §e2048 монет\n + §b3 лутбокса", { it.stat.kills >= 1000}, { user ->
         repeat(3) { user.stat.lootbox++ }
         user.giveMoney(2048)
     }),
