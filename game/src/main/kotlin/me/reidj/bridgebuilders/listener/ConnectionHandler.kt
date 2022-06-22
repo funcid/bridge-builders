@@ -126,6 +126,10 @@ object ConnectionHandler : Listener {
             user.inventory = player.inventory
             user.exp = player.exp
             app.updateNumbersPlayersInTeam()
+
+            player.inventory.filterNotNull().forEach { DamageListener.removeItems(user, it) }
+            DamageListener.removeItems(user, player.itemOnCursor)
+            player.openInventory.topInventory.filterNotNull().forEach { DamageListener.removeItems(user, it) }
         }
     }
 

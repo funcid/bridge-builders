@@ -14,6 +14,7 @@ import me.reidj.bridgebuilders.util.StandHelper
 import net.minecraft.server.v1_12_R1.EnumItemSlot
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
+import org.bukkit.Material
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
@@ -166,11 +167,15 @@ object DamageListener : Listener {
         }
     }
 
-    private fun removeItems(entity: User, itemStack: ItemStack) {
-        if (itemStack.getAmount() > 4) {
+    fun removeItems(entity: User, itemStack: ItemStack) {
+        val type = itemStack.getType()
+        if (itemStack.getAmount() >= 4) {
             itemStack.setAmount(itemStack.getAmount() - 2)
-            if (entity.lastDamager != null)
+            if (entity.lastDamager != null) {
                 entity.lastDamager?.inventory?.addItem(itemStack)
+                if (type.isBlock || type == Material.DIAMOND || type == Material.IRON_INGOT || type == Material.COAL || type == Material.GOLD_INGOT)
+                    itemStack.setAmount(0)
+            }
         }
     }
 
