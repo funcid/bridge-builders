@@ -107,16 +107,16 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     }),
     GAME(2500, { time ->
         if (time % 20 == 0) {
-            Bukkit.getOnlinePlayers().forEach {
-                if (time / 20 == 120) {
-                    teams.forEach { team -> team.isActiveTeleport = true }
-                    Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен")
-                }
-                if (time / 20 == 600) {
-                    Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
-                    teams.forEach { team -> team.blockReturn() }
-                    BlockHandler.placedBlocks.clear()
-                }
+            if (time / 20 == 120) {
+                teams.forEach { team -> team.isActiveTeleport = true }
+                Bukkit.getOnlinePlayers()
+                    .forEach { Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен") }
+            }
+            if (time / 20 == 600) {
+                Bukkit.getOnlinePlayers()
+                    .forEach { Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...") }
+                teams.forEach { team -> team.blockReturn() }
+                BlockHandler.placedBlocks.clear()
             }
         }
         // Проверка на победу
