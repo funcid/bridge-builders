@@ -4,6 +4,7 @@ import clepto.bukkit.B
 import data.StarterKit
 import me.func.mod.Anime
 import me.func.mod.conversation.ModTransfer
+import me.reidj.bridgebuilders.listener.BlockHandler
 import me.reidj.bridgebuilders.team.Team
 import me.reidj.bridgebuilders.util.DefaultKit
 import me.reidj.bridgebuilders.util.WinUtil
@@ -105,7 +106,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
         actualTime
     }),
     GAME(2500, { time ->
-        // Обновление шкалы времени
         if (time % 20 == 0) {
             Bukkit.getOnlinePlayers().forEach {
                 if (time / 20 == 120) {
@@ -115,6 +115,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                 if (time / 20 == 600) {
                     Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...")
                     teams.forEach { team -> team.blockReturn() }
+                    BlockHandler.placedBlocks.clear()
                 }
             }
         }

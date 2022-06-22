@@ -16,8 +16,11 @@ import kotlin.math.min
 
 object BlockHandler : Listener {
 
+    val placedBlocks = mutableMapOf<Int, Byte>()
+
     @EventHandler
     fun BlockPlaceEvent.handle() {
+        placedBlocks[block.typeId] = block.data
         if (teams.all {
                 block.location.distanceSquared(it.spawn) > 60 * 72 || app.getBridge(it).contains(block.location) ||
                         block.location.distanceSquared(it.spawn) < 4 * 4
@@ -28,18 +31,6 @@ object BlockHandler : Listener {
     @EventHandler
     fun BlockBreakEvent.handle() {
         val team = teams.filter { it.players.contains(player.uniqueId) }[0]
-        when (val idAndData = block.typeId to block.data) {
-            15 to 0.toByte() -> { team.breakBlocks[block.location] = idAndData }
-            56 to 0.toByte() -> { team.breakBlocks[block.location] = idAndData }
-            16 to 0.toByte() -> { team.breakBlocks[block.location] = idAndData }
-            14 to block.data -> team.breakBlocks[block.location] = idAndData
-            17 to block.data -> team.breakBlocks[block.location] = idAndData
-            5 to block.data -> team.breakBlocks[block.location] = idAndData
-            17 to block.data -> team.breakBlocks[block.location] = idAndData
-            1 to 5.toByte() -> team.breakBlocks[block.location] = idAndData
-            12 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
-            159 to 10.toByte() -> team.breakBlocks[block.location] = idAndData
-        }
         if (teams.any { app.getBridge(it).contains(block.location) }) {
             isCancelled = true
             return
@@ -85,6 +76,26 @@ object BlockHandler : Listener {
         } else if (block.type == Material.DIAMOND_ORE) {
             block.type = Material.AIR
             player.inventory.addItem(ItemStack(Material.DIAMOND))
+        }
+        if (placedBlocks.contains(block.typeId))
+            return
+        when (val idAndData = block.typeId to block.data) {
+            15 to 0.toByte() -> {
+                team.breakBlocks[block.location] = idAndData
+            }
+            56 to 0.toByte() -> {
+                team.breakBlocks[block.location] = idAndData
+            }
+            16 to 0.toByte() -> {
+                team.breakBlocks[block.location] = idAndData
+            }
+            14 to block.data -> team.breakBlocks[block.location] = idAndData
+            17 to block.data -> team.breakBlocks[block.location] = idAndData
+            5 to block.data -> team.breakBlocks[block.location] = idAndData
+            17 to block.data -> team.breakBlocks[block.location] = idAndData
+            1 to 5.toByte() -> team.breakBlocks[block.location] = idAndData
+            12 to 0.toByte() -> team.breakBlocks[block.location] = idAndData
+            159 to 10.toByte() -> team.breakBlocks[block.location] = idAndData
         }
     }
 }

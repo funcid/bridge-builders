@@ -24,7 +24,6 @@ import me.reidj.bridgebuilders.util.MapLoader
 import net.minecraft.server.v1_12_R1.MinecraftServer
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
@@ -225,7 +224,6 @@ class App : JavaPlugin() {
     fun restart() {
         Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.map { app.getUser(it)!! }.forEach {
             it.stat.games++
-            //me.reidj.bridgebuilders.battlepass.BattlePassUtil.update(it, me.reidj.bridgebuilders.battlepass.quest.QuestType.PLAY, 1)
             if (Math.random() < 0.05) {
                 it.stat.lootbox++
                 B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${it.player!!.name} §fполучил §bлутбокс§f!"))
@@ -239,6 +237,7 @@ class App : JavaPlugin() {
         Cristalix.transfer(Bukkit.getOnlinePlayers().map { it.uniqueId }, LOBBY_SERVER)
         playerDataManager.userMap.clear()
         ConnectionHandler.markers.clear()
+        BlockHandler.placedBlocks.clear()
         Bukkit.unloadWorld(worldMeta.world, false)
         loadMap()
         teams.forEach { team ->

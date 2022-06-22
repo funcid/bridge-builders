@@ -9,11 +9,11 @@ import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.donate.impl.Corpse
 import me.reidj.bridgebuilders.donate.impl.KillMessage
 import me.reidj.bridgebuilders.teams
+import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.StandHelper
 import net.minecraft.server.v1_12_R1.EnumItemSlot
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
-import org.bukkit.Material
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
@@ -61,12 +61,9 @@ object DamageListener : Listener {
         } while ((id == 0 || id == 171 || id == 96 || id == 167) && counter < 20)
 
         // Удаление вещей
-        getEntity().inventory
-            .filterNotNull()
-            .forEach { removeItems(it) }
-        removeItems(getEntity().itemOnCursor)
-        removeItems(getEntity().inventory.itemInOffHand)
-        getEntity().openInventory.topInventory.filterNotNull().forEach { removeItems(it) }
+        getEntity().inventory.filterNotNull().forEach { removeItems(user, it) }
+        removeItems(user, getEntity().itemOnCursor)
+        getEntity().openInventory.topInventory.filterNotNull().forEach { removeItems(user, it) }
 
         getEntity().updateInventory()
 
@@ -137,14 +134,6 @@ object DamageListener : Listener {
                     name.remove()
                 }
             }
-            // Удаление и выдача убийцы некоторых вещей
-            drops.filter {
-                it.getType().isBlock || it.getType() == Material.DIAMOND || it.getType() == Material.IRON_INGOT
-                        || it.getType() == Material.COAL || it.getType() == Material.GOLD_INGOT
-            }.forEach {
-                user.lastDamager!!.inventory.addItem(it)
-                it.setAmount(0)
-            }
         }
 
         teams.filter { it.players.contains(getEntity().uniqueId) }.forEach { team ->
@@ -169,36 +158,20 @@ object DamageListener : Listener {
             if (!teams.filter { it.players.contains(damager.uniqueId) }[0].players.contains(entity.uniqueId))
                 app.getUser(entity as Player)!!.lastDamager = damager
             if (teams.any { team -> team.players.contains(damager.uniqueId) } && teams.filter { team ->
-                    team.players.contains(damager.uniqueId) }[0].players.contains(entity.uniqueId))
+                    team.players.contains(damager.uniqueId)
+                }[0].players.contains(entity.uniqueId))
                 isCancelled = true
             if (damager.itemInHand.getType().name.endsWith("AXE"))
                 damage /= 3
         }
     }
 
-    private fun removeItems(itemStack: ItemStack) {
-        val toDelete = mutableListOf<ItemStack>()
+    private fun removeItems(entity: User, itemStack: ItemStack) {
         if (itemStack.getAmount() > 4) {
             itemStack.setAmount(itemStack.getAmount() - 2)
-        } else {
-            val name = itemStack.getType().name
-            if (name.endsWith("SWORD") || name.endsWith("AXE") || name.endsWith("PICKAXE") || name.endsWith("SPADE")
-                || name.endsWith("CHESTPLATE") || name.endsWith("LEGGINGS") || name.endsWith("HELMET") ||
-                name.endsWith("BOOTS") || name == "BOW"
-            ) {
-                if (itemStack.getDurability() >= 0)
-                    itemStack.setDurability(
-                        ((itemStack.getDurability() + (itemStack.getDurability() * 0.05)).toInt()
-                            .toShort())
-                    )
-                else
-                    toDelete.add(itemStack)
-            } else {
-                toDelete.add(itemStack)
-            }
+            if (entity.lastDamager != null)
+                entity.lastDamager?.inventory?.addItem(itemStack)
         }
-        toDelete.forEach { it.setAmount(0) }
-        toDelete.clear()
     }
 
     private fun printDeathMessage(text: String) =
