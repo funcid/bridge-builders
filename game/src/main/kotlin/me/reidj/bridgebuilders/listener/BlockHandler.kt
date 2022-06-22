@@ -40,6 +40,9 @@ object BlockHandler : Listener {
         } else if (teams.any { block.location.distanceSquared(it.spawn) < 4 * 4 }) {
             isCancelled = true
             return
+        } else if (block.type == Material.SEA_LANTERN) {
+            isCancelled = true
+            return
         }
         if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
             val winner = teams.filter { it.players.contains(player.uniqueId) }[0]

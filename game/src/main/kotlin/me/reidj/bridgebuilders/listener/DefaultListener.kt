@@ -120,7 +120,7 @@ object DefaultListener : Listener {
             }
         }
         // Телепортация на вражескую базу
-        if (location.subtract(0.0, 1.0, 0.0).block.type == Material.BEDROCK) {
+        if (location.subtract(0.0, 1.0, 0.0).block.type == Material.SEA_LANTERN) {
             val playerTeam = teams.filter { team -> team.players.contains(player.uniqueId) }[0]
             if (!playerTeam.isActiveTeleport)
                 return
