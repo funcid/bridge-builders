@@ -123,13 +123,13 @@ object ConnectionHandler : Listener {
         teams.forEach { it.players.remove(player.uniqueId) }
         if (activeStatus != Status.STARTING) {
             val user = app.getUser(player)!!
-            user.inventory = player.inventory
-            user.exp = player.exp
-            app.updateNumbersPlayersInTeam()
-
             player.inventory.filterNotNull().forEach { DamageListener.removeItems(user, it) }
             DamageListener.removeItems(user, player.itemOnCursor)
             player.openInventory.topInventory.filterNotNull().forEach { DamageListener.removeItems(user, it) }
+
+            user.inventory = player.inventory
+            user.exp = player.exp
+            app.updateNumbersPlayersInTeam()
         }
     }
 

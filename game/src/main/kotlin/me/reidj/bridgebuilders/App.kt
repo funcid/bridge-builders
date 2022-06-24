@@ -95,7 +95,7 @@ class App : JavaPlugin() {
 
         // Конфигурация реалма
         realm = IRealmService.get().currentRealmInfo
-        val id = IRealmService.get().currentRealmInfo.realmId.id
+        val id = realm.realmId.id
         realm.status = RealmStatus.WAITING_FOR_PLAYERS
         realm.maxPlayers = slots
         realm.lobbyFallback = RealmId.of("BRIL-1")
@@ -235,6 +235,7 @@ class App : JavaPlugin() {
         }
         playerDataManager.save()
         Cristalix.transfer(Bukkit.getOnlinePlayers().map { it.uniqueId }, LOBBY_SERVER)
+        realm.status = RealmStatus.WAITING_FOR_PLAYERS
         playerDataManager.userMap.clear()
         ConnectionHandler.markers.clear()
         BlockHandler.placedBlocks.clear()
