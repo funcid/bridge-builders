@@ -6,6 +6,7 @@ import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.teams
 import me.reidj.bridgebuilders.util.WinUtil
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -16,11 +17,11 @@ import kotlin.math.min
 
 object BlockHandler : Listener {
 
-    val placedBlocks = mutableMapOf<Int, Byte>()
+    val placedBlocks = mutableMapOf<Location, Pair<Int, Byte>>()
 
     @EventHandler
     fun BlockPlaceEvent.handle() {
-        placedBlocks[block.typeId] = block.data
+        placedBlocks[block.location] = block.typeId to block.data
         if (teams.all {
                 block.location.distanceSquared(it.spawn) > 60 * 72 || app.getBridge(it).contains(block.location) ||
                         block.location.distanceSquared(it.spawn) < 4 * 4
@@ -80,7 +81,7 @@ object BlockHandler : Listener {
             block.type = Material.AIR
             player.inventory.addItem(ItemStack(Material.DIAMOND))
         }
-        if (placedBlocks.contains(block.typeId))
+        if (placedBlocks.any { place -> team.breakBlocks.any { it.value == place.value } })
             return
         when (val idAndData = block.typeId to block.data) {
             15 to 0.toByte() -> {
