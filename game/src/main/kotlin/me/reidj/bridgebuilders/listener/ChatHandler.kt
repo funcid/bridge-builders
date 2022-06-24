@@ -1,6 +1,9 @@
 package me.reidj.bridgebuilders.listener
 
-import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.app
+import me.reidj.bridgebuilders.getPrefix
+import me.reidj.bridgebuilders.isSpectator
+import me.reidj.bridgebuilders.teams
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -10,12 +13,15 @@ object ChatHandler : Listener {
 
     @EventHandler
     fun AsyncPlayerChatEvent.handle() {
-        if (activeStatus != Status.GAME || isSpectator(player))
+        isCancelled = true
+        if (isSpectator(player))
             return
         val team = teams.filter { team -> team.players.contains(player.uniqueId) }
-        if (team.isNotEmpty() && !isSpectator(player)) {
-            isCancelled = true
-            val user = app.getUser(player)
+        val user = app.getUser(player)
+        if (team.isEmpty()) {
+            Bukkit.getOnlinePlayers()
+                .forEach { player -> user?.let { player.sendMessage(getPrefix(it, false) + message) } }
+        } else if (!isSpectator(player)) {
             if (!message.startsWith("!")) {
                 team[0].players.mapNotNull { Bukkit.getPlayer(it) }.forEach { player ->
                     user?.let { player.sendMessage("§8КОМАНДА ${getPrefix(it, false) + message}") }
@@ -33,7 +39,6 @@ object ChatHandler : Listener {
 
                 }
             }
-
         }
     }
 }
