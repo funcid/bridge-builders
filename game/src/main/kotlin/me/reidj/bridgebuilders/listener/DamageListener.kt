@@ -167,13 +167,15 @@ object DamageListener : Listener {
         }
     }
 
+    private val lapis = ItemStack(Material.INK_SACK, 1, 4.toShort())
+
     fun removeItems(entity: User, itemStack: ItemStack) {
         val type = itemStack.getType()
         if (itemStack.getAmount() >= 4) {
             itemStack.setAmount(itemStack.getAmount() - 2)
             if (entity.lastDamager != null) {
                 entity.lastDamager?.inventory?.addItem(itemStack)
-                if (type.isBlock || type == Material.DIAMOND || type == Material.IRON_INGOT || type == Material.COAL || type == Material.GOLD_INGOT)
+                if (type.isBlock || type == Material.DIAMOND || type == Material.IRON_INGOT || type == Material.COAL || type == Material.GOLD_INGOT || type.isEdible || itemStack == lapis)
                     itemStack.setAmount(0)
             }
         }

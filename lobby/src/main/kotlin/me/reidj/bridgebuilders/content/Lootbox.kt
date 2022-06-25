@@ -34,7 +34,7 @@ object Lootbox : Listener {
     init {
         worldMeta.getLabels("lootbox").forEach {
             val banner = Banners.new {
-                x = it.x - 2.5
+                x = it.x
                 y = it.y + 3.6
                 z = it.z
                 weight = 100
