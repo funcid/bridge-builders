@@ -195,10 +195,10 @@ class App : JavaPlugin() {
 
         B.regCommand({ player, args ->
             val realmId =
-                IRealmService.get().getRealmsOfType("BRI")
+                IRealmService.get().getRealmsOfType("BRD")
                     .filter { it.status == RealmStatus.GAME_STARTED_CAN_SPACTATE }
                     .map { it.realmId }
-            val realm = RealmId.of("BRI-${args[0]}")
+            val realm = RealmId.of("BRD-${args[0]}")
             if (realmId.contains(realm))
                 Cristalix.transfer(mutableListOf(player.uniqueId), realm)
             else

@@ -172,10 +172,12 @@ object DamageListener : Listener {
     fun removeItems(entity: User, itemStack: ItemStack) {
         val type = itemStack.getType()
         if (itemStack.getAmount() >= 4) {
+            var amount = itemStack.getAmount()
             itemStack.setAmount(itemStack.getAmount() - 2)
+            amount -= itemStack.getAmount()
             if (entity.lastDamager != null) {
-                entity.lastDamager?.inventory?.addItem(itemStack)
-                if (type.isBlock || type == Material.DIAMOND || type == Material.IRON_INGOT || type == Material.COAL || type == Material.GOLD_INGOT || type.isEdible || itemStack == lapis)
+                entity.lastDamager!!.inventory!!.addItem(ItemStack(itemStack.getType(), amount))
+                if (type.isBlock || type == Material.DIAMOND || type == Material.IRON_INGOT || type == Material.COAL || type == Material.GOLD_INGOT || itemStack == lapis)
                     itemStack.setAmount(0)
             }
         }
