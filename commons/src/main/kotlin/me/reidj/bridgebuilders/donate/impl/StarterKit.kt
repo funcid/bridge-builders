@@ -92,6 +92,7 @@ enum class StarterKit(
             ItemStack(Material.EXP_BOTTLE, 64),
             ItemStack(Material.EXP_BOTTLE, 64),
             ItemStack(Material.EXP_BOTTLE, 64),
+            ItemStack(Material.EXP_BOTTLE, 32),
             ItemStack(Material.LAPIS_BLOCK, 7),
             ItemStack(Material.BREAD, 16)
         )
