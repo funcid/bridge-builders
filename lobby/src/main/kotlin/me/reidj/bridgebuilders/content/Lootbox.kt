@@ -32,30 +32,29 @@ import ru.cristalix.core.formatting.Formatting
 object Lootbox : Listener {
 
     init {
-        worldMeta.getLabels("lootbox").forEach {
-            val banner = Banners.new {
-                x = it.x
-                y = it.y + 3.6
-                z = it.z
-                weight = 100
-                height = 25
-                opacity = .62
-                motionType = MotionType.CONSTANT
-                shineBlocks(false)
-            }
-            B.repeat(20) {
-                Bukkit.getOnlinePlayers().mapNotNull(getByPlayer).forEach { user ->
-                    Banners.content(
-                        user.player!!, banner.uuid, "§bЛутбокс\n§fДоступно ${user.stat.lootbox} ${
-                            Humanize.plurals(
-                                "штука",
-                                "штуки",
-                                "штук",
-                                user.stat.lootbox
-                            )
-                        }\n"
-                    )
-                }
+        val location = worldMeta.getLabel("lootbox")
+        val banner = Banners.new {
+            x = location.x + 0.5
+            y = location.y + 3.6
+            z = location.z
+            weight = 100
+            height = 25
+            opacity = .62
+            motionType = MotionType.CONSTANT
+            shineBlocks(false)
+        }
+        B.repeat(20) {
+            Bukkit.getOnlinePlayers().mapNotNull(getByPlayer).forEach { user ->
+                Banners.content(
+                    user.player!!, banner.uuid, "§bЛутбокс\n§fДоступно ${user.stat.lootbox} ${
+                        Humanize.plurals(
+                            "штука",
+                            "штуки",
+                            "штук",
+                            user.stat.lootbox
+                        )
+                    }\n"
+                )
             }
         }
     }
