@@ -8,6 +8,7 @@ import me.func.mod.Banners
 import me.func.mod.Npc
 import me.func.mod.conversation.ModLoader
 import me.func.mod.selection.Confirmation
+import me.func.mod.selection.Reconnect
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
@@ -75,11 +76,9 @@ object LobbyHandler : Listener {
             }
         }
 
-        if (IRealmService.get()
-                .getRealmById(RealmId.of(user!!.stat.realm)) != null && (user.stat.realm != "" || IRealmService.get()
-                .getRealmById(RealmId.of(user.stat.realm)).status != RealmStatus.WAITING_FOR_PLAYERS)
-        )
-            sendMessage(Formatting.fine("У вас есть незаконченная игра! Вернуться /rejoin."))
+        if (IRealmService.get().getRealmById(RealmId.of(user!!.stat.realm)) != null && (user.stat.realm != ""
+                    || IRealmService.get().getRealmById(RealmId.of(user.stat.realm)).status != RealmStatus.WAITING_FOR_PLAYERS))
+            Reconnect("Вернуться в игру", 60, "Вернуться") { player -> player.performCommand("/rejoin") }
 
         allowFlight = IPermissionService.get().isDonator(uniqueId)
         ModLoader.send("balance-bundle-1.0-SNAPSHOT.jar", this)
