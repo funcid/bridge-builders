@@ -79,6 +79,8 @@ object DamageListener : Listener {
                     app.teleportAtBase(team, getEntity())
                     getEntity().foodLevel = 20
                     user.lastDamager = null
+                    user.isGod = true
+                    B.postpone(3 * 20) { user.isGod = false }
                 }
                 Cycle.exit()
             } else if (time < 2) {
@@ -155,11 +157,11 @@ object DamageListener : Listener {
         // Отключение урона по союзникам
         if ((damager is Player || damager is Arrow) && entity is Player) {
             val damager = if (damager is Projectile) (damager as Projectile).shooter as Player else damager as Player
-            if (!teams.filter { it.players.contains(damager.uniqueId) }[0].players.contains(entity.uniqueId))
-                app.getUser(entity as Player)!!.lastDamager = damager
+            val user = app.getUser(entity as Player)!!
+            if (!teams.filter { it.players.contains(damager.uniqueId) }[0].players.contains(entity.uniqueId) && !user.isGod)
+                user.lastDamager = damager
             if (teams.any { team -> team.players.contains(damager.uniqueId) } && teams.filter { team ->
-                    team.players.contains(damager.uniqueId)
-                }[0].players.contains(entity.uniqueId))
+                    team.players.contains(damager.uniqueId) }[0].players.contains(entity.uniqueId) || user.isGod)
                 isCancelled = true
             if (damager.itemInHand.getType().name.endsWith("AXE"))
                 damage /= 3
