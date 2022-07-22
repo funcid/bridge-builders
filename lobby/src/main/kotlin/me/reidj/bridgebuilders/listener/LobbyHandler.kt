@@ -1,14 +1,15 @@
-package me.reidj.bridgebuilders
+package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
 import clepto.cristalix.Cristalix
-import com.destroystokyo.paper.event.player.PlayerUseUnknownEntityEvent
 import dev.implario.bukkit.item.item
-import me.func.mod.Banners
-import me.func.mod.Npc
 import me.func.mod.conversation.ModLoader
 import me.func.mod.selection.Confirmation
 import me.func.mod.selection.Reconnect
+import me.reidj.bridgebuilders.HUB
+import me.reidj.bridgebuilders.app
+import me.reidj.bridgebuilders.getPrefix
+import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
@@ -41,6 +42,7 @@ object LobbyHandler : Listener {
         nbt("other", "cancel")
         nbt("click", "leave")
     }.build()
+
     private val confirmation =
         Confirmation("Рекомендуем установить", "ресурспак") { send -> send.performCommand("resourcepack") }
 
@@ -60,9 +62,6 @@ object LobbyHandler : Listener {
     }
 
     @EventHandler
-    fun PlayerUseUnknownEntityEvent.handle() = Npc.npcs[entityId]?.click!!.accept(this)
-
-    @EventHandler
     fun PlayerJoinEvent.handle() = player.apply {
         val user = app.getUser(this)
 
@@ -76,20 +75,22 @@ object LobbyHandler : Listener {
             }
         }
 
-        if (IRealmService.get().getRealmById(RealmId.of(user!!.stat.realm)) != null && (user.stat.realm != ""
-                    || IRealmService.get().getRealmById(RealmId.of(user.stat.realm)).status != RealmStatus.WAITING_FOR_PLAYERS))
-            Reconnect("Вернуться в игру", 60, "Вернуться") { player -> player.performCommand("/rejoin") }
+        user!!.player = this
+        user.giveMoney(0)
 
-        allowFlight = IPermissionService.get().isDonator(uniqueId)
         ModLoader.send("balance-bundle-1.0-SNAPSHOT.jar", this)
+        allowFlight = IPermissionService.get().isDonator(uniqueId)
+
         B.postpone(5) {
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
 
             if (user.stat.isApprovedResourcepack)
                 confirmation.open(this)
         }
-        user.player = this
-        user.giveMoney(0)
+
+        if (IRealmService.get().getRealmById(RealmId.of(user.stat.realm)) != null && (user.stat.realm != ""
+                    || IRealmService.get().getRealmById(RealmId.of(user.stat.realm)).status != RealmStatus.WAITING_FOR_PLAYERS))
+            Reconnect("Вернуться в игру", 60, "Вернуться") { player -> player.performCommand("/rejoin") }
     }
 
     @EventHandler
