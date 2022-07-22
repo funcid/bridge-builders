@@ -3,8 +3,10 @@ package me.reidj.bridgebuilders.command
 import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import me.reidj.bridgebuilders.HUB
+import me.reidj.bridgebuilders.PlayerBalancer
 import me.reidj.bridgebuilders.STORAGE
 import me.reidj.bridgebuilders.app
+import me.reidj.bridgebuilders.util.MenuUtil
 import org.bukkit.entity.Player
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.realm.IRealmService
@@ -52,5 +54,20 @@ object PlayerCommands {
                 player.sendMessage(Formatting.error("Сервер не найден."))
             null
         }, "spectate", "spec")
+
+        B.regCommand({ player, _ ->
+            MenuUtil.compass.open(player)
+            null
+        }, "game")
+
+        B.regCommand({ player, _ ->
+            PlayerBalancer("BRI", 16).accept(player)
+            null
+        }, "four")
+
+        B.regCommand({ player, _ ->
+            PlayerBalancer("BRD", 8).accept(player)
+            null
+        }, "two")
     }
 }

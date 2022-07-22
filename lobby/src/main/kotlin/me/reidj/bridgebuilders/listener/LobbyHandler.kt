@@ -30,6 +30,12 @@ import ru.cristalix.core.realm.RealmStatus
 
 object LobbyHandler : Listener {
 
+    private var gameItem: ItemStack = item {
+        type = Material.CLAY_BALL
+        text("§aИграть")
+        nbt("other", "guild_members")
+        nbt("click", "game")
+    }.build()
     private var cosmeticItem: ItemStack = item {
         type = Material.CLAY_BALL
         text("§aПерсонаж")
@@ -95,7 +101,8 @@ object LobbyHandler : Listener {
 
     @EventHandler
     fun PlayerSpawnLocationEvent.handle() {
-        player.inventory.setItem(0, cosmeticItem)
+        player.inventory.setItem(0, gameItem)
+        player.inventory.setItem(4, cosmeticItem)
         player.inventory.setItem(8, backItem)
     }
 
