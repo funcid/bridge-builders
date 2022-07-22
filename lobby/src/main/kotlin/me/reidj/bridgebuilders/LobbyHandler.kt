@@ -84,8 +84,6 @@ object LobbyHandler : Listener {
         ModLoader.send("balance-bundle-1.0-SNAPSHOT.jar", this)
         B.postpone(5) {
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
-            Npc.npcs.values.forEach { it.spawn(this) }
-            Banners.banners.values.forEach { Banners.show(this, it) }
 
             if (user.stat.isApprovedResourcepack)
                 confirmation.open(this)

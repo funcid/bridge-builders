@@ -97,6 +97,7 @@ object CustomizationNPC {
                         }
                         if (isDonate) {
                             buy(player, (pos.getPrice() * (100.0 - sale) / 100.0).toInt(), pos)
+                            clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
                             return@onClick
                         }
                         if (stat.money < pos.getPrice()) {

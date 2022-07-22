@@ -31,18 +31,19 @@ import ru.cristalix.core.formatting.Formatting
 
 object Lootbox : Listener {
 
+    private val location = worldMeta.getLabel("lootbox")
+    private val banner = Banners.new {
+        x = location.x + 0.5
+        y = location.y + 3.6
+        z = location.z
+        weight = 100
+        height = 25
+        opacity = .62
+        motionType = MotionType.CONSTANT
+        shineBlocks(false)
+    }
+
     init {
-        val location = worldMeta.getLabel("lootbox")
-        val banner = Banners.new {
-            x = location.x + 0.5
-            y = location.y + 3.6
-            z = location.z
-            weight = 100
-            height = 25
-            opacity = .62
-            motionType = MotionType.CONSTANT
-            shineBlocks(false)
-        }
         B.repeat(20) {
             Bukkit.getOnlinePlayers().mapNotNull(getByPlayer).forEach { user ->
                 Banners.content(

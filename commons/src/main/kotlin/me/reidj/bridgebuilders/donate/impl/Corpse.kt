@@ -14,7 +14,7 @@ enum class Corpse(private val title: String, private val price: Int, private val
     G1("Поломанная могила", 64, Rare.COMMON),
     G2("Скромная могила", 128, Rare.COMMON),
     G3("Монолит", 256, Rare.RARE),
-    G4("Пямятник", 768, Rare.EPIC),
+    G4("Памятник", 768, Rare.EPIC),
     G5("Монумент", 2048, Rare.LEGENDARY), ;
 
     override fun getTitle(): String {
