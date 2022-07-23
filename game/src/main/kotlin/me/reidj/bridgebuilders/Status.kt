@@ -18,7 +18,7 @@ import ru.cristalix.core.realm.RealmStatus
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_SPACTATE
 
 private val kit = DefaultKit
-private val fastDigging = PotionEffect(PotionEffectType.FAST_DIGGING, Int.MAX_VALUE, 1)
+val fastDigging = PotionEffect(PotionEffectType.FAST_DIGGING, Int.MAX_VALUE, 1)
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     STARTING(70, { it ->
