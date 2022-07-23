@@ -98,10 +98,6 @@ object LobbyHandler : Listener {
 
             NpcManager.npcs[NpcType.GUIDE.name]!!.first.data.skin(uniqueId.toString())
 
-            NpcType.GUIDE.banner.content =
-                "§6${NpcType.GUIDE.bannerTitle}\nПобед: §3${stat!!.wins}\nУбийств: §3${stat.kills}\nСыграно: §3${stat.games}"
-            Banners.show(this, NpcManager.npcs[NpcType.GUIDE.name]!!.second)
-
             user.giveMoney(0)
 
             if (user.stat.isApprovedResourcepack)

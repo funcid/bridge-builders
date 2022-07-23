@@ -46,7 +46,7 @@ class AdminCommand {
         )
         B.regCommand(
             adminConsume { user, _ ->
-                user.stat.gameExitTime = System.currentTimeMillis().toInt() / 1000 + 15
+                user.stat.gameExitTime = System.currentTimeMillis().toInt() / 1000 + 300
             },
             "tban",
         )

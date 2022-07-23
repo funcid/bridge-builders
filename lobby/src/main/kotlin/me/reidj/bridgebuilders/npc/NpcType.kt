@@ -40,7 +40,7 @@ enum class NpcType(
         "menu",
         "ca87474e-b15c-11e9-80c4-1cb72caa35fd",
         45F,
-        createBanner(worldMeta.getLabel("guide"), 50, 1.0, 120, -0.3, 5.5,-144.0)
+        createBanner(worldMeta.getLabel("guide"), 50, 0.0, 120, -0.3, 5.5,-144.0)
     )
     ;
 }
@@ -57,9 +57,9 @@ private fun createBanner(
     this.height = height
     this.weight = weight
     this.opacity = opacity
-    this.location(location.clone().add(x, y, 1.0))
     motionSettings = hashMapOf(
         "yaw" to yaw,
         "pitch" to 0.0
     )
+    location(location.clone().add(x, y, 1.0))
 }
