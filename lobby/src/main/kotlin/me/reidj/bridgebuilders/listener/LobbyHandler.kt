@@ -3,12 +3,16 @@ package me.reidj.bridgebuilders.listener
 import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import dev.implario.bukkit.item.item
-import me.func.mod.conversation.ModLoader
+import me.func.mod.Anime
+import me.func.mod.Npc.skin
 import me.func.mod.selection.Confirmation
 import me.func.mod.selection.Reconnect
+import me.func.protocol.Indicators
 import me.reidj.bridgebuilders.HUB
 import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.getPrefix
+import me.reidj.bridgebuilders.npc.NpcManager
+import me.reidj.bridgebuilders.npc.NpcType
 import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -82,13 +86,17 @@ object LobbyHandler : Listener {
         }
 
         user!!.player = this
-        user.giveMoney(0)
 
-        ModLoader.send("balance-bundle-1.0-SNAPSHOT.jar", this)
         allowFlight = IPermissionService.get().isDonator(uniqueId)
 
         B.postpone(5) {
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+
+            Anime.hideIndicator(this, Indicators.ARMOR, Indicators.EXP, Indicators.HEALTH, Indicators.HUNGER)
+
+            NpcManager.npcs[NpcType.GUIDE.name]!!.first.data.skin(uniqueId.toString())
+
+            user.giveMoney(0)
 
             if (user.stat.isApprovedResourcepack)
                 confirmation.open(this)

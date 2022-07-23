@@ -129,10 +129,10 @@ class App : JavaPlugin() {
                 onClick { event ->
                     val player = event.player
                     val user = app.getUser(player)!!
-                    if (user.activeHand)
+                    if (user.isArmLock)
                         return@onClick
-                    user.activeHand = true
-                    B.postpone(5) { user.activeHand = false }
+                    user.isArmLock = true
+                    B.postpone(5) { user.isArmLock = false }
                     val team = teams.filter { it.players.contains(player.uniqueId) }[0]
                     team.collected.entries.forEachIndexed { index, block ->
                         val itemHand = player.itemInHand

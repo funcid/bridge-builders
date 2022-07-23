@@ -1,6 +1,7 @@
 package me.reidj.bridgebuilders.user
 
-import me.func.mod.conversation.ModTransfer
+import implario.humanize.Humanize
+import me.func.mod.Anime
 import me.reidj.bridgebuilders.team.Team
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -11,7 +12,6 @@ class User(stat: Stat) {
     var collectedBlocks = 0
     var kills = 0
     var exp = 0F
-    var activeHand = false
     var inGame = false
 
     var stat: Stat
@@ -33,6 +33,6 @@ class User(stat: Stat) {
 
     private fun changeMoney(dMoney: Int) {
         stat.money += dMoney
-        ModTransfer(stat.money).send("bridge:balance", player)
+        Anime.bottomRightMessage(player!!, "§e${stat.money} ${Humanize.plurals("монета", "монеты", "монет", stat.money)}")
     }
 }
