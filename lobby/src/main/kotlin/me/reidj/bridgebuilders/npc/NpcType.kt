@@ -24,7 +24,7 @@ enum class NpcType(
         "four",
         "bf30a1df-85de-11e8-a6de-1cb72caa35fd",
         90f,
-        createBanner(worldMeta.getLabel("four"), 40, 0.62, 60, 0.5, 5.0,179.0)
+        createBanner(worldMeta.getLabel("four"), 40, 0.62, 60, 0.5, 5.0,-179.0)
     ),
     TWO(
         "4x2",
@@ -32,7 +32,7 @@ enum class NpcType(
         "two",
         "ca87474e-b15c-11e9-80c4-1cb72caa35fd",
         90f,
-        createBanner(worldMeta.getLabel("two"), 40, 0.62, 60, 0.5,5.0, 179.0)
+        createBanner(worldMeta.getLabel("two"), 40, 0.62, 60, 0.5,5.0, -179.0)
     ),
     GUIDE(
         "Профиль BridgeBuilders",
@@ -57,9 +57,9 @@ private fun createBanner(
     this.height = height
     this.weight = weight
     this.opacity = opacity
+    location(location.clone().add(x, y, 1.0))
     motionSettings = hashMapOf(
         "yaw" to yaw,
         "pitch" to 0.0
     )
-    location(location.clone().add(x, y, 1.0))
 }

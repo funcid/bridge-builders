@@ -75,7 +75,6 @@ object LobbyHandler : Listener {
     @EventHandler
     fun PlayerJoinEvent.handle() = player.apply {
         val user = app.getUser(this)
-        val stat = user?.stat
 
         if (user == null) {
             sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
