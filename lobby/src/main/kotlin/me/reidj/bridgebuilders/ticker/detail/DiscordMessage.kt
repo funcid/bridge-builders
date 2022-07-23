@@ -17,9 +17,11 @@ object DiscordMessage : Ticked {
     private val alertMessage = ComponentBuilder("\n================\n").color(ChatColor.YELLOW)
         .bold(false)
         .append("§fУ нас есть свой дискорд сервер!")
+        .append("\n")
         .append("§fНе знал?")
         .event(hoverEvent)
         .event(clickUrl)
+        .append("\n")
         .append("§fТогда скорее присоединяйся. §7*Клик*")
         .event(hoverEvent)
         .event(clickUrl)
@@ -27,7 +29,7 @@ object DiscordMessage : Ticked {
         .create()
 
     override fun tick(vararg args: Int) {
-        if (args[0] % 600 == 0) {
+        if (args[0] % 6000 == 0) {
             Bukkit.getOnlinePlayers().forEach { it.sendMessage(TextComponent.toLegacyText(*alertMessage)) }
         }
     }

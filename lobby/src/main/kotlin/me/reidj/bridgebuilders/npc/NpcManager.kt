@@ -1,12 +1,15 @@
 package me.reidj.bridgebuilders.npc
 
+import clepto.bukkit.B
 import me.func.mod.Banners
 import me.func.mod.Npc
 import me.func.mod.Npc.location
 import me.func.mod.Npc.onClick
 import me.func.mod.Npc.skin
+import me.func.mod.data.NpcSmart
 import me.func.protocol.element.Banner
 import me.func.protocol.npc.NpcBehaviour
+import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.ticker.Ticked
 import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Bukkit
@@ -19,18 +22,26 @@ import java.util.*
  **/
 object NpcManager : Ticked {
 
-    private val banners = mutableMapOf<String, Banner>()
+    val npcs = mutableMapOf<String, Pair<NpcSmart, Banner>>()
 
     init {
         NpcType.values().forEach { type ->
-            banners[type.name] = type.banner
-            Npc.npc {
-                onClick { it.player.performCommand(type.command) }
+            npcs[type.name] = Npc.npc {
+                onClick {
+                    val player = it.player
+                    val user = app.getUser(player) ?: return@onClick
+                    if (user.isArmLock)
+                        return@onClick
+                    user.isArmLock = true
+                    player.performCommand(type.command)
+                    B.postpone(5) { user.isArmLock = false }
+                }
                 location(worldMeta.getLabel(type.name.lowercase()).clone().add(.5, .0, .5))
                 skin(UUID.fromString(type.skin))
                 behaviour = NpcBehaviour.STARE_AT_PLAYER
                 pitch = type.pitch
-            }
+                name = type.npcName
+            } to type.banner
         }
     }
 
@@ -38,8 +49,22 @@ object NpcManager : Ticked {
         if (args[0] % 20 != 0)
             return
         Bukkit.getOnlinePlayers().forEach {
-            Banners.content(it, banners[NpcType.FOUR.name]!!, "§6§l4х4\n§bОнлайн: ${IRealmService.get().getOnlineOnRealms("BRI")}")
-            Banners.content(it, banners[NpcType.TWO.name]!!, "§6§l4х2\n§bОнлайн: ${IRealmService.get().getOnlineOnRealms("BRD")}")
+            val stat = app.getUser(it)?.stat
+            Banners.content(
+                it,
+                npcs[NpcType.FOUR.name]!!.second,
+                "§b§l4х4\n§e${IRealmService.get().getOnlineOnRealms("BRI")} игроков"
+            )
+            Banners.content(
+                it,
+                npcs[NpcType.TWO.name]!!.second,
+                "§b§l4х2\n§e${IRealmService.get().getOnlineOnRealms("BRD")} игроков"
+            )
+            Banners.content(
+                it,
+                npcs[NpcType.GUIDE.name]!!.second,
+                "§6${NpcType.GUIDE.bannerTitle}\nПобед: §3${stat?.wins}\nУбийств: §3${stat?.kills}\nСыграно: §3${stat?.games}"
+            )
         }
     }
 }

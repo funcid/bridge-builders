@@ -14,7 +14,7 @@ enum class NpcType(
     val bannerTitle: String,
     val npcName: String,
     val command: String,
-    val skin: String,
+    var skin: String,
     val pitch: Float,
     var banner: Banner
 ) {
@@ -24,7 +24,7 @@ enum class NpcType(
         "four",
         "bf30a1df-85de-11e8-a6de-1cb72caa35fd",
         90f,
-        createBanner(worldMeta.getLabel("four"), 40,60,90.0)
+        createBanner(worldMeta.getLabel("four"), 40, 0.62, 60, 0.5, 5.0,179.0)
     ),
     TWO(
         "4x2",
@@ -32,23 +32,32 @@ enum class NpcType(
         "two",
         "ca87474e-b15c-11e9-80c4-1cb72caa35fd",
         90f,
-        createBanner(worldMeta.getLabel("two"), 40,60,90.0)
+        createBanner(worldMeta.getLabel("two"), 40, 0.62, 60, 0.5,5.0, 179.0)
     ),
     GUIDE(
-        "Ваш профиль BridgeBuilders",
+        "Профиль BridgeBuilders",
         "§6ПЕРСОНАЛИЗАЦИЯ",
         "menu",
-        "",
+        "ca87474e-b15c-11e9-80c4-1cb72caa35fd",
         45F,
-        createBanner(worldMeta.getLabel("guide"), 50, 80, 90.0)
+        createBanner(worldMeta.getLabel("guide"), 50, 1.0, 120, -0.3, 5.5,-144.0)
     )
     ;
 }
 
-private fun createBanner(location: Location, height: Int, weight: Int, yaw: Double) = Banners.new {
+private fun createBanner(
+    location: Location,
+    height: Int,
+    opacity: Double,
+    weight: Int,
+    x: Double,
+    y: Double,
+    yaw: Double
+) = Banners.new {
     this.height = height
     this.weight = weight
-    this.location(location.clone().add(0.5, 5.0, 1.0))
+    this.opacity = opacity
+    this.location(location.clone().add(x, y, 1.0))
     motionSettings = hashMapOf(
         "yaw" to yaw,
         "pitch" to 0.0
