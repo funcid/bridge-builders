@@ -65,14 +65,20 @@ object PlayerCommands {
         }, "game")
 
         B.regCommand({ player, _ ->
-            if (!checkBan(app.getUser(player)!!))
+            val user = app.getUser(player)!!
+            if (!checkBan(user)) {
                 PlayerBalancer("BRI", 16).accept(player)
+                user.stat.gameExitTime = 0
+            }
             null
         }, "four")
 
         B.regCommand({ player, _ ->
-            if (!checkBan(app.getUser(player)!!))
+            val user = app.getUser(player)!!
+            if (!checkBan(user)) {
                 PlayerBalancer("BRD", 8).accept(player)
+                user.stat.gameExitTime = 0
+            }
             null
         }, "two")
     }
@@ -82,9 +88,7 @@ object PlayerCommands {
             user.player?.sendMessage(
                 Formatting.fine(
                     "До разблокировки §3${
-                        convertSecond(
-                            user.stat.banTime.toInt() - System.currentTimeMillis().toInt() / 1000
-                        )
+                        convertSecond((user.stat.gameLockTime - System.currentTimeMillis().toInt() / 1000))
                     }§f."
                 )
             )

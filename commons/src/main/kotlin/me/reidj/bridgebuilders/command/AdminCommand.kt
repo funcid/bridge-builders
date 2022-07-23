@@ -45,6 +45,12 @@ class AdminCommand {
             "uban",
         )
         B.regCommand(
+            adminConsume { user, _ ->
+                user.stat.gameExitTime = System.currentTimeMillis().toInt() / 1000 + 15
+            },
+            "tban",
+        )
+        B.regCommand(
             adminConsume { _, args -> getByPlayer(Bukkit.getPlayer(args[0]))!!.stat.realm = "test" },
             "realm",
         )

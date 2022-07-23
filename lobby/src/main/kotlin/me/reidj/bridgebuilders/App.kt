@@ -34,6 +34,8 @@ lateinit var app: App
 
 class App : JavaPlugin() {
 
+    lateinit var lootbox: Lootbox
+
     override fun onEnable() {
         B.plugin = this
         app = this
@@ -77,17 +79,18 @@ class App : JavaPlugin() {
         // Создание контента для лобби
         TopManager().runTaskTimer(this, 0, 1)
         CustomizationNPC
+        lootbox = Lootbox()
 
         // Инициализация команд
         PlayerCommands
 
         // Обработка каждого тика
-        TickTimerHandler(DiscordMessage, NpcManager, BanUtil).runTaskTimer(this, 0, 1)
+        TickTimerHandler(DiscordMessage, NpcManager, BanUtil, lootbox).runTaskTimer(this, 0, 1)
 
         playerDataManager = PlayerDataManager()
 
         B.events(
-            Lootbox,
+            lootbox,
             LobbyHandler,
             GlobalListeners,
             playerDataManager

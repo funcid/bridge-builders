@@ -126,7 +126,7 @@ object ConnectionHandler : Listener {
 
             user.inventory = player.inventory
             user.exp = player.exp
-            user.stat.leaveTime = System.currentTimeMillis().toDouble() / 1000 + 300
+            user.stat.gameExitTime = System.currentTimeMillis().toInt() / 1000 + 300
 
             app.updateNumbersPlayersInTeam()
         }

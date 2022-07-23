@@ -9,13 +9,13 @@ import me.func.mod.Banners.shineBlocks
 import me.func.mod.data.LootDrop
 import me.func.mod.selection.button
 import me.func.mod.selection.selection
-import me.func.protocol.element.MotionType
 import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.MoneyFormatter
 import me.reidj.bridgebuilders.donate.impl.*
 import me.reidj.bridgebuilders.getByPlayer
+import me.reidj.bridgebuilders.ticker.Ticked
 import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -29,7 +29,9 @@ import org.bukkit.event.inventory.InventoryType
 import packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 
-object Lootbox : Listener {
+private const val LOOT_BOX_PRICE = 192
+
+class Lootbox : Listener, Ticked {
 
     private val location = worldMeta.getLabel("lootbox")
     private val banner = Banners.new {
@@ -38,26 +40,7 @@ object Lootbox : Listener {
         z = location.z
         weight = 100
         height = 25
-        opacity = .62
-        motionType = MotionType.CONSTANT
         shineBlocks(false)
-    }
-
-    init {
-        B.repeat(20) {
-            Bukkit.getOnlinePlayers().mapNotNull(getByPlayer).forEach { user ->
-                Banners.content(
-                    user.player!!, banner.uuid, "§bЛутбокс\n§fДоступно ${user.stat.lootbox} ${
-                        Humanize.plurals(
-                            "штука",
-                            "штуки",
-                            "штук",
-                            user.stat.lootbox
-                        )
-                    }\n"
-                )
-            }
-        }
     }
 
     private val dropList = Corpse.values().map { it }
@@ -67,15 +50,13 @@ object Lootbox : Listener {
         .plus(StarterKit.values())
         .filter { it != KillMessage.NONE && it != Corpse.NONE && it != NameTag.NONE && it != StepParticle.NONE && it != StarterKit.NONE }
 
-    private const val lootboxPrice = 192
-
     private val lootboxItem = item {
         type = Material.CLAY_BALL
         nbt("other", "enderchest1")
         text(
             "§bЛутбокс\n\n§7Откройте и получите\n§7псевдоним, частицы ходьбы\n§7следы от стрелы, маски\n§7или скин могилы!\n\n§e > §f㜰 §aОткрыть сейчас за\n${
                 MoneyFormatter.texted(
-                    lootboxPrice
+                    LOOT_BOX_PRICE
                 )
             }"
         )
@@ -105,15 +86,15 @@ object Lootbox : Listener {
             menu.storage = MutableList(user.stat.lootbox) {
                 button {
                     item = lootboxItem
-                    price = lootboxPrice.toLong()
+                    price = LOOT_BOX_PRICE.toLong()
                     title = "§bЛутбокс"
                     onClick { player, _, _ ->
-                        if (user.stat.money < lootboxPrice) {
+                        if (user.stat.money < LOOT_BOX_PRICE) {
                             player.sendMessage(Formatting.error("Не хватает монет :("))
                             return@onClick
                         }
                         Anime.close(player)
-                        user.minusMoney(lootboxPrice)
+                        user.minusMoney(LOOT_BOX_PRICE)
                         user.stat.lootbox--
                         user.stat.lootboxOpenned++
 
@@ -149,6 +130,21 @@ object Lootbox : Listener {
                 }
             }
             menu.open(player)
+        }
+    }
+
+    override fun tick(vararg args: Int) {
+        if (args[0] % 30 == 0) {
+            Bukkit.getOnlinePlayers().mapNotNull(getByPlayer).forEach {
+                Banners.content(it.player!!, banner.uuid, "§bЛутбокс\n§fДоступно ${it.stat.lootbox} ${
+                    Humanize.plurals(
+                        "штука",
+                        "штуки",
+                        "штук",
+                        it.stat.lootbox
+                    )
+                }\n")
+            }
         }
     }
 }

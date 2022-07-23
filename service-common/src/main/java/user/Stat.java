@@ -21,6 +21,8 @@ public class Stat implements Unique {
     private int games;
     private int lootbox;
     private int lootboxOpenned;
+    private Integer gameLockTime;
+    private Integer gameExitTime;
 
     private List<Donate> donate;
     private Set<String> donates;
@@ -31,10 +33,6 @@ public class Stat implements Unique {
     private NameTag activeNameTag;
     private Corpse activeCorpse;
     private StarterKit activeKit;
-
-    private Double banTime;
-    private Double leaveTime;
-
 
     private Boolean isApprovedResourcepack;
     private Boolean isBan;

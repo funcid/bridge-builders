@@ -20,7 +20,7 @@ dependencies {
     implementation 'clepto:clepto-bukkit:3.4.2'
     implementation 'clepto:clepto-cristalix:3.0.2'
 
-    implementation 'me.func.animation-api:animation-api:0.0.31'
+    implementation 'me.func:animation-api:0.1.1'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21'
     implementation project(':commons')
     implementation project(':service-common')

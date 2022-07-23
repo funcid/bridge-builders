@@ -2,7 +2,6 @@ package me.reidj.bridgebuilders.npc
 
 import clepto.bukkit.B
 import implario.humanize.Humanize
-import me.func.mod.Banners
 import me.func.mod.Npc
 import me.func.mod.Npc.location
 import me.func.mod.Npc.onClick
@@ -14,7 +13,6 @@ import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.ticker.Ticked
 import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Bukkit
-import ru.cristalix.core.realm.IRealmService
 import java.util.*
 
 /**
@@ -47,11 +45,10 @@ object NpcManager : Ticked {
     }
 
     override fun tick(vararg args: Int) {
-        if (args[0] % 20 != 0)
-            return
-        Bukkit.getOnlinePlayers().forEach {
-            val stat = app.getUser(it)?.stat
-            npcs[NpcType.FOUR.name]!!.second.content = "§b§l4х4\n§e${IRealmService.get().getOnlineOnRealms("BRI")} ${
+        if (args[0] % 30 == 0) {
+            Bukkit.getOnlinePlayers().forEach {
+                val stat = app.getUser(it)?.stat
+                /*npcs[NpcType.FOUR.name]!!.second.content = "§b§l4х4\n§e${IRealmService.get().getOnlineOnRealms("BRI")} ${
                 plural(
                     IRealmService.get().getOnlineOnRealms("BRI")
                 )
@@ -62,10 +59,12 @@ object NpcManager : Ticked {
                     IRealmService.get().getOnlineOnRealms("BRD")
                 )
             }"
-            Banners.content(it, npcs[NpcType.TWO.name]!!.second.uuid, npcs[NpcType.TWO.name]!!.second.content)
-            NpcType.GUIDE.banner.content =
-                "§6${NpcType.GUIDE.bannerTitle}\nПобед: §3${stat?.wins}\nУбийств: §3${stat?.kills}\nСыграно: §3${stat?.games}"
-            Banners.content(it, npcs[NpcType.GUIDE.name]!!.second.uuid, npcs[NpcType.GUIDE.name]!!.second.content)
+            Banners.content(it, npcs[NpcType.TWO.name]!!.second.uuid, npcs[NpcType.TWO.name]!!.second.content)*/
+                app.getUser(it)?.let {
+                    NpcType.GUIDE.banner.content =
+                        "§6${NpcType.GUIDE.bannerTitle}\nПобед: §3${stat?.wins}\nУбийств: §3${stat?.kills}\nСыграно: §3${stat?.games}"
+                }
+            }
         }
     }
 
