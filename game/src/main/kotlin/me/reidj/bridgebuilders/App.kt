@@ -48,13 +48,14 @@ lateinit var app: App
 
 val LOBBY_SERVER: RealmId = RealmId.of("BRIL-1")
 var activeStatus = Status.STARTING
-var games = 0
 
 lateinit var teams: List<Team>
 lateinit var realm: RealmInfo
 lateinit var map: MapType
 
 class App : JavaPlugin() {
+
+    private var games = 0
 
     override fun onEnable() {
         B.plugin = this
@@ -96,12 +97,14 @@ class App : JavaPlugin() {
         // Конфигурация реалма
         realm = IRealmService.get().currentRealmInfo
         val id = realm.realmId.id
-        realm.status = RealmStatus.WAITING_FOR_PLAYERS
-        realm.maxPlayers = slots
-        realm.lobbyFallback = RealmId.of("BRIL-1")
-        realm.readableName = "BridgeBuilders#$id"
-        realm.groupName = "BridgeBuilders#$id"
-        realm.isCanReconnect = true
+        realm.run {
+            status = RealmStatus.WAITING_FOR_PLAYERS
+            maxPlayers = slots
+            lobbyFallback = RealmId.of("BRIL-1")
+            readableName = "BridgeBuilders#$id"
+            groupName = "BridgeBuilders#$id"
+            isCanReconnect = true
+        }
 
         teams.forEach { team -> map.blocks.forEach { team.collected[it] = 0 } }
 
@@ -214,11 +217,6 @@ class App : JavaPlugin() {
 
         // Ломаю мосты
         teams.forEach { generateBridge(it) }
-
-        Runtime.getRuntime().addShutdownHook(Thread {
-            Bukkit.getOnlinePlayers().map { getUser(it)!!.stat }.forEach { it.realm = "" }
-            playerDataManager.save()
-        })
     }
 
     fun restart() {
@@ -235,12 +233,17 @@ class App : JavaPlugin() {
         }
         playerDataManager.save()
         Cristalix.transfer(Bukkit.getOnlinePlayers().map { it.uniqueId }, LOBBY_SERVER)
+        games++
+
+        // Полная перезагрузка если много игр наиграно
+        if (games >= GAMES_STREAK_RESTART)
+            Bukkit.shutdown()
+
         realm.status = RealmStatus.WAITING_FOR_PLAYERS
+        activeStatus = Status.STARTING
         playerDataManager.userMap.clear()
         ConnectionHandler.markers.clear()
         BlockHandler.placedBlocks.clear()
-        Bukkit.unloadWorld(worldMeta.world, false)
-        loadMap()
         teams.forEach { team ->
             team.players.clear()
             team.breakBlocks.clear()
@@ -248,14 +251,12 @@ class App : JavaPlugin() {
             team.isActiveTeleport = false
             map.blocks.forEach { team.collected[it] = 0 }
         }
-        activeStatus = Status.STARTING
+        Bukkit.unloadWorld(worldMeta.world, false)
+        loadMap()
+
         timer.time = 0
 
         teams.forEach { generateBridge(it) }
-
-        // Полная перезагрузка если много игр наиграно
-        if (games >= GAMES_STREAK_RESTART)
-            Bukkit.shutdown()
     }
 
     fun addBlock(team: Team) {

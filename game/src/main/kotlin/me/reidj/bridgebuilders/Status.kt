@@ -17,8 +17,8 @@ import org.bukkit.potion.PotionEffectType
 import ru.cristalix.core.realm.RealmStatus
 import ru.cristalix.core.realm.RealmStatus.GAME_STARTED_CAN_SPACTATE
 
-val kit = DefaultKit
-val fastDigging = PotionEffect(PotionEffectType.FAST_DIGGING, Int.MAX_VALUE, 1)
+private val kit = DefaultKit
+private val fastDigging = PotionEffect(PotionEffectType.FAST_DIGGING, Int.MAX_VALUE, 1)
 
 enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     STARTING(70, { it ->
@@ -39,7 +39,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
             } else {
                 // Обновление статуса реалма, чтобы нельзя было войти
                 realm.status = GAME_STARTED_CAN_SPACTATE
-                games++
                 // Удаление игроков если они оффлайн
                 teams.forEach {
                     it.players.removeIf { player ->
@@ -65,6 +64,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         user.team = team
 
                         DefaultKit.init(it)
+
                         Anime.timer(it, "Конец игры через", GAME.lastSecond)
                         Anime.sendEmptyBuffer("online:hide", it)
 
@@ -107,12 +107,12 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
     }),
     GAME(2500, { time ->
         if (time % 20 == 0) {
-            if (time / 20 == 120 && me.reidj.bridgebuilders.activeStatus == me.reidj.bridgebuilders.Status.GAME) {
+            if (time / 20 == 120 && activeStatus == Status.GAME) {
                 teams.forEach { team -> team.isActiveTeleport = true }
                 Bukkit.getOnlinePlayers()
                     .forEach { Anime.killboardMessage(it, "Телепорт на чужие базы теперь §aдоступен") }
             }
-            if (time / 20 == 600 && me.reidj.bridgebuilders.activeStatus == me.reidj.bridgebuilders.Status.GAME) {
+            if (time / 20 == 600 && activeStatus == Status.GAME) {
                 Bukkit.getOnlinePlayers()
                     .forEach { Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...") }
                 teams.forEach { team -> team.blockReturn() }

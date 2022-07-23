@@ -4,7 +4,6 @@ include 'commons'
 include 'service-common'
 include 'lobby'
 include 'mod'
-include 'balance'
 include 'service'
 include 'discord'
 

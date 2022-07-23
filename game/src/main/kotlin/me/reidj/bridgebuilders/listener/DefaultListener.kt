@@ -66,10 +66,7 @@ object DefaultListener : Listener {
     }
 
     @EventHandler
-    fun InventoryClickEvent.handle() {
-        if (activeStatus == Status.STARTING)
-            isCancelled = true
-    }
+    fun InventoryClickEvent.handle() { isCancelled = activeStatus == Status.STARTING }
 
     @EventHandler
     fun FoodLevelChangeEvent.handle() = apply { if (activeStatus == Status.STARTING) level = 20 }

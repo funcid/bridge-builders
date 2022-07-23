@@ -37,8 +37,6 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.handle() = player.apply {
-        inventory.clear()
-
         val user = app.getUser(uniqueId)
 
         if (user == null) {
@@ -51,8 +49,9 @@ object ConnectionHandler : Listener {
             }
         }
 
-        if (user!!.player == null)
-            user.player = player
+        inventory.clear()
+
+        user!!.player = player
 
         B.postpone(5) {
             ModLoader.send("bridge-mod-bundle.jar", this)
@@ -88,7 +87,6 @@ object ConnectionHandler : Listener {
                     )
                 }
             }
-            Npc.npcs.values.forEach { it.spawn(this) }
         }
 
         if (activeStatus == Status.STARTING) {
