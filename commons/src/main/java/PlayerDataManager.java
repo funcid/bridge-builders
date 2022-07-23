@@ -57,8 +57,10 @@ public class PlayerDataManager implements Listener {
                             NameTag.NONE,
                             Corpse.NONE,
                             StarterKit.NONE,
-                            0L,
-                            true
+                            0.0,
+                            0.0,
+                            true,
+                            false
                     );
 
                 if (stat.getUuid() == null)
@@ -91,11 +93,17 @@ public class PlayerDataManager implements Listener {
                 if (stat.getActiveKit() == null)
                     stat.setActiveKit(StarterKit.NONE);
 
-                if (stat.getTimePlayedTotal() == null)
-                    stat.setTimePlayedTotal(0L);
+                if (stat.getLeaveTime() == null)
+                    stat.setLeaveTime(0.0);
 
                 if (stat.getIsApprovedResourcepack() == null)
                     stat.setIsApprovedResourcepack(true);
+
+                if (stat.getIsBan() == null)
+                    stat.setIsBan(false);
+
+                if (stat.getBanTime() == null)
+                    stat.setBanTime(0.0);
 
                 userMap.put(uuid, new User(stat));
             } catch (Exception ex) {

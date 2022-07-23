@@ -4,6 +4,7 @@ import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import dev.implario.bukkit.item.item
 import me.func.mod.Anime
+import me.func.mod.Banners
 import me.func.mod.Npc.skin
 import me.func.mod.selection.Confirmation
 import me.func.mod.selection.Reconnect
@@ -74,6 +75,7 @@ object LobbyHandler : Listener {
     @EventHandler
     fun PlayerJoinEvent.handle() = player.apply {
         val user = app.getUser(this)
+        val stat = user?.stat
 
         if (user == null) {
             sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
@@ -96,15 +98,21 @@ object LobbyHandler : Listener {
 
             NpcManager.npcs[NpcType.GUIDE.name]!!.first.data.skin(uniqueId.toString())
 
+            NpcType.GUIDE.banner.content =
+                "§6${NpcType.GUIDE.bannerTitle}\nПобед: §3${stat!!.wins}\nУбийств: §3${stat.kills}\nСыграно: §3${stat.games}"
+            Banners.show(this, NpcManager.npcs[NpcType.GUIDE.name]!!.second)
+
             user.giveMoney(0)
 
             if (user.stat.isApprovedResourcepack)
                 confirmation.open(this)
         }
 
-        if (IRealmService.get().getRealmById(RealmId.of(user.stat.realm)) != null && (user.stat.realm != ""
-                    || IRealmService.get().getRealmById(RealmId.of(user.stat.realm)).status != RealmStatus.WAITING_FOR_PLAYERS))
-            Reconnect("Вернуться в игру", 60, "Вернуться") { player -> player.performCommand("/rejoin") }
+        if (IRealmService.get()
+                .getRealmById(RealmId.of(user.stat.realm)) != null && (user.stat.realm != "" || IRealmService.get()
+                .getRealmById(RealmId.of(user.stat.realm)).status != RealmStatus.WAITING_FOR_PLAYERS) && !user.stat.isBan
+        )
+            Reconnect("Вернуться в игру", 300, "Вернуться") { player -> player.performCommand("/rejoin") }
     }
 
     @EventHandler

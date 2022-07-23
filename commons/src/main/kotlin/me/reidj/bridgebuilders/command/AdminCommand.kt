@@ -38,6 +38,16 @@ class AdminCommand {
             "win",
             "wins"
         )
+        B.regCommand(
+            adminConsume { _, args ->
+                getByPlayer(Bukkit.getPlayer(args[0]))!!.stat.isBan = false
+            },
+            "uban",
+        )
+        B.regCommand(
+            adminConsume { _, args -> getByPlayer(Bukkit.getPlayer(args[0]))!!.stat.realm = "test" },
+            "realm",
+        )
     }
 
     private fun adminConsume(consumer: (user: User, args: Array<String>) -> Unit): B.Executor {

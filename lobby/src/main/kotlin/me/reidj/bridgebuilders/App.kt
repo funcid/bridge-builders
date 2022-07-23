@@ -7,13 +7,13 @@ import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
 import me.func.mod.Kit
-import me.func.mod.conversation.ModLoader
 import me.reidj.bridgebuilders.command.PlayerCommands
 import me.reidj.bridgebuilders.content.CustomizationNPC
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.listener.GlobalListeners
 import me.reidj.bridgebuilders.listener.LobbyHandler
 import me.reidj.bridgebuilders.npc.NpcManager
+import me.reidj.bridgebuilders.ticker.detail.BanUtil
 import me.reidj.bridgebuilders.ticker.detail.DiscordMessage
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.util.MapLoader
@@ -28,7 +28,7 @@ import ru.cristalix.core.render.BukkitRenderService
 import ru.cristalix.core.render.IRenderService
 import java.util.*
 
-const val STORAGE = "https://storage.c7x.ru/reidj/"
+const val STORAGE = "https://storage.c7x.dev/reidj/"
 
 lateinit var app: App
 
@@ -62,8 +62,7 @@ class App : JavaPlugin() {
             user.stat.realm = ""
         }
 
-        val core = CoreApi.get()
-        core.registerService(IRenderService::class.java, BukkitRenderService(getServer()))
+        CoreApi.get().registerService(IRenderService::class.java, BukkitRenderService(getServer()))
 
         // Конфигурация реалма
         IRealmService.get().currentRealmInfo.run {
@@ -83,7 +82,7 @@ class App : JavaPlugin() {
         PlayerCommands
 
         // Обработка каждого тика
-        TickTimerHandler(DiscordMessage, NpcManager).runTaskTimer(this, 0, 1)
+        TickTimerHandler(DiscordMessage, NpcManager, BanUtil).runTaskTimer(this, 0, 1)
 
         playerDataManager = PlayerDataManager()
 

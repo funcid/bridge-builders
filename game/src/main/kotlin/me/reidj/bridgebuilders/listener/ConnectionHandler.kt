@@ -4,7 +4,6 @@ import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import dev.implario.bukkit.item.item
 import me.func.mod.Anime
-import me.func.mod.Npc
 import me.func.mod.conversation.ModLoader
 import me.func.mod.conversation.ModTransfer
 import me.func.protocol.Marker
@@ -127,6 +126,8 @@ object ConnectionHandler : Listener {
 
             user.inventory = player.inventory
             user.exp = player.exp
+            user.stat.leaveTime = System.currentTimeMillis().toDouble() / 1000 + 300
+
             app.updateNumbersPlayersInTeam()
         }
     }

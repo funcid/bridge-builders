@@ -51,24 +51,18 @@ object NpcManager : Ticked {
             return
         Bukkit.getOnlinePlayers().forEach {
             val stat = app.getUser(it)?.stat
-            Banners.content(
-                it,
-                npcs[NpcType.FOUR.name]!!.second,
-                "§b§l4х4\n§e${IRealmService.get().getOnlineOnRealms("BRI")} ${
-                    plural(
-                        IRealmService.get().getOnlineOnRealms("BRI")
-                    )
-                }"
-            )
-            Banners.content(
-                it,
-                npcs[NpcType.TWO.name]!!.second,
-                "§b§l4х2\n§e${IRealmService.get().getOnlineOnRealms("BRD")} ${
-                    plural(
-                        IRealmService.get().getOnlineOnRealms("BRD")
-                    )
-                }"
-            )
+            npcs[NpcType.FOUR.name]!!.second.content = "§b§l4х4\n§e${IRealmService.get().getOnlineOnRealms("BRI")} ${
+                plural(
+                    IRealmService.get().getOnlineOnRealms("BRI")
+                )
+            }"
+            Banners.content(it, npcs[NpcType.FOUR.name]!!.second.uuid, npcs[NpcType.FOUR.name]!!.second.content)
+            npcs[NpcType.TWO.name]!!.second.content = "§b§l4х2\n§e${IRealmService.get().getOnlineOnRealms("BRD")} ${
+                plural(
+                    IRealmService.get().getOnlineOnRealms("BRD")
+                )
+            }"
+            Banners.content(it, npcs[NpcType.TWO.name]!!.second.uuid, npcs[NpcType.TWO.name]!!.second.content)
             NpcType.GUIDE.banner.content =
                 "§6${NpcType.GUIDE.bannerTitle}\nПобед: §3${stat?.wins}\nУбийств: §3${stat?.kills}\nСыграно: §3${stat?.games}"
             Banners.content(it, npcs[NpcType.GUIDE.name]!!.second.uuid, npcs[NpcType.GUIDE.name]!!.second.content)
