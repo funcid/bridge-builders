@@ -1,6 +1,7 @@
 package me.reidj.bridgebuilders.npc
 
 import clepto.bukkit.B
+import implario.humanize.Humanize
 import me.func.mod.Banners
 import me.func.mod.Npc
 import me.func.mod.Npc.location
@@ -53,12 +54,12 @@ object NpcManager : Ticked {
             Banners.content(
                 it,
                 npcs[NpcType.FOUR.name]!!.second,
-                "§b§l4х4\n§e${IRealmService.get().getOnlineOnRealms("BRI")} игроков"
+                "§b§l4х4\n§e${plural(IRealmService.get().getOnlineOnRealms("BRI"))}"
             )
             Banners.content(
                 it,
                 npcs[NpcType.TWO.name]!!.second,
-                "§b§l4х2\n§e${IRealmService.get().getOnlineOnRealms("BRD")} игроков"
+                "§b§l4х2\n§e${plural(IRealmService.get().getOnlineOnRealms("BRD"))}"
             )
             Banners.content(
                 it,
@@ -67,4 +68,6 @@ object NpcManager : Ticked {
             )
         }
     }
+
+    private fun plural(player: Int) = Humanize.plurals("игрок", "игрока", "игроков", player)
 }
