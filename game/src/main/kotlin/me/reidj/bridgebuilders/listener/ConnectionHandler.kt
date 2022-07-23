@@ -141,6 +141,9 @@ object ConnectionHandler : Listener {
                     loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
                 }
             }
+        } else if (activeStatus == Status.STARTING && Bukkit.getOnlinePlayers().size == slots) {
+            disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Сервер переполнен!")
+            loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
         }
     }
 }

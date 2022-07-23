@@ -95,8 +95,6 @@ class App : JavaPlugin() {
             GlobalListeners,
             playerDataManager
         )
-
-        Runtime.getRuntime().addShutdownHook(Thread { playerDataManager.save() })
     }
 
     override fun onDisable() {

@@ -67,7 +67,7 @@ object PlayerCommands {
         B.regCommand({ player, _ ->
             val user = app.getUser(player)!!
             if (!checkBan(user)) {
-                PlayerBalancer("BRI", 16).accept(player)
+                PlayerBalancer("BRI", 32).accept(player)
                 user.stat.gameExitTime = 0
             }
             null
@@ -76,7 +76,7 @@ object PlayerCommands {
         B.regCommand({ player, _ ->
             val user = app.getUser(player)!!
             if (!checkBan(user)) {
-                PlayerBalancer("BRD", 8).accept(player)
+                PlayerBalancer("BRD", 21).accept(player)
                 user.stat.gameExitTime = 0
             }
             null
