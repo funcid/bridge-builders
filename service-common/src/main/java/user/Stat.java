@@ -34,6 +34,10 @@ public class Stat implements Unique {
     private Corpse activeCorpse;
     private StarterKit activeKit;
 
+    private Double banTime;
+    private Double leaveTime;
+    private Long timePlayedTotal;
+
     private Boolean isApprovedResourcepack;
     private Boolean isBan;
 }

@@ -59,6 +59,9 @@ public class PlayerDataManager implements Listener {
                             NameTag.NONE,
                             Corpse.NONE,
                             StarterKit.NONE,
+                            0.0,
+                            0.0,
+                            0L,
                             true,
                             false
                     );
@@ -101,6 +104,15 @@ public class PlayerDataManager implements Listener {
 
                 if (stat.getGameLockTime() == null)
                     stat.setGameLockTime(0);
+
+                if (stat.getBanTime() == null)
+                    stat.setBanTime(0.0);
+
+                if (stat.getLeaveTime() == null)
+                    stat.setLeaveTime(0.0);
+
+                if (stat.getTimePlayedTotal() == null)
+                    stat.setTimePlayedTotal(0L);
 
                 if (stat.getGameExitTime() == null)
                     stat.setGameExitTime(0);
