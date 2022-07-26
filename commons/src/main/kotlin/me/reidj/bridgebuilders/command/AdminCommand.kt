@@ -40,7 +40,11 @@ class AdminCommand {
         )
         B.regCommand(
             adminConsume { _, args ->
-                getByPlayer(Bukkit.getPlayer(args[0]))!!.stat.isBan = false
+                getByPlayer(Bukkit.getPlayer(args[0]))!!.stat.run {
+                    isBan = false
+                    gameLockTime = 0
+                    realm = ""
+                }
             },
             "uban",
         )
