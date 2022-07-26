@@ -123,9 +123,10 @@ object DefaultListener : Listener {
                 return
             if (player.location.distanceSquared(playerTeam.teleport) < 4 * 4) {
                 if (teams.any { enemy -> !enemy.players.contains(player.uniqueId) }) {
-                    val enemyTeam =
-                        teams.filter { enemy -> !enemy.players.contains(player.uniqueId) && enemy.isActiveTeleport }
-                            .random()
+                    val team = teams.filter { enemy -> !enemy.players.contains(player.uniqueId) && enemy.isActiveTeleport }
+                    if (team.isEmpty())
+                        return
+                    val enemyTeam = team.random()
                     app.teleportAtBase(enemyTeam, player)
                     enemyTeam.players.mapNotNull { uuid -> Bukkit.getPlayer(uuid) }.forEach { enemy ->
                         enemy.playSound(
