@@ -67,8 +67,10 @@ object PlayerCommands {
         B.regCommand({ player, _ ->
             val user = app.getUser(player)!!
             if (!checkBan(user)) {
-                PlayerBalancer("BRI", 32).accept(player)
-                user.stat.gameExitTime = 0
+                if (user.stat.realm == "") {
+                    PlayerBalancer("BRI", 16).accept(player)
+                    user.stat.gameExitTime = 0
+                }
             }
             null
         }, "four")
@@ -76,7 +78,7 @@ object PlayerCommands {
         B.regCommand({ player, _ ->
             val user = app.getUser(player)!!
             if (!checkBan(user)) {
-                PlayerBalancer("BRD", 21).accept(player)
+                PlayerBalancer("BRD", 8).accept(player)
                 user.stat.gameExitTime = 0
             }
             null
@@ -92,6 +94,9 @@ object PlayerCommands {
                     }§f."
                 )
             )
+            return true
+        } else if (user.stat.realm != "") {
+            user.player?.sendMessage(Formatting.error("Вы не можете начать новую игру незакончив прошлую!"))
             return true
         }
         return false
