@@ -2,11 +2,8 @@ package me.reidj.bridgebuilders.util
 
 import me.func.mod.Anime
 import me.func.protocol.EndStatus
-import me.reidj.bridgebuilders.Status
-import me.reidj.bridgebuilders.activeStatus
-import me.reidj.bridgebuilders.app
+import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.team.Team
-import me.reidj.bridgebuilders.timer
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
@@ -58,7 +55,7 @@ object WinUtil {
                 firework.fireworkMeta = meta
             }
         }
-        Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.forEach {
+        Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.filter { !isSpectator(it.player!!) }.forEach {
             if (team.players.contains(it.stat.uuid))
                 return@forEach
             it.giveMoney(15)
