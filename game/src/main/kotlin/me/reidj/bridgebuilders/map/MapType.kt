@@ -3,7 +3,8 @@ package me.reidj.bridgebuilders.map
 import me.reidj.bridgebuilders.team.Block
 import org.bukkit.Material.*
 
-enum class MapType(
+enum class
+MapType(
     val title: String,
     var blocks: Set<Block>,
     var needBlocks: Int,
@@ -79,7 +80,7 @@ enum class MapType(
         42,
         30
     ),
-    /*PESOK(
+    PESOK(
         "pesok",
         HashSet<Block>(
             listOf(
@@ -89,11 +90,10 @@ enum class MapType(
                 Block("Еловые ступеньки", 16, SPRUCE_WOOD_STAIRS),
                 Block("Гранит", 28, STONE, 1),
                 Block("Зелёная панель", 42, STAINED_GLASS_PANE, 13),
-                Block("Дубовые ступеньки", 42, WOOD_STAIRS),
+                Block("Дубовые доски", 42, WOOD),
                 Block("Еловая плита", 42, WOOD_STEP, 1),
                 Block("Песок", 63, SAND),
-                Block("Песчаниковые ступеньки", 84, SANDSTONE_STAIRS),
-                Block("Песчаник", 140, SANDSTONE),
+                Block("Песчаник", 224, SANDSTONE),
                 Block("Терракота", 174, HARD_CLAY),
                 Block("Светло-серая керамика", 224, STAINED_CLAY, 8),
             )
@@ -101,5 +101,5 @@ enum class MapType(
         887,
         42,
         30
-    ),*/
+    ),
 }
