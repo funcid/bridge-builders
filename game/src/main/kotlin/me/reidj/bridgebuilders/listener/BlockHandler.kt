@@ -2,6 +2,7 @@ package me.reidj.bridgebuilders.listener
 
 import clepto.bukkit.B
 import me.func.mod.Anime
+import me.func.mod.Npc
 import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.teams
 import me.reidj.bridgebuilders.util.WinUtil
@@ -14,6 +15,8 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.inventory.ItemStack
 import kotlin.math.min
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 object BlockHandler : Listener {
 
@@ -25,6 +28,14 @@ object BlockHandler : Listener {
         if (teams.all {
                 block.location.distanceSquared(it.spawn) > 60 * 72 || app.getBridge(it).contains(block.location) ||
                         block.location.distanceSquared(it.spawn) < 4 * 4
+            })
+            isCancelled = true
+        if (Npc.npcs.any {
+                sqrt(
+                    (it.value.data.x - block.location.x).pow(2.0) + (it.value.data.y - block.location.y).pow(
+                        2.0
+                    ) + (it.value.data.z - block.location.z).pow(2.0)
+                ) <= 5
             })
             isCancelled = true
     }

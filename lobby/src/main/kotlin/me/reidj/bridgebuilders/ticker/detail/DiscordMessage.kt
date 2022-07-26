@@ -21,7 +21,7 @@ object DiscordMessage : Ticked {
         .create()
 
     override fun tick(vararg args: Int) {
-        if (args[0] % 6000 == 0) {
+        if (args[0] % 10000 == 0) {
             Bukkit.getOnlinePlayers().forEach {player -> alertMessage.forEach { player.sendMessage(it) } }
         }
     }
