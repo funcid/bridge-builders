@@ -53,7 +53,7 @@ object ConnectionHandler : Listener {
         user!!.player = player
 
         B.postpone(5) {
-            ModLoader.send("bridge-mod-bundle.jar", this)
+            ModLoader.send("mod-bundle-1.0-SNAPSHOT.jar", this)
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
             // Создание маркера
             teams.forEach {

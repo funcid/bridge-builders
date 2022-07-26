@@ -233,17 +233,12 @@ class App : JavaPlugin() {
         }
         playerDataManager.save()
         Cristalix.transfer(Bukkit.getOnlinePlayers().map { it.uniqueId }, LOBBY_SERVER)
-        games++
-
-        // Полная перезагрузка если много игр наиграно
-        if (games >= GAMES_STREAK_RESTART)
-            Bukkit.shutdown()
-
         realm.status = RealmStatus.WAITING_FOR_PLAYERS
-        activeStatus = Status.STARTING
         playerDataManager.userMap.clear()
         ConnectionHandler.markers.clear()
         BlockHandler.placedBlocks.clear()
+        Bukkit.unloadWorld(worldMeta.world, false)
+        loadMap()
         teams.forEach { team ->
             team.players.clear()
             team.breakBlocks.clear()
@@ -251,12 +246,14 @@ class App : JavaPlugin() {
             team.isActiveTeleport = false
             map.blocks.forEach { team.collected[it] = 0 }
         }
-        Bukkit.unloadWorld(worldMeta.world, false)
-        loadMap()
-
+        activeStatus = Status.STARTING
         timer.time = 0
 
         teams.forEach { generateBridge(it) }
+
+        // Полная перезагрузка если много игр наиграно
+        if (games >= GAMES_STREAK_RESTART)
+            Bukkit.shutdown()
     }
 
     fun addBlock(team: Team) {
