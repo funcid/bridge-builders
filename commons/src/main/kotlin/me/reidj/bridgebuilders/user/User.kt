@@ -27,12 +27,13 @@ class User(stat: Stat) {
         this.stat = stat
     }
 
-    fun giveMoney(money: Int) = changeMoney(money)
+    fun giveMoney(money: Int, isLobby: Boolean) = changeMoney(money)
 
     fun minusMoney(money: Int) = changeMoney(-money)
 
-    private fun changeMoney(dMoney: Int) {
+    private fun changeMoney(dMoney: Int, isLobby: Boolean) {
         stat.money += dMoney
-        Anime.bottomRightMessage(player!!, "§e${stat.money} ${Humanize.plurals("монета", "монеты", "монет", stat.money)}")
+        if (isLobby)
+            Anime.bottomRightMessage(player!!, "§e${stat.money} ${Humanize.plurals("монета", "монеты", "монет", stat.money)}")
     }
 }
