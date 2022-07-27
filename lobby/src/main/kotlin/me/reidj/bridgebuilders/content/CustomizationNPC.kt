@@ -105,7 +105,7 @@ object CustomizationNPC {
                             Glow.animate(player, 0.4, GlowColor.RED)
                             return@onClick
                         }
-                        user.giveMoney(-pos.getPrice())
+                        user.giveMoney(-pos.getPrice(), true)
                         pos.give(user)
                         Glow.animate(player, 0.4, GlowColor.GREEN)
                         clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))

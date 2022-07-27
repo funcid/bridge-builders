@@ -30,7 +30,7 @@ object WinUtil {
             it.apply {
                 player!!.sendMessage(Formatting.fine("Вы получили §e30 монет §fза победу."))
                 stat.wins++
-                giveMoney(30)
+                giveMoney(30, false)
                 Anime.showEnding(
                     player!!,
                     EndStatus.WIN,
@@ -58,7 +58,7 @@ object WinUtil {
         Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.filter { !isSpectator(it.player!!) }.forEach {
             if (team.players.contains(it.stat.uuid))
                 return@forEach
-            it.giveMoney(15)
+            it.giveMoney(15, false)
             it.player!!.sendMessage(Formatting.fine("Вы получили §e15 монет§f."))
             Anime.showEnding(
                 it.player!!,

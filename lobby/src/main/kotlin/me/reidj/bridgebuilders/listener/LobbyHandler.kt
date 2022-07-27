@@ -4,7 +4,6 @@ import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import dev.implario.bukkit.item.item
 import me.func.mod.Anime
-import me.func.mod.Banners
 import me.func.mod.Npc.skin
 import me.func.mod.selection.Confirmation
 import me.func.mod.selection.Reconnect
@@ -97,7 +96,7 @@ object LobbyHandler : Listener {
 
             NpcManager.npcs[NpcType.GUIDE.name]!!.first.data.skin(uniqueId.toString())
 
-            user.giveMoney(0)
+            user.giveMoney(0, true)
 
             if (user.stat.isApprovedResourcepack)
                 confirmation.open(this)

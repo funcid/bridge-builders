@@ -110,7 +110,7 @@ object DamageListener : Listener {
             }
             // Начисление убийце статистики
             killerStatistic?.let {
-                it.giveMoney(5)
+                it.giveMoney(5, false)
                 it.stat.kills++
                 it.kills++
                 it.player!!.sendMessage(Formatting.fine("Вы получили §e5 монет §fза убийство."))
