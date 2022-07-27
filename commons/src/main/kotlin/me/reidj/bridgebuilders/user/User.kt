@@ -27,9 +27,9 @@ class User(stat: Stat) {
         this.stat = stat
     }
 
-    fun giveMoney(money: Int, isLobby: Boolean) = changeMoney(money)
+    fun giveMoney(money: Int, isLobby: Boolean) = changeMoney(money, isLobby)
 
-    fun minusMoney(money: Int) = changeMoney(-money)
+    fun minusMoney(money: Int) = changeMoney(-money, true)
 
     private fun changeMoney(dMoney: Int, isLobby: Boolean) {
         stat.money += dMoney

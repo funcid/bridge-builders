@@ -123,7 +123,7 @@ object DefaultListener : Listener {
                 return
             if (player.location.distanceSquared(playerTeam.teleport) < 4 * 4) {
                 if (teams.any { enemy -> !enemy.players.contains(player.uniqueId) }) {
-                    val team = teams.filter { enemy -> !enemy.players.contains(player.uniqueId) && enemy.isActiveTeleport }
+                    val team = teams.filter { enemy -> !enemy.players.contains(player.uniqueId) }
                     if (team.isEmpty())
                         return
                     val enemyTeam = team.random()
