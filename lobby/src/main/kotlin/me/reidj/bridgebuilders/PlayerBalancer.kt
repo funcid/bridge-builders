@@ -3,7 +3,9 @@ package me.reidj.bridgebuilders
 import me.reidj.bridgebuilders.ticker.detail.BanUtil
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.party.IPartyService
 import ru.cristalix.core.party.PartySnapshot
 import ru.cristalix.core.realm.IRealmService
@@ -35,6 +37,9 @@ class PlayerBalancer(private val server: String) : Consumer<Player> {
                         for (uuid in party1.members) {
                             if (BanUtil.checkBan(app.getUser(uuid)!!))
                                 ITransferService.get().transfer(uuid, realm.get())
+                            else
+                                Bukkit.getPlayer(uuid)
+                                    .sendMessage(Formatting.error("Вы не можете начать игру, пока участник вашей тусовки находится в блокировке :("))
                         }
                     } else {
                         p.spigot().sendMessage(
