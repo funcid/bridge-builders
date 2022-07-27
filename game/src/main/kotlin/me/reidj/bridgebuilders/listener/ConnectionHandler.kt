@@ -36,6 +36,11 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.handle() = player.apply {
+        if (activeStatus == Status.STARTING && Bukkit.getOnlinePlayers().size == slots) {
+            Cristalix.transfer(listOf(uniqueId), LOBBY_SERVER)
+            return@apply
+        }
+
         val user = app.getUser(uniqueId)
 
         if (user == null) {
@@ -141,9 +146,6 @@ object ConnectionHandler : Listener {
                     loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
                 }
             }
-        } else if (activeStatus == Status.STARTING && Bukkit.getOnlinePlayers().size >= slots) {
-            disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Сервер переполнен!")
-            loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
         }
     }
 }
