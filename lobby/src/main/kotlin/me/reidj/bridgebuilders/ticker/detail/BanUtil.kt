@@ -62,5 +62,6 @@ object BanUtil : Ticked {
                 "минут",
                 minutes
             )
+        } $seconds ${Humanize.plurals("секунда", "секунды", "секунд", seconds)}"
     }
 }
