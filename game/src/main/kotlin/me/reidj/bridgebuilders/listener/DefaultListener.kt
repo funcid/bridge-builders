@@ -66,7 +66,9 @@ object DefaultListener : Listener {
     }
 
     @EventHandler
-    fun InventoryClickEvent.handle() { isCancelled = activeStatus == Status.STARTING }
+    fun InventoryClickEvent.handle() {
+        isCancelled = activeStatus == Status.STARTING
+    }
 
     @EventHandler
     fun FoodLevelChangeEvent.handle() = apply { if (activeStatus == Status.STARTING) level = 20 }
@@ -158,10 +160,7 @@ object DefaultListener : Listener {
 
     private fun displayCoolDownBar(team: Team) {
         team.players.mapNotNull { Bukkit.getPlayer(it) }
-            .forEach {
-                Anime.reload(it, 0.1, "До следующего телепорта", 42, 102, 240)
-                B.postpone(20 * 2) { Anime.reload(it, 120.0, "До следующего телепорта", 42, 102, 240) }
-            }
+            .forEach { B.postpone(20 * 2) { Anime.reload(it, 120.0, "До следующего телепорта", 42, 102, 240) } }
     }
 
     private fun teleportAvailable(team: Team) {

@@ -30,7 +30,7 @@ class AdminCommand {
         }, "opa")
         B.regCommand(
             adminConsume { _, args ->
-                getByPlayer(Bukkit.getPlayer(args[0]))!!.giveMoney(args[1].toInt())
+                getByPlayer(Bukkit.getPlayer(args[0]))!!.giveMoney(args[1].toInt(), true)
             }, "money"
         )
         B.regCommand(

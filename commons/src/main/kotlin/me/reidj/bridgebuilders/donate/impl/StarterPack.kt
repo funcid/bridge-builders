@@ -33,7 +33,7 @@ enum class StarterPack(
 
     override fun give(user: User) {
         user.stat.lootbox += 3
-        user.giveMoney(512)
+        user.giveMoney(512, true)
     }
 
     override fun isActive(user: User): Boolean = false

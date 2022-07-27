@@ -53,7 +53,7 @@ enum class MoneyKit(
     }
 
     override fun give(user: User) {
-        user.giveMoney(reward)
+        user.giveMoney(reward, true)
     }
 
     override fun isActive(user: User): Boolean {
