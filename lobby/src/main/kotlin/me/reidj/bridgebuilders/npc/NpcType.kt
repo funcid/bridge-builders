@@ -22,7 +22,7 @@ enum class NpcType(
         "4x4",
         "",
         "four",
-        "bf30a1df-85de-11e8-a6de-1cb72caa35fd",
+        "ca87474e-b15c-11e9-80c4-1cb72caa35fd",
         90f,
         createBanner(worldMeta.getLabel("four"), 40, 0.62, 60, 0.5, 5.0,-179.0)
     ),
@@ -30,7 +30,7 @@ enum class NpcType(
         "4x2",
         "",
         "two",
-        "ca87474e-b15c-11e9-80c4-1cb72caa35fd",
+        "b01a9b37-a632-11e8-8374-1cb72caa35fd",
         90f,
         createBanner(worldMeta.getLabel("two"), 40, 0.62, 60, 0.5,5.0, -179.0)
     ),

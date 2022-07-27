@@ -1,9 +1,6 @@
 package me.reidj.bridgebuilders.listener
 
-import me.reidj.bridgebuilders.app
-import me.reidj.bridgebuilders.getPrefix
-import me.reidj.bridgebuilders.isSpectator
-import me.reidj.bridgebuilders.teams
+import me.reidj.bridgebuilders.*
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -13,6 +10,8 @@ object ChatHandler : Listener {
 
     @EventHandler
     fun AsyncPlayerChatEvent.handle() {
+        if (activeStatus != Status.GAME)
+            return
         isCancelled = true
         if (isSpectator(player))
             return
