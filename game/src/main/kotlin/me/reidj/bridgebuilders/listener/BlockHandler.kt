@@ -28,15 +28,7 @@ object BlockHandler : Listener {
         if (teams.all {
                 block.location.distanceSquared(it.spawn) > 60 * 72 || app.getBridge(it).contains(block.location) ||
                         block.location.distanceSquared(it.spawn) < 4 * 4
-            })
-            isCancelled = true
-        if (Npc.npcs.any {
-                sqrt(
-                    (it.value.data.x - block.location.x).pow(2.0) + (it.value.data.y - block.location.y).pow(
-                        2.0
-                    ) + (it.value.data.z - block.location.z).pow(2.0)
-                ) <= 5
-            })
+            } || isNpcBlock(block.location))
             isCancelled = true
     }
 
@@ -53,6 +45,9 @@ object BlockHandler : Listener {
             isCancelled = true
             return
         } else if (block.type == Material.SEA_LANTERN) {
+            isCancelled = true
+            return
+        } else if (isNpcBlock(block.location)) {
             isCancelled = true
             return
         }
@@ -113,4 +108,13 @@ object BlockHandler : Listener {
             159 to 10.toByte() -> team.breakBlocks[block.location] = idAndData
         }
     }
+
+    private fun isNpcBlock(location: Location) = Npc.npcs.any {
+        sqrt(
+            (it.value.data.x - location.x).pow(2.0) + (it.value.data.y - location.y).pow(
+                2.0
+            ) + (it.value.data.z - location.z).pow(2.0)
+        ) <= 5
+    }
+
 }
