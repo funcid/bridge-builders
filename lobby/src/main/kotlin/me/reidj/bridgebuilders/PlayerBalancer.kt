@@ -35,7 +35,7 @@ class PlayerBalancer(private val server: String) : Consumer<Player> {
                     val realmInfo = IRealmService.get().getRealmById(realm.get())
                     if (realmInfo.currentPlayers + party1.members.size <= realmInfo.maxPlayers) {
                         for (uuid in party1.members) {
-                            if (BanUtil.checkBan(app.getUser(uuid)!!))
+                            if (!BanUtil.checkBan(app.getUser(uuid)!!))
                                 ITransferService.get().transfer(uuid, realm.get())
                             else
                                 Bukkit.getPlayer(uuid)
