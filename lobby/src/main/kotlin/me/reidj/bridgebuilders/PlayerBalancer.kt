@@ -1,5 +1,6 @@
 package me.reidj.bridgebuilders
 
+import me.reidj.bridgebuilders.ticker.detail.BanUtil
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.entity.Player
@@ -32,7 +33,8 @@ class PlayerBalancer(private val server: String, private val maxPlayers: Int) : 
                     val realmInfo = IRealmService.get().getRealmById(realm.get())
                     if (realmInfo.currentPlayers + party1.members.size <= realmInfo.maxPlayers) {
                         for (uuid in party1.members) {
-                            ITransferService.get().transfer(uuid, realm.get())
+                            if (BanUtil.checkBan(app.getUser(uuid)!!))
+                                ITransferService.get().transfer(uuid, realm.get())
                         }
                     } else {
                         p.spigot().sendMessage(

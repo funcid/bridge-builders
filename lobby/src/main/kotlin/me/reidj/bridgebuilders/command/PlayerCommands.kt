@@ -2,12 +2,11 @@ package me.reidj.bridgebuilders.command
 
 import clepto.bukkit.B
 import clepto.cristalix.Cristalix
-import implario.humanize.Humanize
 import me.reidj.bridgebuilders.HUB
 import me.reidj.bridgebuilders.PlayerBalancer
 import me.reidj.bridgebuilders.STORAGE
 import me.reidj.bridgebuilders.app
-import me.reidj.bridgebuilders.user.User
+import me.reidj.bridgebuilders.ticker.detail.BanUtil
 import me.reidj.bridgebuilders.util.MenuUtil
 import org.bukkit.entity.Player
 import ru.cristalix.core.formatting.Formatting
@@ -66,7 +65,7 @@ object PlayerCommands {
 
         B.regCommand({ player, _ ->
             val user = app.getUser(player)!!
-            if (!checkBan(user)) {
+            if (!BanUtil.checkBan(user)) {
                 if (user.stat.realm == "") {
                     PlayerBalancer("BRI", 32).accept(player)
                     user.stat.gameExitTime = 0
@@ -77,41 +76,11 @@ object PlayerCommands {
 
         B.regCommand({ player, _ ->
             val user = app.getUser(player)!!
-            if (!checkBan(user)) {
+            if (!BanUtil.checkBan(user)) {
                 PlayerBalancer("BRD", 21).accept(player)
                 user.stat.gameExitTime = 0
             }
             null
         }, "two")
-    }
-
-    private fun checkBan(user: User): Boolean {
-        if (user.stat.isBan) {
-            user.player?.sendMessage(
-                Formatting.fine(
-                    "До разблокировки §3${
-                        convertSecond((user.stat.gameLockTime - System.currentTimeMillis().toInt() / 1000))
-                    }§f."
-                )
-            )
-            return true
-        } else if (user.stat.realm != "") {
-            user.player?.sendMessage(Formatting.error("Вы не можете начать новую игру, незакончив прошлую!"))
-            return true
-        }
-        return false
-    }
-
-    private fun convertSecond(totalSeconds: Int): String {
-        val minutes = (totalSeconds % 3600) / 60
-        val seconds = totalSeconds % 60
-        return "$minutes ${
-            Humanize.plurals(
-                "минута",
-                "минуты",
-                "минут",
-                minutes
-            )
-        } $seconds ${Humanize.plurals("секунда", "секунды", "секунд", seconds)}"
     }
 }

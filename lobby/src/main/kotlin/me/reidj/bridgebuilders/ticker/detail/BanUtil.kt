@@ -1,7 +1,9 @@
 package me.reidj.bridgebuilders.ticker.detail
 
+import implario.humanize.Humanize
 import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.ticker.Ticked
+import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import ru.cristalix.core.formatting.Formatting
 
@@ -29,5 +31,36 @@ object BanUtil : Ticked {
                 it.player?.sendMessage(Formatting.fine("Доступ к игре был разблокирован!"))
             }
         }
+    }
+
+    fun checkBan(user: User): Boolean {
+        if (user.stat.isBan) {
+            user.player?.sendMessage(
+                Formatting.fine(
+                    "До разблокировки §3${
+                        convertSecond(
+                            (user.stat.gameLockTime - System.currentTimeMillis().toInt() / 1000)
+                        )
+                    }§f."
+                )
+            )
+            return true
+        } else if (user.stat.realm != "") {
+            user.player?.sendMessage(Formatting.error("Вы не можете начать новую игру, незакончив прошлую!"))
+            return true
+        }
+        return false
+    }
+
+    private fun convertSecond(totalSeconds: Int): String {
+        val minutes = (totalSeconds % 3600) / 60
+        val seconds = totalSeconds % 60
+        return "$minutes ${
+            Humanize.plurals(
+                "минута",
+                "минуты",
+                "минут",
+                minutes
+            )
     }
 }
