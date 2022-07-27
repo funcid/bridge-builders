@@ -15,7 +15,7 @@ import java.util.*
 import java.util.concurrent.ExecutionException
 import java.util.function.Consumer
 
-class PlayerBalancer(private val server: String, private val maxPlayers: Int) : Consumer<Player> {
+class PlayerBalancer(private val server: String) : Consumer<Player> {
 
     @Throws(ExecutionException::class, InterruptedException::class)
     private fun sendToServer(player: Player) {
@@ -76,7 +76,7 @@ class PlayerBalancer(private val server: String, private val maxPlayers: Int) : 
             ) {
                 continue
             }
-            if (realmInfo.currentPlayers + mintoJoin <= maxPlayers) {
+            if (realmInfo.currentPlayers + mintoJoin <= 32) {
                 if (maxRealm == null) {
                     maxRealm = realmInfo
                 } else if (maxRealm.currentPlayers < realmInfo.currentPlayers) {

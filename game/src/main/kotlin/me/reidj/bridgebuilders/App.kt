@@ -99,7 +99,7 @@ class App : JavaPlugin() {
         val id = realm.realmId.id
         realm.run {
             status = RealmStatus.WAITING_FOR_PLAYERS
-            maxPlayers = slots
+            maxPlayers = 32
             lobbyFallback = RealmId.of("BRIL-1")
             readableName = "BridgeBuilders#$id"
             groupName = "BridgeBuilders#$id"

@@ -77,7 +77,7 @@ object PlayerCommands {
         B.regCommand({ player, _ ->
             val user = app.getUser(player)!!
             if (!BanUtil.checkBan(user)) {
-                PlayerBalancer("BRD", 21).accept(player)
+                PlayerBalancer("BRD", 32).accept(player)
                 user.stat.gameExitTime = 0
             }
             null
