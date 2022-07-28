@@ -49,7 +49,6 @@ object BlockHandler : Listener {
             return
         } else if (isNpcBlock(block.location)) {
             isCancelled = true
-            return
         }
         if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
             val winner = teams.filter { it.players.contains(player.uniqueId) }[0]

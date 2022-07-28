@@ -113,7 +113,7 @@ object DamageListener : Listener {
                 it.giveMoney(5, false)
                 it.stat.kills++
                 it.kills++
-                it.player!!.sendMessage(Formatting.fine("Вы получили §e5 монет §fза убийство."))
+                it.player?.sendMessage(Formatting.fine("Вы получили §e5 монет §fза убийство."))
             }
             // Создаю гроб, лол
             if (user.stat.activeCorpse != data.Corpse.NONE) {
