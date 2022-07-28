@@ -55,8 +55,6 @@ object ConnectionHandler : Listener {
 
         inventory.clear()
 
-        user!!.player = player
-
         B.postpone(5) {
             ModLoader.send("mod-bundle-1.0-SNAPSHOT.jar", this)
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
@@ -92,6 +90,8 @@ object ConnectionHandler : Listener {
                 }
             }
         }
+
+        user!!.player = player
 
         if (activeStatus == Status.STARTING) {
             gameMode = GameMode.ADVENTURE

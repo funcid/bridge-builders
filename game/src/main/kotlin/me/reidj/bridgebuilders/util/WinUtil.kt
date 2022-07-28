@@ -55,7 +55,7 @@ object WinUtil {
                 firework.fireworkMeta = meta
             }
         }
-        Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.filter { !isSpectator(it.player!!) }.forEach {
+        Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.filter { it.player != null }.filter { !isSpectator(it.player!!) }.forEach {
             if (team.players.contains(it.stat.uuid))
                 return@forEach
             it.giveMoney(15, false)
