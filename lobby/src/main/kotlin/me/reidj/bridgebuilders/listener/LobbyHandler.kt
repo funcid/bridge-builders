@@ -84,8 +84,9 @@ object LobbyHandler : Listener {
 
         allowFlight = IPermissionService.get().isDonator(uniqueId)
 
+        user.player = this
+
         B.postpone(5) {
-            user!!.player = this
 
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
 

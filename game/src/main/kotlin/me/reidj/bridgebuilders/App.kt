@@ -358,6 +358,8 @@ class App : JavaPlugin() {
     }
 
     override fun onDisable() {
+        Bukkit.getOnlinePlayers().mapNotNull(getByPlayer).forEach { it.stat.gameExitTime = 0 }
+
         playerDataManager.save()
 
         val worlds = Bukkit.getWorlds()
