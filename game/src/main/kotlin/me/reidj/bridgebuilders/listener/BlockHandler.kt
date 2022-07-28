@@ -34,11 +34,12 @@ object BlockHandler : Listener {
 
     @EventHandler
     fun BlockBreakEvent.handle() {
-        val team = teams.filter { it.players.contains(player.uniqueId) }[0]
+        val allTeams = teams.filter { it.players.contains(player.uniqueId) }
+        val team = allTeams[0]
         if (teams.any { app.getBridge(it).contains(block.location) }) {
             isCancelled = true
             return
-        } else if (block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
+        } else if (allTeams.isNotEmpty() && block.type == Material.BEACON && app.getCountBlocksTeam(team)) {
             isCancelled = true
             return
         } else if (teams.any { block.location.distanceSquared(it.spawn) < 4 * 4 }) {
@@ -50,7 +51,7 @@ object BlockHandler : Listener {
         } else if (isNpcBlock(block.location)) {
             isCancelled = true
         }
-        if (block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
+        if (allTeams.isNotEmpty() && block.type == Material.BEACON && !app.getCountBlocksTeam(team)) {
             val winner = teams.filter { it.players.contains(player.uniqueId) }[0]
             Bukkit.getOnlinePlayers().forEach {
                 Anime.killboardMessage(

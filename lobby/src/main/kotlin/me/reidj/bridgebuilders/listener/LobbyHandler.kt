@@ -87,7 +87,6 @@ object LobbyHandler : Listener {
         user.player = this
 
         B.postpone(5) {
-
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
 
             Anime.hideIndicator(this, Indicators.ARMOR, Indicators.EXP, Indicators.HEALTH, Indicators.HUNGER)
@@ -101,7 +100,7 @@ object LobbyHandler : Listener {
         }
 
         if (IRealmService.get()
-                .getRealmById(RealmId.of(user!!.stat.realm)) != null && (user.stat.realm != "" || IRealmService.get()
+                .getRealmById(RealmId.of(user.stat.realm)) != null && (user.stat.realm != "" || IRealmService.get()
                 .getRealmById(RealmId.of(user.stat.realm)).status != RealmStatus.WAITING_FOR_PLAYERS) && !user.stat.isBan
         )
             Reconnect("Вернуться в игру", 300, "Вернуться") { player -> player.performCommand("/rejoin") }

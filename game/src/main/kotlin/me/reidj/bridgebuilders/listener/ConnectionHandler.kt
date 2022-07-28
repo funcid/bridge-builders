@@ -6,6 +6,7 @@ import dev.implario.bukkit.item.item
 import me.func.mod.Anime
 import me.func.mod.conversation.ModLoader
 import me.func.mod.conversation.ModTransfer
+import me.func.mod.util.after
 import me.func.protocol.Marker
 import me.func.protocol.MarkerSign
 import me.reidj.bridgebuilders.*
@@ -45,18 +46,15 @@ object ConnectionHandler : Listener {
 
         if (user == null) {
             sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
-            B.postpone(20) {
-                Cristalix.transfer(
-                    setOf(player.uniqueId),
-                    LOBBY_SERVER
-                )
-            }
+            after { Cristalix.transfer(setOf(player.uniqueId), LOBBY_SERVER) }
             return@run
         }
 
         inventory.clear()
 
-        B.postpone(30) {
+        user.player = player
+
+        B.postpone(20) {
             ModLoader.send("mod-bundle-1.0-SNAPSHOT.jar", this)
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
             // Создание маркера
@@ -92,8 +90,6 @@ object ConnectionHandler : Listener {
             }
         }
 
-        user!!.player = player
-
         if (activeStatus == Status.STARTING) {
             gameMode = GameMode.ADVENTURE
             inventory.setItem(8, back)
@@ -124,7 +120,7 @@ object ConnectionHandler : Listener {
     @EventHandler
     fun PlayerQuitEvent.handle() {
         teams.forEach { it.players.remove(player.uniqueId) }
-        if (activeStatus != Status.STARTING) {
+        if (activeStatus == Status.GAME) {
             val user = app.getUser(player)!!
             player.inventory.filterNotNull().forEach { DamageListener.removeItems(user, it) }
             DamageListener.removeItems(user, player.itemOnCursor)
