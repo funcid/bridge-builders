@@ -17,7 +17,7 @@ import java.util.*
 import java.util.concurrent.ExecutionException
 import java.util.function.Consumer
 
-class PlayerBalancer(private val server: String) : Consumer<Player> {
+class PlayerBalancer(private val server: String, private val maxPlayers: Int) : Consumer<Player> {
 
     @Throws(ExecutionException::class, InterruptedException::class)
     private fun sendToServer(player: Player) {
@@ -72,7 +72,7 @@ class PlayerBalancer(private val server: String) : Consumer<Player> {
         }
     }
 
-    private fun getRealm(realm: String, mintoJoin: Int): Optional<RealmId> {
+    private fun getRealm(realm: String, mintoJoin: Int, ): Optional<RealmId> {
         var maxRealm: RealmInfo? = null
         var minRealm: RealmInfo? = null
         for (realmInfo in IRealmService.get().getRealmsOfType(realm)) {
@@ -81,7 +81,7 @@ class PlayerBalancer(private val server: String) : Consumer<Player> {
             ) {
                 continue
             }
-            if (realmInfo.currentPlayers + mintoJoin <= 32) {
+            if (realmInfo.currentPlayers + mintoJoin <= maxPlayers) {
                 if (maxRealm == null) {
                     maxRealm = realmInfo
                 } else if (maxRealm.currentPlayers < realmInfo.currentPlayers) {
