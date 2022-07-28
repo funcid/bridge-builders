@@ -2,9 +2,11 @@ package me.reidj.bridgebuilders.ticker.detail
 
 import implario.humanize.Humanize
 import me.reidj.bridgebuilders.app
+import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.ticker.Ticked
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
+import packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 
 /**
@@ -22,13 +24,19 @@ object BanUtil : Ticked {
                 it.stat.isBan = true
                 it.stat.gameExitTime = 0
                 it.stat.realm = ""
-                it.player?.sendMessage(Formatting.error("Доступ к игре был заблокирован!"))
+                it.player?.let { player ->
+                    it.player?.sendMessage(Formatting.error("Доступ к игре был заблокирован!"))
+                    clientSocket.write(SaveUserPackage(player.uniqueId, it.stat))
+                }
             }
             if (it.stat.isBan && System.currentTimeMillis().toInt() / 1000 >= it.stat.gameLockTime) {
                 it.stat.realm = ""
                 it.stat.gameLockTime = 0
                 it.stat.isBan = false
-                it.player?.sendMessage(Formatting.fine("Доступ к игре был разблокирован!"))
+                it.player?.let { player ->
+                    player.sendMessage(Formatting.fine("Доступ к игре был разблокирован!"))
+                    clientSocket.write(SaveUserPackage(player.uniqueId, it.stat))
+                }
             }
         }
     }

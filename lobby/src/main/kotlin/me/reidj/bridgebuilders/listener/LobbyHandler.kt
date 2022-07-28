@@ -7,6 +7,7 @@ import me.func.mod.Anime
 import me.func.mod.Npc.skin
 import me.func.mod.selection.Confirmation
 import me.func.mod.selection.Reconnect
+import me.func.mod.util.after
 import me.func.protocol.Indicators
 import me.reidj.bridgebuilders.HUB
 import me.reidj.bridgebuilders.app
@@ -72,24 +73,20 @@ object LobbyHandler : Listener {
     }
 
     @EventHandler
-    fun PlayerJoinEvent.handle() = player.apply {
+    fun PlayerJoinEvent.handle() = player.run {
         val user = app.getUser(this)
 
         if (user == null) {
-            sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
-            B.postpone(20) {
-                Cristalix.transfer(
-                    listOf(uniqueId),
-                    RealmId.of(HUB)
-                )
-            }
+            sendMessage(Formatting.error("Нам не удалось загрузить Вашу статистику."))
+            after(3) { Cristalix.transfer(listOf(uniqueId), RealmId.of(HUB)) }
+            return@run
         }
-
-        user!!.player = this
 
         allowFlight = IPermissionService.get().isDonator(uniqueId)
 
         B.postpone(5) {
+            user!!.player = this
+
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
 
             Anime.hideIndicator(this, Indicators.ARMOR, Indicators.EXP, Indicators.HEALTH, Indicators.HUNGER)
@@ -103,7 +100,7 @@ object LobbyHandler : Listener {
         }
 
         if (IRealmService.get()
-                .getRealmById(RealmId.of(user.stat.realm)) != null && (user.stat.realm != "" || IRealmService.get()
+                .getRealmById(RealmId.of(user!!.stat.realm)) != null && (user.stat.realm != "" || IRealmService.get()
                 .getRealmById(RealmId.of(user.stat.realm)).status != RealmStatus.WAITING_FOR_PLAYERS) && !user.stat.isBan
         )
             Reconnect("Вернуться в игру", 300, "Вернуться") { player -> player.performCommand("/rejoin") }

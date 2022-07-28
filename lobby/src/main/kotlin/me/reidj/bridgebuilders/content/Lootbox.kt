@@ -136,16 +136,18 @@ class Lootbox : Listener, Ticked {
     override fun tick(vararg args: Int) {
         if (args[0] % 30 == 0) {
             Bukkit.getOnlinePlayers().mapNotNull(getByPlayer).forEach {
-                Banners.content(
-                    it.player!!, banner.uuid, "§bЛутбокс\n§fДоступно ${it.stat.lootbox} ${
-                        Humanize.plurals(
-                            "штука",
-                            "штуки",
-                            "штук",
-                            it.stat.lootbox
-                        )
-                    }\n"
-                )
+                it.player?.let { player ->
+                    Banners.content(
+                        player, banner.uuid, "§bЛутбокс\n§fДоступно ${it.stat.lootbox} ${
+                            Humanize.plurals(
+                                "штука",
+                                "штуки",
+                                "штук",
+                                it.stat.lootbox
+                            )
+                        }\n"
+                    )
+                }
             }
         }
     }

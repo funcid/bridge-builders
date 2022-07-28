@@ -35,27 +35,28 @@ object ConnectionHandler : Listener {
     val markers = mutableListOf<Marker>()
 
     @EventHandler
-    fun PlayerJoinEvent.handle() = player.apply {
+    fun PlayerJoinEvent.handle() = player.run {
         if (activeStatus == Status.STARTING && Bukkit.getOnlinePlayers().size == slots) {
             Cristalix.transfer(listOf(uniqueId), LOBBY_SERVER)
-            return@apply
+            return@run
         }
 
         val user = app.getUser(uniqueId)
 
         if (user == null) {
             sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
-            B.postpone(3) {
+            B.postpone(20) {
                 Cristalix.transfer(
                     setOf(player.uniqueId),
                     LOBBY_SERVER
                 )
             }
+            return@run
         }
 
         inventory.clear()
 
-        B.postpone(5) {
+        B.postpone(30) {
             ModLoader.send("mod-bundle-1.0-SNAPSHOT.jar", this)
             teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
             // Создание маркера

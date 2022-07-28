@@ -1,10 +1,12 @@
 package me.reidj.bridgebuilders.command
 
 import clepto.bukkit.B
+import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.slots
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
+import packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 
 class AdminCommand {
@@ -43,7 +45,9 @@ class AdminCommand {
                 getByPlayer(Bukkit.getPlayer(args[0]))!!.stat.run {
                     isBan = false
                     gameLockTime = 0
+                    gameExitTime = 0
                     realm = ""
+                    clientSocket.write(SaveUserPackage(uuid, this))
                 }
             },
             "uban",
