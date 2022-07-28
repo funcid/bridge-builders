@@ -66,7 +66,9 @@ object BlockHandler : Listener {
             winner.players.mapNotNull { app.getUser(it) }.sortedBy { -it.collectedBlocks }
                 .subList(0, min(3, winner.players.size))
                 .forEachIndexed { index, user ->
-                    B.bc(" §l${index + 1}. §e" + user.player!!.name + " §с" + user.collectedBlocks + " блоков принесено")
+                    var playerName = ""
+                    playerName = if (user.player == null) "ERROR" else user.player!!.name
+                    B.bc(" §l${index + 1}. §e" + playerName + " §с" + user.collectedBlocks + " блоков принесено")
                 }
             B.bc("§b―――――――――――――――――")
             B.bc(" ")
