@@ -45,7 +45,7 @@ object BanUtil : Ticked {
                 )
             )
             return true
-        } else if (user.stat.realm != "") {
+        } else if (user.stat.gameExitTime > 0) {
             user.player?.sendMessage(Formatting.error("Вы не можете начать новую игру, незакончив прошлую!"))
             return true
         }
