@@ -145,6 +145,13 @@ object ConnectionHandler : Listener {
                     disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Сейчас нельзя зайти на этот сервер")
                     loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
                 }
+                val stat = app.getUser(uniqueId)?.stat
+                stat?.let {
+                    if (profileProperty.value == "PARTY_WARP" && (it.isBan || it.gameExitTime > 0)) {
+                        disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Вы не можете начать новую игру, незакончив прошлую!")
+                        loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
+                    }
+                }
             }
         }
     }
