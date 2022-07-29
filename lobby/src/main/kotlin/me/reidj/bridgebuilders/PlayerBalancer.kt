@@ -35,7 +35,11 @@ class PlayerBalancer(private val server: String, private val maxPlayers: Int) : 
                     val realmInfo = IRealmService.get().getRealmById(realm.get())
                     if (realmInfo.currentPlayers + party1.members.size <= realmInfo.maxPlayers) {
                         for (uuid in party1.members) {
-                            val user = app.getUser(uuid) ?: return
+                            val user = app.getUser(uuid)
+                            if (user == null) {
+                                Bukkit.getPlayer(uuid).sendMessage(Formatting.error("Произошла непредвиденная ошибка. Возможно Ваш друг не находится в лобби BridgeBuilders"))
+                                return
+                            }
                             if (!BanUtil.checkBan(user))
                                 ITransferService.get().transfer(uuid, realm.get())
                             else
