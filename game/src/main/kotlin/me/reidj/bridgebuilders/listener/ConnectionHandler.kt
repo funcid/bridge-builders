@@ -39,7 +39,6 @@ object ConnectionHandler : Listener {
     fun PlayerJoinEvent.handle() = player.run {
         if (activeStatus == Status.STARTING && Bukkit.getOnlinePlayers().size > slots) {
             Cristalix.transfer(listOf(uniqueId), LOBBY_SERVER)
-            println(2)
             return@run
         }
 
@@ -116,7 +115,7 @@ object ConnectionHandler : Listener {
                     DefaultKit.init(player)
                     ModTransfer().send("bridge:start", player)
                     app.updateNumbersPlayersInTeam()
-                    Anime.timer(this, "Конец игры через", Status.GAME.lastSecond)
+                    Anime.timer(this, "Конец игры через", activeStatus.lastSecond - timer.time % 20)
                     Anime.sendEmptyBuffer("online:hide", this)
                     user.inventory!!.forEachIndexed { index, itemStack -> player.inventory.setItem(index, itemStack) }
                     player.exp = user.exp
