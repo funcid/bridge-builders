@@ -37,8 +37,9 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.handle() = player.run {
-        if (activeStatus == Status.STARTING && Bukkit.getOnlinePlayers().size == slots) {
+        if (activeStatus == Status.STARTING && Bukkit.getOnlinePlayers().size > slots) {
             Cristalix.transfer(listOf(uniqueId), LOBBY_SERVER)
+            println(2)
             return@run
         }
 
@@ -46,7 +47,7 @@ object ConnectionHandler : Listener {
 
         if (user == null) {
             sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
-            after { Cristalix.transfer(setOf(player.uniqueId), LOBBY_SERVER) }
+            after(10) { Cristalix.transfer(setOf(player.uniqueId), LOBBY_SERVER) }
             return@run
         }
 
@@ -54,9 +55,14 @@ object ConnectionHandler : Listener {
 
         user.player = player
 
-        B.postpone(20) {
+        if (user.player == null) {
+            sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
+            after(10) { Cristalix.transfer(setOf(player.uniqueId), LOBBY_SERVER) }
+            return@run
+        }
+
+        B.postpone(3) {
             ModLoader.send("mod-bundle-1.0-SNAPSHOT.jar", this)
-            teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
             // Создание маркера
             teams.forEach {
                 markers.add(
@@ -91,6 +97,7 @@ object ConnectionHandler : Listener {
         }
 
         if (activeStatus == Status.STARTING) {
+            teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
             gameMode = GameMode.ADVENTURE
             inventory.setItem(8, back)
             teams.forEach {
@@ -102,30 +109,38 @@ object ConnectionHandler : Listener {
                         .build()
                 )
             }
-        } else if (user.inGame) {
-            user.team!!.players.add(uniqueId)
-            B.postpone(5) {
-                DefaultKit.init(player)
-                ModTransfer().send("bridge:start", player)
-                app.updateNumbersPlayersInTeam()
-                user.inventory!!.forEachIndexed { index, itemStack -> player.inventory.setItem(index, itemStack) }
-                player.exp = user.exp
-            }
         } else {
-            gameMode = GameMode.SPECTATOR
-            Bukkit.getOnlinePlayers().forEach { it.hidePlayer(app, this) }
+            if (user.inGame) {
+                teams.filter { it.spawn == user.team!!.spawn }[0].players.add(uniqueId)
+                B.postpone(5) {
+                    DefaultKit.init(player)
+                    ModTransfer().send("bridge:start", player)
+                    app.updateNumbersPlayersInTeam()
+                    Anime.timer(this, "Конец игры через", Status.GAME.lastSecond)
+                    Anime.sendEmptyBuffer("online:hide", this)
+                    user.inventory!!.forEachIndexed { index, itemStack -> player.inventory.setItem(index, itemStack) }
+                    player.exp = user.exp
+                }
+            } else {
+                teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+                gameMode = GameMode.SPECTATOR
+                Bukkit.getOnlinePlayers().forEach { it.hidePlayer(app, this) }
+            }
         }
     }
 
     @EventHandler
     fun PlayerQuitEvent.handle() {
-        teams.forEach { it.players.remove(player.uniqueId) }
+        val team = teams.filter { player.uniqueId in it.players }[0]
+        team.players.remove(player.uniqueId)
         if (activeStatus == Status.GAME) {
             val user = app.getUser(player)!!
+
             player.inventory.filterNotNull().forEach { DamageListener.removeItems(user, it) }
             DamageListener.removeItems(user, player.itemOnCursor)
             player.openInventory.topInventory.filterNotNull().forEach { DamageListener.removeItems(user, it) }
 
+            user.team = team
             user.inventory = player.inventory
             user.exp = player.exp
             user.stat.gameExitTime = System.currentTimeMillis().toInt() / 1000 + 300
@@ -145,7 +160,10 @@ object ConnectionHandler : Listener {
                 val stat = app.getUser(uniqueId)?.stat
                 stat?.let {
                     if (profileProperty.value == "PARTY_WARP" && (it.isBan || it.gameExitTime > 0)) {
-                        disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Вы не можете начать новую игру, незакончив прошлую!")
+                        disallow(
+                            AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
+                            "Вы не можете начать новую игру, незакончив прошлую!"
+                        )
                         loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
                     }
                 }

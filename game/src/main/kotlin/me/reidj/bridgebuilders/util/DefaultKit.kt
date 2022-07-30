@@ -21,9 +21,9 @@ object DefaultKit {
     val spade = ItemStack(Material.WOOD_SPADE)
     val bread = ItemStack(Material.BREAD, 32)
 
-    fun init(player: Player) = player.apply {
+    fun init(player: Player) {
         val playerTeam = teams.filter { it.players.contains(player.uniqueId) }[0]
-        val user = app.getUser(this)!!
+        val user = app.getUser(player)!!
 
         if (slots == 8)
             player.addPotionEffect(fastDigging)

@@ -61,7 +61,6 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                         val user = app.getUser(it)!!
 
                         user.inGame = true
-                        user.team = team
 
                         DefaultKit.init(it)
 
