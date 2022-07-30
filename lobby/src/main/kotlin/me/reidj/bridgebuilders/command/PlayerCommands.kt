@@ -2,6 +2,7 @@ package me.reidj.bridgebuilders.command
 
 import clepto.bukkit.B
 import clepto.cristalix.Cristalix
+import me.func.mod.util.after
 import me.reidj.bridgebuilders.HUB
 import me.reidj.bridgebuilders.PlayerBalancer
 import me.reidj.bridgebuilders.STORAGE
@@ -34,7 +35,8 @@ object PlayerCommands {
                     .getRealmById(RealmId.of(user.stat.realm)).status == RealmStatus.WAITING_FOR_PLAYERS
             )
                 return@regCommand Formatting.error("У Вас нету незаконченной игры.")
-            Cristalix.transfer(listOf(player.uniqueId), RealmId.of(user.stat.realm))
+            user.stat.gameExitTime = 0
+            after { Cristalix.transfer(listOf(player.uniqueId), RealmId.of(user.stat.realm)) }
             null
         }, "rejoin")
 

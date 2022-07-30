@@ -19,7 +19,7 @@ object BanUtil : Ticked {
         if (args[0] % 20 != 0)
             return
         Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.forEach {
-            if (it.stat.realm != "" && !it.stat.isBan && System.currentTimeMillis().toInt() / 1000 >= it.stat.gameExitTime) {
+            if (it.stat.gameExitTime > 0 && !it.stat.isBan && System.currentTimeMillis().toInt() / 1000 >= it.stat.gameExitTime) {
                 it.stat.gameLockTime = System.currentTimeMillis().toInt() / 1000 + 1800
                 it.stat.isBan = true
                 it.stat.gameExitTime = 0
