@@ -72,6 +72,8 @@ object LobbyHandler : Listener {
             player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
     }
 
+    private val reconnect = Reconnect(300) { it.performCommand("rejoin") }
+
     @EventHandler
     fun PlayerJoinEvent.handle() = player.run {
         val user = app.getUser(this)
@@ -97,13 +99,16 @@ object LobbyHandler : Listener {
 
             if (user.stat.isApprovedResourcepack)
                 confirmation.open(this)
-        }
 
-        if (IRealmService.get()
-                .getRealmById(RealmId.of(user.stat.realm)) != null && (user.stat.realm != "" || IRealmService.get()
-                .getRealmById(RealmId.of(user.stat.realm)).status != RealmStatus.WAITING_FOR_PLAYERS) && !user.stat.isBan
-        )
-            Reconnect("Вернуться в игру", 300, "Вернуться") { player -> player.performCommand("/rejoin") }
+            if (IRealmService.get()
+                    .getRealmById(RealmId.of(user.stat.realm)) != null && (user.stat.realm != "" || IRealmService.get()
+                    .getRealmById(RealmId.of(user.stat.realm)).status != RealmStatus.WAITING_FOR_PLAYERS) && !user.stat.isBan
+            ) {
+                reconnect.text = "Вернуться в игру"
+                reconnect.hint = "Вернуться"
+                reconnect.open(this)
+            }
+        }
     }
 
     @EventHandler
