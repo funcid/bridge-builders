@@ -130,7 +130,10 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun PlayerQuitEvent.handle() {
-        val team = teams.filter { player.uniqueId in it.players }[0]
+        val allTeams = teams.filter { player.uniqueId in it.players }
+        if (allTeams.isNotEmpty())
+            return
+        val team = allTeams[0]
         team.players.remove(player.uniqueId)
         if (activeStatus == Status.GAME) {
             val user = app.getUser(player)!!
