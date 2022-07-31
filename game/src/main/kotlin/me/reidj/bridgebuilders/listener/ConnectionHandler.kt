@@ -96,7 +96,7 @@ object ConnectionHandler : Listener {
         }
 
         if (activeStatus == Status.STARTING) {
-            teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+            after(10) { teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
             gameMode = GameMode.ADVENTURE
             inventory.setItem(8, back)
             teams.forEach {
@@ -121,7 +121,7 @@ object ConnectionHandler : Listener {
                     player.exp = user.exp
                 }
             } else {
-                teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+                after(10) { teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
                 gameMode = GameMode.SPECTATOR
                 Bukkit.getOnlinePlayers().forEach { it.hidePlayer(app, this) }
             }
