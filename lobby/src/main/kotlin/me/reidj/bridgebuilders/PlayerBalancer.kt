@@ -36,7 +36,7 @@ class PlayerBalancer(private val server: String, private val maxPlayers: Int) : 
                     if (realmInfo.currentPlayers + party1.members.size <= realmInfo.maxPlayers) {
                         for (uuid in party1.members) {
                             val user = app.getUser(uuid)
-                            if (user == null) {
+                            if (user == null || uuid == null || Bukkit.getPlayer(uuid) == null) {
                                 Bukkit.getPlayer(uuid).sendMessage(Formatting.error("Произошла непредвиденная ошибка. Возможно Ваш друг не находится в лобби BridgeBuilders"))
                                 return
                             }

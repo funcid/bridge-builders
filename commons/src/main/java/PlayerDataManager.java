@@ -12,7 +12,6 @@ import packages.SaveUserPackage;
 import packages.StatPackage;
 import ru.cristalix.core.CoreApi;
 import ru.cristalix.core.event.AccountEvent;
-import ru.cristalix.core.realm.IRealmService;
 import user.Stat;
 
 import java.util.*;
@@ -131,8 +130,6 @@ public class PlayerDataManager implements Listener {
             Stat info = user.getStat();
             if (!user.getInGame())
                 userMap.remove(event.getUuid());
-            else
-                info.setRealm(IRealmService.get().getCurrentRealmInfo().getRealmId().getRealmName());
             BridgeBuildersInstanceKt.getClientSocket().write(new SaveUserPackage(event.getUuid(), info));
         }, 100);
     }

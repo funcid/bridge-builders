@@ -48,8 +48,10 @@ object ConnectionHandler : Listener {
             sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
             after(10) { Cristalix.transfer(setOf(player.uniqueId), LOBBY_SERVER) }
             return@run
-        } else if (user.stat.isBan || user.stat.gameExitTime > 0) {
-            sendMessage(Formatting.error("На Вас наложена временная блокировка или Вы не закончили прошлоую игру!"))
+        }
+
+        if (user.stat.isBan || user.stat.gameExitTime > 0 || user.stat.gameLockTime > 0) {
+            sendMessage(Formatting.error("На Вас наложена временная блокировка или Вы не закончили прошлую игру!"))
             after(10) { Cristalix.transfer(setOf(player.uniqueId), LOBBY_SERVER) }
             return@run
         }
@@ -57,12 +59,6 @@ object ConnectionHandler : Listener {
         inventory.clear()
 
         user.player = player
-
-        if (user.player == null) {
-            sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
-            after(10) { Cristalix.transfer(setOf(player.uniqueId), LOBBY_SERVER) }
-            return@run
-        }
 
         B.postpone(3) {
             ModLoader.send("mod-bundle-1.0-SNAPSHOT.jar", this)
@@ -145,6 +141,8 @@ object ConnectionHandler : Listener {
             player.inventory.filterNotNull().forEach { DamageListener.removeItems(user, it) }
             DamageListener.removeItems(user, player.itemOnCursor)
             player.openInventory.topInventory.filterNotNull().forEach { DamageListener.removeItems(user, it) }
+
+            user.stat.realm = IRealmService.get().currentRealmInfo.realmId.realmName
 
             user.team = team
             user.inventory = player.inventory
