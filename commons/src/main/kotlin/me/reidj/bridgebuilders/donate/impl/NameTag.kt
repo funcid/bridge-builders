@@ -44,6 +44,8 @@ enum class NameTag(private val title: String, private val price: Int, private va
     SHINIGAMI("Синигами", 4096, Rare.LEGENDARY),
     EMPTY("Пустой", 4096, Rare.LEGENDARY),
     MUCUS("Слизь", 4096, Rare.LEGENDARY),
+    LIL("Lil", 4096, Rare.LEGENDARY),
+    REPER("Репер", 4096, Rare.LEGENDARY),
     ;
 
     override fun getTitle(): String {

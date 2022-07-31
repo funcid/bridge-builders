@@ -37,5 +37,7 @@ public enum NameTag {
     ARCHITECT,
     ANARCHIST,
     VALLI,
+    LIL,
+    REPER,
     ;
 }
