@@ -28,7 +28,6 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
-import packages.ResetRejoinPackage
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.datasync.EntityDataParameters
 import ru.cristalix.core.formatting.Color
@@ -79,11 +78,6 @@ class App : JavaPlugin() {
         )
 
         clientSocket.connect()
-
-        clientSocket.registerHandler(ResetRejoinPackage::class.java) { pckg ->
-            val user = getUser(pckg.uuid) ?: return@registerHandler
-            user.stat.realm = ""
-        }
 
         map = MapType.values().random()
 
@@ -227,10 +221,7 @@ class App : JavaPlugin() {
                 B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${it.player!!.name} §fполучил §bлутбокс§f!"))
             }
         }
-        playerDataManager.userMap.entries.forEach {
-            it.value.stat.realm = ""
-            clientSocket.write(ResetRejoinPackage(it.key))
-        }
+        playerDataManager.userMap.entries.forEach { it.value.stat.realm = "" }
         playerDataManager.save()
         Cristalix.transfer(Bukkit.getOnlinePlayers().map { it.uniqueId }, LOBBY_SERVER)
         realm.status = RealmStatus.WAITING_FOR_PLAYERS

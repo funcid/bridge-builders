@@ -113,9 +113,6 @@ public class BridgeService {
             thePitPackage.setPassed(passed);
             answer(channel, thePitPackage);
         }));
-        registerHandler(ResetRejoinPackage.class, (channel, source, pckg) -> {
-            ServerSocketHandler.broadcast(pckg);
-        });
 
         try {
             Javalin.create().get("/", ctx -> ctx.result(createMetrics())).start(Integer.parseInt(System.getenv("METRICS_PORT")));

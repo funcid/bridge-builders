@@ -36,6 +36,7 @@ object PlayerCommands {
             )
                 return@regCommand Formatting.error("У Вас нету незаконченной игры.")
             user.stat.gameExitTime = 0
+            user.stat.realm = ""
             after { Cristalix.transfer(listOf(player.uniqueId), RealmId.of(user.stat.realm)) }
             null
         }, "rejoin")

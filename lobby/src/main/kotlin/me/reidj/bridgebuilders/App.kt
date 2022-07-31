@@ -20,7 +20,6 @@ import me.reidj.bridgebuilders.util.MapLoader
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
-import packages.ResetRejoinPackage
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmStatus
@@ -58,11 +57,6 @@ class App : JavaPlugin() {
         )
 
         clientSocket.connect()
-
-        clientSocket.registerHandler(ResetRejoinPackage::class.java) { pckg ->
-            val user = getUser(pckg.uuid) ?: return@registerHandler
-            user.stat.realm = ""
-        }
 
         CoreApi.get().registerService(IRenderService::class.java, BukkitRenderService(getServer()))
 
