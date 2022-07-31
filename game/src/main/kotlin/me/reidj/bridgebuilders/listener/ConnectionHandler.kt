@@ -48,6 +48,10 @@ object ConnectionHandler : Listener {
             sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
             after(10) { Cristalix.transfer(setOf(player.uniqueId), LOBBY_SERVER) }
             return@run
+        } else if (user.stat.isBan || user.stat.gameExitTime > 0) {
+            sendMessage(Formatting.error("На Вас наложена временная блокировка или Вы не закончили прошлоую игру!"))
+            after(10) { Cristalix.transfer(setOf(player.uniqueId), LOBBY_SERVER) }
+            return@run
         }
 
         inventory.clear()
@@ -158,16 +162,6 @@ object ConnectionHandler : Listener {
                 if (profileProperty.value == "PARTY_WARP" && IRealmService.get().currentRealmInfo.status != RealmStatus.WAITING_FOR_PLAYERS) {
                     disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Сейчас нельзя зайти на этот сервер")
                     loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
-                }
-                val stat = app.getUser(uniqueId)?.stat
-                stat?.let {
-                    if (profileProperty.value == "PARTY_WARP" && (it.isBan || it.gameExitTime > 0)) {
-                        disallow(
-                            AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
-                            "Вы не можете начать новую игру, незакончив прошлую!"
-                        )
-                        loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER
-                    }
                 }
             }
         }
