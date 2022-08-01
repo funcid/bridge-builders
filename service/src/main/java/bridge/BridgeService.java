@@ -152,7 +152,19 @@ public class BridgeService {
                     put(Filters.gt("kills", 0), unset("kills"));
                     put(Filters.gt("lootbox", 0), unset("lootbox"));
                     put(Filters.gt("lootboxOpenned", 0), unset("lootboxOpenned"));
+                    put(Filters.gt("isBan", false), unset("isBan"));
                     put(Filters.gt("wins", 0), unset("wins"));
+                    put(Filters.gt("realm", ""), unset("realm"));
+                    put(Filters.gt("gameLockTime", 0), unset("gameLockTime"));
+                    put(Filters.gt("gameExitTime", 0), unset("gameExitTime"));
+                }};
+                map.forEach((key, value) -> userData.getData().updateMany(key, value, (result, t) -> t.printStackTrace()));
+            }
+            if (s.equals("unbanall")) {
+                val map = new HashMap<Bson, Bson>() {{
+                    put(Filters.gt("realm", ""), unset("realm"));
+                    put(Filters.gt("gameLockTime", 0), unset("gameLockTime"));
+                    put(Filters.gt("gameExitTime", 0), unset("gameExitTime"));
                 }};
                 map.forEach((key, value) -> userData.getData().updateMany(key, value, (result, t) -> t.printStackTrace()));
             }
