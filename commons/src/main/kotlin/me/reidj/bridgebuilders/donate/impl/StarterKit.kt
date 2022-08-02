@@ -83,8 +83,8 @@ enum class StarterKit(
     COOK(
         "Дворф",
         2048,
+        EPIC,
         DIAMOND_SWORD,
-        CAKE,
         "weapons:steel_axe",
         "§bАлмазный нагрудник, Алмазные ботинки, Алмазная кирка, Алмазный топор, Стейк х16",
         arrayOf(
