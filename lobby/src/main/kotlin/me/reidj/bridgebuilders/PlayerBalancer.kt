@@ -1,11 +1,8 @@
 package me.reidj.bridgebuilders
 
-import me.reidj.bridgebuilders.ticker.detail.BanUtil
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.party.IPartyService
 import ru.cristalix.core.party.PartySnapshot
 import ru.cristalix.core.realm.IRealmService
@@ -35,16 +32,7 @@ class PlayerBalancer(private val server: String, private val maxPlayers: Int) : 
                     val realmInfo = IRealmService.get().getRealmById(realm.get())
                     if (realmInfo.currentPlayers + party1.members.size <= realmInfo.maxPlayers) {
                         for (uuid in party1.members) {
-                            val user = app.getUser(uuid)
-                            if (user == null || uuid == null || Bukkit.getPlayer(uuid) == null) {
-                                Bukkit.getPlayer(uuid).sendMessage(Formatting.error("Произошла непредвиденная ошибка. Возможно Ваш друг не находится в лобби BridgeBuilders"))
-                                return
-                            }
-                            if (!BanUtil.checkBan(user))
-                                ITransferService.get().transfer(uuid, realm.get())
-                            else
-                                Bukkit.getPlayer(uuid)
-                                    .sendMessage(Formatting.error("Вы не можете начать игру, пока участник вашей тусовки находится в блокировке :("))
+                            ITransferService.get().transfer(uuid, realm.get())
                         }
                     } else {
                         p.spigot().sendMessage(
@@ -77,7 +65,7 @@ class PlayerBalancer(private val server: String, private val maxPlayers: Int) : 
         }
     }
 
-    private fun getRealm(realm: String, mintoJoin: Int, ): Optional<RealmId> {
+    private fun getRealm(realm: String, mintoJoin: Int): Optional<RealmId> {
         var maxRealm: RealmInfo? = null
         var minRealm: RealmInfo? = null
         for (realmInfo in IRealmService.get().getRealmsOfType(realm)) {
