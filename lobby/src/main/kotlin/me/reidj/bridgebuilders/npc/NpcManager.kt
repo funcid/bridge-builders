@@ -52,14 +52,14 @@ object NpcManager : Ticked {
         Bukkit.getOnlinePlayers().forEach {
             val stat = app.getUser(it)?.stat
             Banners.content(
-                it, npcs[NpcType.FOUR.name]!!.second, "§b§l4х4\n§e${IRealmService.get().getOnlineOnRealms("BRI")} ${
+                it, NpcType.FOUR.banner, "§b§l4х4\n§e${IRealmService.get().getOnlineOnRealms("BRI")} ${
                     plural(
                         IRealmService.get().getOnlineOnRealms("BRI")
                     )
                 }"
             )
             Banners.content(
-                it, npcs[NpcType.TWO.name]!!.second, "§b§l4х2\n§e${IRealmService.get().getOnlineOnRealms("BRD")} ${
+                it, NpcType.TWO.banner, "§b§l4х2\n§e${IRealmService.get().getOnlineOnRealms("BRD")} ${
                     plural(
                         IRealmService.get().getOnlineOnRealms("BRD")
                     )
@@ -67,7 +67,7 @@ object NpcManager : Ticked {
             )
             Banners.content(
                 it,
-                npcs[NpcType.GUIDE.name]!!.second,
+                NpcType.GUIDE.banner,
                 "§6${NpcType.GUIDE.bannerTitle}\nПобед: §3${stat?.wins}\nУбийств: §3${stat?.kills}\nСыграно: §3${stat?.games}"
             )
         }

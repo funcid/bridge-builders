@@ -302,7 +302,7 @@ object CustomizationNPC {
             }
         },
         button {
-            title = "Включить/Выключить установку ресурспака"
+            title = "Ресурспак"
             description = ""
             hint("Переключить")
             item = item {
@@ -310,9 +310,9 @@ object CustomizationNPC {
                 nbt("other", "settings")
             }.build()
             onClick { player, _, button ->
-                app.getUser(player)!!.stat.apply {
+                app.getUser(player)!!.stat.run {
                     isApprovedResourcepack = !isApprovedResourcepack
-                    button.hint(if (isApprovedResourcepack) "Выключить" else "Включить")
+                    button.hint(if (isApprovedResourcepack) "Выключить автоматическую установку" else "Включить автоматическую установку")
                 }
             }
         }
