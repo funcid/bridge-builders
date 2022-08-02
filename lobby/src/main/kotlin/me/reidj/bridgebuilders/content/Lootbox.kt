@@ -39,6 +39,10 @@ class Lootbox : Listener, Ticked {
         x = location.x + 0.5
         y = location.y + 3.6
         z = location.z
+        motionSettings = hashMapOf(
+            "yaw" to 180f,
+            "pitch" to 0.0
+        )
         weight = 100
         height = 25
         shineBlocks(false)

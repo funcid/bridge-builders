@@ -65,7 +65,7 @@ class App : JavaPlugin() {
 
         Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC, Kit.LOOTBOX, Kit.GRAFFITI)
 
-        BridgeBuildersInstance(this, { getUser(it) }, MapLoader.load("LOBB"))
+        BridgeBuildersInstance(this, { getUser(it) }, MapLoader.load("LOBB2"))
 
         // Подкючение к Netty сервису / Управляет конфигами, кастомными пакетами, всей data
         val bridgeServiceHost: String = getEnv("BRIDGE_SERVICE_HOST", "127.0.0.1")

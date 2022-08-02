@@ -22,6 +22,7 @@ public class TopPackage extends BridgePackage {
     public enum TopType {
 
         WINS,
+        GAMES
         ;
 
     }

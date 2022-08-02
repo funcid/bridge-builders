@@ -49,14 +49,12 @@ object PlayerCommands {
 
         command("four") { player, _ ->
             val user = app.getUser(player)!!
-            println(user)
             if (!BanUtil.checkBan(user, player))
                 PlayerBalancer("BRI", 16).accept(player)
         }
 
         command("two") { player, _ ->
             val user = app.getUser(player)!!
-            println(user)
             if (!BanUtil.checkBan(user, player))
                 PlayerBalancer("BRD", 8).accept(player)
         }

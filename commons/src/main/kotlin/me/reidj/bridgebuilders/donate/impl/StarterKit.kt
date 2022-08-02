@@ -216,11 +216,11 @@ enum class StarterKit(
         UNIQUE,
         IRON_SWORD,
         "weapons_other:43",
-        "§bЗелье яда х3, Зелье моментального урона х2, Зелье замедления х8, Огниво, Кольчужный сет, Алмазный меч, Зелье силы I х1, Золотое яблоко х2, Золотая морковка х10",
+        "§bЗелье яда х3, Зелье моментального урона х2, Зелье замедления х3, Огниво, Кольчужный сет, Алмазный меч, Зелье силы I х1, Золотое яблоко х2, Золотая морковка х10",
         arrayOf(
             createPotion(PotionEffectType.POISON, true, 30, 0, 3, "отравления"),
             createPotion(PotionEffectType.HARM, true, 1, 0, 2, "урона"),
-            createPotion(PotionEffectType.SLOW, true, 15, 0, 8, "замедления"),
+            createPotion(PotionEffectType.SLOW, true, 15, 0, 3, "замедления"),
             ItemStack(FLINT_AND_STEEL),
             ItemStack(CHAINMAIL_HELMET),
             ItemStack(CHAINMAIL_CHESTPLATE),

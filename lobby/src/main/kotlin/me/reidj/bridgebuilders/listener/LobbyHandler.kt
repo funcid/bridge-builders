@@ -65,10 +65,12 @@ object LobbyHandler : Listener {
             player.performCommand(nmsItem.tag.getString("click"))
     }
 
+    private val spawn = worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5).apply { yaw = 90f }
+
     @EventHandler
     fun PlayerMoveEvent.handle() {
         if (player.location.block.y <= 2)
-            player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+            player.teleport(spawn)
     }
 
     private val reconnect = Reconnect(300) { it.performCommand("rejoin") }
@@ -89,7 +91,7 @@ object LobbyHandler : Listener {
             player.allowFlight = IPermissionService.get().isDonator(player.uniqueId)
             user.player = player
 
-            player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+            player.teleport(spawn)
 
             Anime.hideIndicator(player, Indicators.ARMOR, Indicators.EXP, Indicators.HEALTH, Indicators.HUNGER)
 

@@ -27,9 +27,10 @@ class TopManager : Listener, BukkitRunnable() {
 
     init {
         // Создание топа
-        val topLabel = worldMeta.getLabel("top")
-        val topArgs = topLabel.tag.split(" ")
-        boards[TopType.WINS] = newBoard("Топ по победам", "Побед", topLabel.add(0.5, 4.5, 0.0), topArgs[1].toFloat())
+        worldMeta.getLabels("top").forEach {
+            val pair = it.tag.split(" ")
+            boards[TopType.valueOf(pair[0].uppercase())] = newBoard("Топ по ${pair[4]}", pair[3], it.add(0.5, 4.5, 0.0), pair[1].toFloat())
+        }
     }
 
     private fun newBoard(title: String, fieldName: String, location: Location, yaw: Float) = newBoard().apply {

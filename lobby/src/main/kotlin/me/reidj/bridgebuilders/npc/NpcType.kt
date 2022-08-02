@@ -24,7 +24,7 @@ enum class NpcType(
         "four",
         "ca87474e-b15c-11e9-80c4-1cb72caa35fd",
         90f,
-        createBanner(worldMeta.getLabel("four"), 40, 0.62, 60, 0.5, 5.0,-179.0)
+        createBanner(worldMeta.getLabel("four"), 40, 0.62, 60, 0.5, 5.0,-90.0, false)
     ),
     TWO(
         "4x2",
@@ -32,7 +32,7 @@ enum class NpcType(
         "two",
         "b01a9b37-a632-11e8-8374-1cb72caa35fd",
         90f,
-        createBanner(worldMeta.getLabel("two"), 40, 0.62, 60, 0.5,5.0, -179.0)
+        createBanner(worldMeta.getLabel("two"), 40, 0.62, 60, 0.5,5.0, -90.0, false)
     ),
     GUIDE(
         "Профиль BridgeBuilders",
@@ -40,7 +40,7 @@ enum class NpcType(
         "menu",
         "ca87474e-b15c-11e9-80c4-1cb72caa35fd",
         45F,
-        createBanner(worldMeta.getLabel("guide"), 50, 0.0, 120, -0.3, 5.5,-144.0)
+        createBanner(worldMeta.getLabel("guide"), 50, 0.0, 120, -0.3, 5.5,-90.0, true)
     )
     ;
 }
@@ -52,12 +52,14 @@ private fun createBanner(
     weight: Int,
     x: Double,
     y: Double,
-    yaw: Double
+    yaw: Double,
+    watchPlayer: Boolean,
 ) = Banners.new {
     this.height = height
     this.weight = weight
     this.opacity = opacity
-    location(location.clone().add(x, y, 1.0))
+    location(location.clone().add(x, y, 0.5))
+    watchingOnPlayer = watchPlayer
     motionSettings = hashMapOf(
         "yaw" to yaw,
         "pitch" to 0.0
