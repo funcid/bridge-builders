@@ -25,7 +25,6 @@ import org.bukkit.event.block.BlockPhysicsEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.*
-import org.bukkit.inventory.ItemStack
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.permissions.IPermissionService
@@ -35,19 +34,19 @@ import ru.cristalix.core.realm.RealmStatus
 
 object LobbyHandler : Listener {
 
-    private var gameItem: ItemStack = item {
+    private var gameItem = item {
         type = Material.CLAY_BALL
         text("§aИграть")
         nbt("other", "guild_members")
         nbt("click", "game")
     }.build()
-    private var cosmeticItem: ItemStack = item {
+    private var cosmeticItem = item {
         type = Material.CLAY_BALL
         text("§aПерсонаж")
         nbt("other", "clothes")
         nbt("click", "menu")
     }.build()
-    private var backItem: ItemStack = item {
+    private var backItem = item {
         type = Material.CLAY_BALL
         text("§cВыйти")
         nbt("other", "cancel")
@@ -113,12 +112,12 @@ object LobbyHandler : Listener {
 
             val now = System.currentTimeMillis()
             // Обнулить комбо сбора наград если прошло больше суток или комбо > 7
-            if ((stat.rewardStreak > 0 && now - stat.lastEnter > 24 * 60 * 60 * 1000) || stat.rewardStreak > 6) {
+            if ((stat.rewardStreak > 0 && now - stat.lastEnterTime * 10000 > 24 * 60 * 60 * 1000) || stat.rewardStreak > 6) {
                 stat.rewardStreak = 0
             }
-            if (now - stat.dailyClaimTimestamp > 14 * 60 * 60 * 1000) {
+            if (now - stat.dailyTimestamp * 10000 > 14 * 60 * 60 * 1000) {
                 Anime.close(player)
-                stat.dailyClaimTimestamp = now
+                stat.dailyTimestamp = now.toDouble() / 10000
                 Anime.openDailyRewardMenu(
                     player,
                     stat.rewardStreak,
@@ -130,7 +129,7 @@ object LobbyHandler : Listener {
                 dailyReward.give(user)
                 stat.rewardStreak++
             }
-            stat.lastEnter = now
+            stat.lastEnterTime = now.toDouble() / 10000
         }
     }
 

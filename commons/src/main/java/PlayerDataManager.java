@@ -61,6 +61,8 @@ public class PlayerDataManager implements Listener {
                             0.0,
                             0.0,
                             0L,
+                            0.0,
+                            0.0,
                             0L,
                             0L,
                             0,
@@ -124,6 +126,12 @@ public class PlayerDataManager implements Listener {
 
                 if (stat.getLastEnter() == null)
                     stat.setLastEnter(0L);
+
+                if (stat.getDailyTimestamp() == null)
+                    stat.setDailyTimestamp(0.0);
+
+                if (stat.getLastEnterTime() == null)
+                    stat.setLastEnterTime(0.0);
 
                 if (stat.getRewardStreak() == null)
                     stat.setRewardStreak(0);

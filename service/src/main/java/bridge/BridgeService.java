@@ -168,6 +168,14 @@ public class BridgeService {
                 }};
                 map.forEach((key, value) -> userData.getData().updateMany(key, value, (result, t) -> t.printStackTrace()));
             }
+            if (s.equals("test")) {
+                val map = new HashMap<Bson, Bson>() {{
+                    put(Filters.gt("dailyClaimTimestamp", 0L), unset("dailyClaimTimestamp"));
+                    put(Filters.gt("dailyTimestamp", 0L), unset("dailyTimestamp"));
+                    put(Filters.gt("lastEnter", 0L), unset("lastEnter"));
+                }};
+                map.forEach((key, value) -> userData.getData().updateMany(key, value, (result, t) -> t.printStackTrace()));
+            }
             if (args[0].equals("delete")) {
                 if (args.length < 2) System.out.println("Usage: delete [uuid]");
                 else {

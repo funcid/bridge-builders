@@ -38,6 +38,8 @@ public class Stat implements Unique {
     private Double leaveTime;
     private Long timePlayedTotal;
 
+    private Double dailyTimestamp;
+    private Double lastEnterTime;
     private Long dailyClaimTimestamp;
     private Long lastEnter;
     private Integer rewardStreak;

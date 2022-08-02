@@ -7,12 +7,16 @@ import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
 import me.func.mod.Kit
+import me.func.mod.data.Sprites
+import me.func.mod.selection.button
+import me.func.mod.selection.choicer
 import me.reidj.bridgebuilders.command.PlayerCommands
 import me.reidj.bridgebuilders.content.CustomizationNPC
 import me.reidj.bridgebuilders.content.Lootbox
 import me.reidj.bridgebuilders.listener.GlobalListeners
 import me.reidj.bridgebuilders.listener.LobbyHandler
 import me.reidj.bridgebuilders.npc.NpcManager
+import me.reidj.bridgebuilders.npc.NpcType
 import me.reidj.bridgebuilders.ticker.detail.BanUtil
 import me.reidj.bridgebuilders.ticker.detail.DiscordMessage
 import me.reidj.bridgebuilders.top.TopManager
@@ -31,6 +35,25 @@ const val STORAGE = "https://storage.c7x.dev/reidj/"
 
 lateinit var app: App
 
+val compass = choicer {
+    title = "BridgeBuilders"
+    description = "Собери предметы для постройки моста!"
+    buttons(
+        button {
+            texture = Sprites.DUO.path()
+            title = "§b4x2"
+            description = "Онлайн: §3" + IRealmService.get().getOnlineOnRealms("BRD")
+            onClick { it, _, _ -> it.performCommand(NpcType.TWO.command) }
+        },
+        button {
+            texture = Sprites.SQUAD.path()
+            title = "§b4x4"
+            description = "Онлайн: §3" + IRealmService.get().getOnlineOnRealms("BRI")
+            onClick { it, _, _ -> it.performCommand(NpcType.FOUR.command) }
+        }
+    )
+}
+
 class App : JavaPlugin() {
 
     lateinit var lootbox: Lootbox
@@ -40,7 +63,7 @@ class App : JavaPlugin() {
         app = this
         Platforms.set(PlatformDarkPaper())
 
-        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC, Kit.LOOTBOX)
+        Anime.include(Kit.EXPERIMENTAL, Kit.STANDARD, Kit.NPC, Kit.LOOTBOX, Kit.GRAFFITI)
 
         BridgeBuildersInstance(this, { getUser(it) }, MapLoader.load("LOBB"))
 
