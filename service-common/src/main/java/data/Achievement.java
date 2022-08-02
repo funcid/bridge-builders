@@ -16,5 +16,9 @@ public enum Achievement {
     GLADIATOR,
     MAXIMUS,
     LOOTER,
-    ;
+    COLLECTROR,
+    SEARCH_TREASURE,
+    REIDJ_GIFTS,
+    NOT_TOUCH,
+    CURIOSITY,
 }
