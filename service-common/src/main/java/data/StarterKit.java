@@ -1,18 +1,18 @@
 package data;
 
 public enum StarterKit {
-
     NONE,
     LUMBERJACK,
     EXCAVATOR,
     MINER,
     BLACKSMITH,
     COOK,
-    ENCHANTER,
-    HEALER,
     ASSASSIN,
-    COLLECTOR,
+    HEALER,
+    ENCHANTER,
     LUCIFER,
     PALADIN,
-    ;
+    COLLECTOR,
+    SOUL_CATCHER,
+
 }

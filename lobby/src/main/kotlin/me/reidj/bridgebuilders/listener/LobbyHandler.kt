@@ -81,7 +81,6 @@ object LobbyHandler : Listener {
             if (user == null) {
                 player.sendMessage(Formatting.error("Нам не удалось загрузить Вашу статистику."))
                 Cristalix.transfer(listOf(player.uniqueId), RealmId.of(HUB))
-                println("null")
                 return@after
             }
 
@@ -98,8 +97,10 @@ object LobbyHandler : Listener {
 
             user.giveMoney(0, true)
 
-            if (user.stat.isApprovedResourcepack)
+            if (!user.stat.isApprovedResourcepack)
                 confirmation.open(player)
+            else
+                player.performCommand("resourcepack")
 
             if (IRealmService.get()
                     .getRealmById(RealmId.of(user.stat.realm)) != null && (user.stat.realm != "" || IRealmService.get()

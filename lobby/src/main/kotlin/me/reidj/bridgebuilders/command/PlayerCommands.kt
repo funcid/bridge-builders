@@ -31,7 +31,7 @@ object PlayerCommands {
             after { Cristalix.transfer(listOf(player.uniqueId), RealmId.of(user.stat.realm)) }
         }
 
-        command("resourcepack") { player, _ -> player.setResourcePack("${STORAGE}BridgeBuilders.zip", "100") }
+        command("resourcepack") { player, _ -> player.setResourcePack("${STORAGE}BridgeBuilders2.zip", "12134") }
 
         command("spectate") { player, args ->
             val realmId =

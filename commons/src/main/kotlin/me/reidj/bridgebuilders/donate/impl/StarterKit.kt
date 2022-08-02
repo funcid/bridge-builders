@@ -4,8 +4,10 @@ import dev.implario.bukkit.item.item
 import me.reidj.bridgebuilders.donate.DonatePosition
 import me.reidj.bridgebuilders.donate.MoneyFormatter
 import me.reidj.bridgebuilders.donate.Rare
+import me.reidj.bridgebuilders.donate.Rare.*
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Material
+import org.bukkit.Material.*
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
@@ -20,173 +22,214 @@ enum class StarterKit(
     private val lore: String,
     val content: Array<ItemStack>
 ) : DonatePosition {
-    NONE("Отсутствует", 0, Rare.COMMON, Material.BARRIER, null, "", arrayOf()),
+    NONE("Отсутствует", 0, COMMON, BARRIER, null, "", arrayOf()),
     LUMBERJACK(
         "Лесоруб",
         256,
-        Rare.COMMON,
-        Material.IRON_AXE,
+        COMMON,
+        IRON_AXE,
         "weapons:iron_aztec_axe",
-        "§bЖелезный топор, §bКольчужный нагрудник, §bЯблоко х16",
+        "§bЖелезный топор, Кольчужный нагрудник, Яблоко х16",
         arrayOf(
-            ItemStack(Material.IRON_AXE),
-            ItemStack(Material.CHAINMAIL_CHESTPLATE),
-            ItemStack(Material.APPLE, 16)
+            ItemStack(IRON_AXE),
+            ItemStack(CHAINMAIL_CHESTPLATE),
+            ItemStack(APPLE, 16)
         )
     ),
     EXCAVATOR(
         "Землерой",
         512,
-        Rare.RARE,
-        Material.IRON_SPADE,
+        RARE,
+        IRON_SPADE,
         "weapons:iron_aztec_shovel",
-        "§bЖелезную лопату, §bКольчужные поножи, §bХлеб х16",
+        "§bЖелезную лопату, Кольчужные поножи, Хлеб х16",
         arrayOf(
-            ItemStack(Material.IRON_SPADE),
-            ItemStack(Material.CHAINMAIL_LEGGINGS),
-            ItemStack(Material.BREAD, 16)
+            ItemStack(IRON_SPADE),
+            ItemStack(CHAINMAIL_LEGGINGS),
+            ItemStack(BREAD, 16)
         )
     ),
     MINER(
         "Рудокоп",
         768,
-        Rare.RARE,
-        Material.IRON_PICKAXE,
+        RARE,
+        IRON_PICKAXE,
         "weapons:iron_aztec_pickaxe",
-        "§bЖелезную кирку, §bКольчужный шлем, §bМорковь х6",
+        "§bЖелезную кирку, Кольчужный шлем, Морковь х16",
         arrayOf(
-            ItemStack(Material.IRON_PICKAXE),
-            ItemStack(Material.CHAINMAIL_HELMET),
-            ItemStack(Material.CARROT_ITEM, 6)
+            ItemStack(IRON_PICKAXE),
+            ItemStack(CHAINMAIL_HELMET),
+            ItemStack(CARROT_ITEM, 16)
         )
     ),
     BLACKSMITH(
         "Кузнец",
-        2048,
-        Rare.EPIC,
-        Material.DIAMOND_SWORD,
+        768,
+        RARE,
+        DIAMOND_SWORD,
         "weapons:titan_axe",
-        "§bПечка х2, §bЖелезная руда х16, §bУголь х16, §bЗолотой слиток х16, §bАлмаз х2, §bЖареная баранина х2",
+        "§bНаковальня, Железо х8, Золото х16, Кульчужный сет, 16 яблок",
         arrayOf(
-            ItemStack(Material.FURNACE, 2),
-            ItemStack(Material.IRON_ORE, 16),
-            ItemStack(Material.COAL, 16),
-            ItemStack(Material.GOLD_INGOT, 16),
-            ItemStack(Material.DIAMOND, 2),
-            ItemStack(Material.COOKED_MUTTON, 10)
-        )
-    ),
-    ENCHANTER(
-        "Зачарователь",
-        2048,
-        Rare.EPIC,
-        Material.CLAY_BALL,
-        "skyblock:yield",
-        "§bКниги х16, §bНаковальня, §bКнижные полки х18, §bСтол зачарования, §bБутыльки опыта х256, §bБлоки лазурита х7, §bХлеб х16",
-        arrayOf(
-            ItemStack(Material.BOOK, 16),
-            ItemStack(Material.ANVIL),
-            ItemStack(Material.BOOKSHELF, 18),
-            ItemStack(Material.ENCHANTMENT_TABLE),
-            ItemStack(Material.EXP_BOTTLE, 64),
-            ItemStack(Material.EXP_BOTTLE, 64),
-            ItemStack(Material.EXP_BOTTLE, 64),
-            ItemStack(Material.EXP_BOTTLE, 64),
-            ItemStack(Material.EXP_BOTTLE, 32),
-            ItemStack(Material.LAPIS_BLOCK, 7),
-            ItemStack(Material.BREAD, 16)
+            ItemStack(ANVIL),
+            ItemStack(IRON_INGOT, 8),
+            ItemStack(GOLD_INGOT, 16),
+            ItemStack(CHAINMAIL_HELMET),
+            ItemStack(CHAINMAIL_CHESTPLATE),
+            ItemStack(CHAINMAIL_LEGGINGS),
+            ItemStack(CHAINMAIL_BOOTS),
+            ItemStack(APPLE, 16)
         )
     ),
     COOK(
-        "Повар",
+        "Дворф",
         2048,
-        Rare.EPIC,
-        Material.CAKE,
-        null,
-        "§bХлеб х32, §bЯблоко х32, §bТорт х5, §bЖареная баранина х16, §bСтейк х16",
+        EPIC,
+        CAKE,
+        "weapons:steel_axe",
+        "§bАлмазный нагрудник, Алмазные ботинки, Алмазная кирка, Алмазный топор, Стейк х16",
         arrayOf(
-            ItemStack(Material.BREAD, 32),
-            ItemStack(Material.APPLE, 32),
-            ItemStack(Material.CAKE, 5),
-            ItemStack(Material.COOKED_MUTTON, 16),
-            ItemStack(Material.COOKED_BEEF, 16)
-        )
-    ),
-    HEALER(
-        "Целитель",
-        2048,
-        Rare.EPIC,
-        Material.CLAY_BALL,
-        "other:heart",
-        "§bЗелье регенерации I х2, §bЗелье лечения I х3, §bЗолотое яблоко х2, §bХлеб х16",
-        arrayOf(
-            createPotion(PotionEffectType.REGENERATION, 60, 0, 2, "регенерации"),
-            createPotion(PotionEffectType.HEAL, 0, 0, 3, "лечения"),
-            ItemStack(Material.GOLDEN_APPLE, 2),
-            ItemStack(Material.BREAD, 16)
+            ItemStack(DIAMOND_CHESTPLATE),
+            ItemStack(DIAMOND_BOOTS),
+            ItemStack(DIAMOND_PICKAXE),
+            ItemStack(DIAMOND_AXE),
+            ItemStack(COOKED_BEEF, 16)
         )
     ),
     ASSASSIN(
         "Ассасин",
         2048,
-        Rare.EPIC,
-        Material.IRON_SWORD,
+        EPIC,
+        IRON_SWORD,
         "weapons_other:42",
-        "§bЗелье невидимости х2, §bЗелье скорости I x2, §bЛук, §bСтрелы х32, §bКаменный меч, §bСтейк х12",
+        "§bЗелье невидимости х2, Зелье скорости I x2, Лук, Стрелы х32, Каменный меч, Стейк х12, Удочка, Кольчужный сет",
         arrayOf(
-            createPotion(PotionEffectType.INVISIBILITY, 15, 0, 2, "невидимости"),
-            createPotion(PotionEffectType.SPEED, 60, 0, 2, "скорости"),
-            ItemStack(Material.BOW),
-            ItemStack(Material.ARROW, 32),
-            ItemStack(Material.STONE_SWORD),
-            ItemStack(Material.COOKED_BEEF, 12)
+            createPotion(PotionEffectType.INVISIBILITY, true, 15, 0, 2, "невидимости"),
+            createPotion(PotionEffectType.SPEED, true, 60, 0, 2, "скорости"),
+            ItemStack(BOW),
+            ItemStack(ARROW, 32),
+            ItemStack(STONE_SWORD),
+            ItemStack(COOKED_BEEF, 12),
+            ItemStack(FISHING_ROD),
+            ItemStack(CHAINMAIL_HELMET),
+            ItemStack(CHAINMAIL_CHESTPLATE),
+            ItemStack(CHAINMAIL_LEGGINGS),
+            ItemStack(CHAINMAIL_BOOTS)
         )
     ),
-    COLLECTOR(
-        "Коллекционер",
+    HEALER(
+        "Целитель",
         4096,
-        Rare.LEGENDARY,
-        Material.GOLD_PICKAXE,
-        "simulators:donate_pickaxe",
-        "§bАлмазная кирка, §bАлмазный топор, §bАлмазная лопата, §bЖареная баранина х16",
+        LEGENDARY,
+        CLAY_BALL,
+        "other:heart",
+        "§bЗелье регенерации II х3, Зелье лечения I х5, Золотое морковка х10, Железный сет",
         arrayOf(
-            ItemStack(Material.DIAMOND_PICKAXE),
-            ItemStack(Material.DIAMOND_AXE),
-            ItemStack(Material.DIAMOND_SPADE),
-            ItemStack(Material.COOKED_MUTTON, 16)
+            createPotion(PotionEffectType.REGENERATION, true, 60, 1, 3, "регенерации"),
+            createPotion(PotionEffectType.HEAL, false, 0, 0, 5, "лечения"),
+            ItemStack(GOLDEN_CARROT, 10),
+            ItemStack(IRON_HELMET),
+            ItemStack(IRON_CHESTPLATE),
+            ItemStack(IRON_LEGGINGS),
+            ItemStack(IRON_BOOTS)
+        )
+    ),
+    ENCHANTER(
+        "Зачарователь",
+        4096,
+        LEGENDARY,
+        CLAY_BALL,
+        "skyblock:yield",
+        "§bКниги х16, Наковальня, Книжные полки х18, Стол зачарования, Бутыльки опыта х256, Блоки лазурита х7, Хлеб х16",
+        arrayOf(
+            ItemStack(BOOK, 16),
+            ItemStack(ANVIL),
+            ItemStack(BOOKSHELF, 18),
+            ItemStack(ENCHANTMENT_TABLE),
+            ItemStack(EXP_BOTTLE, 64),
+            ItemStack(EXP_BOTTLE, 64),
+            ItemStack(EXP_BOTTLE, 64),
+            ItemStack(EXP_BOTTLE, 64),
+            ItemStack(EXP_BOTTLE, 32),
+            ItemStack(LAPIS_BLOCK, 7),
+            ItemStack(BREAD, 16)
         )
     ),
     LUCIFER(
         "Люцифер",
         4096,
-        Rare.LEGENDARY,
-        Material.IRON_SWORD,
-        "weapons_other:evil_trident",
-        "§bКольчужный шлем, §bКольчужный нагрудник, §bКольчужные поножи, §bКольчужные ботинки, §bЖелезный меч, §bЗолотое яблоко х2",
+        LEGENDARY,
+        IRON_SWORD,
+        "bridgebuilders:lucifer",
+        "§bОбсидиан х8, Алмазная кирка, Алмазный меч, Железный сет, Ведро с лавой х3, Зелье огнеустойкости х2, Золотая морковка х10",
         arrayOf(
-            ItemStack(Material.CHAINMAIL_HELMET),
-            ItemStack(Material.CHAINMAIL_CHESTPLATE),
-            ItemStack(Material.CHAINMAIL_LEGGINGS),
-            ItemStack(Material.CHAINMAIL_BOOTS),
-            ItemStack(Material.IRON_SWORD),
-            ItemStack(Material.GOLDEN_APPLE, 2)
+            ItemStack(OBSIDIAN, 8),
+            ItemStack(DIAMOND_PICKAXE),
+            ItemStack(DIAMOND_SWORD),
+            ItemStack(IRON_HELMET),
+            ItemStack(IRON_CHESTPLATE),
+            ItemStack(IRON_LEGGINGS),
+            ItemStack(IRON_BOOTS),
+            ItemStack(LAVA_BUCKET, 3),
+            createPotion(PotionEffectType.FIRE_RESISTANCE, true, 30, 0, 2, "огнеуйстойкости"),
+            ItemStack(GOLDEN_CARROT, 10)
         )
     ),
     PALADIN(
         "Паладин",
         4096,
-        Rare.LEGENDARY,
-        Material.IRON_SWORD,
-        "weapons_other:wood_staff",
-        "§bАлмазный меч, §bЖелезную кирку, §bЗолотая морковь х24, §bЗолотые яблоки х4, §bАлмазные ботинки",
+        LEGENDARY,
+        CLAY_BALL,
+        "bridgebuilders:paladin",
+        "§bАлмазный шлем, Алмазные ботинки, Железный нагрудник, Железные штаны, Золотые яблоки х6, Алмазный меч, Стейк х16, Зелье лечения х3",
         arrayOf(
-            ItemStack(Material.DIAMOND_SWORD),
-            ItemStack(Material.IRON_PICKAXE),
-            ItemStack(Material.GOLDEN_CARROT, 24),
-            ItemStack(Material.GOLD_CHESTPLATE),
-            ItemStack(Material.GOLD_LEGGINGS),
-            ItemStack(Material.DIAMOND_BOOTS),
-            ItemStack(Material.GOLDEN_APPLE, 4)
+            ItemStack(DIAMOND_HELMET),
+            ItemStack(DIAMOND_BOOTS),
+            ItemStack(IRON_CHESTPLATE),
+            ItemStack(IRON_LEGGINGS),
+            ItemStack(GOLDEN_APPLE, 6),
+            ItemStack(DIAMOND_SWORD),
+            ItemStack(COOKED_BEEF, 16),
+            createPotion(PotionEffectType.HEAL, true, 1, 0, 3, "лечения")
+        )
+    ),
+    COLLECTOR(
+        "Коллекционер",
+        8192,
+        UNIQUE,
+        GOLD_PICKAXE,
+        "simulators:donate_pickaxe",
+        "§bАлмазная кирка, Железная лопата, Каменный топор, Кожаный шлем, Алмазный нагрудник, Железные штаны, Кольчужные ботинки, Хлеб х10",
+        arrayOf(
+            ItemStack(DIAMOND_PICKAXE),
+            ItemStack(IRON_SPADE),
+            ItemStack(STONE_AXE),
+            ItemStack(LEATHER_HELMET),
+            ItemStack(DIAMOND_CHESTPLATE),
+            ItemStack(IRON_LEGGINGS),
+            ItemStack(CHAINMAIL_BOOTS),
+            ItemStack(BREAD, 10)
+        )
+    ),
+    SOUL_CATCHER(
+        "Ловец Душ",
+        8192,
+        UNIQUE,
+        IRON_SWORD,
+        "weapons_other:43",
+        "§bЗелье яда х3, Зелье моментального урона х2, Зелье замедления х8, Огниво, Динамит х5, Кольчужный сет, Алмазный меч, Зелье силы I х1, Золотое яблоко х2, Золотая морковка х10",
+        arrayOf(
+            createPotion(PotionEffectType.POISON, true, 30, 0, 3, "отравления"),
+            createPotion(PotionEffectType.HARM, true, 1, 0, 2, "урона"),
+            createPotion(PotionEffectType.SLOW, true, 15, 0, 8, "замедления"),
+            ItemStack(FLINT_AND_STEEL),
+            ItemStack(CHAINMAIL_HELMET),
+            ItemStack(CHAINMAIL_CHESTPLATE),
+            ItemStack(CHAINMAIL_LEGGINGS),
+            ItemStack(CHAINMAIL_BOOTS),
+            ItemStack(DIAMOND_SWORD),
+            createPotion(PotionEffectType.INCREASE_DAMAGE, false, 45, 0, 1, "силы"),
+            ItemStack(GOLDEN_APPLE, 2),
+            ItemStack(GOLDEN_CARROT, 10)
         )
     ),
     ;
@@ -229,14 +272,17 @@ enum class StarterKit(
     override fun getObjectName(): String = name
 }
 
-fun createPotion(type: PotionEffectType, duration: Int, amplifier: Int, amount: Int, title: String): ItemStack {
-    val potion = ItemStack(Material.SPLASH_POTION, amount)
-    val potionMeta = potion.itemMeta as PotionMeta
-
-    potionMeta.displayName = "Зелье $title"
-    potionMeta.color = type.color
-    potionMeta.addCustomEffect(PotionEffect(type, duration * 20, amplifier), true)
-    potion.itemMeta = potionMeta
-
-    return potion
+private fun createPotion(
+    type: PotionEffectType,
+    splash: Boolean,
+    duration: Int,
+    amplifier: Int,
+    amount: Int,
+    title: String
+) = ItemStack(if (splash) SPLASH_POTION else POTION, amount).apply {
+    itemMeta = (itemMeta as PotionMeta).apply {
+        displayName = "Зелье $title"
+        color = type.color
+        addCustomEffect(PotionEffect(type, duration * 20, amplifier), true)
+    }
 }
