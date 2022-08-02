@@ -68,7 +68,7 @@ enum class StarterKit(
         RARE,
         DIAMOND_SWORD,
         "weapons:titan_axe",
-        "§bНаковальня, Железо х8, Золото х16, Кульчужный сет, 16 яблок",
+        "§bНаковальня, Железо х8, Золото х16, Кольчужный сет, 16 яблок",
         arrayOf(
             ItemStack(ANVIL),
             ItemStack(IRON_INGOT, 8),
@@ -83,7 +83,7 @@ enum class StarterKit(
     COOK(
         "Дворф",
         2048,
-        EPIC,
+        DIAMOND_SWORD,
         CAKE,
         "weapons:steel_axe",
         "§bАлмазный нагрудник, Алмазные ботинки, Алмазная кирка, Алмазный топор, Стейк х16",
@@ -216,7 +216,7 @@ enum class StarterKit(
         UNIQUE,
         IRON_SWORD,
         "weapons_other:43",
-        "§bЗелье яда х3, Зелье моментального урона х2, Зелье замедления х8, Огниво, Динамит х5, Кольчужный сет, Алмазный меч, Зелье силы I х1, Золотое яблоко х2, Золотая морковка х10",
+        "§bЗелье яда х3, Зелье моментального урона х2, Зелье замедления х8, Огниво, Кольчужный сет, Алмазный меч, Зелье силы I х1, Золотое яблоко х2, Золотая морковка х10",
         arrayOf(
             createPotion(PotionEffectType.POISON, true, 30, 0, 3, "отравления"),
             createPotion(PotionEffectType.HARM, true, 1, 0, 2, "урона"),
