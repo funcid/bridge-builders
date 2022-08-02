@@ -6,6 +6,7 @@ import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.ticker.Ticked
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 
@@ -41,9 +42,9 @@ object BanUtil : Ticked {
         }
     }
 
-    fun checkBan(user: User): Boolean {
+    fun checkBan(user: User, player: Player): Boolean {
         if (user.stat.isBan) {
-            user.player?.sendMessage(
+            player.sendMessage(
                 Formatting.fine(
                     "До разблокировки §3${
                         convertSecond(
@@ -54,7 +55,7 @@ object BanUtil : Ticked {
             )
             return true
         } else if (user.stat.gameExitTime > 0) {
-            user.player?.sendMessage(Formatting.error("Вы не можете начать новую игру, незакончив прошлую!"))
+            player.sendMessage(Formatting.error("Вы не можете начать новую игру, незакончив прошлую!"))
             return true
         }
         return false
