@@ -28,13 +28,13 @@ enum class WeekRewards(val reward: DailyReward, val give: (User) -> Any) {
         }
     ),
     FOUR(DailyReward("§5Памятник", Corpse.G4.getIcon()), {
-        withDuplicate(it, 2000, me.reidj.bridgebuilders.donate.impl.Corpse.G4) { user, donate ->
+        withDuplicate(it, 2000, Corpse.G4) { user, donate ->
             user.stat.donates.contains(donate.getName())
         }
     }),
     FIVE(
         DailyReward("§bЛутбокс", item { type = Material.CLAY_BALL }.nbt("other", "enderchest1").build()),
-        { me.reidj.bridgebuilders.content.Lootbox().open(it) }
+        { Lootbox().open(it) }
     ),
     SIX(DailyReward("§e5`000 монет", item {
         type = Material.GOLD_INGOT

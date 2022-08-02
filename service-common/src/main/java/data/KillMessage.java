@@ -1,17 +1,26 @@
 package data;
 
 public enum KillMessage {
-
     NONE,
+    CHOP,
+    AQUARIUM,
     GLOBAL,
     AHEAD,
     DEAD,
+    SNAKE,
     END,
+    ASTRONAUT,
+    GUILLOTINE,
     SLEEP,
     HORNY,
     ROOM,
     BLACK,
+    JAWS,
+    EXECUTIONER,
+    LIFE_DRAINER,
     X,
     KIRA,
-    ;
+    TIME_MACHINE,
+    SURGEON,
+    PUPPETEER,
 }

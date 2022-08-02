@@ -100,14 +100,16 @@ object DamageListener : Listener {
             }
             // Сообщение об убийстве
             Bukkit.getOnlinePlayers().forEach {
-                Anime.killboardMessage(
-                    it,
-                    "" + victim.color.chatColor + getEntity().name + "§f " + killerStatistic?.stat?.activeKillMessage?.name?.let { it1 ->
-                        KillMessage.valueOf(it1)
-                            .getFormat()
-                    } + " игроком " + killer[0].color.chatColor + user.lastDamager!!.name
-                )
+                killerStatistic?.stat?.activeKillMessage?.name?.let { string ->
+                    Anime.killboardMessage(
+                        it, KillMessage.valueOf(string)
+                            .getFormat().replace("%e", "${victim.color.chatColor} ${getEntity().name}§f")
+                            .replace("%k", "${killer[0].color.chatColor} ${user.lastDamager!!.name}§f")
+                    )
+                }
             }
+
+
             // Начисление убийце статистики
             killerStatistic?.let {
                 it.giveMoney(5, false)
@@ -136,16 +138,16 @@ object DamageListener : Listener {
                     name.remove()
                 }
             }
-        }
 
-        teams.filter { it.players.contains(getEntity().uniqueId) }.forEach { team ->
-            team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach { player ->
-                player.playSound(
-                    player.location,
-                    org.bukkit.Sound.ENTITY_ENDERDRAGON_AMBIENT,
-                    1f,
-                    1f
-                )
+            teams.filter{ it.players.contains(getEntity().uniqueId) }.forEach{ team ->
+                team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach { player ->
+                    player.playSound(
+                        player.location,
+                        org.bukkit.Sound.ENTITY_ENDERDRAGON_AMBIENT,
+                        1f,
+                        1f
+                    )
+                }
             }
         }
     }
@@ -161,7 +163,8 @@ object DamageListener : Listener {
             if (!teams.filter { it.players.contains(damager.uniqueId) }[0].players.contains(entity.uniqueId) && !user.isGod)
                 user.lastDamager = damager
             if (teams.any { team -> team.players.contains(damager.uniqueId) } && teams.filter { team ->
-                    team.players.contains(damager.uniqueId) }[0].players.contains(entity.uniqueId) || user.isGod)
+                    team.players.contains(damager.uniqueId)
+                }[0].players.contains(entity.uniqueId) || user.isGod)
                 isCancelled = true
             if (damager.itemInHand.getType().name.endsWith("AXE"))
                 damage /= 3
