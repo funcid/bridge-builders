@@ -8,11 +8,11 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.*
 import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.entity.ExplosionPrimeEvent
-import org.bukkit.event.player.*
-import packages.ChatPackage
-import ru.cristalix.core.network.ISocketClient
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent
+import org.bukkit.event.player.PlayerInteractEntityEvent
+import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import java.text.SimpleDateFormat
-import java.util.*
 
 private val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
 
@@ -49,14 +49,6 @@ object GlobalListeners : Listener {
     fun PlayerSwapHandItemsEvent.handle() = apply { isCancelled = true }
 
     @EventHandler
-    fun AsyncPlayerChatEvent.handle() =
-        ISocketClient.get().write(ChatPackage(player.name, message, formatter.format(Date())))
-
-    @EventHandler
-    fun PlayerCommandPreprocessEvent.handle() =
-        ISocketClient.get().write(ChatPackage(player.name, message, formatter.format(Date())))
-
-    @EventHandler
     fun BlockFromToEvent.handle() {
         val id = block.typeId
         isCancelled = id == 8 || id == 9
@@ -70,7 +62,7 @@ object GlobalListeners : Listener {
         if (isSpectator(player))
             return
         val particle = getByPlayer(player)?.stat?.activeParticle
-        if (particle != data.StepParticle.NONE && player.world != null && player != null) {
+        if (particle != data.StepParticle.NONE && player.world != null && player != null && player.location != null) {
             val location = player.location
             player.world.spawnParticle(
                 particle?.let { StepParticle.valueOf(it.name).type },

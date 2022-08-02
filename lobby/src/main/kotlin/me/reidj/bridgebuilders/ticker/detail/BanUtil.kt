@@ -58,6 +58,7 @@ object BanUtil : Ticked {
             player.sendMessage(Formatting.error("Вы не можете начать новую игру, незакончив прошлую!"))
             return true
         }
+        user.stat.gameExitTime = 0
         return false
     }
 

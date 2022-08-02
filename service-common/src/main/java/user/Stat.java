@@ -38,6 +38,10 @@ public class Stat implements Unique {
     private Double leaveTime;
     private Long timePlayedTotal;
 
+    private Long dailyClaimTimestamp;
+    private Long lastEnter;
+    private Integer rewardStreak;
+
     private Boolean isApprovedResourcepack;
     private Boolean isBan;
 }

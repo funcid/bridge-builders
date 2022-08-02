@@ -58,9 +58,8 @@ object ConnectionHandler : Listener {
 
         inventory.clear()
 
-        user.player = player
-
-        B.postpone(3) {
+        after(15) {
+            user.player = player
             ModLoader.send("mod-bundle-1.0-SNAPSHOT.jar", this)
             // Создание маркера
             teams.forEach {
@@ -96,22 +95,24 @@ object ConnectionHandler : Listener {
         }
 
         if (activeStatus == Status.STARTING) {
-            after(10) { teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
-            gameMode = GameMode.ADVENTURE
-            inventory.setItem(8, back)
-            teams.forEach {
-                inventory.addItem(
-                    Items.builder()
-                        .displayName("Выбрать команду: " + it.color.chatFormat + it.color.teamName)
-                        .type(Material.WOOL)
-                        .color(it.color)
-                        .build()
-                )
+            after(15) {
+                teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+                gameMode = GameMode.ADVENTURE
+                inventory.setItem(8, back)
+                teams.forEach {
+                    inventory.addItem(
+                        Items.builder()
+                            .displayName("Выбрать команду: " + it.color.chatFormat + it.color.teamName)
+                            .type(Material.WOOL)
+                            .color(it.color)
+                            .build()
+                    )
+                }
             }
         } else {
             if (user.inGame) {
                 teams.filter { it.spawn == user.team!!.spawn }[0].players.add(uniqueId)
-                B.postpone(5) {
+                B.postpone(15) {
                     DefaultKit.init(player)
                     ModTransfer().send("bridge:start", player)
                     app.updateNumbersPlayersInTeam()
@@ -121,7 +122,7 @@ object ConnectionHandler : Listener {
                     player.exp = user.exp
                 }
             } else {
-                after(10) { teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
+                after(15) { teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
                 gameMode = GameMode.SPECTATOR
                 Bukkit.getOnlinePlayers().forEach { it.hidePlayer(app, this) }
             }

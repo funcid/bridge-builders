@@ -16,6 +16,7 @@ import me.reidj.bridgebuilders.donate.MoneyFormatter
 import me.reidj.bridgebuilders.donate.impl.*
 import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.ticker.Ticked
+import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -97,40 +98,43 @@ class Lootbox : Listener, Ticked {
                         user.minusMoney(LOOT_BOX_PRICE)
                         user.stat.lootbox--
                         user.stat.lootboxOpenned++
-
-                        val drop = dropList.random() as DonatePosition
-                        val moneyDrop = (Math.random() * 20 + 10).toInt()
-
-                        Anime.openLootBox(
-                            player, LootDrop(
-                                drop.getIcon(),
-                                drop.getTitle(),
-                                drop.getRare().title
-                            )
-                        )
-
-                        if (user.stat.donates.contains(drop.objectName)) {
-                            val giveBack = (drop.getRare().ordinal + 1) * 48
-                            player.sendMessage(Formatting.fine("§aДубликат! §fЗаменен на §e$giveBack монет§f."))
-                            user.giveMoney(giveBack, true)
-                        } else {
-                            drop.give(user)
-                        }
-                        user.giveMoney(moneyDrop, true)
-
-                        B.bc(
-                            Formatting.fine(
-                                "§e${player.name} §fполучил §b${
-                                    drop.getRare().with(drop.getTitle())
-                                }."
-                            )
-                        )
-                        clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
+                        open(user)
                     }
                 }
             }
             menu.open(player)
         }
+    }
+
+    fun open(user: User) {
+        val drop = dropList.random() as DonatePosition
+        val moneyDrop = (Math.random() * 20 + 10).toInt()
+
+        Anime.openLootBox(
+            user.player!!, LootDrop(
+                drop.getIcon(),
+                drop.getTitle(),
+                drop.getRare().title
+            )
+        )
+
+        if (user.stat.donates.contains(drop.objectName)) {
+            val giveBack = (drop.getRare().ordinal + 1) * 48
+            user.player!!.sendMessage(Formatting.fine("§aДубликат! §fЗаменен на §e$giveBack монет§f."))
+            user.giveMoney(giveBack, true)
+        } else {
+            drop.give(user)
+        }
+        user.giveMoney(moneyDrop, true)
+
+        B.bc(
+            Formatting.fine(
+                "§e${user.player!!.name} §fполучил §b${
+                    drop.getRare().with(drop.getTitle())
+                }."
+            )
+        )
+        clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
     }
 
     override fun tick(vararg args: Int) {

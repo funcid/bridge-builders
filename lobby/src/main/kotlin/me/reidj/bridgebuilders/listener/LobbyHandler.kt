@@ -1,6 +1,5 @@
 package me.reidj.bridgebuilders.listener
 
-import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import dev.implario.bukkit.item.item
 import me.func.mod.Anime
@@ -14,6 +13,7 @@ import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.getPrefix
 import me.reidj.bridgebuilders.npc.NpcManager
 import me.reidj.bridgebuilders.npc.NpcType
+import me.reidj.bridgebuilders.reward.WeekRewards
 import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -75,30 +75,32 @@ object LobbyHandler : Listener {
     private val reconnect = Reconnect(300) { it.performCommand("rejoin") }
 
     @EventHandler
-    fun PlayerJoinEvent.handle() = player.run {
-        val user = app.getUser(this)
+    fun PlayerJoinEvent.handle() {
+        after(10) {
+            val user = app.getUser(player)
 
-        if (user == null) {
-            sendMessage(Formatting.error("Нам не удалось загрузить Вашу статистику."))
-            after(3) { Cristalix.transfer(listOf(uniqueId), RealmId.of(HUB)) }
-            return@run
-        }
+            if (user == null) {
+                player.sendMessage(Formatting.error("Нам не удалось загрузить Вашу статистику."))
+                Cristalix.transfer(listOf(player.uniqueId), RealmId.of(HUB))
+                println("null")
+                return@after
+            }
 
-        allowFlight = IPermissionService.get().isDonator(uniqueId)
+            val stat = user.stat
 
-        user.player = this
+            player.allowFlight = IPermissionService.get().isDonator(player.uniqueId)
+            user.player = player
 
-        B.postpone(5) {
-            teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+            player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
 
-            Anime.hideIndicator(this, Indicators.ARMOR, Indicators.EXP, Indicators.HEALTH, Indicators.HUNGER)
+            Anime.hideIndicator(player, Indicators.ARMOR, Indicators.EXP, Indicators.HEALTH, Indicators.HUNGER)
 
-            NpcManager.npcs[NpcType.GUIDE.name]!!.first.data.skin(uniqueId.toString())
+            NpcManager.npcs[NpcType.GUIDE.name]!!.first.data.skin(player.uniqueId.toString())
 
             user.giveMoney(0, true)
 
             if (user.stat.isApprovedResourcepack)
-                confirmation.open(this)
+                confirmation.open(player)
 
             if (IRealmService.get()
                     .getRealmById(RealmId.of(user.stat.realm)) != null && (user.stat.realm != "" || IRealmService.get()
@@ -106,8 +108,29 @@ object LobbyHandler : Listener {
             ) {
                 reconnect.text = "Вернуться в игру"
                 reconnect.hint = "Вернуться"
-                reconnect.open(this)
+                reconnect.open(player)
             }
+
+            val now = System.currentTimeMillis()
+            // Обнулить комбо сбора наград если прошло больше суток или комбо > 7
+            if ((stat.rewardStreak > 0 && now - stat.lastEnter > 24 * 60 * 60 * 1000) || stat.rewardStreak > 6) {
+                stat.rewardStreak = 0
+            }
+            if (now - stat.dailyClaimTimestamp > 14 * 60 * 60 * 1000) {
+                Anime.close(player)
+                stat.dailyClaimTimestamp = now
+                Anime.openDailyRewardMenu(
+                    player,
+                    stat.rewardStreak,
+                    *WeekRewards.values().map { it.reward }.toTypedArray()
+                )
+
+                val dailyReward = WeekRewards.values()[stat.rewardStreak]
+                player.sendMessage(Formatting.fine("Ваша ежедневная награда: " + dailyReward.reward.title))
+                dailyReward.give(user)
+                stat.rewardStreak++
+            }
+            stat.lastEnter = now
         }
     }
 

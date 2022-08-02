@@ -61,6 +61,9 @@ public class PlayerDataManager implements Listener {
                             0.0,
                             0.0,
                             0L,
+                            0L,
+                            0L,
+                            0,
                             true,
                             false
                     );
@@ -115,6 +118,15 @@ public class PlayerDataManager implements Listener {
 
                 if (stat.getGameExitTime() == null)
                     stat.setGameExitTime(0);
+
+                if (stat.getDailyClaimTimestamp() == null)
+                    stat.setDailyClaimTimestamp(0L);
+
+                if (stat.getLastEnter() == null)
+                    stat.setLastEnter(0L);
+
+                if (stat.getRewardStreak() == null)
+                    stat.setRewardStreak(0);
 
                 userMap.put(uuid, new User(stat));
             } catch (Exception ex) {

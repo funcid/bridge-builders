@@ -76,8 +76,7 @@ object CustomizationNPC {
                         is StepParticle -> stat.activeParticle == data.StepParticle.valueOf(pos.objectName)
                         else -> false
                     }
-                    if (!has) price = pos.getPrice().toLong()
-                    else hint = "Выбрать"
+                    if (!has) price = pos.getPrice().toLong() else hint = "Выбрать"
                     onClick { player, _, _ ->
                         if (current)
                             return@onClick
