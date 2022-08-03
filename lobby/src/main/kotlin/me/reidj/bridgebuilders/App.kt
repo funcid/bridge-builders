@@ -18,6 +18,7 @@ import me.reidj.bridgebuilders.listener.LobbyHandler
 import me.reidj.bridgebuilders.npc.NpcManager
 import me.reidj.bridgebuilders.npc.NpcType
 import me.reidj.bridgebuilders.ticker.detail.BanUtil
+import me.reidj.bridgebuilders.ticker.detail.CompassUpdateOnline
 import me.reidj.bridgebuilders.ticker.detail.DiscordMessage
 import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.util.MapLoader
@@ -102,7 +103,7 @@ class App : JavaPlugin() {
         PlayerCommands
 
         // Обработка каждого тика
-        TickTimerHandler(DiscordMessage, NpcManager, BanUtil, lootbox).runTaskTimer(this, 0, 1)
+        TickTimerHandler(DiscordMessage, NpcManager, BanUtil, lootbox, CompassUpdateOnline).runTaskTimer(this, 0, 1)
 
         playerDataManager = PlayerDataManager()
 

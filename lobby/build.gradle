@@ -24,6 +24,8 @@ dependencies {
     implementation 'implario:kotlin-api:1.0.0'
 
     implementation 'me.func:animation-api:0.1.12'
+
+    implementation 'cristalix:boards-bukkit-api:3.0.15'
     implementation project(':commons')
     implementation project(':service-common')
 }

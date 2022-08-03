@@ -18,7 +18,6 @@ import me.reidj.bridgebuilders.listener.*
 import me.reidj.bridgebuilders.map.MapType
 import me.reidj.bridgebuilders.team.Bridge
 import me.reidj.bridgebuilders.team.Team
-import me.reidj.bridgebuilders.top.TopManager
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.MapLoader
 import net.minecraft.server.v1_12_R1.MinecraftServer
@@ -205,9 +204,6 @@ class App : JavaPlugin() {
                 team.teleport.z + 0.5
             )
         }
-
-        // Создание менеджера топа
-        TopManager()
 
         // Ломаю мосты
         teams.forEach { generateBridge(it) }

@@ -22,6 +22,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPhysicsEvent
+import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.*
@@ -154,6 +155,9 @@ object LobbyHandler : Listener {
 
     @EventHandler
     fun BlockBreakEvent.handle() = apply { cancel = true }
+
+    @EventHandler
+    fun BlockPlaceEvent.handle() = apply { cancel = true }
 
     @EventHandler
     fun PlayerDropItemEvent.handle() = apply { cancel = true }
