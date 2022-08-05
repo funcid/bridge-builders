@@ -160,7 +160,7 @@ enum class StarterKit(
         LEGENDARY,
         IRON_SWORD,
         "bridgebuilders:lucifer",
-        "§bОбсидиан х8, Алмазная кирка, Алмазный меч, Железный сет, Ведро с лавой х3, Зелье огнеустойкости х2, Золотая морковка х10",
+        "§bОбсидиан х8, Алмазная кирка, Алмазный меч, Железный сет, Зелье огнеустойкости х2, Золотая морковка х10",
         arrayOf(
             ItemStack(OBSIDIAN, 8),
             ItemStack(DIAMOND_PICKAXE),
@@ -169,7 +169,6 @@ enum class StarterKit(
             ItemStack(IRON_CHESTPLATE),
             ItemStack(IRON_LEGGINGS),
             ItemStack(IRON_BOOTS),
-            ItemStack(LAVA_BUCKET, 3),
             createPotion(PotionEffectType.FIRE_RESISTANCE, true, 30, 0, 2, "огнеуйстойкости"),
             ItemStack(GOLDEN_CARROT, 10)
         )
@@ -198,12 +197,11 @@ enum class StarterKit(
         UNIQUE,
         GOLD_PICKAXE,
         "simulators:donate_pickaxe",
-        "§bАлмазная кирка, Железная лопата, Каменный топор, Кожаный шлем, Алмазный нагрудник, Железные штаны, Кольчужные ботинки, Хлеб х10",
+        "§bАлмазная кирка, Железная лопата, Каменный топор, Алмазный нагрудник, Железные штаны, Кольчужные ботинки, Хлеб х10",
         arrayOf(
             ItemStack(DIAMOND_PICKAXE),
             ItemStack(IRON_SPADE),
             ItemStack(STONE_AXE),
-            ItemStack(LEATHER_HELMET),
             ItemStack(DIAMOND_CHESTPLATE),
             ItemStack(IRON_LEGGINGS),
             ItemStack(CHAINMAIL_BOOTS),

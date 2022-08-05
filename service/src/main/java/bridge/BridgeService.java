@@ -101,6 +101,11 @@ public class BridgeService {
                     pitPackage.setEntries(res);
                     answer(channel, pitPackage);
                 })));
+        registerHandler(ResetRejoin.class, ((channel, serverName, pckg) -> userData.find(pckg.getUuid()).thenAccept(stat -> {
+            stat.setRealm("");
+            pckg.setStat(stat);
+            userData.save(stat);
+        })));
         registerHandler(UserRequestJoinPackage.class, ((channel, serverName, thePitPackage) -> {
             Optional<RealmInfo> realm = realmsController.bestRealm();
             boolean passed = false;
