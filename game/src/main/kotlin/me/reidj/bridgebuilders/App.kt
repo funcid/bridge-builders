@@ -27,6 +27,7 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
+import packages.RejoinPackage
 import packages.ResetRejoin
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.datasync.EntityDataParameters
@@ -78,6 +79,10 @@ class App : JavaPlugin() {
         )
 
         clientSocket.connect()
+
+        clientSocket.registerHandler(RejoinPackage::class.java) {
+            getUser(it.uuid)?.stat = it.stat
+        }
 
         map = MapType.values().random()
 

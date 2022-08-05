@@ -106,6 +106,7 @@ public class BridgeService {
             pckg.setStat(stat);
             userData.save(stat);
         })));
+        registerHandler(RejoinPackage.class, ((channel, serverName, pckg) -> ServerSocketHandler.broadcast(pckg)));
         registerHandler(UserRequestJoinPackage.class, ((channel, serverName, thePitPackage) -> {
             Optional<RealmInfo> realm = realmsController.bestRealm();
             boolean passed = false;

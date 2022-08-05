@@ -5,6 +5,8 @@ import me.func.mod.util.after
 import me.func.mod.util.command
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.ticker.detail.BanUtil
+import packages.RejoinPackage
+import packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
@@ -21,14 +23,16 @@ object PlayerCommands {
 
         command("rejoin") { player, _ ->
             val user = app.getUser(player)!!
-            if (user.stat.realm == "" || IRealmService.get()
-                    .getRealmById(RealmId.of(user.stat.realm)).status == RealmStatus.WAITING_FOR_PLAYERS
-            )
+            if (user.stat.realm == "" || IRealmService.get().getRealmById(RealmId.of(user.stat.realm)).status == RealmStatus.WAITING_FOR_PLAYERS) {
+                player.sendMessage(Formatting.error("У Вас нету незаконченной игры."))
                 return@command
-            player.sendMessage(Formatting.error("У Вас нету незаконченной игры."))
+            }
+            val realm = user.stat.realm
             user.stat.gameExitTime = 0
             user.stat.realm = ""
-            after { Cristalix.transfer(listOf(player.uniqueId), RealmId.of(user.stat.realm)) }
+            clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
+            clientSocket.write(RejoinPackage(player.uniqueId, user.stat))
+            after { Cristalix.transfer(listOf(player.uniqueId), RealmId.of(realm)) }
         }
 
         command("resourcepack") { player, _ -> player.setResourcePack("${STORAGE}BridgeBuilders2.zip", "12134") }

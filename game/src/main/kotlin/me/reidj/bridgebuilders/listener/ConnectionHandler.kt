@@ -37,6 +37,7 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.handle() = player.run {
+        // Чтобы /spec и /rejoin работали
         if (activeStatus == Status.STARTING && Bukkit.getOnlinePlayers().size > slots) {
             Cristalix.transfer(listOf(uniqueId), LOBBY_SERVER)
             return@run
