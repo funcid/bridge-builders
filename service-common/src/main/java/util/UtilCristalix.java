@@ -23,8 +23,7 @@ public class UtilCristalix {
         return (prefix.isEmpty() ? "" : prefix + " ") + color + data.getUsername();
     }
 
-    private String prefix(IGroup group) {
+    public String prefix(IGroup group) {
         return group.getPrefix().isEmpty() ? "" : group.getPrefixColor() + group.getPrefix();
     }
-
 }

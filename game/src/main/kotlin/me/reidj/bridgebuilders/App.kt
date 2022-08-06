@@ -1,6 +1,5 @@
 package me.reidj.bridgebuilders
 
-import PlayerDataManager
 import clepto.bukkit.B
 import clepto.cristalix.Cristalix
 import com.google.common.collect.Maps
@@ -34,6 +33,7 @@ import ru.cristalix.core.datasync.EntityDataParameters
 import ru.cristalix.core.formatting.Color
 import ru.cristalix.core.karma.IKarmaService
 import ru.cristalix.core.karma.KarmaService
+import ru.cristalix.core.network.Capability
 import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
@@ -66,23 +66,14 @@ class App : JavaPlugin() {
 
         CoreApi.get().registerService(IKarmaService::class.java, KarmaService(ISocketClient.get()))
 
-        // Подкючение к Netty сервису / Управляет конфигами, кастомными пакетами, всей data
-        val bridgeServiceHost: String = getEnv("BRIDGE_SERVICE_HOST", "127.0.0.1")
-        val bridgeServicePort: Int = getEnv("BRIDGE_SERVICE_PORT", "14653").toInt()
-        val bridgeServicePassword: String = getEnv("BRIDGE_SERVICE_PASSWORD", "12345")
-
-        clientSocket = client.ClientSocket(
-            bridgeServiceHost,
-            bridgeServicePort,
-            bridgeServicePassword,
-            Cristalix.getRealmString()
+        clientSocket.registerCapability(
+            Capability.builder()
+                .className(RejoinPackage::class.java.name)
+                .notification(true)
+                .build()
         )
 
-        clientSocket.connect()
-
-        clientSocket.registerHandler(RejoinPackage::class.java) {
-            getUser(it.uuid)?.stat = it.stat
-        }
+        clientSocket.addListener(RejoinPackage::class.java) { _, pckg -> getUser(pckg.uuid)?.stat = pckg.stat }
 
         map = MapType.values().random()
 
@@ -111,8 +102,6 @@ class App : JavaPlugin() {
         timer = Timer()
         timer.runTaskTimer(this, 10, 1)
 
-        playerDataManager = PlayerDataManager()
-
         // Регистрация обработчиков событий
         B.events(
             GlobalListeners,
@@ -121,7 +110,6 @@ class App : JavaPlugin() {
             DamageListener,
             ChatHandler,
             BlockHandler,
-            playerDataManager
         )
 
         // Спавню нпс
@@ -223,15 +211,15 @@ class App : JavaPlugin() {
                 B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${it.player!!.name} §fполучил §bлутбокс§f!"))
             }
         }
-        playerDataManager.userMap.values.forEach {
+        userMap.values.forEach {
             if (!it.player!!.isOnline)
                 clientSocket.write(ResetRejoin(it.stat.uuid))
             it.stat.realm = ""
         }
-        playerDataManager.save()
+        save()
         Cristalix.transfer(Bukkit.getOnlinePlayers().map { it.uniqueId }, LOBBY_SERVER)
         realm.status = RealmStatus.WAITING_FOR_PLAYERS
-        playerDataManager.userMap.clear()
+        userMap.clear()
         ConnectionHandler.markers.clear()
         BlockHandler.placedBlocks.clear()
         Bukkit.unloadWorld(worldMeta.world, false)
@@ -360,7 +348,7 @@ class App : JavaPlugin() {
             it.stat.realm = ""
         }
 
-        playerDataManager.save()
+        save()
 
         val worlds = Bukkit.getWorlds()
 
@@ -391,7 +379,7 @@ class App : JavaPlugin() {
 
     fun getUser(player: Player): User? = getUser(player.uniqueId)
 
-    fun getUser(uuid: UUID): User? = playerDataManager.userMap[uuid]
+    fun getUser(uuid: UUID): User? = userMap[uuid]
 
     fun updateNumbersPlayersInTeam() = teams.forEach { team ->
         team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach {

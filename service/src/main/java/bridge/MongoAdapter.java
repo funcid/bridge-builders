@@ -3,61 +3,54 @@ package bridge;
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.async.client.FindIterable;
 import com.mongodb.async.client.MongoClient;
+import com.mongodb.async.client.MongoClients;
 import com.mongodb.async.client.MongoCollection;
 import com.mongodb.client.model.*;
 import com.mongodb.session.ClientSession;
-import data.Unique;
-import lombok.Getter;
-import lombok.val;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import packages.TopPackage;
 import ru.cristalix.core.GlobalSerializers;
+import ru.cristalix.core.network.ISocketClient;
+import ru.cristalix.core.network.packages.BulkGroupsPackage;
+import ru.cristalix.core.network.packages.GroupData;
+import tops.PlayerTopEntry;
 import tops.TopEntry;
+import user.Stat;
+import util.UtilCristalix;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-@Getter
-public class MongoAdapter<T extends Unique> {
+public class MongoAdapter {
 
 	private static final UpdateOptions UPSERT = new UpdateOptions().upsert(true);
 
 	private final MongoCollection<Document> data;
-	private final Class<T> type;
 	private final ClientSession session;
 
 	private final AtomicBoolean connected = new AtomicBoolean(false);
 
-	public MongoAdapter(MongoClient client, String database, String collection, Class<T> type) {
-		this.data = client.getDatabase(database).getCollection(collection);
-		this.type = type;
+	public MongoAdapter(String dbUrl, String database, String collection) {
 		CompletableFuture<ClientSession> future = new CompletableFuture<>();
+		MongoClient client = MongoClients.create(dbUrl);
 		client.startSession(ClientSessionOptions.builder().causallyConsistent(true).build(), (s, throwable) -> {
 			if (throwable != null) future.completeExceptionally(throwable);
 			else future.complete(s);
 		});
+		data = client.getDatabase(database).getCollection(collection);
 		try {
-			this.session = future.get(10, TimeUnit.SECONDS);
-			new Thread(() -> {
-				try {
-					Thread.sleep(2000L);
-					connected.set(true);
-				} catch (Exception ignored) {
-				}
-			}).start();
-		} catch (Exception e) {
+			session = future.get(10, TimeUnit.SECONDS);
+		} catch (InterruptedException | ExecutionException | TimeoutException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public boolean isConnected() {
-		return connected.get();
-	}
-
-	public CompletableFuture<T> find(UUID uuid) {
-		CompletableFuture<T> future = new CompletableFuture<>();
+	public CompletableFuture<Stat> find(UUID uuid) {
+		CompletableFuture<Stat> future = new CompletableFuture<>();
 		data.find(session, Filters.eq("uuid", uuid.toString()))
 				.first((result, throwable) -> {
 					try {
@@ -69,28 +62,28 @@ public class MongoAdapter<T extends Unique> {
 		return future;
 	}
 
-	public CompletableFuture<Map<UUID, T>> findAll() {
-		CompletableFuture<Map<UUID, T>> future = new CompletableFuture<>();
-		FindIterable<Document> documentFindIterable = data.find(session);
-		Map<UUID, T> map = new ConcurrentHashMap<>();
+	public CompletableFuture<Map<UUID, Stat>> findAll() {
+		CompletableFuture<Map<UUID, Stat>> future = new CompletableFuture<>();
+		FindIterable<Document> documentFindIterable = data.find();
+		Map<UUID, Stat> map = new ConcurrentHashMap<>();
 		documentFindIterable.forEach(document -> {
-			T object = readDocument(document);
+			Stat object = readDocument(document);
 			map.put(object.getUuid(), object);
 		}, (v, error) -> future.complete(map));
 		return future;
 	}
 
-	private T readDocument(Document document) {
-		return document == null ? null : GlobalSerializers.fromJson(document.toJson(), type);
+	private Stat readDocument(Document document) {
+		return document == null ? null : GlobalSerializers.fromJson(document.toJson(), Stat.class);
 	}
 
-	public void save(Unique unique) {
-		save(Collections.singletonList(unique));
+	public void save(Stat info) {
+		save(Collections.singletonList(info));
 	}
 
-	public void save(List<Unique> uniques) {
+	public void save(List<Stat> uniques) {
 		List<WriteModel<Document>> models = new ArrayList<>();
-		for (Unique unique : uniques) {
+		for (Stat unique : uniques) {
 			WriteModel<Document> model = new UpdateOneModel<>(
 					Filters.eq("uuid", unique.getUuid().toString()),
 					new Document("$set", Document.parse(GlobalSerializers.toJson(unique))),
@@ -103,19 +96,20 @@ public class MongoAdapter<T extends Unique> {
 			data.bulkWrite(session, models, this::handle);
 	}
 
-	public <V> CompletableFuture<List<TopEntry<T, V>>> makeRatingByField(String fieldName, int limit) {
-		val operations = Arrays.asList(
+	public <V> CompletableFuture<List<TopEntry<Stat, V>>> makeRatingByField(String fieldName, int limit) {
+		List<Bson> operations = Arrays.asList(
 				Aggregates.project(Projections.fields(
 						Projections.include(fieldName),
+						Projections.include("prefix"),
 						Projections.include("uuid"),
 						Projections.exclude("_id")
 				)), Aggregates.sort(Sorts.descending(fieldName)),
 				Aggregates.limit(limit)
 		);
-		List<TopEntry<T, V>> entries = new ArrayList<>();
-		CompletableFuture<List<TopEntry<T, V>>> future = new CompletableFuture<>();
+		List<TopEntry<Stat, V>> entries = new ArrayList<>();
+		CompletableFuture<List<TopEntry<Stat, V>>> future = new CompletableFuture<>();
 		data.aggregate(operations).forEach(document -> {
-			T key = readDocument(document);
+			Stat key = readDocument(document);
 			entries.add(new TopEntry<>(key, (V) document.get(fieldName)));
 		}, (__, throwable) -> {
 			if (throwable != null) {
@@ -132,7 +126,39 @@ public class MongoAdapter<T extends Unique> {
 			throwable.printStackTrace();
 	}
 
-	public void clear(UUID uuid) {
-		data.deleteOne(Filters.eq("uuid", uuid.toString()), this::handle);
+	public CompletableFuture<List<PlayerTopEntry<Object>>> getTop(TopPackage.TopType topType, int limit) {
+		return makeRatingByField(topType.name().toLowerCase(), limit).thenApplyAsync(entries -> {
+			List<PlayerTopEntry<Object>> playerEntries = new ArrayList<>();
+			for (TopEntry<Stat, Object> userInfoObjectTopEntry : entries) {
+				PlayerTopEntry<Object> objectPlayerTopEntry = new PlayerTopEntry<>(userInfoObjectTopEntry.getKey(), userInfoObjectTopEntry.getValue());
+				playerEntries.add(objectPlayerTopEntry);
+			}
+			try {
+				List<UUID> uuids = new ArrayList<>();
+				for (TopEntry<Stat, Object> entry : entries) {
+					UUID uuid = entry.getKey().getUuid();
+					uuids.add(uuid);
+				}
+				List<GroupData> groups = ISocketClient.get()
+						.<BulkGroupsPackage>writeAndAwaitResponse(new BulkGroupsPackage(uuids))
+						.get(5L, TimeUnit.SECONDS)
+						.getGroups();
+				Map<UUID, GroupData> map = groups.stream()
+						.collect(Collectors.toMap(GroupData::getUuid, Function.identity()));
+				for (PlayerTopEntry<Object> playerEntry : playerEntries) {
+					GroupData data = map.get(playerEntry.getKey().getUuid());
+					playerEntry.setUserName(data.getUsername());
+					playerEntry.setDisplayName(UtilCristalix.createDisplayName(data));
+				}
+			} catch(Exception ex) {
+				ex.printStackTrace();
+				// Oh shit
+				playerEntries.forEach(entry -> {
+					entry.setUserName("ERROR");
+					entry.setDisplayName("ERROR");
+				});
+			}
+			return playerEntries;
+		});
 	}
 }

@@ -1,14 +1,16 @@
 package me.reidj.bridgebuilders
 
-import PlayerDataManager
 import clepto.bukkit.B
 import clepto.cristalix.WorldMeta
 import me.reidj.bridgebuilders.command.AdminCommand
 import me.reidj.bridgebuilders.donate.impl.NameTag
 import me.reidj.bridgebuilders.user.User
+import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import packages.BulkSaveUserPackage
+import packages.SaveUserPackage
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.inventory.IInventoryService
@@ -19,15 +21,17 @@ import ru.cristalix.core.party.PartyService
 import ru.cristalix.core.permissions.IPermissionService
 import ru.cristalix.core.transfer.ITransferService
 import ru.cristalix.core.transfer.TransferService
+import java.util.*
 
 const val HUB = "HUB-2"
 
 lateinit var bridgeBuildersInstance: JavaPlugin
 lateinit var getByPlayer: (Player) -> User?
 lateinit var worldMeta: WorldMeta
-lateinit var clientSocket: client.ClientSocket
-lateinit var playerDataManager: PlayerDataManager
+lateinit var clientSocket: ISocketClient
 var slots: Int = System.getenv("SLOT").toInt()
+
+val userMap = mutableMapOf<UUID, User>()
 
 private val permissionService: IPermissionService = IPermissionService.get()
 
@@ -40,10 +44,12 @@ class BridgeBuildersInstance(
         bridgeBuildersInstance = plugin
         worldMeta = meta
 
+        clientSocket = ISocketClient.get()
+
         // Регистрация сервисов
         CoreApi.get().apply {
-            registerService(IPartyService::class.java, PartyService(ISocketClient.get()))
-            registerService(ITransferService::class.java, TransferService(ISocketClient.get()))
+            registerService(IPartyService::class.java, PartyService(clientSocket))
+            registerService(ITransferService::class.java, TransferService(clientSocket))
             registerService(IInventoryService::class.java, InventoryService())
         }
 
@@ -82,3 +88,9 @@ fun getPrefix(user: User, isTab: Boolean): String {
     }
     return finalPrefix
 }
+
+fun save(): BulkSaveUserPackage = BulkSaveUserPackage(Bukkit.getOnlinePlayers().map {
+    val uuid = it.uniqueId
+    val user = userMap.remove(uuid)
+    SaveUserPackage(uuid, user?.stat)
+})

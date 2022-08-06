@@ -44,7 +44,7 @@ class TopManager : Listener, BukkitRunnable() {
 
     private fun updateData() {
         for (type in TopType.values()) {
-            clientSocket.writeAndAwaitResponse(TopPackage(type, DATA_COUNT))
+            clientSocket.writeAndAwaitResponse<TopPackage>(TopPackage(type, DATA_COUNT))
                 .thenAcceptAsync { pkg ->
                     tops[type] = pkg.entries.stream()
                         .map { entry ->

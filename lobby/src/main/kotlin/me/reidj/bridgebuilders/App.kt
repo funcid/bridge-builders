@@ -1,8 +1,6 @@
 package me.reidj.bridgebuilders
 
-import PlayerDataManager
 import clepto.bukkit.B
-import clepto.cristalix.Cristalix
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
 import me.func.mod.Anime
@@ -73,15 +71,6 @@ class App : JavaPlugin() {
         val bridgeServicePort: Int = getEnv("BRIDGE_SERVICE_PORT", "14653").toInt()
         val bridgeServicePassword: String = getEnv("BRIDGE_SERVICE_PASSWORD", "12345")
 
-        clientSocket = client.ClientSocket(
-            bridgeServiceHost,
-            bridgeServicePort,
-            bridgeServicePassword,
-            Cristalix.getRealmString()
-        )
-
-        clientSocket.connect()
-
         CoreApi.get().registerService(IRenderService::class.java, BukkitRenderService(getServer()))
 
         // Конфигурация реалма
@@ -105,22 +94,19 @@ class App : JavaPlugin() {
         // Обработка каждого тика
         TickTimerHandler(DiscordMessage, NpcManager, BanUtil, lootbox, CompassUpdateOnline).runTaskTimer(this, 0, 1)
 
-        playerDataManager = PlayerDataManager()
-
         B.events(
             lootbox,
             LobbyHandler,
             GlobalListeners,
-            playerDataManager
         )
     }
 
     override fun onDisable() {
         Bukkit.getOnlinePlayers().map { getUser(it)!!.stat }.forEach { it.realm = "" }
-        playerDataManager.save()
+        save()
     }
 
     fun getUser(player: Player) = getUser(player.uniqueId)
 
-    fun getUser(uuid: UUID) = playerDataManager.userMap[uuid]
+    fun getUser(uuid: UUID) = userMap[uuid]
 }

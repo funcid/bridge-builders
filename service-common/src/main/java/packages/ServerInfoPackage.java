@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import ru.cristalix.core.network.CorePackage;
 import user.Stat;
 
 import java.util.UUID;
@@ -12,7 +13,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class ServerInfoPackage extends BridgePackage {
+public class ServerInfoPackage extends CorePackage {
 
     // request
     private final UUID uuid;

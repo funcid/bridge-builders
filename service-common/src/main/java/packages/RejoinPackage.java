@@ -3,6 +3,7 @@ package packages;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import ru.cristalix.core.network.CorePackage;
 import user.Stat;
 
 import java.util.UUID;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
-public class RejoinPackage extends BridgePackage {
+public class RejoinPackage extends CorePackage {
 
     // request
     private final UUID uuid;

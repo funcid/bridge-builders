@@ -6,7 +6,6 @@ import dev.kord.rest.service.RestClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import packages.ChatPackage
 import ru.cristalix.core.microservice.MicroServicePlatform
 import ru.cristalix.core.microservice.MicroserviceBootstrap
 import ru.cristalix.core.network.Capability

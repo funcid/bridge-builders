@@ -1,22 +1,82 @@
 package me.reidj.bridgebuilders.listener
 
+import data.Corpse
+import data.KillMessage
+import data.NameTag
+import data.StarterKit
+import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.donate.impl.StepParticle
 import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.isSpectator
+import me.reidj.bridgebuilders.user.User
+import me.reidj.bridgebuilders.userMap
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.*
 import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.entity.ExplosionPrimeEvent
-import org.bukkit.event.player.PlayerArmorStandManipulateEvent
-import org.bukkit.event.player.PlayerInteractEntityEvent
-import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.event.player.PlayerSwapHandItemsEvent
-import java.text.SimpleDateFormat
-
-private val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+import org.bukkit.event.player.*
+import packages.SaveUserPackage
+import packages.StatPackage
+import user.Stat
+import java.util.concurrent.TimeUnit
 
 object GlobalListeners : Listener {
+
+    @EventHandler
+    fun AsyncPlayerPreLoginEvent.handle() {
+        try {
+            val statPackage =
+                clientSocket.writeAndAwaitResponse<StatPackage>(StatPackage(uniqueId))[3L, TimeUnit.SECONDS]
+            var stat = statPackage.stat
+            if (stat == null)
+                stat = Stat(
+                    uniqueId,
+                    "",
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    ArrayList(),
+                    HashSet(),
+                    ArrayList(),
+                    KillMessage.NONE,
+                    data.StepParticle.NONE,
+                    NameTag.NONE,
+                    Corpse.NONE,
+                    StarterKit.NONE,
+                    0.0,
+                    0.0,
+                    0L,
+                    0.0,
+                    0.0,
+                    0L,
+                    0L,
+                    0,
+                    true,
+                    false
+                )
+            userMap[uniqueId] = User(stat)
+        } catch (ex: Exception) {
+            userMap.remove(uniqueId)
+            disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Сейчас нельзя зайти на этот сервер");
+            loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER;
+            ex.printStackTrace()
+        }
+    }
+
+    @EventHandler
+    fun PlayerQuitEvent.handle() {
+        val uuid = player.uniqueId
+        val user = userMap.remove(uuid) ?: return
+        if (!user.inGame)
+            userMap.remove(uuid)
+        clientSocket.write(SaveUserPackage(uuid, user.stat))
+    }
 
     @EventHandler
     fun BlockRedstoneEvent.handle() = apply { newCurrent = oldCurrent }

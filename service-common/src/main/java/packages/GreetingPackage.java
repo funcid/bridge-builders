@@ -3,6 +3,7 @@ package packages;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import ru.cristalix.core.network.CorePackage;
 
 /**
  * @author Рейдж 03.10.2021
@@ -12,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
-public class GreetingPackage extends BridgePackage {
+public class GreetingPackage extends CorePackage {
 
     // request
     private final String password;

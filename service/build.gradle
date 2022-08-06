@@ -10,31 +10,9 @@ shadowJar {
 dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     implementation 'org.projectlombok:lombok:1.18.18'
-    implementation 'org.slf4j:slf4j-simple:1.7.30'
+    compileOnly 'org.mongodb:mongodb-driver-async:3.7.1'
+    compileOnly 'cristalix:microservice:20.11.04'
     implementation 'io.javalin:javalin:4.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation project(":service-common")
-    compileOnly 'org.mongodb:mongodb-driver-async:3.7.1'
-    compileOnly 'cristalix:microservice:20.11.04'
-    compileOnly 'com.google.guava:guava:21.0'
-    compileOnly 'io.netty:netty-all:4.1.37.Final'
-    compileOnly 'ru.cristalix:waterfall:1.2'
-}
-
-tasks.withType(Test) {
-    environment 'db_url', 'mongodb+srv://ilyafx:eJ7f3jRinZOpn5WM@cluster0.wkoiz.mongodb.net/admin?retryWrites=true&w=majority&ssl=true&streamType=netty'
-    environment 'db_data', 'bridgebuilders'
-}
-
-test {
-    useJUnitPlatform()
-}
-
-jar {
-    manifest {
-        attributes "Main-Class": "bridge.BridgeService"
-    }
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    }
 }
