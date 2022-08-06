@@ -26,8 +26,8 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
-import packages.RejoinPackage
-import packages.ResetRejoin
+import me.reidj.bridgebuilders.packages.RejoinPackage
+import me.reidj.bridgebuilders.packages.ResetRejoin
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.datasync.EntityDataParameters
 import ru.cristalix.core.formatting.Color
@@ -343,7 +343,7 @@ class App : JavaPlugin() {
     }
 
     override fun onDisable() {
-        Bukkit.getOnlinePlayers().mapNotNull(getByPlayer).forEach {
+        Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.forEach {
             it.stat.gameExitTime = 0
             it.stat.realm = ""
         }

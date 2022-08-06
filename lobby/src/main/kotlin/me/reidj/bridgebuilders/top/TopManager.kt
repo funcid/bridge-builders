@@ -5,13 +5,13 @@ import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Location
 import org.bukkit.event.Listener
 import org.bukkit.scheduler.BukkitRunnable
-import packages.TopPackage
-import packages.TopPackage.TopType
+import me.reidj.bridgebuilders.packages.TopPackage
+import me.reidj.bridgebuilders.packages.TopPackage.TopType
 import ru.cristalix.boards.bukkitapi.Board
 import ru.cristalix.boards.bukkitapi.Boards
 import ru.cristalix.boards.bukkitapi.Boards.newBoard
 import ru.cristalix.core.GlobalSerializers
-import tops.TopEntry
+import me.reidj.bridgebuilders.tops.TopEntry
 import java.text.DecimalFormat
 import java.util.*
 import java.util.stream.Collectors
@@ -44,11 +44,16 @@ class TopManager : Listener, BukkitRunnable() {
 
     private fun updateData() {
         for (type in TopType.values()) {
-            clientSocket.writeAndAwaitResponse<TopPackage>(TopPackage(type, DATA_COUNT))
+            clientSocket.writeAndAwaitResponse<TopPackage>(
+                TopPackage(type, DATA_COUNT)
+            )
                 .thenAcceptAsync { pkg ->
                     tops[type] = pkg.entries.stream()
                         .map { entry ->
-                            TopEntry(entry.displayName, TOP_DATA_FORMAT.format(entry.value))
+                            TopEntry(
+                                entry.displayName,
+                                TOP_DATA_FORMAT.format(entry.value)
+                            )
                         }.collect(Collectors.toList())
                 }
         }

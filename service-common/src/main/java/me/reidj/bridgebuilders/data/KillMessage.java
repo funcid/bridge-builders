@@ -1,4 +1,4 @@
-package data;
+package me.reidj.bridgebuilders.data;
 
 public enum KillMessage {
     NONE,

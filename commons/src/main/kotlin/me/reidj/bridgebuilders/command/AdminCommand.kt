@@ -6,7 +6,7 @@ import me.reidj.bridgebuilders.getByPlayer
 import me.reidj.bridgebuilders.slots
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
-import packages.SaveUserPackage
+import me.reidj.bridgebuilders.packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 
 class AdminCommand {

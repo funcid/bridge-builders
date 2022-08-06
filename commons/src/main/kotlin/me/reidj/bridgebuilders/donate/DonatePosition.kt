@@ -1,6 +1,6 @@
 package me.reidj.bridgebuilders.donate
 
-import data.Donate
+import me.reidj.bridgebuilders.data.Donate
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.inventory.ItemStack
 

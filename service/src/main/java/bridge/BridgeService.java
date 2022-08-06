@@ -1,6 +1,6 @@
 package bridge;
 
-import packages.*;
+import me.reidj.bridgebuilders.packages.*;
 import ru.cristalix.core.CoreApi;
 import ru.cristalix.core.microservice.MicroServicePlatform;
 import ru.cristalix.core.microservice.MicroserviceBootstrap;
@@ -21,7 +21,7 @@ public class BridgeService {
 
         MicroserviceBootstrap.bootstrap(new MicroServicePlatform(4));
 
-        MongoAdapter mongoAdapter = new MongoAdapter(System.getenv("db_url"), System.getenv("db_data"), "data");
+        MongoAdapter mongoAdapter = new MongoAdapter(System.getenv("db_url"), System.getenv("db_data"), "me/reidj/bridgebuilders/data");
 
         ISocketClient socketClient = ISocketClient.get();
 

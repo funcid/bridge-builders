@@ -4,13 +4,13 @@ import clepto.bukkit.B
 import clepto.cristalix.WorldMeta
 import me.reidj.bridgebuilders.command.AdminCommand
 import me.reidj.bridgebuilders.donate.impl.NameTag
+import me.reidj.bridgebuilders.packages.BulkSaveUserPackage
+import me.reidj.bridgebuilders.packages.SaveUserPackage
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
-import packages.BulkSaveUserPackage
-import packages.SaveUserPackage
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.inventory.IInventoryService
@@ -28,7 +28,7 @@ const val HUB = "HUB-2"
 lateinit var bridgeBuildersInstance: JavaPlugin
 lateinit var getByPlayer: (Player) -> User?
 lateinit var worldMeta: WorldMeta
-lateinit var clientSocket: ISocketClient
+var clientSocket: ISocketClient = ISocketClient.get()
 var slots: Int = System.getenv("SLOT").toInt()
 
 val userMap = mutableMapOf<UUID, User>()
@@ -43,8 +43,6 @@ class BridgeBuildersInstance(
     init {
         bridgeBuildersInstance = plugin
         worldMeta = meta
-
-        clientSocket = ISocketClient.get()
 
         // Регистрация сервисов
         CoreApi.get().apply {
@@ -79,7 +77,7 @@ fun getPrefix(user: User, isTab: Boolean): String {
     permissionService.getBestGroup(user.stat.uuid).thenAccept { group ->
         permissionService.getNameColor(user.stat.uuid).thenApply {
             finalPrefix =
-                (if (user.stat.activeNameTag == data.NameTag.NONE) "" else NameTag.valueOf(user.stat.activeNameTag.name)
+                (if (user.stat.activeNameTag == me.reidj.bridgebuilders.data.NameTag.NONE) "" else NameTag.valueOf(user.stat.activeNameTag.name)
                     .getRare()
                     .getColor() + NameTag.valueOf(user.stat.activeNameTag.name)
                     .getTitle() + "§8 ┃ ") + (if (group.prefix == "") "" else group.nameColor + group.prefix + "§8 ┃ §f") + (it
@@ -89,8 +87,9 @@ fun getPrefix(user: User, isTab: Boolean): String {
     return finalPrefix
 }
 
-fun save(): BulkSaveUserPackage = BulkSaveUserPackage(Bukkit.getOnlinePlayers().map {
-    val uuid = it.uniqueId
-    val user = userMap.remove(uuid)
-    SaveUserPackage(uuid, user?.stat)
-})
+fun save(): BulkSaveUserPackage =
+    BulkSaveUserPackage(Bukkit.getOnlinePlayers().map {
+        val uuid = it.uniqueId
+        val user = userMap.remove(uuid)
+        SaveUserPackage(uuid, user?.stat)
+    })

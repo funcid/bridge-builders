@@ -1,8 +1,8 @@
-package tops;
+package me.reidj.bridgebuilders.tops;
 
 import lombok.Getter;
 import lombok.Setter;
-import user.Stat;
+import me.reidj.bridgebuilders.user.Stat;
 
 @Setter
 @Getter

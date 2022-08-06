@@ -7,7 +7,7 @@ import me.reidj.bridgebuilders.ticker.Ticked
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import packages.SaveUserPackage
+import me.reidj.bridgebuilders.packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 
 /**
@@ -27,7 +27,12 @@ object BanUtil : Ticked {
                 it.stat.realm = ""
                 it.player?.let { player ->
                     it.player?.sendMessage(Formatting.error("Доступ к игре был заблокирован!"))
-                    clientSocket.write(SaveUserPackage(player.uniqueId, it.stat))
+                    clientSocket.write(
+                        SaveUserPackage(
+                            player.uniqueId,
+                            it.stat
+                        )
+                    )
                 }
             }
             if (it.stat.isBan && System.currentTimeMillis().toInt() / 1000 >= it.stat.gameLockTime) {
@@ -36,7 +41,12 @@ object BanUtil : Ticked {
                 it.stat.isBan = false
                 it.player?.let { player ->
                     player.sendMessage(Formatting.fine("Доступ к игре был разблокирован!"))
-                    clientSocket.write(SaveUserPackage(player.uniqueId, it.stat))
+                    clientSocket.write(
+                        SaveUserPackage(
+                            player.uniqueId,
+                            it.stat
+                        )
+                    )
                 }
             }
         }

@@ -1,7 +1,7 @@
 package me.reidj.bridgebuilders
 
 import clepto.bukkit.B
-import data.StarterKit
+import me.reidj.bridgebuilders.data.StarterKit
 import me.func.mod.Anime
 import me.func.mod.conversation.ModTransfer
 import me.reidj.bridgebuilders.listener.BlockHandler

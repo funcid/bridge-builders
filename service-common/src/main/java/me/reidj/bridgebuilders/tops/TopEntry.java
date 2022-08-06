@@ -1,4 +1,4 @@
-package tops;
+package me.reidj.bridgebuilders.tops;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

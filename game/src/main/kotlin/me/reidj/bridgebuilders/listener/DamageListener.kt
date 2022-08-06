@@ -118,7 +118,7 @@ object DamageListener : Listener {
                 it.player?.sendMessage(Formatting.fine("Вы получили §e5 монет §fза убийство."))
             }
             // Создаю гроб, лол
-            if (user.stat.activeCorpse != data.Corpse.NONE) {
+            if (user.stat.activeCorpse != me.reidj.bridgebuilders.data.Corpse.NONE) {
                 val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
                     .marker(true)
                     .invisible(true)

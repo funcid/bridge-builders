@@ -1,23 +1,19 @@
-package packages;
+package me.reidj.bridgebuilders.packages;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import ru.cristalix.core.network.CorePackage;
 
-/**
- * @author Рейдж 03.10.2021
- * @project ThePit
- */
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
-public class GreetingPackage extends CorePackage {
+public class BulkSaveUserPackage extends CorePackage {
 
     // request
-    private final String password;
-    private final String serverName;
+    private final List<SaveUserPackage> packages;
 
     // no response
 }

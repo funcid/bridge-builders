@@ -1,4 +1,4 @@
-package util;
+package me.reidj.bridgebuilders.util;
 
 import lombok.experimental.UtilityClass;
 import ru.cristalix.core.network.packages.GroupData;

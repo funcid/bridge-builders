@@ -1,7 +1,7 @@
 package me.reidj.bridgebuilders.content
 
 import clepto.bukkit.B
-import data.Corpse
+import me.reidj.bridgebuilders.data.Corpse
 import dev.implario.bukkit.item.item
 import me.func.mod.Anime
 import me.func.mod.Glow
@@ -21,7 +21,7 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
-import packages.SaveUserPackage
+import me.reidj.bridgebuilders.packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.network.packages.GetAccountBalancePackage
@@ -70,10 +70,10 @@ object CustomizationNPC {
                     price = pos.getPrice().toLong()
                     val current = has && when (pos) {
                         is me.reidj.bridgebuilders.donate.impl.Corpse -> stat.activeCorpse == Corpse.valueOf(pos.objectName)
-                        is KillMessage -> stat.activeKillMessage == data.KillMessage.valueOf(pos.objectName)
-                        is NameTag -> stat.activeNameTag == data.NameTag.valueOf(pos.objectName)
-                        is StarterKit -> stat.activeKit == data.StarterKit.valueOf(pos.objectName)
-                        is StepParticle -> stat.activeParticle == data.StepParticle.valueOf(pos.objectName)
+                        is KillMessage -> stat.activeKillMessage == me.reidj.bridgebuilders.data.KillMessage.valueOf(pos.objectName)
+                        is NameTag -> stat.activeNameTag == me.reidj.bridgebuilders.data.NameTag.valueOf(pos.objectName)
+                        is StarterKit -> stat.activeKit == me.reidj.bridgebuilders.data.StarterKit.valueOf(pos.objectName)
+                        is StepParticle -> stat.activeParticle == me.reidj.bridgebuilders.data.StepParticle.valueOf(pos.objectName)
                         else -> false
                     }
                     if (!has) price = pos.getPrice().toLong() else hint = "Выбрать"
@@ -85,18 +85,28 @@ object CustomizationNPC {
                             when (pos) {
                                 is me.reidj.bridgebuilders.donate.impl.Corpse -> stat.activeCorpse =
                                     Corpse.valueOf(pos.objectName)
-                                is KillMessage -> stat.activeKillMessage = data.KillMessage.valueOf(pos.objectName)
-                                is NameTag -> stat.activeNameTag = data.NameTag.valueOf(pos.objectName)
-                                is StarterKit -> stat.activeKit = data.StarterKit.valueOf(pos.objectName)
-                                is StepParticle -> stat.activeParticle = data.StepParticle.valueOf(pos.objectName)
+                                is KillMessage -> stat.activeKillMessage = me.reidj.bridgebuilders.data.KillMessage.valueOf(pos.objectName)
+                                is NameTag -> stat.activeNameTag = me.reidj.bridgebuilders.data.NameTag.valueOf(pos.objectName)
+                                is StarterKit -> stat.activeKit = me.reidj.bridgebuilders.data.StarterKit.valueOf(pos.objectName)
+                                is StepParticle -> stat.activeParticle = me.reidj.bridgebuilders.data.StepParticle.valueOf(pos.objectName)
                             }
                             Anime.title(player, "Выбрано!")
-                            clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
+                            clientSocket.write(
+                                SaveUserPackage(
+                                    player.uniqueId,
+                                    user.stat
+                                )
+                            )
                             return@onClick
                         }
                         if (isDonate) {
                             buy(player, (pos.getPrice() * (100.0 - sale) / 100.0).toInt(), pos)
-                            clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
+                            clientSocket.write(
+                                SaveUserPackage(
+                                    player.uniqueId,
+                                    user.stat
+                                )
+                            )
                             return@onClick
                         }
                         if (stat.money < pos.getPrice()) {
@@ -107,7 +117,12 @@ object CustomizationNPC {
                         user.giveMoney(-pos.getPrice(), true)
                         pos.give(user)
                         Glow.animate(player, 0.4, GlowColor.GREEN)
-                        clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
+                        clientSocket.write(
+                            SaveUserPackage(
+                                player.uniqueId,
+                                user.stat
+                            )
+                        )
                     }
                     title = (if (current) "[ Выбрано ]" else if (has) "§7Выбрать" else "§bКупить") + " " + pos.getTitle()
                     description = pos.getDescription()
@@ -269,7 +284,7 @@ object CustomizationNPC {
                     rows = 3
                     columns = 2
                     storage = Achievement.values().map { oldAchievement ->
-                        val achievement = data.Achievement.valueOf(oldAchievement.name)
+                        val achievement = me.reidj.bridgebuilders.data.Achievement.valueOf(oldAchievement.name)
                         val playerHas = user.stat.achievement.contains(achievement)
                         val canGet = oldAchievement.predicate(user)
                         button {
@@ -293,7 +308,12 @@ object CustomizationNPC {
                                 oldAchievement.reward(user)
                                 user.stat.achievement.add(achievement)
                                 player.sendMessage(Formatting.fine("Вы успешно получили награду!"))
-                                clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
+                                clientSocket.write(
+                                    SaveUserPackage(
+                                        user.stat.uuid,
+                                        user.stat
+                                    )
+                                )
                                 B.postpone(5) { user.isArmLock = false }
                             }
                         }
@@ -361,7 +381,12 @@ object CustomizationNPC {
                 Glow.animate(player, 0.4, GlowColor.GREEN)
                 donate.give(user)
                 player.sendMessage(Formatting.fine("Спасибо за поддержку разработчиков!"))
-                clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
+                clientSocket.write(
+                    SaveUserPackage(
+                        player.uniqueId,
+                        user.stat
+                    )
+                )
             }
         }.open(player)
     }

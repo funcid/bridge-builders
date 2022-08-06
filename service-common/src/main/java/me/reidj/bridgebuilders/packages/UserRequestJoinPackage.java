@@ -1,26 +1,23 @@
-package packages;
+package me.reidj.bridgebuilders.packages;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import ru.cristalix.core.network.CorePackage;
-import user.Stat;
 
 import java.util.UUID;
 
-/**
- * @author : Рейдж
- * @project : BridgeBuilders
- **/
-
 @Data
 @EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
 @RequiredArgsConstructor
-public class RejoinPackage extends CorePackage {
+public class UserRequestJoinPackage extends CorePackage {
 
     // request
-    private final UUID uuid;
-    private final Stat stat;
+    private UUID user;
 
-    // no response
+    // response
+    private boolean passed;
+
 }

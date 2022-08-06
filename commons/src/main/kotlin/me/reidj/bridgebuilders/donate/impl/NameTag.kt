@@ -96,7 +96,7 @@ enum class NameTag(private val title: String, private val price: Int, private va
     }
 
     override fun isActive(user: User): Boolean {
-        return user.stat.activeNameTag == data.NameTag.valueOf(name)
+        return user.stat.activeNameTag == me.reidj.bridgebuilders.data.NameTag.valueOf(name)
     }
 
     override fun getName(): String {

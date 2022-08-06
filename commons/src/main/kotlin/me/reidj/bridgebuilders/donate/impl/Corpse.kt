@@ -44,7 +44,7 @@ enum class Corpse(private val title: String, private val price: Int, private val
     }
 
     override fun isActive(user: User): Boolean {
-        return user.stat.activeCorpse == data.Corpse.valueOf(objectName)
+        return user.stat.activeCorpse == me.reidj.bridgebuilders.data.Corpse.valueOf(objectName)
     }
 
     override fun getName(): String {

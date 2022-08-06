@@ -55,7 +55,7 @@ enum class StepParticle(
     }
 
     override fun isActive(user: User): Boolean {
-        return user.stat.activeParticle == data.StepParticle.valueOf(name)
+        return user.stat.activeParticle == me.reidj.bridgebuilders.data.StepParticle.valueOf(name)
     }
 
     override fun getName(): String {

@@ -5,8 +5,8 @@ import me.func.mod.util.after
 import me.func.mod.util.command
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.ticker.detail.BanUtil
-import packages.RejoinPackage
-import packages.SaveUserPackage
+import me.reidj.bridgebuilders.packages.RejoinPackage
+import me.reidj.bridgebuilders.packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
@@ -30,8 +30,18 @@ object PlayerCommands {
             val realm = user.stat.realm
             user.stat.gameExitTime = 0
             user.stat.realm = ""
-            clientSocket.write(SaveUserPackage(player.uniqueId, user.stat))
-            clientSocket.write(RejoinPackage(player.uniqueId, user.stat))
+            clientSocket.write(
+                SaveUserPackage(
+                    player.uniqueId,
+                    user.stat
+                )
+            )
+            clientSocket.write(
+                RejoinPackage(
+                    player.uniqueId,
+                    user.stat
+                )
+            )
             after { Cristalix.transfer(listOf(player.uniqueId), RealmId.of(realm)) }
         }
 

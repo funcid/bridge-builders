@@ -1,22 +1,23 @@
-package packages;
+package me.reidj.bridgebuilders.packages;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import ru.cristalix.core.network.CorePackage;
-import user.Stat;
 
-import java.util.UUID;
+/**
+ * @author Рейдж 03.10.2021
+ * @project ThePit
+ */
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
-public class SaveUserPackage extends CorePackage {
+public class GreetingPackage extends CorePackage {
 
     // request
-    private final UUID user;
-    private final Stat userInfo;
+    private final String password;
+    private final String serverName;
 
     // no response
-
 }

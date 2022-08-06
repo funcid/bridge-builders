@@ -262,7 +262,7 @@ enum class StarterKit(
     }
 
     override fun isActive(user: User): Boolean {
-        return user.stat.activeKit == data.StarterKit.valueOf(name)
+        return user.stat.activeKit == me.reidj.bridgebuilders.data.StarterKit.valueOf(name)
     }
 
     override fun getName() = name

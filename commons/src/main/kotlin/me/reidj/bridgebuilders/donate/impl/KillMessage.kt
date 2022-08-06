@@ -68,7 +68,7 @@ enum class KillMessage(
     }
 
     override fun isActive(user: User): Boolean {
-        return user.stat.activeKillMessage == data.KillMessage.valueOf(name)
+        return user.stat.activeKillMessage == me.reidj.bridgebuilders.data.KillMessage.valueOf(name)
     }
 
     override fun getName(): String {

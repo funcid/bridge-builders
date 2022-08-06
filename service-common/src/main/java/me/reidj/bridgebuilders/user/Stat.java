@@ -1,8 +1,9 @@
-package user;
+package me.reidj.bridgebuilders.user;
 
-import data.*;
+import me.reidj.bridgebuilders.data.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import me.reidj.bridgebuilders.data.*;
 
 import java.util.List;
 import java.util.Set;

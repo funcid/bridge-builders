@@ -1,10 +1,10 @@
-package packages;
+package me.reidj.bridgebuilders.packages;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import me.reidj.bridgebuilders.tops.PlayerTopEntry;
 import ru.cristalix.core.network.CorePackage;
-import tops.PlayerTopEntry;
 
 import java.util.List;
 

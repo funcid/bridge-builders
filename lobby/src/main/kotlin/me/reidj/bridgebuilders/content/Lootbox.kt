@@ -27,7 +27,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
-import packages.SaveUserPackage
+import me.reidj.bridgebuilders.packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 
 private const val LOOT_BOX_PRICE = 192
@@ -138,7 +138,12 @@ class Lootbox : Listener, Ticked {
                 }."
             )
         )
-        clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
+        clientSocket.write(
+            SaveUserPackage(
+                user.stat.uuid,
+                user.stat
+            )
+        )
     }
 
     override fun tick(vararg args: Int) {

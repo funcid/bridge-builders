@@ -5,7 +5,6 @@ import me.func.mod.Anime
 import me.reidj.bridgebuilders.team.Team
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
-import user.Stat
 
 class User(stat: Stat) {
 
