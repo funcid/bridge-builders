@@ -212,10 +212,12 @@ class App : JavaPlugin() {
             }
         }
         userMap.values.forEach {
-            if (!it.player!!.isOnline)
-                clientSocket.write(ResetRejoin(it.stat.uuid))
-            it.stat.realm = ""
-            it.inGame = false
+            it.player?.let { player ->
+                if (!player.isOnline)
+                    clientSocket.write(ResetRejoin(it.stat.uuid))
+                it.stat.realm = ""
+                it.inGame = false
+            }
         }
         userMap.clear()
         Cristalix.transfer(Bukkit.getOnlinePlayers().map { it.uniqueId }, LOBBY_SERVER)

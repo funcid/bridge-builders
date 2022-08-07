@@ -1,5 +1,6 @@
 package me.reidj.bridgebuilders.util
 
+import clepto.bukkit.B
 import me.func.mod.Anime
 import me.func.protocol.EndStatus
 import me.reidj.bridgebuilders.*
@@ -55,7 +56,6 @@ object WinUtil {
                 meta.power = 0
                 firework.fireworkMeta = meta
             }
-            clientSocket.write(SaveUserPackage(it.stat.uuid, it.stat))
         }
         Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.filter { it.player != null }.filter { !isSpectator(it.player!!) }.forEach {
             if (team.players.contains(it.stat.uuid))
@@ -68,6 +68,13 @@ object WinUtil {
                 listOf("Блоков принесено:", "Игроков убито:"),
                 listOf("${it.collectedBlocks}", "${it.kills}")
             )
+        }
+        Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.map { app.getUser(it)!! }.forEach {
+            it.stat.games++
+            if (Math.random() < 0.05) {
+                it.stat.lootbox++
+                B.bc(Formatting.fine("§e${it.player!!.name} §fполучил §bлутбокс§f!"))
+            }
             clientSocket.write(SaveUserPackage(it.stat.uuid, it.stat))
         }
     }
