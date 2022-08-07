@@ -15,6 +15,8 @@ import me.func.mod.conversation.ModLoader
 import me.func.protocol.GlowColor
 import me.reidj.bridgebuilders.listener.*
 import me.reidj.bridgebuilders.map.MapType
+import me.reidj.bridgebuilders.packages.RejoinPackage
+import me.reidj.bridgebuilders.packages.ResetRejoin
 import me.reidj.bridgebuilders.team.Bridge
 import me.reidj.bridgebuilders.team.Team
 import me.reidj.bridgebuilders.user.User
@@ -26,8 +28,6 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
-import me.reidj.bridgebuilders.packages.RejoinPackage
-import me.reidj.bridgebuilders.packages.ResetRejoin
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.datasync.EntityDataParameters
 import ru.cristalix.core.formatting.Color
@@ -215,11 +215,11 @@ class App : JavaPlugin() {
             if (!it.player!!.isOnline)
                 clientSocket.write(ResetRejoin(it.stat.uuid))
             it.stat.realm = ""
+            it.inGame = false
         }
-        save()
+        userMap.clear()
         Cristalix.transfer(Bukkit.getOnlinePlayers().map { it.uniqueId }, LOBBY_SERVER)
         realm.status = RealmStatus.WAITING_FOR_PLAYERS
-        userMap.clear()
         ConnectionHandler.markers.clear()
         BlockHandler.placedBlocks.clear()
         Bukkit.unloadWorld(worldMeta.world, false)

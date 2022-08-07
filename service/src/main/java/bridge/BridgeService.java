@@ -21,7 +21,7 @@ public class BridgeService {
 
         MicroserviceBootstrap.bootstrap(new MicroServicePlatform(4));
 
-        MongoAdapter mongoAdapter = new MongoAdapter(System.getenv("db_url"), System.getenv("db_data"), "me/reidj/bridgebuilders/data");
+        MongoAdapter mongoAdapter = new MongoAdapter(System.getenv("db_url"), System.getenv("db_data"), "data");
 
         ISocketClient socketClient = ISocketClient.get();
 

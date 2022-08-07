@@ -10,6 +10,7 @@ import me.func.mod.util.after
 import me.func.protocol.Marker
 import me.func.protocol.MarkerSign
 import me.reidj.bridgebuilders.*
+import me.reidj.bridgebuilders.packages.SaveUserPackage
 import me.reidj.bridgebuilders.util.DefaultKit
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
@@ -132,11 +133,12 @@ object ConnectionHandler : Listener {
 
     @EventHandler
     fun PlayerQuitEvent.handle() {
-        val allTeams = teams.filter { player.uniqueId in it.players }
+        val uuid = player.uniqueId
+        val allTeams = teams.filter { uuid in it.players }
         if (allTeams.isEmpty())
             return
         val team = allTeams[0]
-        team.players.remove(player.uniqueId)
+        team.players.remove(uuid)
         if (activeStatus == Status.GAME) {
             val user = app.getUser(player)!!
 
@@ -152,6 +154,8 @@ object ConnectionHandler : Listener {
             user.stat.gameExitTime = System.currentTimeMillis().toInt() / 1000 + 300
 
             app.updateNumbersPlayersInTeam()
+
+            clientSocket.write(SaveUserPackage(uuid, user.stat))
         }
     }
 

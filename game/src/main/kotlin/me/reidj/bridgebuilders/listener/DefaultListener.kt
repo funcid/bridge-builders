@@ -8,7 +8,6 @@ import me.reidj.bridgebuilders.team.Team
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -19,8 +18,6 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import ru.cristalix.core.formatting.Formatting
-import java.lang.Math.cos
-import java.lang.Math.sin
 
 object DefaultListener : Listener {
 
@@ -103,20 +100,8 @@ object DefaultListener : Listener {
         if (teams.none { it.players.contains(player.uniqueId) })
             return
         teams.forEach { team ->
-            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 12 && !isSpectator(
-                    player
-                )
-            ) {
-                for (i in 0..60)
-                    player.spawnParticle(
-                        Particle.SPELL_INSTANT,
-                        sin(Math.toRadians(location.x * 6)),
-                        location.x,
-                        cos(Math.toRadians(location.z * 6)),
-                        1
-                    )
+            if (app.getCountBlocksTeam(team) && team.bridge.end.distanceSquared(player.location) < 29 * 12 && !isSpectator(player))
                 player.velocity = team.spawn.toVector().subtract(player.location.toVector()).normalize()
-            }
         }
         // Телепортация на вражескую базу
         if (location.subtract(0.0, 1.0, 0.0).block.type == Material.SEA_LANTERN) {

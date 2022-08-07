@@ -3,10 +3,10 @@ package me.reidj.bridgebuilders.command
 import clepto.bukkit.B
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.getByPlayer
+import me.reidj.bridgebuilders.packages.SaveUserPackage
 import me.reidj.bridgebuilders.slots
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
-import me.reidj.bridgebuilders.packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 
 class AdminCommand {
@@ -36,7 +36,11 @@ class AdminCommand {
             }, "money"
         )
         B.regCommand(
-            adminConsume { _, args -> getByPlayer(Bukkit.getPlayer(args[0]))!!.stat.wins += args[1].toInt() },
+            adminConsume { _, args ->
+                val user = getByPlayer(Bukkit.getPlayer(args[0]))!!
+                user.stat.wins += args[1].toInt()
+                clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
+             },
             "win",
             "wins"
         )

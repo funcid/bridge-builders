@@ -25,6 +25,8 @@ object GlobalListeners : Listener {
 
     @EventHandler
     fun AsyncPlayerPreLoginEvent.handle() {
+        if (userMap.contains(uniqueId))
+            return
         try {
             val statPackage =
                 clientSocket.writeAndAwaitResponse<StatPackage>(
@@ -62,6 +64,51 @@ object GlobalListeners : Listener {
                     true,
                     false
                 )
+
+            if (stat.uuid == null) stat.uuid = uniqueId
+
+            if (stat.realm == null) stat.realm = ""
+
+            if (stat.donate == null) stat.donate = ArrayList()
+
+            if (stat.donates == null) stat.donates = HashSet()
+
+            if (stat.achievement == null) stat.achievement = ArrayList()
+
+            if (stat.activeKillMessage == null) stat.activeKillMessage = KillMessage.NONE
+
+            if (stat.activeParticle == null) stat.setActiveParticle(me.reidj.bridgebuilders.data.StepParticle.NONE)
+
+            if (stat.activeNameTag == null) stat.activeNameTag = NameTag.NONE
+
+            if (stat.activeCorpse == null) stat.activeCorpse = Corpse.NONE
+
+            if (stat.activeKit == null) stat.activeKit = StarterKit.NONE
+
+            if (stat.isApprovedResourcepack == null) stat.isApprovedResourcepack = true
+
+            if (stat.isBan == null) stat.isBan = false
+
+            if (stat.gameLockTime == null) stat.gameLockTime = 0
+
+            if (stat.banTime == null) stat.banTime = 0.0
+
+            if (stat.leaveTime == null) stat.leaveTime = 0.0
+
+            if (stat.timePlayedTotal == null) stat.timePlayedTotal = 0L
+
+            if (stat.gameExitTime == null) stat.gameExitTime = 0
+
+            if (stat.dailyClaimTimestamp == null) stat.dailyClaimTimestamp = 0L
+
+            if (stat.lastEnter == null) stat.lastEnter = 0L
+
+            if (stat.dailyTimestamp == null) stat.dailyTimestamp = 0.0
+
+            if (stat.lastEnterTime == null) stat.lastEnterTime = 0.0
+
+            if (stat.rewardStreak == null) stat.rewardStreak = 0
+
             userMap[uniqueId] = User(stat)
         } catch (ex: Exception) {
             userMap.remove(uniqueId)
@@ -74,7 +121,7 @@ object GlobalListeners : Listener {
     @EventHandler
     fun PlayerQuitEvent.handle() {
         val uuid = player.uniqueId
-        val user = userMap.remove(uuid) ?: return
+        val user = userMap[uuid] ?: return
         if (!user.inGame)
             userMap.remove(uuid)
         clientSocket.write(SaveUserPackage(uuid, user.stat))
