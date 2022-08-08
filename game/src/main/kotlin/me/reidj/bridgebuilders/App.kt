@@ -204,13 +204,6 @@ class App : JavaPlugin() {
     }
 
     fun restart() {
-        Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.map { app.getUser(it)!! }.forEach {
-            it.stat.games++
-            if (Math.random() < 0.05) {
-                it.stat.lootbox++
-                B.bc(ru.cristalix.core.formatting.Formatting.fine("§e${it.player!!.name} §fполучил §bлутбокс§f!"))
-            }
-        }
         userMap.values.forEach {
             it.player?.let { player ->
                 if (!player.isOnline)

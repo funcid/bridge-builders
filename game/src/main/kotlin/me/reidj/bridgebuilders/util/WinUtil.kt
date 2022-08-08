@@ -56,6 +56,7 @@ object WinUtil {
                 meta.power = 0
                 firework.fireworkMeta = meta
             }
+            clientSocket.write(SaveUserPackage(it.stat.uuid, it.stat))
         }
         Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.filter { it.player != null }.filter { !isSpectator(it.player!!) }.forEach {
             if (team.players.contains(it.stat.uuid))
@@ -68,6 +69,7 @@ object WinUtil {
                 listOf("Блоков принесено:", "Игроков убито:"),
                 listOf("${it.collectedBlocks}", "${it.kills}")
             )
+            clientSocket.write(SaveUserPackage(it.stat.uuid, it.stat))
         }
         Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.map { app.getUser(it)!! }.forEach {
             it.stat.games++
