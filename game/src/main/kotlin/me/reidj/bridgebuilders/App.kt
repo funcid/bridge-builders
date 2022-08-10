@@ -1,7 +1,6 @@
 package me.reidj.bridgebuilders
 
 import clepto.bukkit.B
-import clepto.cristalix.Cristalix
 import com.google.common.collect.Maps
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.platform.impl.darkpaper.PlatformDarkPaper
@@ -16,7 +15,6 @@ import me.func.protocol.GlowColor
 import me.reidj.bridgebuilders.listener.*
 import me.reidj.bridgebuilders.map.MapType
 import me.reidj.bridgebuilders.packages.RejoinPackage
-import me.reidj.bridgebuilders.packages.ResetRejoin
 import me.reidj.bridgebuilders.team.Bridge
 import me.reidj.bridgebuilders.team.Team
 import me.reidj.bridgebuilders.user.User
@@ -204,16 +202,7 @@ class App : JavaPlugin() {
     }
 
     fun restart() {
-        userMap.values.forEach {
-            it.player?.let { player ->
-                if (!player.isOnline)
-                    clientSocket.write(ResetRejoin(it.stat.uuid))
-                it.stat.realm = ""
-                it.inGame = false
-            }
-        }
         userMap.clear()
-        Cristalix.transfer(Bukkit.getOnlinePlayers().map { it.uniqueId }, LOBBY_SERVER)
         realm.status = RealmStatus.WAITING_FOR_PLAYERS
         ConnectionHandler.markers.clear()
         BlockHandler.placedBlocks.clear()

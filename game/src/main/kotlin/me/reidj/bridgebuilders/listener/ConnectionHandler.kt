@@ -147,11 +147,11 @@ object ConnectionHandler : Listener {
             player.openInventory.topInventory.filterNotNull().forEach { DamageListener.removeItems(user, it) }
 
             user.stat.realm = IRealmService.get().currentRealmInfo.realmId.realmName
+            user.stat.gameExitTime = (System.currentTimeMillis() / 1000 + 300).toInt()
 
             user.team = team
             user.inventory = player.inventory
             user.exp = player.exp
-            user.stat.gameExitTime = System.currentTimeMillis().toInt() / 1000 + 300
 
             app.updateNumbersPlayersInTeam()
 

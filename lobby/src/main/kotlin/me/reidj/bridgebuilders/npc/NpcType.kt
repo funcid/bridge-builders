@@ -30,7 +30,7 @@ enum class NpcType(
         "4x2",
         "",
         "two",
-        "b01a9b37-a632-11e8-8374-1cb72caa35fd",
+        "bf30a1df-85de-11e8-a6de-1cb72caa35fd",
         90f,
         createBanner(worldMeta.getLabel("two"), 40, 0.62, 60, 0.5,5.0, -90.0, false)
     ),

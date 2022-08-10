@@ -160,6 +160,9 @@ object LobbyHandler : Listener {
     fun BlockPlaceEvent.handle() = apply { cancel = true }
 
     @EventHandler
+    fun PlayerPickupItemEvent.handle() { isCancelled = true }
+
+    @EventHandler
     fun PlayerDropItemEvent.handle() = apply { cancel = true }
 
     @EventHandler

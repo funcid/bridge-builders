@@ -75,8 +75,6 @@ object BlockHandler : Listener {
             B.bc(" ")
 
             WinUtil.end(winner)
-
-            B.postpone(5 * 20) { app.restart() }
             return
         }
         if (block.type == Material.IRON_ORE) {

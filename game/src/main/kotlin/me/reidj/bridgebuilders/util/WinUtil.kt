@@ -1,7 +1,9 @@
 package me.reidj.bridgebuilders.util
 
 import clepto.bukkit.B
+import clepto.cristalix.Cristalix
 import me.func.mod.Anime
+import me.func.mod.util.after
 import me.func.protocol.EndStatus
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.packages.SaveUserPackage
@@ -71,13 +73,22 @@ object WinUtil {
             )
             clientSocket.write(SaveUserPackage(it.stat.uuid, it.stat))
         }
-        Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.map { app.getUser(it)!! }.forEach {
-            it.stat.games++
+        Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.forEach {
+            val user = app.getUser(it)!!
+            user.stat.games++
+            user.stat.realm = ""
+            user.inGame = false
             if (Math.random() < 0.05) {
-                it.stat.lootbox++
+                user.stat.lootbox++
                 B.bc(Formatting.fine("§e${it.player!!.name} §fполучил §bлутбокс§f!"))
             }
-            clientSocket.write(SaveUserPackage(it.stat.uuid, it.stat))
+            clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
+            after(3 * 20) {
+                Bukkit.getOnlinePlayers().forEach { player ->
+                    Cristalix.transfer(listOf(player.uniqueId), LOBBY_SERVER)
+                }
+            }
+            after(5 * 20) { app.restart() }
         }
     }
 }
