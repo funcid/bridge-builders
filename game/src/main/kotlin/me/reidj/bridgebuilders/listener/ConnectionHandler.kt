@@ -37,37 +37,38 @@ object ConnectionHandler : Listener {
     val markers = mutableListOf<Marker>()
 
     @EventHandler
-    fun PlayerJoinEvent.handle() = player.run {
+    fun PlayerJoinEvent.handle() {
+        val uuid = player.uniqueId
         // Чтобы /spec и /rejoin работали
         if (activeStatus == Status.STARTING && Bukkit.getOnlinePlayers().size > slots) {
-            Cristalix.transfer(listOf(uniqueId), LOBBY_SERVER)
-            return@run
+            Cristalix.transfer(listOf(uuid), LOBBY_SERVER)
+            return
         }
 
-        val user = app.getUser(uniqueId)
+        val user = app.getUser(uuid)
 
         if (user == null) {
-            sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
+            player.sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
             after(10) { Cristalix.transfer(setOf(player.uniqueId), LOBBY_SERVER) }
-            return@run
+            return
         }
 
         if (user.stat.isBan || user.stat.gameExitTime > 0 || user.stat.gameLockTime > 0) {
-            sendMessage(Formatting.error("На Вас наложена временная блокировка или Вы не закончили прошлую игру!"))
+            player.sendMessage(Formatting.error("На Вас наложена временная блокировка или Вы не закончили прошлую игру!"))
             after(10) { Cristalix.transfer(setOf(player.uniqueId), LOBBY_SERVER) }
-            return@run
+            return
         }
 
-        inventory.clear()
+        player.inventory.clear()
 
         after(15) {
             user.player = player
-            ModLoader.send("mod-bundle-1.0-SNAPSHOT.jar", this)
+            ModLoader.send("mod-bundle-1.0-SNAPSHOT.jar", player)
             // Создание маркера
             teams.forEach {
                 markers.add(
                     Anime.marker(
-                        this,
+                        player,
                         Marker(
                             UUID.randomUUID(),
                             it.teleport.x + 0.5,
@@ -85,7 +86,7 @@ object ConnectionHandler : Listener {
                 B.repeat(15) {
                     up = !up
                     Anime.moveMarker(
-                        this,
+                        player,
                         marker.uuid,
                         marker.x,
                         marker.y - if (up) 0.0 else 0.7,
@@ -98,11 +99,11 @@ object ConnectionHandler : Listener {
 
         if (activeStatus == Status.STARTING) {
             after(15) {
-                teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
-                gameMode = GameMode.ADVENTURE
-                inventory.setItem(8, back)
+                player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5))
+                player.gameMode = GameMode.ADVENTURE
+                player.inventory.setItem(8, back)
                 teams.forEach {
-                    inventory.addItem(
+                    player.inventory.addItem(
                         Items.builder()
                             .displayName("Выбрать команду: " + it.color.chatFormat + it.color.teamName)
                             .type(Material.WOOL)
@@ -113,20 +114,20 @@ object ConnectionHandler : Listener {
             }
         } else {
             if (user.inGame) {
-                teams.filter { it.spawn == user.team!!.spawn }[0].players.add(uniqueId)
+                teams.filter { it.spawn == user.team!!.spawn }[0].players.add(uuid)
                 B.postpone(15) {
                     DefaultKit.init(player)
                     ModTransfer().send("bridge:start", player)
                     app.updateNumbersPlayersInTeam()
-                    Anime.timer(this, "Конец игры через", activeStatus.lastSecond - timer.time % 20)
-                    Anime.sendEmptyBuffer("online:hide", this)
+                    Anime.timer(player, "Конец игры через", activeStatus.lastSecond - timer.time % 20)
+                    Anime.sendEmptyBuffer("online:hide", player)
                     user.inventory!!.forEachIndexed { index, itemStack -> player.inventory.setItem(index, itemStack) }
                     player.exp = user.exp
                 }
             } else {
-                after(15) { teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
-                gameMode = GameMode.SPECTATOR
-                Bukkit.getOnlinePlayers().forEach { it.hidePlayer(app, this) }
+                after(15) { player.teleport(worldMeta.getLabel("spawn").clone().add(0.5, 0.0, 0.5)) }
+                player.gameMode = GameMode.SPECTATOR
+                Bukkit.getOnlinePlayers().forEach { it.hidePlayer(app, player) }
             }
         }
     }
@@ -140,7 +141,7 @@ object ConnectionHandler : Listener {
         val team = allTeams[0]
         team.players.remove(uuid)
         if (activeStatus == Status.GAME) {
-            val user = app.getUser(player)!!
+            val user = app.getUser(player) ?: return
 
             player.inventory.filterNotNull().forEach { DamageListener.removeItems(user, it) }
             DamageListener.removeItems(user, player.itemOnCursor)

@@ -28,10 +28,7 @@ object GlobalListeners : Listener {
         if (userMap.contains(uniqueId))
             return
         try {
-            val statPackage =
-                clientSocket.writeAndAwaitResponse<StatPackage>(
-                    StatPackage(uniqueId)
-                )[3L, TimeUnit.SECONDS]
+            val statPackage = clientSocket.writeAndAwaitResponse<StatPackage>(StatPackage(uniqueId)).get(5, TimeUnit.SECONDS)
             var stat = statPackage.stat
             if (stat == null)
                 stat = Stat(
@@ -112,7 +109,7 @@ object GlobalListeners : Listener {
             userMap[uniqueId] = User(stat)
         } catch (ex: Exception) {
             userMap.remove(uniqueId)
-            disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Сейчас нельзя зайти на этот сервер");
+            disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Нам не удалось загрузить Вашу статистику")
             loginResult = AsyncPlayerPreLoginEvent.Result.KICK_OTHER;
             ex.printStackTrace()
         }

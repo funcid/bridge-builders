@@ -51,11 +51,11 @@ enum class Achievement(
         repeat(20) { user.stat.lootbox++ }
         user.giveMoney(8192, true)
     }),
-    GAMER("Игрок", "§7Сыграть 10 игр\n§f + §e128 монет", { it.stat.games >= 10 }, {
-        it.giveMoney(128, true)
-    }),
-    GLADIATOR("Гладиатор", "§7Сыграть 100 игр\n§f + §e64 монеты", { it.stat.games >= 100 }, {
+    GAMER("Игрок", "§7Сыграть 10 игр\n§f + §e64 монеты", { it.stat.games >= 10 }, {
         it.giveMoney(64, true)
+    }),
+    GLADIATOR("Гладиатор", "§7Сыграть 100 игр\n§f + §e128 монет", { it.stat.games >= 100 }, {
+        it.giveMoney(128, true)
     }),
     MAXIMUS(
         "Максимус",

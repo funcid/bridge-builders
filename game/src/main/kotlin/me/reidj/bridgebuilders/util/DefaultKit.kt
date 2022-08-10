@@ -22,7 +22,10 @@ object DefaultKit {
     val bread = ItemStack(Material.BREAD, 32)
 
     fun init(player: Player) {
-        val playerTeam = teams.filter { it.players.contains(player.uniqueId) }[0]
+        val allTeams = teams.filter { it.players.contains(player.uniqueId) }
+        if (allTeams.isEmpty())
+            return
+        val playerTeam = allTeams[0]
         val user = app.getUser(player)!!
 
         if (slots == 8)
