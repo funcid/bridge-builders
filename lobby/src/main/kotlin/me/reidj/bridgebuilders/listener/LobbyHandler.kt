@@ -74,7 +74,14 @@ object LobbyHandler : Listener {
             player.teleport(spawn)
     }
 
-    private val reconnect = Reconnect(300) { it.performCommand("rejoin") }
+    private val reconnect = Reconnect(300) {
+        val user = app.getUser(it) ?: return@Reconnect
+        if (user.isArmLock)
+            return@Reconnect
+        user.isArmLock = true
+        it.performCommand("rejoin")
+        after(5) { user.isArmLock = false }
+    }
 
     @EventHandler
     fun PlayerJoinEvent.handle() {
@@ -160,7 +167,9 @@ object LobbyHandler : Listener {
     fun BlockPlaceEvent.handle() = apply { cancel = true }
 
     @EventHandler
-    fun PlayerPickupItemEvent.handle() { isCancelled = true }
+    fun PlayerPickupItemEvent.handle() {
+        isCancelled = true
+    }
 
     @EventHandler
     fun PlayerDropItemEvent.handle() = apply { cancel = true }
