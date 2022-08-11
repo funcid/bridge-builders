@@ -167,7 +167,8 @@ object GlobalListeners : Listener {
     fun PlayerMoveEvent.handle() {
         if (isSpectator(player))
             return
-        val particle = getByPlayer(player)?.stat?.activeParticle
+        val user = getByPlayer(player) ?: return
+        val particle = user.stat.activeParticle
         if (particle != me.reidj.bridgebuilders.data.StepParticle.NONE && player.world != null && player != null && player.location != null) {
             val location = player.location
             player.world.spawnParticle(
