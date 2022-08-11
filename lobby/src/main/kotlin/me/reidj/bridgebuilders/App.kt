@@ -66,11 +66,6 @@ class App : JavaPlugin() {
 
         BridgeBuildersInstance(this, { getUser(it) }, MapLoader.load("LOBB2"))
 
-        // Подкючение к Netty сервису / Управляет конфигами, кастомными пакетами, всей data
-        val bridgeServiceHost: String = getEnv("BRIDGE_SERVICE_HOST", "127.0.0.1")
-        val bridgeServicePort: Int = getEnv("BRIDGE_SERVICE_PORT", "14653").toInt()
-        val bridgeServicePassword: String = getEnv("BRIDGE_SERVICE_PASSWORD", "12345")
-
         CoreApi.get().registerService(IRenderService::class.java, BukkitRenderService(getServer()))
 
         // Конфигурация реалма

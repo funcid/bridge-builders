@@ -14,7 +14,6 @@ import me.func.mod.conversation.ModLoader
 import me.func.protocol.GlowColor
 import me.reidj.bridgebuilders.listener.*
 import me.reidj.bridgebuilders.map.MapType
-import me.reidj.bridgebuilders.packages.RejoinPackage
 import me.reidj.bridgebuilders.team.Bridge
 import me.reidj.bridgebuilders.team.Team
 import me.reidj.bridgebuilders.user.User
@@ -31,7 +30,6 @@ import ru.cristalix.core.datasync.EntityDataParameters
 import ru.cristalix.core.formatting.Color
 import ru.cristalix.core.karma.IKarmaService
 import ru.cristalix.core.karma.KarmaService
-import ru.cristalix.core.network.Capability
 import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
@@ -63,15 +61,6 @@ class App : JavaPlugin() {
         EntityDataParameters.register()
 
         CoreApi.get().registerService(IKarmaService::class.java, KarmaService(ISocketClient.get()))
-
-        clientSocket.registerCapability(
-            Capability.builder()
-                .className(RejoinPackage::class.java.name)
-                .notification(true)
-                .build()
-        )
-
-        clientSocket.addListener(RejoinPackage::class.java) { _, pckg -> getUser(pckg.uuid)?.stat = pckg.stat }
 
         map = MapType.values().random()
 

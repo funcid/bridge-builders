@@ -43,14 +43,6 @@ public class BridgeService {
                 Capability.builder()
                         .className(TopPackage.class.getName())
                         .notification(true)
-                        .build(),
-                Capability.builder()
-                        .className(ResetRejoin.class.getName())
-                        .notification(true)
-                        .build(),
-                Capability.builder()
-                        .className(RejoinPackage.class.getName())
-                        .notification(true)
                         .build()
                 );
 
@@ -75,11 +67,5 @@ public class BridgeService {
                     pckg.setEntries(res);
                     socketClient.forward(channel, pckg);
                 })));
-        socketClient.addListener(ResetRejoin.class, ((channel, pckg) -> mongoAdapter.find(pckg.getUuid()).thenAccept(stat -> {
-            stat.setRealm("");
-            pckg.setStat(stat);
-            mongoAdapter.save(stat);
-        })));
-        //socketClient.addListener(RejoinPackage.class, ((channel, pckg) -> broadcast(pckg)));
     }
 }
