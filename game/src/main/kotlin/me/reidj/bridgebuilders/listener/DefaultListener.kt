@@ -5,10 +5,10 @@ import clepto.cristalix.Cristalix
 import me.func.mod.Anime
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.team.Team
-import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.FoodLevelChangeEvent
@@ -43,9 +43,7 @@ object DefaultListener : Listener {
                             it.inventory.heldItemSlot == prevTeamIndex || it.inventory.heldItemSlot == teams.indexOf(
                                 team
                             )
-                        }
-                        .mapNotNull { app.getUser(it) }
-                        .forEach { showTeamList(it) }
+                        }.forEach { showTeamList(it) }
                     player.sendMessage(Formatting.fine("Вы выбрали команду: " + team.color.chatFormat + team.color.teamName))
                 }
             } else if (material == Material.CLAY_BALL)
@@ -59,7 +57,7 @@ object DefaultListener : Listener {
             return
         val newItem = player.inventory.getItem(newSlot)
         if (newItem != player.inventory.getItem(previousSlot))
-            B.postpone(1) { app.getUser(player)?.let { showTeamList(it) } }
+            B.postpone(1) { showTeamList(player) }
     }
 
     @EventHandler
@@ -68,12 +66,12 @@ object DefaultListener : Listener {
     @EventHandler
     fun FoodLevelChangeEvent.handle() = apply { if (activeStatus == Status.STARTING) level = 20 }
 
-    private fun showTeamList(user: User) {
+    private fun showTeamList(player: Player) {
         if (slots > 16)
             return
 
-        val teamIndex = user.player!!.inventory.heldItemSlot
-        val item = user.player!!.inventory.getItem(teamIndex)
+        val teamIndex = player.inventory.heldItemSlot
+        val item = player.inventory.getItem(teamIndex)
 
         val template = me.func.mod.conversation.ModTransfer().integer(teamIndex)
 
@@ -86,7 +84,7 @@ object DefaultListener : Listener {
                 template.string(if (it < slots / teams.size - players.size) " §7..." else "")
             }
         }
-        template.send("bridge:team", user.player)
+        template.send("bridge:team", player)
     }
 
     @EventHandler

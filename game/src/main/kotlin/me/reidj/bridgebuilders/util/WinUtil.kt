@@ -74,7 +74,7 @@ object WinUtil {
             clientSocket.write(SaveUserPackage(it.stat.uuid, it.stat))
         }
         Bukkit.getOnlinePlayers().filter { !isSpectator(it) }.forEach {
-            val user = app.getUser(it)!!
+            val user = app.getUser(it) ?: return@forEach
             user.stat.games++
             user.stat.realm = ""
             user.inGame = false
@@ -84,6 +84,7 @@ object WinUtil {
             }
             clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
             after(3 * 20) {
+                userMap.clear()
                 Bukkit.getOnlinePlayers().forEach { player ->
                     Cristalix.transfer(listOf(player.uniqueId), LOBBY_SERVER)
                 }
