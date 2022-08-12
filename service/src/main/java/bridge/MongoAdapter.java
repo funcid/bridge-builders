@@ -7,6 +7,7 @@ import com.mongodb.async.client.MongoClients;
 import com.mongodb.async.client.MongoCollection;
 import com.mongodb.client.model.*;
 import com.mongodb.session.ClientSession;
+import lombok.Getter;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import me.reidj.bridgebuilders.packages.TopPackage;
@@ -29,10 +30,9 @@ public class MongoAdapter {
 
 	private static final UpdateOptions UPSERT = new UpdateOptions().upsert(true);
 
+	@Getter
 	private final MongoCollection<Document> data;
 	private final ClientSession session;
-
-	private final AtomicBoolean connected = new AtomicBoolean(false);
 
 	public MongoAdapter(String dbUrl, String database, String collection) {
 		CompletableFuture<ClientSession> future = new CompletableFuture<>();
