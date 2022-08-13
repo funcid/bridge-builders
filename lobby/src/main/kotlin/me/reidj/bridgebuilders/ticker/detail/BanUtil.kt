@@ -3,11 +3,11 @@ package me.reidj.bridgebuilders.ticker.detail
 import implario.humanize.Humanize
 import me.reidj.bridgebuilders.app
 import me.reidj.bridgebuilders.clientSocket
+import me.reidj.bridgebuilders.packages.SaveUserPackage
 import me.reidj.bridgebuilders.ticker.Ticked
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import me.reidj.bridgebuilders.packages.SaveUserPackage
 import ru.cristalix.core.formatting.Formatting
 
 /**
@@ -20,8 +20,8 @@ object BanUtil : Ticked {
         if (args[0] % 20 != 0)
             return
         Bukkit.getOnlinePlayers().mapNotNull { app.getUser(it) }.forEach {
-            if (it.stat.gameExitTime > 0 && !it.stat.isBan && System.currentTimeMillis().toInt() / 1000 >= it.stat.gameExitTime) {
-                it.stat.gameLockTime = System.currentTimeMillis().toInt() / 1000 + 1800
+            if (it.stat.gameExitTime > 0 && !it.stat.isBan && (System.currentTimeMillis() / 1000).toInt() >= it.stat.gameExitTime) {
+                it.stat.gameLockTime = (System.currentTimeMillis() / 1000 + 1800).toInt()
                 it.stat.isBan = true
                 it.stat.gameExitTime = 0
                 it.stat.realm = ""
@@ -35,7 +35,7 @@ object BanUtil : Ticked {
                     )
                 }
             }
-            if (it.stat.isBan && System.currentTimeMillis().toInt() / 1000 >= it.stat.gameLockTime) {
+            if (it.stat.isBan && (System.currentTimeMillis() / 1000).toInt() >= it.stat.gameLockTime) {
                 it.stat.realm = ""
                 it.stat.gameLockTime = 0
                 it.stat.isBan = false
@@ -58,7 +58,7 @@ object BanUtil : Ticked {
                 Formatting.fine(
                     "До разблокировки §3${
                         convertSecond(
-                            (user.stat.gameLockTime - System.currentTimeMillis().toInt() / 1000)
+                            (user.stat.gameLockTime - (System.currentTimeMillis() / 1000)).toInt()
                         )
                     }§f."
                 )
