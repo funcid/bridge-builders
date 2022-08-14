@@ -1,9 +1,9 @@
 package me.reidj.bridgebuilders
 
 import clepto.bukkit.B
-import me.reidj.bridgebuilders.data.StarterKit
 import me.func.mod.Anime
 import me.func.mod.conversation.ModTransfer
+import me.reidj.bridgebuilders.data.StarterKit
 import me.reidj.bridgebuilders.listener.BlockHandler
 import me.reidj.bridgebuilders.team.Team
 import me.reidj.bridgebuilders.util.DefaultKit
@@ -58,7 +58,7 @@ enum class Status(val lastSecond: Int, val now: (Int) -> Int) {
                     app.updateNumbersPlayersInTeam()
 
                     team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach uuid@{
-                        val user = app.getUser(it)!!
+                        val user = app.getUser(it) ?: return@forEach
 
                         user.inGame = true
 

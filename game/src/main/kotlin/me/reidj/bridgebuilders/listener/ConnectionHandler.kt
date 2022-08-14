@@ -22,8 +22,6 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.item.Items
-import ru.cristalix.core.permissions.IPermissionService
-import ru.cristalix.core.permissions.StaffGroups
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmStatus
 import java.util.*
@@ -142,8 +140,11 @@ object ConnectionHandler : Listener {
             return
         val team = allTeams[0]
         team.players.remove(uuid)
-        if (activeStatus == Status.GAME) {
+        if (activeStatus == Status.GAME && !isSpectator(player)) {
             val user = app.getUser(player) ?: return
+
+            if (!user.inGame)
+                return
 
             player.inventory.filterNotNull().forEach { DamageListener.removeItems(user, it) }
             DamageListener.removeItems(user, player.itemOnCursor)
@@ -151,8 +152,7 @@ object ConnectionHandler : Listener {
 
             user.stat.realm = IRealmService.get().currentRealmInfo.realmId.realmName
 
-            if (IPermissionService.get().getStaffGroup(user.stat.uuid).get().priority < 2600)
-                user.stat.gameExitTime = (System.currentTimeMillis() / 1000 + 300).toInt()
+            user.stat.gameExitTime = (System.currentTimeMillis() / 1000 + 300).toInt()
 
             user.team = team
             user.inventory = player.inventory

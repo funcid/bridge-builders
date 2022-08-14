@@ -70,7 +70,7 @@ fun getEnv(name: String, defaultValue: String): String {
     return field
 }
 
-fun isSpectator(player: Player): Boolean = player.gameMode == GameMode.SPECTATOR
+fun isSpectator(player: Player) = player.gameMode == GameMode.SPECTATOR
 
 fun getPrefix(user: User, isTab: Boolean): String {
     var finalPrefix = ""
