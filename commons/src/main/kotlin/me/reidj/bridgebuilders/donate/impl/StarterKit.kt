@@ -8,6 +8,7 @@ import me.reidj.bridgebuilders.donate.Rare.*
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Material
 import org.bukkit.Material.*
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
@@ -86,12 +87,12 @@ enum class StarterKit(
         EPIC,
         DIAMOND_SWORD,
         "weapons:steel_axe",
-        "§bАлмазный нагрудник, Алмазные ботинки, Алмазная кирка, Алмазный топор, Стейк х16",
+        "§bАлмазный нагрудник (Защита III), Алмазные ботинки, Алмазная кирка, Алмазный топор (Острота II), Стейк х16",
         arrayOf(
-            ItemStack(DIAMOND_CHESTPLATE),
+            createEnchantItem(ItemStack(DIAMOND_CHESTPLATE), Enchantment.PROTECTION_ENVIRONMENTAL to 3),
             ItemStack(DIAMOND_BOOTS),
             ItemStack(DIAMOND_PICKAXE),
-            ItemStack(DIAMOND_AXE),
+            createEnchantItem(ItemStack(DIAMOND_AXE), Enchantment.DAMAGE_ALL to 2),
             ItemStack(COOKED_BEEF, 16)
         )
     ),
@@ -101,7 +102,7 @@ enum class StarterKit(
         EPIC,
         IRON_SWORD,
         "weapons_other:42",
-        "§bЗелье невидимости х2, Зелье скорости I x2, Лук, Стрелы х32, Каменный меч, Стейк х12, Удочка, Кольчужный сет",
+        "§bЗелье невидимости х2, Зелье скорости I x2, Лук, Стрелы х32, Каменный меч, Стейк х12, Удочка, Кольчужный сет (Защита I)",
         arrayOf(
             createPotion(PotionEffectType.INVISIBILITY, true, 15, 0, 2, "невидимости"),
             createPotion(PotionEffectType.SPEED, true, 60, 0, 2, "скорости"),
@@ -110,10 +111,10 @@ enum class StarterKit(
             ItemStack(STONE_SWORD),
             ItemStack(COOKED_BEEF, 12),
             ItemStack(FISHING_ROD),
-            ItemStack(CHAINMAIL_HELMET),
-            ItemStack(CHAINMAIL_CHESTPLATE),
-            ItemStack(CHAINMAIL_LEGGINGS),
-            ItemStack(CHAINMAIL_BOOTS)
+            createEnchantItem(ItemStack(CHAINMAIL_HELMET), Enchantment.PROTECTION_ENVIRONMENTAL to 1),
+            createEnchantItem(ItemStack(CHAINMAIL_CHESTPLATE), Enchantment.PROTECTION_ENVIRONMENTAL to 1),
+            createEnchantItem(ItemStack(CHAINMAIL_LEGGINGS), Enchantment.PROTECTION_ENVIRONMENTAL to 1),
+            createEnchantItem(ItemStack(CHAINMAIL_BOOTS), Enchantment.PROTECTION_ENVIRONMENTAL to 1),
         )
     ),
     HEALER(
@@ -134,24 +135,22 @@ enum class StarterKit(
         )
     ),
     ENCHANTER(
-        "Зачарователь",
+        "Репликон",
         4096,
         LEGENDARY,
         CLAY_BALL,
         "skyblock:yield",
-        "§bКниги х16, Наковальня, Книжные полки х18, Стол зачарования, Бутыльки опыта х256, Блоки лазурита х7, Хлеб х16",
+        "Золотой сет, Золотой меч, Золотая морковка х16, Золотая кирка (Эффективность II), Золотой топор (Эффективность II), Золотая лопата (Эффективность 4)",
         arrayOf(
-            ItemStack(BOOK, 16),
-            ItemStack(ANVIL),
-            ItemStack(BOOKSHELF, 18),
-            ItemStack(ENCHANTMENT_TABLE),
-            ItemStack(EXP_BOTTLE, 64),
-            ItemStack(EXP_BOTTLE, 64),
-            ItemStack(EXP_BOTTLE, 64),
-            ItemStack(EXP_BOTTLE, 64),
-            ItemStack(EXP_BOTTLE, 32),
-            ItemStack(LAPIS_BLOCK, 7),
-            ItemStack(BREAD, 16)
+            ItemStack(GOLD_HELMET),
+            ItemStack(GOLD_CHESTPLATE),
+            ItemStack(GOLD_LEGGINGS),
+            ItemStack(GOLD_BOOTS),
+            ItemStack(GOLD_SWORD),
+            ItemStack(GOLDEN_CARROT, 16),
+            createEnchantItem(ItemStack(GOLD_PICKAXE), Enchantment.DIG_SPEED to 3),
+            createEnchantItem(ItemStack(GOLD_AXE), Enchantment.DIG_SPEED to 3),
+            createEnchantItem(ItemStack(GOLD_SPADE), Enchantment.DIG_SPEED to 4),
         )
     ),
     LUCIFER(
@@ -160,15 +159,15 @@ enum class StarterKit(
         LEGENDARY,
         IRON_SWORD,
         "bridgebuilders:lucifer",
-        "§bОбсидиан х8, Алмазная кирка, Алмазный меч, Железный сет, Зелье огнеустойкости х2, Золотая морковка х10",
+        "§bОбсидиан х8, Алмазная кирка, Алмазный меч, Железный сет (Шипы I, Огнеупорность II), Зелье огнеустойкости х2, Золотая морковка х10",
         arrayOf(
             ItemStack(OBSIDIAN, 8),
             ItemStack(DIAMOND_PICKAXE),
             ItemStack(DIAMOND_SWORD),
-            ItemStack(IRON_HELMET),
-            ItemStack(IRON_CHESTPLATE),
-            ItemStack(IRON_LEGGINGS),
-            ItemStack(IRON_BOOTS),
+            createEnchantItem(ItemStack(IRON_HELMET), Enchantment.THORNS to 1, Enchantment.PROTECTION_FIRE to 2 ),
+            createEnchantItem(ItemStack(IRON_CHESTPLATE), Enchantment.THORNS to 1, Enchantment.PROTECTION_FIRE to 2 ),
+            createEnchantItem(ItemStack(IRON_LEGGINGS), Enchantment.THORNS to 1, Enchantment.PROTECTION_FIRE to 2 ),
+            createEnchantItem(ItemStack(IRON_BOOTS), Enchantment.THORNS to 1, Enchantment.PROTECTION_FIRE to 2 ),
             createPotion(PotionEffectType.FIRE_RESISTANCE, true, 30, 0, 2, "огнеуйстойкости"),
             ItemStack(GOLDEN_CARROT, 10)
         )
@@ -179,12 +178,12 @@ enum class StarterKit(
         LEGENDARY,
         CLAY_BALL,
         "bridgebuilders:paladin",
-        "§bАлмазный шлем, Алмазные ботинки, Железный нагрудник, Железные штаны, Золотые яблоки х6, Алмазный меч, Стейк х16, Зелье лечения х3",
+        "§bАлмазный шлем (Защита II), Алмазные ботинки (Защита II), Железный нагрудник (Защита II), Железные штаны (Защита II), Золотые яблоки х6, Алмазный меч, Стейк х16, Зелье лечения х3",
         arrayOf(
-            ItemStack(DIAMOND_HELMET),
-            ItemStack(DIAMOND_BOOTS),
-            ItemStack(IRON_CHESTPLATE),
-            ItemStack(IRON_LEGGINGS),
+            createEnchantItem(ItemStack(DIAMOND_HELMET), Enchantment.PROTECTION_ENVIRONMENTAL to 2),
+            createEnchantItem(ItemStack(DIAMOND_BOOTS), Enchantment.PROTECTION_ENVIRONMENTAL to 2),
+            createEnchantItem(ItemStack(IRON_CHESTPLATE), Enchantment.PROTECTION_ENVIRONMENTAL to 2),
+            createEnchantItem(ItemStack(IRON_LEGGINGS), Enchantment.PROTECTION_ENVIRONMENTAL to 2),
             ItemStack(GOLDEN_APPLE, 6),
             ItemStack(DIAMOND_SWORD),
             ItemStack(COOKED_BEEF, 16),
@@ -284,3 +283,6 @@ private fun createPotion(
         addCustomEffect(PotionEffect(type, duration * 20, amplifier), true)
     }
 }
+
+private fun createEnchantItem(itemStack: ItemStack, vararg enchantment: Pair<Enchantment, Int>) =
+    itemStack.apply { enchantment.forEach { addEnchantment(it.first, it.second) } }

@@ -44,7 +44,7 @@ object DamageListener : Listener {
         val cause = getEntity().lastDamageCause
         val victim = teams.filter { team -> team.players.contains(getEntity().uniqueId) }[0]
 
-        val user = app.getUser(getEntity())!!
+        val user = app.getUser(getEntity()) ?: return
 
         if (cause.cause == EntityDamageEvent.DamageCause.FALL)
             printDeathMessage("Игрок ${victim.color.chatFormat + getEntity().name} §fприземлился с большой высоты")

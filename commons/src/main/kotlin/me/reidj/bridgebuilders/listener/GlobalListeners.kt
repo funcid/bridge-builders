@@ -125,34 +125,34 @@ object GlobalListeners : Listener {
     }
 
     @EventHandler
-    fun BlockRedstoneEvent.handle() = apply { newCurrent = oldCurrent }
+    fun BlockRedstoneEvent.handle() { newCurrent = oldCurrent }
 
     @EventHandler
-    fun PlayerInteractEntityEvent.handle() = apply { isCancelled = true }
+    fun PlayerInteractEntityEvent.handle() { isCancelled = true }
 
     @EventHandler
-    fun BlockFadeEvent.handle() = apply { isCancelled = true }
+    fun BlockFadeEvent.handle() { isCancelled = true }
 
     @EventHandler
-    fun BlockSpreadEvent.handle() = apply { isCancelled = true }
+    fun BlockSpreadEvent.handle(){ isCancelled = true }
 
     @EventHandler
-    fun EntityChangeBlockEvent.handle() = apply {
+    fun EntityChangeBlockEvent.handle() {
         isCancelled = true
         block.state.update(false, false)
     }
 
     @EventHandler
-    fun BlockGrowEvent.handle() = apply { isCancelled = true }
+    fun BlockGrowEvent.handle() { isCancelled = true }
 
     @EventHandler
-    fun BlockPhysicsEvent.handle() = apply { isCancelled = true }
+    fun BlockPhysicsEvent.handle() { isCancelled = true }
 
     @EventHandler
-    fun PlayerArmorStandManipulateEvent.handle() = apply { isCancelled = true }
+    fun PlayerArmorStandManipulateEvent.handle() { isCancelled = true }
 
     @EventHandler
-    fun PlayerSwapHandItemsEvent.handle() = apply { isCancelled = true }
+    fun PlayerSwapHandItemsEvent.handle() { isCancelled = true }
 
     @EventHandler
     fun BlockFromToEvent.handle() {
@@ -161,7 +161,7 @@ object GlobalListeners : Listener {
     }
 
     @EventHandler
-    fun ExplosionPrimeEvent.handle() = apply { isCancelled = true }
+    fun ExplosionPrimeEvent.handle() { isCancelled = true }
 
     @EventHandler
     fun PlayerMoveEvent.handle() {

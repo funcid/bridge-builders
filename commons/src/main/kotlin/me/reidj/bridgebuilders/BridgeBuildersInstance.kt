@@ -1,6 +1,5 @@
 package me.reidj.bridgebuilders
 
-import clepto.bukkit.B
 import clepto.cristalix.WorldMeta
 import me.reidj.bridgebuilders.command.AdminCommand
 import me.reidj.bridgebuilders.donate.impl.NameTag
@@ -55,8 +54,6 @@ class BridgeBuildersInstance(
 
         // Регистрация админ команд
         AdminCommand()
-
-        B.repeat(1) { clientSocket }
     }
 }
 
