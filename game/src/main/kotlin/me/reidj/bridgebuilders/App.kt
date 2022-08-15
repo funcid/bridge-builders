@@ -105,7 +105,7 @@ class App : JavaPlugin() {
             Npc.npc {
                 onClick { event ->
                     val player = event.player
-                    val user = app.getUser(player)!!
+                    val user = app.getUser(player) ?: return@onClick
                     if (user.isArmLock)
                         return@onClick
                     user.isArmLock = true

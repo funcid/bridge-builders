@@ -9,6 +9,7 @@ import me.reidj.bridgebuilders.user.User
 import org.bukkit.Material
 import org.bukkit.Material.*
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.enchantments.Enchantment.*
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.potion.PotionEffect
@@ -87,12 +88,12 @@ enum class StarterKit(
         EPIC,
         DIAMOND_SWORD,
         "weapons:steel_axe",
-        "§bАлмазный нагрудник (Защита III), Алмазные ботинки, Алмазная кирка, Алмазный топор (Острота II), Стейк х16",
+        "§bАлмазный нагрудник (Защита I), Алмазные ботинки (Защита I), Алмазная кирка, Алмазный топор (Острота II), Стейк х16",
         arrayOf(
-            createEnchantItem(ItemStack(DIAMOND_CHESTPLATE), Enchantment.PROTECTION_ENVIRONMENTAL to 3),
-            ItemStack(DIAMOND_BOOTS),
+            createEnchantItem(ItemStack(DIAMOND_CHESTPLATE), PROTECTION_ENVIRONMENTAL to 1),
+            createEnchantItem(ItemStack(DIAMOND_BOOTS), PROTECTION_ENVIRONMENTAL to 1),
             ItemStack(DIAMOND_PICKAXE),
-            createEnchantItem(ItemStack(DIAMOND_AXE), Enchantment.DAMAGE_ALL to 2),
+            createEnchantItem(ItemStack(DIAMOND_AXE), DAMAGE_ALL to 2),
             ItemStack(COOKED_BEEF, 16)
         )
     ),
@@ -111,10 +112,10 @@ enum class StarterKit(
             ItemStack(STONE_SWORD),
             ItemStack(COOKED_BEEF, 12),
             ItemStack(FISHING_ROD),
-            createEnchantItem(ItemStack(CHAINMAIL_HELMET), Enchantment.PROTECTION_ENVIRONMENTAL to 1),
-            createEnchantItem(ItemStack(CHAINMAIL_CHESTPLATE), Enchantment.PROTECTION_ENVIRONMENTAL to 1),
-            createEnchantItem(ItemStack(CHAINMAIL_LEGGINGS), Enchantment.PROTECTION_ENVIRONMENTAL to 1),
-            createEnchantItem(ItemStack(CHAINMAIL_BOOTS), Enchantment.PROTECTION_ENVIRONMENTAL to 1),
+            createEnchantItem(ItemStack(CHAINMAIL_HELMET), PROTECTION_ENVIRONMENTAL to 1),
+            createEnchantItem(ItemStack(CHAINMAIL_CHESTPLATE), PROTECTION_ENVIRONMENTAL to 1),
+            createEnchantItem(ItemStack(CHAINMAIL_LEGGINGS), PROTECTION_ENVIRONMENTAL to 1),
+            createEnchantItem(ItemStack(CHAINMAIL_BOOTS), PROTECTION_ENVIRONMENTAL to 1),
         )
     ),
     HEALER(
@@ -123,16 +124,17 @@ enum class StarterKit(
         LEGENDARY,
         CLAY_BALL,
         "other:heart",
-        "§bЗелье регенерации II х3, Зелье лечения I х5, Золотое морковка х10, Железный сет",
+        "§bЗелье регенерации II х3, Зелье лечения I х5, Золотое морковка х10, Железный сет (Защита I), Деревянный меч (Отдача II)",
         arrayOf(
             createPotion(PotionEffectType.REGENERATION, true, 60, 1, 3, "регенерации"),
             createPotion(PotionEffectType.HEAL, false, 0, 0, 5, "лечения"),
             ItemStack(GOLDEN_CARROT, 10),
-            ItemStack(IRON_HELMET),
-            ItemStack(IRON_CHESTPLATE),
-            ItemStack(IRON_LEGGINGS),
-            ItemStack(IRON_BOOTS)
-        )
+            createEnchantItem(ItemStack(IRON_HELMET), PROTECTION_ENVIRONMENTAL to 1),
+            createEnchantItem(ItemStack(IRON_CHESTPLATE), PROTECTION_ENVIRONMENTAL to 1),
+            createEnchantItem(ItemStack(IRON_LEGGINGS), PROTECTION_ENVIRONMENTAL to 1),
+            createEnchantItem(ItemStack(IRON_BOOTS), PROTECTION_ENVIRONMENTAL to 1),
+            createEnchantItem(ItemStack(WOOD_SWORD), KNOCKBACK to 2),
+            )
     ),
     ENCHANTER(
         "Репликон",
@@ -140,7 +142,7 @@ enum class StarterKit(
         LEGENDARY,
         CLAY_BALL,
         "skyblock:yield",
-        "Золотой сет, Золотой меч, Золотая морковка х16, Золотая кирка (Эффективность II), Золотой топор (Эффективность II), Золотая лопата (Эффективность 4)",
+        "Золотой сет, Золотой меч, Золотая морковка х16, Золотая кирка (Эффективность II, Прочность III), Золотой топор (Эффективность III, Прочность II), Золотая лопата (Эффективность IV, Прочность I)",
         arrayOf(
             ItemStack(GOLD_HELMET),
             ItemStack(GOLD_CHESTPLATE),
@@ -148,9 +150,9 @@ enum class StarterKit(
             ItemStack(GOLD_BOOTS),
             ItemStack(GOLD_SWORD),
             ItemStack(GOLDEN_CARROT, 16),
-            createEnchantItem(ItemStack(GOLD_PICKAXE), Enchantment.DIG_SPEED to 3),
-            createEnchantItem(ItemStack(GOLD_AXE), Enchantment.DIG_SPEED to 3),
-            createEnchantItem(ItemStack(GOLD_SPADE), Enchantment.DIG_SPEED to 4),
+            createEnchantItem(ItemStack(GOLD_PICKAXE), DIG_SPEED to 2, DURABILITY to 3),
+            createEnchantItem(ItemStack(GOLD_AXE), DIG_SPEED to 3, DURABILITY to 2),
+            createEnchantItem(ItemStack(GOLD_SPADE), DIG_SPEED to 4, DURABILITY to 1),
         )
     ),
     LUCIFER(
@@ -164,10 +166,10 @@ enum class StarterKit(
             ItemStack(OBSIDIAN, 8),
             ItemStack(DIAMOND_PICKAXE),
             ItemStack(DIAMOND_SWORD),
-            createEnchantItem(ItemStack(IRON_HELMET), Enchantment.THORNS to 1, Enchantment.PROTECTION_FIRE to 2 ),
-            createEnchantItem(ItemStack(IRON_CHESTPLATE), Enchantment.THORNS to 1, Enchantment.PROTECTION_FIRE to 2 ),
-            createEnchantItem(ItemStack(IRON_LEGGINGS), Enchantment.THORNS to 1, Enchantment.PROTECTION_FIRE to 2 ),
-            createEnchantItem(ItemStack(IRON_BOOTS), Enchantment.THORNS to 1, Enchantment.PROTECTION_FIRE to 2 ),
+            createEnchantItem(ItemStack(IRON_HELMET), THORNS to 1, PROTECTION_FIRE to 2 ),
+            createEnchantItem(ItemStack(IRON_CHESTPLATE), THORNS to 1, PROTECTION_FIRE to 2 ),
+            createEnchantItem(ItemStack(IRON_LEGGINGS), THORNS to 1, PROTECTION_FIRE to 2 ),
+            createEnchantItem(ItemStack(IRON_BOOTS), THORNS to 1, PROTECTION_FIRE to 2 ),
             createPotion(PotionEffectType.FIRE_RESISTANCE, true, 30, 0, 2, "огнеуйстойкости"),
             ItemStack(GOLDEN_CARROT, 10)
         )
@@ -178,13 +180,13 @@ enum class StarterKit(
         LEGENDARY,
         CLAY_BALL,
         "bridgebuilders:paladin",
-        "§bАлмазный шлем (Защита II), Алмазные ботинки (Защита II), Железный нагрудник (Защита II), Железные штаны (Защита II), Золотые яблоки х6, Алмазный меч, Стейк х16, Зелье лечения х3",
+        "§bАлмазный шлем, Алмазные ботинки, Железный нагрудник, Железные штаны, Золотые яблоки х2, Алмазный меч, Стейк х16, Зелье лечения х3",
         arrayOf(
-            createEnchantItem(ItemStack(DIAMOND_HELMET), Enchantment.PROTECTION_ENVIRONMENTAL to 2),
-            createEnchantItem(ItemStack(DIAMOND_BOOTS), Enchantment.PROTECTION_ENVIRONMENTAL to 2),
-            createEnchantItem(ItemStack(IRON_CHESTPLATE), Enchantment.PROTECTION_ENVIRONMENTAL to 2),
-            createEnchantItem(ItemStack(IRON_LEGGINGS), Enchantment.PROTECTION_ENVIRONMENTAL to 2),
-            ItemStack(GOLDEN_APPLE, 6),
+            ItemStack(DIAMOND_HELMET),
+            ItemStack(DIAMOND_BOOTS),
+            ItemStack(IRON_CHESTPLATE),
+            ItemStack(IRON_LEGGINGS),
+            ItemStack(GOLDEN_APPLE, 2),
             ItemStack(DIAMOND_SWORD),
             ItemStack(COOKED_BEEF, 16),
             createPotion(PotionEffectType.HEAL, true, 1, 0, 3, "лечения")
@@ -196,15 +198,16 @@ enum class StarterKit(
         UNIQUE,
         GOLD_PICKAXE,
         "simulators:donate_pickaxe",
-        "§bАлмазная кирка, Железная лопата, Каменный топор, Алмазный нагрудник, Железные штаны, Кольчужные ботинки, Хлеб х10",
+        "§bАлмазная кирка, Железная лопата (Эффективность II), Каменный топор (Эффективность II), Алмазный нагрудник, Железные штаны, Кольчужные ботинки, Хлеб х10, Деревянный меч (Острота III, Заговор огня II)",
         arrayOf(
             ItemStack(DIAMOND_PICKAXE),
-            ItemStack(IRON_SPADE),
-            ItemStack(STONE_AXE),
+            createEnchantItem(ItemStack(IRON_SPADE), DIG_SPEED to 2),
+            createEnchantItem(ItemStack(STONE_AXE), DIG_SPEED to 2),
             ItemStack(DIAMOND_CHESTPLATE),
             ItemStack(IRON_LEGGINGS),
             ItemStack(CHAINMAIL_BOOTS),
-            ItemStack(BREAD, 10)
+            ItemStack(BREAD, 10),
+            createEnchantItem(ItemStack(WOOD_SWORD), DAMAGE_ALL to 3, FIRE_ASPECT to 2)
         )
     ),
     SOUL_CATCHER(
