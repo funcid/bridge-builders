@@ -11,7 +11,7 @@ dependencies {
 }
 
 bundle {
-    modName 'BridgeBuilders'
+    modName 'BridgeBuildersLobby'
     mainClass 'me.reidj.bridgebuilders.App'
     author 'Reidj'
     keep('class ru.cristalix.data.** { *; }')

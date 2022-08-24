@@ -1,3 +1,5 @@
+main: me.reidj.lobby.App
 name: BridgeBuildersLobby
-main: me.reidj.bridgebuilders.App
 version: 1.0.0
+depend:
+  - CoreAPI

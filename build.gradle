@@ -3,51 +3,17 @@ plugins {
 }
 
 allprojects {
+    apply plugin: 'java-library'
+    group 'me.reidj'
+    version '1.0-SNAPSHOT'
     repositories {
         maven {
             url 'https://repo.c7x.ru/repository/maven-public/'
-        }
-        maven {
-            url 'https://repo.c7x.ru/repository/maven-snapshots/'
-            credentials {
-                username = System.getenv("CRI_REPO_LOGIN") ?: project.properties["CRI_REPO_LOGIN"] as String
-                password = System.getenv("CRI_REPO_PASSWORD") ?: project.properties["CRI_REPO_PASSWORD"] as String
-            }
-        }
-        maven {
-            url 'https://repo.c7x.ru/repository/maven-releases/'
             credentials {
                 username = System.getenv("CRI_REPO_LOGIN") ?: project.properties["CRI_REPO_LOGIN"] as String
                 password = System.getenv("CRI_REPO_PASSWORD") ?: project.properties["CRI_REPO_PASSWORD"] as String
             }
         }
         mavenCentral()
-    }
-}
-
-subprojects {
-    apply plugin: 'kotlin'
-
-    group = 'me.reidj'
-    version = '1.0-SNAPSHOT'
-
-    afterEvaluate {
-        jar {
-            from configurations.runtimeClasspath.collect { it.directory ? it : zipTree(it) }
-            duplicatesStrategy DuplicatesStrategy.EXCLUDE
-        }
-    }
-
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-
-    tasks.withType(JavaCompile) {
-        options.encoding = "UTF-8"
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
-    }
-
-    compileKotlin {
-        kotlinOptions.jvmTarget = '1.8'
     }
 }

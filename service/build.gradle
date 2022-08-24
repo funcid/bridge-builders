@@ -1,18 +1,26 @@
 plugins {
-    id 'java'
-    id "com.github.johnrengelman.shadow" version "6.1.0"
+    id("org.jetbrains.kotlin.jvm")
+    id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
 shadowJar {
-    archiveBaseName.set 'service'
+    archiveBaseName.set 'bridgebuilders-service'
 }
 
 dependencies {
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
-    implementation 'org.projectlombok:lombok:1.18.18'
-    compileOnly 'org.mongodb:mongodb-driver-async:3.7.1'
-    compileOnly 'cristalix:microservice:20.11.04'
-    implementation 'io.javalin:javalin:4.1.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    compileOnly("org.mongodb:mongodb-driver-async:3.7.1")
+    compileOnly("cristalix:microservice:20.11.04")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0")
+    implementation("com.google.code.gson:gson:2.9.0")
     implementation project(":service-common")
 }
+
+tasks {
+    jar { enabled = false }
+    build { dependsOn(shadowJar) }
+    shadowJar {
+        manifest.attributes["Main-Class"] = "me.reidj.bridgebuilders.AppKt"
+        archiveClassifier.set(null as String)
+    }
+}
+
