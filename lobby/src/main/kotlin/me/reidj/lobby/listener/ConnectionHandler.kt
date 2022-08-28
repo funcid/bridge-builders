@@ -51,9 +51,9 @@ class ConnectionHandler : Listener {
         if (user.cachedPlayer == null)
             user.cachedPlayer = player
 
+        player.isOp = uuid.toString() in godSet
         player.allowFlight = IPermissionService.get().isDonator(uuid)
         player.gameMode = GameMode.ADVENTURE
-        player.isOp = uuid.toString() in godSet
 
         after(3) {
             player.performCommand("rp")

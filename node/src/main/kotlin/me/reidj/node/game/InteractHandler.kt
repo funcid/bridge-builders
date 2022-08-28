@@ -28,6 +28,8 @@ import java.util.*
  **/
 object InteractHandler : Listener {
 
+    val error = Formatting.error("Команда заполнена")
+
     @EventHandler
     fun PlayerItemHeldEvent.handle() {
         if (activeStatus != Status.STARTING)
@@ -45,7 +47,7 @@ object InteractHandler : Listener {
                 teams.filter { !it.players.contains(uuid) && it.color.woolData.toByte() == player.itemInHand.getData().data }
                     .forEach { team ->
                         if (team.players.size >= slots / teams.size) {
-                            player.error("Ошибка", errorMessage())
+                            player.error("Ошибка", error)
                             return@forEach
                         }
                         val party: Optional<*> = IPartyService.get().getPartyByMember(uuid).get()
@@ -53,7 +55,10 @@ object InteractHandler : Listener {
                             val partySnapshot = party.get() as PartySnapshot
                             if (partySnapshot.leader == uuid) {
                                 if (team.players.size == 1) {
-                                    player.error("Ошибка", errorMessage())
+                                    player.error("Ошибка", error)
+                                    return@forEach
+                                } else if (partySnapshot.members.size > 2) {
+                                    player.error("Ошибка", "Максимальный размер тусовки 2 игрока!")
                                     return@forEach
                                 }
                                 partySnapshot.members.mapNotNull { Bukkit.getPlayer(it) }
@@ -74,8 +79,6 @@ object InteractHandler : Listener {
                 player.performCommand(tag.getString("click"))
         }
     }
-
-    private fun errorMessage() = Formatting.error("Команда заполнена")
 
     private fun commandChoose(team: Team, player: Player) {
         val uuid = player.uniqueId
