@@ -64,6 +64,8 @@ class LootBox : Listener, Ticked {
         .plus(NameTagType.values())
         .plus(StartingKit.values())
         .plus(WalkingEffectType.values())
+        .plus(LootBoxKit.values())
+        .plus(MoneyKitType.values())
         .filter { it != GraveType.NONE && it != MessageType.NONE && it != NameTagType.NONE && it != StartingKit.NONE && it != WalkingEffectType.NONE }
         .toList()
 
@@ -128,6 +130,8 @@ class LootBox : Listener, Ticked {
             drop.give(user)
         }
 
+        user.giveExperience(boxType.lootBox.experience)
+
         B.bc(Formatting.fine("§e${player.name} §fполучил §b${drop.getRare().with(drop.getTitle())}."))
 
         clientSocket.write(SaveUserPackage(stat.uuid, stat))
@@ -138,9 +142,9 @@ class LootBox : Listener, Ticked {
             Bukkit.getOnlinePlayers().mapNotNull { getUser(it) }.forEach {
                 val size = it.stat.lootBoxes.size
                 it.cachedPlayer?.let { player ->
-                    banners.forEach {
+                    banners.forEach { banner ->
                         Banners.content(
-                            player, it.uuid, "§bЛутбокс\n§fДоступно $size ${
+                            player, banner.uuid, "§bЛутбокс\n§fДоступно $size ${
                                 Humanize.plurals(
                                     "штука",
                                     "штуки",

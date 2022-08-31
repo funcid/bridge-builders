@@ -11,7 +11,6 @@ import ru.cristalix.core.microservice.MicroserviceBootstrap
 import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.permissions.IPermissionService
 import ru.cristalix.core.permissions.PermissionService
-import java.util.concurrent.TimeUnit
 
 /**
  * @project : BridgeBuilders
@@ -24,12 +23,18 @@ fun main() {
     val mongoAdapter = MongoAdapter(System.getenv("db_url"), System.getenv("db_data"), "data43")
 
     ISocketClient.get().run {
-        capabilities(LoadStatPackage::class, SaveUserPackage::class, BulkSaveUserPackage::class, TopPackage::class, RejoinPackage::class)
+        capabilities(
+            LoadStatPackage::class,
+            SaveUserPackage::class,
+            BulkSaveUserPackage::class,
+            TopPackage::class,
+            RejoinPackage::class
+        )
 
         CoreApi.get().registerService(IPermissionService::class.java, PermissionService(this))
 
         addListener(LoadStatPackage::class.java) { realmId, pckg ->
-            mongoAdapter.find(pckg.uuid).get(3, TimeUnit.SECONDS).apply {
+            mongoAdapter.find(pckg.uuid).get().run {
                 pckg.stat = this
                 forward(realmId, pckg)
                 println("Loaded on ${realmId.realmName}! Player: ${pckg.uuid}")

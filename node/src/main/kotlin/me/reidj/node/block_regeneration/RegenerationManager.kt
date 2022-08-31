@@ -20,12 +20,11 @@ object RegenerationManager {
             val pair = it.value
             it.key.block.setTypeAndDataFast(pair.first, pair.second)
         }
+        blocks.clear()
     }
 
-    fun addBlock(block: Block) {
+    fun addBlock(block: Block) =
         RegenerationBlocks.values().filter { block.typeId == it.id && block.data in it.data }.forEach {
             blocks[block.location] = it.id to it.data[0]
         }
-        blocks.clear()
-    }
 }

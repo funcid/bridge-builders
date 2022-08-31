@@ -10,4 +10,5 @@ data class LootBox(
     val crystals: Int,
     val openPrice: Int,
     val openLevel: Int,
+    val experience: Int,
 )

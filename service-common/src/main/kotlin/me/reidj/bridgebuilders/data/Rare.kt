@@ -18,7 +18,5 @@ enum class Rare(private val title: String, private val color: String) {
 
     fun with(content: String) = "${getColored()} §7$content"
 
-    fun getColor() = color
-
     fun getColored() = "$color$title"
 }

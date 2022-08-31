@@ -29,7 +29,7 @@ enum class MoneyKitType(
 
     override fun getCrystals() = crystal
 
-    override fun getRare() = Rare.MYTHIC
+    override fun getRare() = Rare.DONATE
 
     override fun getName() = name
 

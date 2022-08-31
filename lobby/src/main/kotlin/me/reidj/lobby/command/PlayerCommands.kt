@@ -1,10 +1,8 @@
 package me.reidj.lobby.command
 
 import me.func.mod.Anime
-import me.func.mod.battlepass.BattlePass
 import me.func.mod.util.after
 import me.func.mod.util.command
-import me.func.protocol.battlepass.BattlePassUserData
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.getUser
 import me.reidj.bridgebuilders.protocol.RejoinPackage
@@ -61,8 +59,15 @@ class PlayerCommands {
             if (!BanManager.endOfBan(user))
                 PlayerBalancer("BRD", 8).accept(player)
         }
-        command("test") { player, _ ->
-            BattlePass.show(player, me.reidj.lobby.content.BattlePass.battlePass, BattlePassUserData(100, false))
-        }
+        /*command("test") { player, _ ->
+            //BattlePass.show(player, me.reidj.lobby.content.BattlePass.battlePass, BattlePassUserData(100, false))
+            boosterBar {
+                title = "hui"
+                subtitle = "hui2"
+                isShowBackground = true
+                progress = 1.0
+            }.open(player)
+            Anime.startBoosters(player, Booster("хуй", 1.0), Booster("хуй3", 2.0, "coin"))
+        }*/
     }
 }

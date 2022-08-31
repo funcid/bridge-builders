@@ -32,9 +32,9 @@ enum class LootBoxKit(
         repeat(3) { stat.lootBoxes.add(me.reidj.bridgebuilders.data.LootBoxType.LEGENDARY) }
     }),
     ARISTOCRAT("§cАристократ", "§510 Эпических лутбоксов\n§65 Легендарных лутбоксов\n§c5 Донат лутбоксов", 109, { stat ->
-        kotlin.repeat(10) { stat.lootBoxes.add(me.reidj.bridgebuilders.data.LootBoxType.EPIC) }
-        kotlin.repeat(5) { stat.lootBoxes.add(me.reidj.bridgebuilders.data.LootBoxType.LEGENDARY) }
-        kotlin.repeat(3) { stat.lootBoxes.add(me.reidj.bridgebuilders.data.LootBoxType.DONATE) }
+        repeat(10) { stat.lootBoxes.add(me.reidj.bridgebuilders.data.LootBoxType.EPIC) }
+        repeat(5) { stat.lootBoxes.add(me.reidj.bridgebuilders.data.LootBoxType.LEGENDARY) }
+        repeat(3) { stat.lootBoxes.add(me.reidj.bridgebuilders.data.LootBoxType.DONATE) }
     })
     ;
 
@@ -46,7 +46,7 @@ enum class LootBoxKit(
 
     override fun getCrystals() = crystal
 
-    override fun getRare() = Rare.MYTHIC
+    override fun getRare() = Rare.DONATE
 
     override fun getName() = name
 

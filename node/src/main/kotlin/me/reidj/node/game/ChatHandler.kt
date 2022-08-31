@@ -2,10 +2,10 @@ package me.reidj.node.game
 
 import me.reidj.bridgebuilders.createDisplayName
 import me.reidj.bridgebuilders.getUser
+import me.reidj.bridgebuilders.isSpectator
 import me.reidj.node.activeStatus
 import me.reidj.node.teams
 import me.reidj.node.timer.Status
-import me.reidj.node.util.isSpectator
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

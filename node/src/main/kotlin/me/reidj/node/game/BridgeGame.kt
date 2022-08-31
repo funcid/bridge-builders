@@ -69,8 +69,6 @@ class BridgeGame {
             DamageHandler()
         )
 
-        //ArrowEffect(this)
-
         everyAfter(10, 1) { timer.tick() }
     }
 
