@@ -2,6 +2,7 @@ package me.reidj.lobby.listener
 
 import me.func.mod.Anime
 import me.func.mod.conversation.ModLoader
+import me.func.mod.selection.Confirmation
 import me.func.mod.util.after
 import me.func.protocol.Indicators
 import me.reidj.bridgebuilders.clientSocket
@@ -10,9 +11,7 @@ import me.reidj.bridgebuilders.godSet
 import me.reidj.bridgebuilders.protocol.SaveUserPackage
 import me.reidj.bridgebuilders.userMap
 import me.reidj.lobby.app
-import me.reidj.lobby.content.BattlePass
 import me.reidj.lobby.content.WeekRewards
-import me.reidj.lobby.npc.NpcManager
 import me.reidj.lobby.util.GameUtil
 import me.reidj.lobby.util.GameUtil.spawn
 import me.reidj.lobby.util.ItemUtil.backItem
@@ -29,6 +28,7 @@ import ru.cristalix.core.permissions.IPermissionService
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
 import ru.cristalix.core.realm.RealmStatus
+import ru.cristalix.core.tab.ITabService
 import ru.cristalix.core.transfer.ITransferService
 
 /**
@@ -55,20 +55,18 @@ class ConnectionHandler : Listener {
         player.allowFlight = IPermissionService.get().isDonator(uuid)
         player.gameMode = GameMode.ADVENTURE
 
+        ITabService.get().update(player)
+
         after(3) {
-            player.performCommand("rp")
+            if (user.stat.isApprovedResourcepack)
+                player.performCommand("rp")
+
             Anime.hideIndicator(player, Indicators.ARMOR, Indicators.EXP, Indicators.HEALTH, Indicators.HUNGER)
 
             ModLoader.send("lobby-mod-bundle-1.0-SNAPSHOT.jar", player)
 
-            Anime.loadTexture(player, "https://storage.c7x.ru/reidj/bridgebuilders/ether.png")
-
             user.giveExperience(0)
             user.giveEther(0)
-
-            me.func.mod.battlepass.BattlePass.send(player, BattlePass.battlePass)
-
-            NpcManager.setNpcSkin(uuid)
 
             player.teleport(spawn)
 

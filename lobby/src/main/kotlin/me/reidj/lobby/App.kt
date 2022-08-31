@@ -15,6 +15,7 @@ import me.reidj.bridgebuilders.util.MapLoader
 import me.reidj.bridgebuilders.worldMeta
 import me.reidj.lobby.command.AdminCommands
 import me.reidj.lobby.command.PlayerCommands
+import me.reidj.lobby.command.manager.TabViewManager
 import me.reidj.lobby.content.Customization
 import me.reidj.lobby.content.LootBox
 import me.reidj.lobby.listener.ConnectionHandler
@@ -89,7 +90,7 @@ class App : JavaPlugin() {
         AdminCommands()
         PlayerCommands()
 
-        listener(GlobalListeners(), npcManager, lootBox, ConnectionHandler(), InteractHandler(), UnusedHandler())
+        listener(GlobalListeners(), npcManager, lootBox, ConnectionHandler(), InteractHandler(), UnusedHandler(), TabViewManager())
 
         // Обновление топа
         Bukkit.getServer().scheduler.runTaskTimerAsynchronously(this, TopManager(), 0, 60 * 20)

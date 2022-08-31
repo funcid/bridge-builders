@@ -239,6 +239,27 @@ class Customization {
             }
         },
         button {
+            title = "Стартовые наборы"
+            hint("Открыть")
+            description = "Выберите набор, который поможет вам в игре."
+            texture = getTexture("starting_kit")
+            onClick { player, _, _ ->
+                temp(
+                    player,
+                    "Стартовые наборы",
+                    false,
+                    3,
+                    1,
+                    *StartingKit.values()
+                ) { button, kit ->
+                    button.texture(kit.getTexture())
+                    if (kit.getLevel() > 0)
+                        button.description("Доступно с §3${kit.getLevel()} §fуровня")
+                    button.hover(kit.getDescription())
+                }
+            }
+        },
+        button {
             title = "Могилы"
             hint("Открыть")
             description = "Выберите могилу, которая появится на месте вашей смерти."
@@ -299,22 +320,14 @@ class Customization {
                 }
             }
         }, button {
-            title = "Стартовые наборы"
-            hint("Открыть")
-            description = "Выберите набор, который поможет вам в игре."
-            texture = getTexture("starting_kit")
-            onClick { player, _, _ ->
-                temp(
-                    player,
-                    "Стартовые наборы",
-                    false,
-                    3,
-                    1,
-                    *StartingKit.values()
-                ) { button, kit ->
-                    button.texture(kit.getTexture())
-                    button.hover(kit.getDescription())
-                }
+            title = "Ресурспак"
+            hint("Переключить")
+            texture = getTexture("resourcepack")
+            onClick { player, _, button ->
+                val user = getUser(player) ?: return@onClick
+                val stat = user.stat
+                stat.isApprovedResourcepack = !stat.isApprovedResourcepack
+                button.hint(if (stat.isApprovedResourcepack) "Выключить автоматическую установку" else "Включить автоматическую установку")
             }
         }
     )
@@ -385,6 +398,10 @@ class Customization {
             } else {
                 if (stat.ether < donate.getEther()) {
                     Anime.killboardMessage(player, Formatting.error("Недостаточно Эфира!"))
+                    Glow.animate(player, 0.4, GlowColor.RED)
+                    return@Confirmation
+                } else if (user.getLevel() < donate.getLevel()) {
+                    Anime.killboardMessage(player, Formatting.error("Ваш уровень ниже того, что требуется!"))
                     Glow.animate(player, 0.4, GlowColor.RED)
                     return@Confirmation
                 }

@@ -32,6 +32,8 @@ enum class GraveType(
 
     override fun getCrystals() = 0
 
+    override fun getLevel() = 0
+
     override fun getTexture(): String? = null
 
     override fun getRare() = rare

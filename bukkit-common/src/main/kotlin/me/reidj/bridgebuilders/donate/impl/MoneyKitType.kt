@@ -39,6 +39,8 @@ enum class MoneyKitType(
         TODO("Not yet implemented")
     }
 
+    override fun getLevel() = 0
+
     override fun give(user: User) {
         user.giveEther(reward)
     }

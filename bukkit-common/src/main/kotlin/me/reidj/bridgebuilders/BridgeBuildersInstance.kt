@@ -65,6 +65,13 @@ fun createDisplayName(user: User): String {
         .getTitle() + " §8┃ " else "") + (if (prefix.isEmpty()) "" else "$prefix §8┃ ") + color + user.cachedPlayer?.name
 }
 
+fun createPrefix(user: User?): String {
+    if (user == null)
+        return ""
+    if (user.stat.currentNameTag != NameTagType.NONE.name) return "${NameTagType.valueOf(user.stat.currentNameTag).getTitle()} §8┃"
+    return ""
+}
+
 private fun prefix(group: IGroup): String = if (group.prefix.isEmpty()) "" else group.prefixColor + group.prefix
 
 fun regAdminCommand(commandName: String, executor: (User, Array<out String>) -> Unit) {

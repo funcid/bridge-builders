@@ -18,6 +18,8 @@ interface DonatePosition {
 
     fun getIcon(): ItemStack
 
+    fun getLevel(): Int
+
     fun getTexture(): String?
 
     fun give(user: User)

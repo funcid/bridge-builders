@@ -18,6 +18,5 @@ class App : KotlinMod() {
         mod = this
 
         LevelIndicator()
-        RightBottom()
     }
 }

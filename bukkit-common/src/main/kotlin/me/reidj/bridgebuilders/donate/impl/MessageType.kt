@@ -248,6 +248,8 @@ enum class MessageType(
         nbt("other", "pets1")
     }
 
+    override fun getLevel() = 0
+
     override fun give(user: User) {
         user.stat.messages.add(name)
     }

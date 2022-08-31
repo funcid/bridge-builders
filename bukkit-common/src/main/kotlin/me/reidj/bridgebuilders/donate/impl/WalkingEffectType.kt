@@ -40,6 +40,8 @@ enum class WalkingEffectType(
 
     override fun getCrystals() = crystals
 
+    override fun getLevel() = 0
+
     override fun getName() = name
 
     override fun getRare() = rare

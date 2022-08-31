@@ -59,15 +59,5 @@ class PlayerCommands {
             if (!BanManager.endOfBan(user))
                 PlayerBalancer("BRD", 8).accept(player)
         }
-        /*command("test") { player, _ ->
-            //BattlePass.show(player, me.reidj.lobby.content.BattlePass.battlePass, BattlePassUserData(100, false))
-            boosterBar {
-                title = "hui"
-                subtitle = "hui2"
-                isShowBackground = true
-                progress = 1.0
-            }.open(player)
-            Anime.startBoosters(player, Booster("хуй", 1.0), Booster("хуй3", 2.0, "coin"))
-        }*/
     }
 }

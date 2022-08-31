@@ -22,6 +22,7 @@ enum class StartingKit(
     private val texture: String,
     private val ether: Int,
     private val crystals: Int,
+    private val level: Int,
     private val rare: Rare,
     val armorContent: Array<ItemStack>,
     vararg val inventory: ItemStack
@@ -30,6 +31,7 @@ enum class StartingKit(
         "Стандартный",
         "Кожаный сет\nДеревянные инструменты\nХлеб х32",
         "default",
+        0,
         0,
         0,
         COMMON,
@@ -51,13 +53,14 @@ enum class StartingKit(
         "lesorub",
         512,
         0,
+        0,
         COMMON,
         arrayOf(ItemStack(AIR), ItemStack(AIR), ItemStack(CHAINMAIL_CHESTPLATE), ItemStack(AIR)),
         ItemStack(IRON_AXE),
         ItemStack(APPLE, 16)
     ),
     EXCAVATOR(
-        "Землерой", "Железная лопата\nКольчужные поножи\nХлеб х16", "zemleroi", 512, 0, COMMON, arrayOf(
+        "Землерой", "Железная лопата\nКольчужные поножи\nХлеб х16", "zemleroi", 512, 0, 0, COMMON, arrayOf(
             ItemStack(AIR),
             ItemStack(CHAINMAIL_LEGGINGS),
             ItemStack(AIR),
@@ -66,7 +69,7 @@ enum class StartingKit(
         ItemStack(IRON_SPADE), ItemStack(BREAD, 16)
     ),
     MINER(
-        "Рудокоп", "Железная кирка\nКольчужный шлем\nМорковь х16", "rudocop", 512, 0, COMMON, arrayOf(
+        "Рудокоп", "Железная кирка\nКольчужный шлем\nМорковь х16", "rudocop", 512, 0,0, COMMON, arrayOf(
             ItemStack(AIR),
             ItemStack(AIR),
             ItemStack(AIR),
@@ -74,7 +77,7 @@ enum class StartingKit(
         ), ItemStack(IRON_PICKAXE), ItemStack(CARROT_ITEM, 16)
     ),
     BLACKSMITH(
-        "Кузнец", "Кольчужный сет\nЖелезо х8\nЗолото х16\nЯблоки х16", "kuznec", 768, 0, UNUSUAL, arrayOf(
+        "Кузнец", "Кольчужный сет\nЖелезо х8\nЗолото х16\nЯблоки х16", "kuznec", 768, 0,10, UNUSUAL, arrayOf(
             ItemStack(CHAINMAIL_BOOTS),
             ItemStack(CHAINMAIL_LEGGINGS),
             ItemStack(CHAINMAIL_CHESTPLATE),
@@ -87,6 +90,7 @@ enum class StartingKit(
         "goblin",
         1024,
         0,
+        10,
         UNUSUAL,
         arrayOf(
             ItemStack(LEATHER_BOOTS),
@@ -118,6 +122,7 @@ enum class StartingKit(
         "dworf",
         1024,
         0,
+        20,
         RARE,
         arrayOf(
             item {
@@ -144,6 +149,7 @@ enum class StartingKit(
         "assasin",
         1024,
         0,
+        20,
         RARE,
         arrayOf(
             item {
@@ -177,6 +183,7 @@ enum class StartingKit(
         "elf",
         2048,
         0,
+        20,
         RARE,
         arrayOf(
             item {
@@ -207,6 +214,7 @@ enum class StartingKit(
         "celitel",
         1024,
         0,
+        20,
         RARE,
         arrayOf(
             item {
@@ -240,6 +248,7 @@ enum class StartingKit(
         "urukhai",
         4096,
         0,
+        30,
         EPIC,
         arrayOf(
             item {
@@ -282,6 +291,7 @@ enum class StartingKit(
         "leprekon",
         2048,
         0,
+        30,
         EPIC,
         arrayOf(
             ItemStack(GOLD_BOOTS),
@@ -313,6 +323,7 @@ enum class StartingKit(
         "lucik",
         2048,
         0,
+        30,
         EPIC,
         arrayOf(
             item {
@@ -349,6 +360,7 @@ enum class StartingKit(
         "lovec_dush",
         2048,
         0,
+        30,
         EPIC,
         arrayOf(
             ItemStack(CHAINMAIL_BOOTS),
@@ -371,6 +383,7 @@ enum class StartingKit(
         "jumper",
         8192,
         0,
+        40,
         LEGENDARY,
         arrayOf(
             item {
@@ -398,6 +411,7 @@ enum class StartingKit(
         "paladin",
         4096,
         0,
+        40,
         LEGENDARY,
         arrayOf(
             ItemStack(DIAMOND_BOOTS),
@@ -417,6 +431,7 @@ enum class StartingKit(
         "collector",
         4096,
         0,
+        40,
         LEGENDARY,
         arrayOf(
             ItemStack(CHAINMAIL_BOOTS),
@@ -447,6 +462,7 @@ enum class StartingKit(
         "bur",
         16384,
         0,
+        50,
         MYTHIC,
         arrayOf(
             item {
@@ -483,6 +499,8 @@ enum class StartingKit(
     override fun getRare() = rare
 
     override fun getName() = name
+
+    override fun getLevel() = level
 
     override fun getIcon(): ItemStack {
         TODO("Not yet implemented")

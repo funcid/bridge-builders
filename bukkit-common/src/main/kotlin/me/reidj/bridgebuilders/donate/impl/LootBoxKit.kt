@@ -44,6 +44,8 @@ enum class LootBoxKit(
 
     override fun getEther() = 0
 
+    override fun getLevel() = 0
+
     override fun getCrystals() = crystal
 
     override fun getRare() = Rare.DONATE

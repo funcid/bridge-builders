@@ -135,6 +135,8 @@ enum class NameTagType(
 
     override fun getName() = name
 
+    override fun getLevel() = 0
+
     override fun getIcon() = item {
         type = Material.CLAY_BALL
         nbt("other", "pets1")
