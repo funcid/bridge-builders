@@ -5,8 +5,6 @@ import me.func.mod.Banners
 import me.func.mod.Npc
 import me.func.mod.Npc.location
 import me.func.mod.Npc.onClick
-import me.func.mod.Npc.skin
-import me.func.mod.data.NpcSmart
 import me.func.mod.util.after
 import me.func.protocol.npc.NpcBehaviour
 import me.reidj.bridgebuilders.getUser
@@ -15,7 +13,6 @@ import me.reidj.lobby.ticker.Ticked
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import ru.cristalix.core.realm.IRealmService
-import java.util.*
 
 /**
  * @project : BridgeBuilders
@@ -23,15 +20,9 @@ import java.util.*
  **/
 class NpcManager : Ticked, Listener {
 
-    companion object {
-        private val npcs = mutableMapOf<NpcType, NpcSmart>()
-
-        fun setNpcSkin(uuid: UUID) = npcs[NpcType.GUIDE]!!.data.skin(uuid)
-    }
-
     init {
         NpcType.values().forEach { type ->
-            npcs[type] = Npc.npc {
+            Npc.npc {
                 onClick {
                     val player = it.player
                     val user = getUser(player) ?: return@onClick
@@ -45,10 +36,11 @@ class NpcManager : Ticked, Listener {
                     x += .5
                     z += .5
                 })
-                skin(UUID.fromString(type.skin))
                 behaviour = NpcBehaviour.STARE_AT_PLAYER
                 pitch = type.pitch
                 name = type.npcName
+                skinUrl = type.skinUrl
+                skinDigest = type.skinDigest
             }
         }
     }
