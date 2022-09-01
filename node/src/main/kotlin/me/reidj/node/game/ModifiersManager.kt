@@ -85,9 +85,9 @@ object ModifiersManager {
     ) {
         BOER(
             "Бур",
-            "На старте игры всем командам выдаётся \nУскоренное копание на 3 минуты. \nПо истечению времени - оно пропадает.",
+            "На старте игры всем командам выдаётся \nУскоренное копание на 8 минут. \nПо истечению времени - оно пропадает.",
             "uskor",
-            { addPotionEffect(PotionEffect(PotionEffectType.FAST_DIGGING, 180 * 20, 0)) }
+            { addPotionEffect(PotionEffect(PotionEffectType.FAST_DIGGING, 480 * 20, 0)) }
         ),
         IMPLANT("Имплант", "Всем игрокам вживляется Имплант, \nкоторый даёт двойное здоровье на всю игру",
             "implant",

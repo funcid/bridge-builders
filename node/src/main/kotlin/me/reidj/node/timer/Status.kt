@@ -25,7 +25,7 @@ enum class Status(val lastSecond: Int, val now: (Int, BridgeGame) -> Int) {
         var actualTime = time
 
         // Если время вышло и пора играть
-        if (time / 20 >= STARTING.lastSecond && players.size >= slots) {
+        if (time / 20 == STARTING.lastSecond) {
             // Начать отсчет заново, так как мало игроков
             if (players.size < slots) {
                 actualTime = 1
@@ -39,7 +39,7 @@ enum class Status(val lastSecond: Int, val now: (Int, BridgeGame) -> Int) {
                         player == null || !player.isOnline
                     }
                 }
-                // Заполение команд
+                // Заполнение команд
                 Bukkit.getOnlinePlayers().forEach { player ->
                     player.inventory.clear()
                     player.openInventory.topInventory.clear()
@@ -85,9 +85,9 @@ enum class Status(val lastSecond: Int, val now: (Int, BridgeGame) -> Int) {
         actualTime
     }),
     GAME(2500, { time, game ->
-        if (time % 20 == 0) {
+        if (time % 20 == 0 && activeStatus == GAME) {
             val players = Bukkit.getOnlinePlayers()
-            if (time / 20 == 120 && activeStatus == GAME) {
+            if (time / 20 == 120) {
                 players.mapNotNull { getUser(it) }.forEach {
                     it.isTeleportAvailable = true
                     it.cachedPlayer?.let { player ->

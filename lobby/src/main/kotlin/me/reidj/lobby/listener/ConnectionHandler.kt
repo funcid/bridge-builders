@@ -2,7 +2,6 @@ package me.reidj.lobby.listener
 
 import me.func.mod.Anime
 import me.func.mod.conversation.ModLoader
-import me.func.mod.selection.Confirmation
 import me.func.mod.util.after
 import me.func.protocol.Indicators
 import me.reidj.bridgebuilders.clientSocket
@@ -58,6 +57,8 @@ class ConnectionHandler : Listener {
         ITabService.get().update(player)
 
         after(3) {
+            player.setResourcePack("", "")
+
             if (user.stat.isApprovedResourcepack)
                 player.performCommand("rp")
 
