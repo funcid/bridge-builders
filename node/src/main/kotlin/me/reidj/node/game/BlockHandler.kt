@@ -2,8 +2,10 @@ package me.reidj.node.game
 
 import me.func.mod.Anime
 import me.reidj.bridgebuilders.getUser
+import me.reidj.node.activeStatus
 import me.reidj.node.block_regeneration.RegenerationManager
 import me.reidj.node.teams
+import me.reidj.node.timer.Status
 import org.bukkit.Bukkit
 import org.bukkit.Material.*
 import org.bukkit.block.Block
@@ -59,6 +61,7 @@ class BlockHandler(private val game: BridgeGame) : Listener {
             ru.cristalix.core.karma.IKarmaService.get().enableGG { true }
 
             game.end(team)
+            activeStatus = Status.END
         }
 
         // Автопереплавка руды

@@ -1,6 +1,5 @@
 package me.reidj.node.game
 
-import kotlinx.coroutines.runBlocking
 import me.func.mod.Anime
 import me.func.mod.Glow
 import me.func.mod.Npc
@@ -237,8 +236,8 @@ class BridgeGame {
     fun end(team: Team) {
         team.players.mapNotNull { getUser(it) }.forEach {
             it.run {
-                it.givePureEther(30)
-                it.givePureExperience(30)
+                givePureEther(30)
+                givePureExperience(30)
                 cachedPlayer?.let { player ->
                     player.sendMessage(Formatting.fine("Вы получили §d30 Эфира §fи §b30 опыта §fза победу."))
                     Anime.showEnding(
@@ -266,7 +265,6 @@ class BridgeGame {
                     }
                 }
                 stat.wins++
-                givePureEther(30)
             }
         }
         teams.filter { it != team }.forEach { looser ->
@@ -296,9 +294,9 @@ class BridgeGame {
                     stat.lootBoxes.add(lootBox)
                     Bukkit.broadcastMessage(Formatting.fine("§e${if (cachedPlayer == null) "ERROR" else cachedPlayer!!.name} §fполучил ${lootBox.lootBox.rare.getColored()} лутбокс§f!"))
                 }
-                after(5) { runBlocking { bulkSave(true) } }
             }
         }
+        after(5) { clientSocket.write(bulkSave(true)) }
         after(40) { stopGame() }
     }
 
