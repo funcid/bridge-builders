@@ -34,7 +34,9 @@ class PlayerBalancer(private val server: String, private val maxPlayers: Int) : 
                 val realm = getRealm(server, party1.members.size)
                 if (realm.isPresent) {
                     val realmInfo = IRealmService.get().getRealmById(realm.get())
-                    if (realmInfo.currentPlayers + party1.members.size <= realmInfo.maxPlayers) {
+                    if (realmInfo.currentPlayers + party1.members.size <= realmInfo
+                            .maxPlayers
+                    ) {
                         for (uuid in party1.members) {
                             ITransferService.get().transfer(uuid, realm.get())
                         }
@@ -73,7 +75,7 @@ class PlayerBalancer(private val server: String, private val maxPlayers: Int) : 
         var maxRealm: RealmInfo? = null
         var minRealm: RealmInfo? = null
         for (realmInfo in IRealmService.get().getRealmsOfType(realm)) {
-            if (realmInfo.status != RealmStatus.GAME_STARTED_RESTRICTED
+            if (realmInfo.status != RealmStatus.WAITING_FOR_PLAYERS
                 || realmInfo.currentPlayers + mintoJoin > realmInfo.maxPlayers
             ) {
                 continue

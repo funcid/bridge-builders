@@ -72,6 +72,7 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
         }
 
         after(3) {
+            player.setResourcePack("", "")
             player.performCommand("rp")
             ModLoader.send("mod-bundle-1.0-SNAPSHOT.jar", player)
             Anime.hideIndicator(player, Indicators.HUNGER, Indicators.EXP, Indicators.HEALTH, Indicators.VEHICLE)
@@ -116,14 +117,15 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
     fun PlayerQuitEvent.handle() {
         val uuid = player.uniqueId
         val players = Bukkit.getOnlinePlayers()
+        val team = teams.firstOrNull { uuid in it.players } ?: return
         if (activeStatus == Status.STARTING) {
             players.forEach { ModTransfer(true, slots, players.size).send("bridge:online", it) }
             ModifiersManager.voteRemove(player)
             userMap.remove(uuid)
+            team.players.remove(uuid)
         } else if (activeStatus == Status.GAME) {
             val user = getUser(player) ?: return
             val stat = user.stat
-            val team = teams.firstOrNull { uuid in it.players } ?: return
             val inventory = player.inventory
 
             team.updateNumbersPlayersInTeam()

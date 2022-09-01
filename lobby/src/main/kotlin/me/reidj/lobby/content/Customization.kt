@@ -345,7 +345,7 @@ class Customization {
                     hover(
                         """
                         Уровень: §3${user.getLevel()}
-                        Опыта: §3${stat.experience}
+                        Опыта: §3${stat.exp}
                         Побед: §3${stat.wins}
                         Эфира: §3${stat.ether}
                         Убийств: §3${stat.kills}

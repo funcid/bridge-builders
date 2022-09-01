@@ -33,7 +33,7 @@ data class Stat(
     var currentNameTag: String,
     var currentStarterKit: String,
 
-    var experience: Double,
+    var exp: Double,
 
     var gameLockTime: Long,
     var gameExitTime: Long,

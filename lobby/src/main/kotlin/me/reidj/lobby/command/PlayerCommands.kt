@@ -26,10 +26,10 @@ class PlayerCommands {
         command("rp") { player, _ -> player.setResourcePack(System.getenv("resourcepack"), "3845agc8-219j-12ed-861d-0242ac120002") }
         command("leave") { player, _ -> ITransferService.get().transfer(player.uniqueId, app.getHub()) }
         command("spectate") { player, args ->
-            val realmId = IRealmService.get().getRealmsOfType("BRIT")
+            val realmId = IRealmService.get().getRealmsOfType("BRD")
                 .filter { it.status == RealmStatus.GAME_STARTED_CAN_SPACTATE }
                 .map { it.realmId }
-            val realm = RealmId.of("BRIT-${args[0]}")
+            val realm = RealmId.of("BRD-${args[0]}")
             if (realm in realmId)
                 ITransferService.get().transfer(player.uniqueId, realm)
             else

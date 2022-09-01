@@ -35,6 +35,8 @@ import ru.cristalix.core.party.PartyService
 import ru.cristalix.core.realm.IRealmService
 import ru.cristalix.core.realm.RealmId
 import ru.cristalix.core.realm.RealmStatus
+import ru.cristalix.core.render.BukkitRenderService
+import ru.cristalix.core.render.IRenderService
 import ru.cristalix.core.transfer.ITransferService
 import ru.cristalix.core.transfer.TransferService
 
@@ -63,6 +65,7 @@ class App : JavaPlugin() {
             registerService(IPartyService::class.java, PartyService(clientSocket))
             registerService(ITransferService::class.java, TransferService(clientSocket))
             registerService(IInventoryService::class.java, InventoryService())
+            registerService(IRenderService::class.java, BukkitRenderService(getServer()))
         }
 
         Anime.include(Kit.NPC, Kit.STANDARD, Kit.LOOTBOX, Kit.GRAFFITI, Kit.EXPERIMENTAL, Kit.BATTLEPASS)
@@ -76,7 +79,7 @@ class App : JavaPlugin() {
             maxPlayers = SLOTS
             isLobbyServer = true
             readableName = "BridgeBuildersLobby"
-            groupName = "BridgeBuildersLobby"
+            groupName = "BridgeBuilders"
             servicedServers = arrayOf("BRD")
         }
 

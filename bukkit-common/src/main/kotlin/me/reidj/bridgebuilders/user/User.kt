@@ -48,15 +48,15 @@ class User(stat: Stat) {
         stat.ether += ether
     }
 
-    fun getLevel() = me.reidj.bridgebuilders.getLevel(stat.experience)
+    fun getLevel() = me.reidj.bridgebuilders.getLevel(stat.exp)
 
     fun giveExperience(exp: Int) {
         val prevLevel = getLevel()
         givePureExperience(exp)
         ModTransfer(
             getLevel(),
-            stat.experience,
-            getRequiredExperience(me.reidj.bridgebuilders.getLevel(stat.experience))
+            stat.exp,
+            getRequiredExperience(me.reidj.bridgebuilders.getLevel(stat.exp))
         ).send("bridge:exp", cachedPlayer)
         if (getLevel() > prevLevel) {
             cachedPlayer?.let {
@@ -75,6 +75,6 @@ class User(stat: Stat) {
     }
 
     fun givePureExperience(exp: Int) {
-        stat.experience += exp
+        stat.exp += exp
     }
 }

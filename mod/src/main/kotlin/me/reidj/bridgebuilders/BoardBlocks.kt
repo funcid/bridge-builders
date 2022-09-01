@@ -27,7 +27,7 @@ object BoardBlocks {
             align = BOTTOM
             color = WHITE
             shadow = true
-            content = "www.cristalix.ru"
+            content = "www.cristalix.gg"
         })
         addChild(rectangle {
             offset = V3(0.0, 23.0)

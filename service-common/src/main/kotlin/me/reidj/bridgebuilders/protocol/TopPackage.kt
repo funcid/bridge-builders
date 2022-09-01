@@ -13,7 +13,6 @@ data class TopPackage(val topType: TopType, val limit: Int): CorePackage() {
 
     enum class TopType {
         WINS,
-        EXPERIENCE,
-        GAMES,
+        EXP,
     }
 }

@@ -32,12 +32,12 @@ class BlockHandler(private val game: BridgeGame) : Listener {
         val hasBlock = type == BEACON
         val hasBlockCount = team.getCountBlocksTeam(game.mapType)
 
-        isCancelled = isCancelled(block) || (hasBlock && !hasBlockCount)
+        isCancelled = isCancelled(block) || (hasBlock && hasBlockCount)
 
         RegenerationManager.addBlock(block)
 
         // Конец игры
-        if (hasBlock && hasBlockCount) {
+        if (hasBlock && !hasBlockCount) {
             val chatFormat = team.color.chatFormat
             val teamName = team.color.teamName
             Bukkit.getOnlinePlayers()
@@ -55,6 +55,8 @@ class BlockHandler(private val game: BridgeGame) : Listener {
                 }
             Bukkit.broadcastMessage("§b―――――――――――――――――")
             Bukkit.broadcastMessage(" ")
+
+            ru.cristalix.core.karma.IKarmaService.get().enableGG { true }
 
             game.end(team)
         }

@@ -1,5 +1,3 @@
 main: me.reidj.node.App
 name: BridgeBuilders
 version: 1.0.0
-depend:
-  - CoreAPI

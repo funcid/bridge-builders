@@ -102,10 +102,12 @@ enum class Status(val lastSecond: Int, val now: (Int, BridgeGame) -> Int) {
                 players.forEach { Anime.alert(it, "Сброс мира", "Некоторые блоки начали регенерироваться...") }
             }
         }
-        if (game.checkWin())
+        if (game.checkWin()) {
+            ru.cristalix.core.karma.IKarmaService.get().enableGG { true }
             activeStatus = END
-        else if (Bukkit.getOnlinePlayers().isEmpty())
+        } else if (Bukkit.getOnlinePlayers().isEmpty()) {
             game.stopGame()
+        }
         time
     }),
     END(2510, { time, game ->

@@ -21,17 +21,19 @@ import me.reidj.node.command.PlayerCommands
 import me.reidj.node.game.BridgeGame
 import me.reidj.node.team.Team
 import me.reidj.node.timer.Status
+import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.datasync.EntityDataParameters
 import ru.cristalix.core.inventory.IInventoryService
 import ru.cristalix.core.inventory.InventoryService
+import ru.cristalix.core.karma.IKarmaService
+import ru.cristalix.core.karma.KarmaService
 import ru.cristalix.core.network.Capability
 import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.party.IPartyService
 import ru.cristalix.core.party.PartyService
 import ru.cristalix.core.realm.IRealmService
-import ru.cristalix.core.realm.RealmId
 import ru.cristalix.core.realm.RealmInfo
 import ru.cristalix.core.realm.RealmStatus
 import ru.cristalix.core.transfer.ITransferService
@@ -82,6 +84,7 @@ class App : JavaPlugin() {
             registerService(IPartyService::class.java, PartyService(ISocketClient.get()))
             registerService(ITransferService::class.java, TransferService(ISocketClient.get()))
             registerService(IInventoryService::class.java, InventoryService())
+            registerService(IKarmaService::class.java, KarmaService(ISocketClient.get()))
         }
 
         // Конфигурация реалма
@@ -89,10 +92,8 @@ class App : JavaPlugin() {
             val id = realmId.id
             status = RealmStatus.WAITING_FOR_PLAYERS
             maxPlayers = 32
-            lobbyFallback = RealmId.of("BRIL-1")
             readableName = "BridgeBuilders#$id"
             groupName = "BridgeBuilders#$id"
-            isCanReconnect = true
         }
 
         Anime.include(Kit.EXPERIMENTAL, Kit.HEALTH_BAR, Kit.NPC, Kit.STANDARD, Kit.GRAFFITI)
@@ -110,6 +111,10 @@ class App : JavaPlugin() {
     }
 
     override fun onDisable() {
+        Bukkit.getOnlinePlayers().mapNotNull { getUser(it) }.map { it.stat }.forEach {
+            it.lastRealm = ""
+            it.gameExitTime = -1
+        }
         runBlocking { clientSocket.write(bulkSave(true)) }
         Thread.sleep(1000)
     }

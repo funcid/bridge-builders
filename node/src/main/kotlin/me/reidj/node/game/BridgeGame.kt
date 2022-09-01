@@ -290,7 +290,7 @@ class BridgeGame {
             it.run {
                 stat.games++
                 inGame = false
-                if (Math.random() < 0.05) {
+                if (Math.random() < 0.02) {
                     val lootBox = LootBoxType.values().drop(5).random()
                     LootBoxType.values().drop(5).forEach { println(it) }
                     stat.lootBoxes.add(lootBox)
