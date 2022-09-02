@@ -1,5 +1,6 @@
 package me.reidj.node.game
 
+import kotlinx.coroutines.runBlocking
 import me.func.mod.Anime
 import me.func.mod.Glow
 import me.func.mod.Npc
@@ -17,7 +18,6 @@ import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.MapLoader
 import me.reidj.node.activeStatus
 import me.reidj.node.map.MapType
-import me.reidj.node.realm
 import me.reidj.node.team.Bridge
 import me.reidj.node.team.Team
 import me.reidj.node.teams
@@ -33,7 +33,6 @@ import org.bukkit.entity.Player
 import org.bukkit.util.Vector
 import ru.cristalix.core.formatting.Color
 import ru.cristalix.core.formatting.Formatting
-import ru.cristalix.core.realm.RealmStatus
 import ru.cristalix.core.transfer.ITransferService
 import kotlin.math.max
 import kotlin.math.pow
@@ -111,7 +110,7 @@ class BridgeGame {
         ITransferService.get().transferBatch(Bukkit.getOnlinePlayers().map { it.uniqueId }, getLobbyRealm())
 
         after(5) {
-            realm.status = RealmStatus.WAITING_FOR_PLAYERS
+            /*realm.status = RealmStatus.WAITING_FOR_PLAYERS
             activeStatus = Status.STARTING
             timer.time = 0
             teams.clear()
@@ -119,10 +118,8 @@ class BridgeGame {
             userMap.clear()
             games++
             Bukkit.unloadWorld(worldMeta.world, false)
-            startGame()
-
-            if (games >= GAMES_STREAK_RESTART)
-                Bukkit.shutdown()
+            startGame()*/
+            Bukkit.shutdown()
         }
     }
 
@@ -146,8 +143,8 @@ class BridgeGame {
             val npcArgs = label.tag.split(" ")
             Npc.npc {
                 location(label.apply {
-                    x + .5
-                    z + .5
+                    x += 0.5
+                    z += 0.5
                 })
                 behaviour = NpcBehaviour.STARE_AT_PLAYER
                 name = "§bСтроитель Джо"
@@ -296,7 +293,10 @@ class BridgeGame {
                 }
             }
         }
-        after(5) { clientSocket.write(bulkSave(true)) }
+        after(5) {
+            runBlocking { clientSocket.write(bulkSave(true)) }
+            Thread.sleep(1000)
+        }
         after(40) { stopGame() }
     }
 

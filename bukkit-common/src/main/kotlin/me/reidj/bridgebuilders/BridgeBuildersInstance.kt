@@ -68,7 +68,9 @@ fun createDisplayName(user: User): String {
 fun createPrefix(user: User?): String {
     if (user == null)
         return ""
-    if (user.stat.currentNameTag != NameTagType.NONE.name) return "${NameTagType.valueOf(user.stat.currentNameTag).getTitle()} §8┃"
+    if (user.stat.currentNameTag != NameTagType.NONE.name) return "${
+        NameTagType.valueOf(user.stat.currentNameTag).getTitle()
+    } §8┃"
     return ""
 }
 
@@ -86,13 +88,12 @@ fun regAdminCommand(commandName: String, executor: (User, Array<out String>) -> 
     }
 }
 
-fun bulkSave(remove: Boolean): BulkSaveUserPackage? =
-    BulkSaveUserPackage(Bukkit.getOnlinePlayers().map {
-        val uuid = it.uniqueId
-        val user = (if (remove) userMap.remove(uuid) else userMap[uuid]) ?: return null
-        user.inGame = false
-        SaveUserPackage(uuid, user.stat)
-    }.toList())
+fun bulkSave(remove: Boolean): BulkSaveUserPackage? = BulkSaveUserPackage(Bukkit.getOnlinePlayers().map {
+    val uuid = it.uniqueId
+    val user = (if (remove) userMap.remove(uuid) else userMap[uuid]) ?: return null
+    user.inGame = false
+    SaveUserPackage(uuid, user.stat)
+})
 
 fun getRequiredExperience(forLevel: Int) = forLevel * forLevel - forLevel / 2
 

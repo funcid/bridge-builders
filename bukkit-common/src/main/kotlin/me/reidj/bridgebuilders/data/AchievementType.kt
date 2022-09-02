@@ -16,7 +16,7 @@ enum class AchievementType(
     NEWBIE("Новичок", "Победить 1 раз\n§f+ 128 Эфира\n+ 100 опыта\n+ Обычный лутбокс х1", { it.stat.wins >= 1 }, {
         it.giveEther(128)
         it.giveExperience(100)
-
+        it.stat.lootBoxes.add(LootBoxType.COMMON)
     }),
     RESPONSIBLE("Освоившийся", "Победить 10 раз\n§f256 Эфира\n+ 250 опыта", { it.stat.wins >= 10 }, {
         it.giveEther(256)
@@ -30,12 +30,11 @@ enum class AchievementType(
         {
             it.giveEther(512)
             it.giveExperience(500)
-
+            repeat(2) { _ -> it.stat.lootBoxes.add(LootBoxType.UNUSUAL) }
         }),
     VETERAN("Ветеран", "Победить 50 раз\n§f+1,024 Эфира\n+ 700 опыта", { it.stat.wins >= 50 }, {
         it.giveEther(1024)
         it.giveExperience(700)
-
     }),
     MASTER(
         "Мастер",
@@ -44,7 +43,9 @@ enum class AchievementType(
         {
             it.giveEther(2048)
             it.giveExperience(1000)
-
+            val stat = it.stat
+            repeat(5) { stat.lootBoxes.add(LootBoxType.COMMON) }
+            repeat(2) { stat.lootBoxes.add(LootBoxType.RARE) }
         }),
     LIFE_LEGEND(
         "Живая Легенда",
@@ -53,7 +54,7 @@ enum class AchievementType(
         {
             it.giveEther(4096)
             it.giveExperience(1500)
-
+            it.stat.lootBoxes.add(LootBoxType.EPIC)
         }),
     LEGENDARY_BUILDER(
         "Легендарный строитель",
@@ -62,7 +63,9 @@ enum class AchievementType(
         {
             it.giveEther(8196)
             it.giveExperience(2500)
-
+            val stat = it.stat
+            repeat(3) { stat.lootBoxes.add(LootBoxType.EPIC) }
+            repeat(2) { stat.lootBoxes.add(LootBoxType.LEGENDARY) }
         }),
 
     // Достижения за убийства
@@ -73,12 +76,11 @@ enum class AchievementType(
         {
             it.giveEther(128)
             it.giveExperience(100)
-
+            it.stat.lootBoxes.add(LootBoxType.COMMON)
         }),
     MURDER("Маньяк", "Убить 10 игроков\n§f+ 256 Эфира\n+ 250 опыта", { it.stat.kills >= 10 }, {
         it.giveEther(256)
         it.giveExperience(250)
-
     }),
     HITMAN(
         "Наёмный убийца",
@@ -86,13 +88,12 @@ enum class AchievementType(
         { it.stat.kills >= 25 }, {
             it.giveEther(512)
             it.giveExperience(400)
-
+            repeat(3) { _ -> it.stat.lootBoxes.add(LootBoxType.UNUSUAL) }
         }
     ),
     RIPPER("Потрошитель", "Убить 50 игроков\n§f+ 768 Эфира\n+ 700 опыта", { it.stat.kills >= 50 }, {
         it.giveEther(768)
         it.giveExperience(700)
-
     }),
     PSYCHOPATH(
         "Психопат",
@@ -101,7 +102,7 @@ enum class AchievementType(
         {
             it.giveEther(1024)
             it.giveExperience(900)
-
+            repeat(3) { _ -> it.stat.lootBoxes.add(LootBoxType.RARE) }
         }),
     SERIAL_MURDER(
         "Серийный маньяк",
@@ -109,7 +110,7 @@ enum class AchievementType(
         { it.stat.kills >= 250 }, {
             it.giveEther(2048)
             it.giveExperience(1500)
-
+            repeat(2) { _ -> it.stat.lootBoxes.add(LootBoxType.EPIC) }
         }),
     EXECUTIONER(
         "Палач",
@@ -117,7 +118,9 @@ enum class AchievementType(
         { it.stat.kills >= 500 }, {
             it.giveEther(4096)
             it.giveExperience(2000)
-
+            val stat = it.stat
+            repeat(3) { stat.lootBoxes.add(LootBoxType.EPIC) }
+            stat.lootBoxes.add(LootBoxType.LEGENDARY)
         }),
     JASON_VOORHEES(
         "Джейсон Вурхиз",
@@ -125,7 +128,9 @@ enum class AchievementType(
         { it.stat.kills >= 1000 }, {
             it.giveEther(8192)
             it.giveExperience(2700)
-
+            val stat = it.stat
+            repeat(5) { stat.lootBoxes.add(LootBoxType.EPIC) }
+            repeat(2) { stat.lootBoxes.add(LootBoxType.LEGENDARY) }
         }),
     MINION_OF_CHAOS(
         "Приспешник Хаоса",
@@ -133,7 +138,9 @@ enum class AchievementType(
         { it.stat.kills >= 2500 }, {
             it.giveEther(10256)
             it.giveExperience(3500)
-
+            val stat = it.stat
+            repeat(10) { stat.lootBoxes.add(LootBoxType.EPIC) }
+            repeat(5) { stat.lootBoxes.add(LootBoxType.LEGENDARY) }
         }),
     JOHN_WICK(
         "Джон Уик",
@@ -141,7 +148,9 @@ enum class AchievementType(
         { it.stat.kills >= 5000 }, {
             it.giveEther(20540)
             it.giveExperience(5500)
-
+            val stat = it.stat
+            repeat(3) { stat.lootBoxes.add(LootBoxType.DONATE) }
+            repeat(2) { stat.lootBoxes.add(LootBoxType.LEGENDARY) }
         }),
 
     // Достижения за уровень
@@ -151,7 +160,7 @@ enum class AchievementType(
         { it.getLevel() >= 5 }, {
             it.giveEther(250)
             it.giveExperience(90)
-
+            it.stat.lootBoxes.add(LootBoxType.COMMON)
         }),
     COPPER_GRADE(
         "Авантюрист Медного ранга",
@@ -167,7 +176,7 @@ enum class AchievementType(
         { it.getLevel() >= 30 }, {
             it.giveEther(1024)
             it.giveExperience(300)
-
+            repeat(3) { _ -> it.stat.lootBoxes.add(LootBoxType.UNUSUAL) }
         }),
     IRON_GRADE(
         "Авантюрист Железного ранга",
@@ -175,7 +184,6 @@ enum class AchievementType(
         { it.getLevel() >= 50 }, {
             it.giveEther(1526)
             it.giveExperience(600)
-
         }),
     STEEL_GRADE(
         "Авантюрист Стального ранга",
@@ -183,7 +191,7 @@ enum class AchievementType(
         { it.getLevel() >= 75 }, {
             it.giveEther(2048)
             it.giveExperience(900)
-
+            repeat(3) { _ -> it.stat.lootBoxes.add(LootBoxType.RARE) }
         }),
     GOLD_GRADE(
         "Авантюрист Золотого Ранга",
@@ -191,7 +199,9 @@ enum class AchievementType(
         { it.getLevel() >= 100 }, {
             it.giveEther(4096)
             it.giveExperience(1300)
-
+            val stat = it.stat
+            repeat(3) { stat.lootBoxes.add(LootBoxType.RARE) }
+            stat.lootBoxes.add(LootBoxType.EPIC)
         }),
     CARBON_GRADE(
         "Авантюрист Карбонового Ранга",
@@ -199,7 +209,7 @@ enum class AchievementType(
         { it.getLevel() >= 125 }, {
             it.giveEther(5096)
             it.giveExperience(2000)
-
+            repeat(3) { _ -> it.stat.lootBoxes.add(LootBoxType.EPIC) }
         }),
     TITANIUM_GRADE(
         "Авантюрист Титанового Ранга",
@@ -207,7 +217,9 @@ enum class AchievementType(
         { it.getLevel() >= 150 }, {
             it.giveEther(6096)
             it.giveExperience(2500)
-
+            val stat = it.stat
+            repeat(3) { stat.lootBoxes.add(LootBoxType.EPIC) }
+            repeat(2) { stat.lootBoxes.add(LootBoxType.LEGENDARY) }
         }),
     ADAMANTITE_GRADE(
         "Авантюрист Адамантитового Ранга",
@@ -215,7 +227,10 @@ enum class AchievementType(
         { it.getLevel() >= 300 }, {
             it.giveEther(10256)
             it.giveExperience(3500)
-
+            val stat = it.stat
+            repeat(5) { stat.lootBoxes.add(LootBoxType.LEGENDARY) }
+            repeat(10) { stat.lootBoxes.add(LootBoxType.EPIC) }
+            stat.lootBoxes.add(LootBoxType.DONATE)
         }),
     PLATINUM_GRADE(
         "Авантюрист Платинового Ранга",
@@ -223,7 +238,10 @@ enum class AchievementType(
         { it.getLevel() >= 500 }, {
             it.giveEther(20512)
             it.giveExperience(5000)
-
+            val stat = it.stat
+            repeat(10) { stat.lootBoxes.add(LootBoxType.LEGENDARY) }
+            repeat(15) { stat.lootBoxes.add(LootBoxType.EPIC) }
+            repeat(3) { stat.lootBoxes.add(LootBoxType.DONATE) }
         }),
 
     // Достижения за открытые лутбоксы
@@ -253,6 +271,7 @@ enum class AchievementType(
         { it.stat.lootBoxOpened >= 100 }, {
             it.giveEther(2048)
             it.giveExperience(1250)
+            repeat(3) { _ -> it.stat.lootBoxes.add(LootBoxType.EPIC) }
         }),
     WHAT(
         "Что я сделал!?",
@@ -260,6 +279,9 @@ enum class AchievementType(
         { it.stat.lootBoxOpened >= 250 }, {
             it.giveEther(4096)
             it.giveExperience(1700)
+            val stat = it.stat
+            stat.lootBoxes.add(LootBoxType.LEGENDARY)
+            repeat(2) { stat.lootBoxes.add(LootBoxType.EPIC) }
         }),
     THE_KNIFE(
         "Выпал нож, я не вру!",
@@ -267,6 +289,8 @@ enum class AchievementType(
         { it.stat.lootBoxOpened >= 500 }, {
             it.giveEther(8192)
             it.giveExperience(3000)
+            val stat = it.stat
+            repeat(2) { _ -> stat.lootBoxes.add(me.reidj.bridgebuilders.data.LootBoxType.LEGENDARY) }
+            repeat(2) { stat.lootBoxes.add(me.reidj.bridgebuilders.data.LootBoxType.DONATE) }
         }),
-    ;
-}
+        }
