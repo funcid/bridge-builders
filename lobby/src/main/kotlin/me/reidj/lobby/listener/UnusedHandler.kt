@@ -54,8 +54,8 @@ class UnusedHandler : Listener {
 
     @EventHandler
     fun AsyncPlayerChatEvent.handle() {
-        isCancelled = true
         val user = getUser(player) ?: return
+        isCancelled = true
         Bukkit.getOnlinePlayers()
             .forEach { it.sendMessage("${createDisplayName(user)} ${Formatting.ARROW_SYMBOL} $message") }
     }

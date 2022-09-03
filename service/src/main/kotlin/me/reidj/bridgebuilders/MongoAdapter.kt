@@ -91,7 +91,14 @@ open class MongoAdapter(dbUrl: String, dbName: String, collection: String) {
     private fun handle(throwable: Throwable?) = throwable?.printStackTrace()
 
     open fun <V> makeRatingByField(fieldName: String, limit: Int): CompletableFuture<List<TopEntry<Stat, V>>> {
-        val operations = listOf(
+        val entries = ArrayList<TopEntry<Stat, V>>()
+        val future: CompletableFuture<List<TopEntry<Stat, V>>> = CompletableFuture<List<TopEntry<Stat, V>>>()
+
+        data.createIndex(Indexes.hashed("_id")) { _, _ -> }
+        data.createIndex(Indexes.hashed("uuid")) { _, _ -> }
+        data.createIndex(Indexes.ascending(fieldName)) { _, _ -> }
+
+        data.aggregate(listOf(
             Aggregates.project(
                 Projections.fields(
                     Projections.include(fieldName),
@@ -100,10 +107,7 @@ open class MongoAdapter(dbUrl: String, dbName: String, collection: String) {
                 )
             ), Aggregates.sort(Sorts.descending(fieldName)),
             Aggregates.limit(limit)
-        )
-        val entries = ArrayList<TopEntry<Stat, V>>()
-        val future: CompletableFuture<List<TopEntry<Stat, V>>> = CompletableFuture<List<TopEntry<Stat, V>>>()
-        data.aggregate(operations).forEach({ document: Document ->
+        )).forEach({ document: Document ->
             readDocument(document)?.let { entries.add(TopEntry(it, document[fieldName] as V)) }
         }) { _: Void?, throwable: Throwable? ->
             if (throwable != null) {

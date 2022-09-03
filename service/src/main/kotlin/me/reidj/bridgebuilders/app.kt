@@ -2,7 +2,9 @@ package me.reidj.bridgebuilders
 
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates.unset
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import me.reidj.bridgebuilders.protocol.*
 import org.bson.conversions.Bson
 import ru.cristalix.core.CoreApi
@@ -33,30 +35,30 @@ fun main() {
 
         CoreApi.get().registerService(IPermissionService::class.java, PermissionService(this))
 
-        addListener(LoadStatPackage::class.java) { realmId, pckg ->
-            mongoAdapter.find(pckg.uuid).get().run {
+        listen<LoadStatPackage> { realmId, pckg ->
+            withContext(Dispatchers.IO) { mongoAdapter.find(pckg.uuid).get() }.run {
                 pckg.stat = this
                 forward(realmId, pckg)
                 println("Loaded on ${realmId.realmName}! Player: ${pckg.uuid}")
             }
         }
-        addListener(SaveUserPackage::class.java) { realmId, pckg ->
+        listen<SaveUserPackage> { realmId, pckg ->
             mongoAdapter.save(pckg.stat)
             println("Received SaveUserPackage from ${realmId.realmName} for ${pckg.uuid}")
 
         }
-        addListener(BulkSaveUserPackage::class.java) { realmId, pckg ->
+        listen<BulkSaveUserPackage> { realmId, pckg ->
             mongoAdapter.save(pckg.packages.map { it.stat })
             println("Received BulkSaveUserPackage from ${realmId.realmName}")
         }
-        addListener(TopPackage::class.java) { realmId, pckg ->
+        listen<TopPackage> { realmId, pckg ->
             mongoAdapter.getTop(pckg.topType, pckg.limit).thenAccept {
                 pckg.entries = it
                 forward(realmId, pckg)
                 println("Top generated for ${realmId.realmName}")
             }
         }
-        addListener(RejoinPackage::class.java) { _, pckg ->
+        listen<RejoinPackage> { _, pckg ->
             write(pckg)
         }
     }
