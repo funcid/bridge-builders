@@ -28,7 +28,7 @@ import java.util.*
  **/
 object InteractHandler : Listener {
 
-    val error = Formatting.error("Команда заполнена")
+    private val error = Formatting.error("Команда заполнена")
 
     @EventHandler
     fun PlayerItemHeldEvent.handle() {
@@ -54,7 +54,7 @@ object InteractHandler : Listener {
                         if (party.isPresent) {
                             val partySnapshot = party.get() as PartySnapshot
                             if (partySnapshot.leader == uuid) {
-                                if (team.players.size == 1) {
+                                if (team.players.size >= 1) {
                                     player.error("Ошибка", error)
                                     return@forEach
                                 } else if (partySnapshot.members.size > 2) {

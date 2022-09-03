@@ -484,7 +484,17 @@ enum class StartingKit(
         ), item {
             type = STONE_SWORD
             enchant(DAMAGE_ALL, 1)
-        }, ItemStack(GOLDEN_APPLE, 1), ItemStack(COOKED_BEEF, 16)
+        }, ItemStack(GOLDEN_APPLE, 1), ItemStack(COOKED_BEEF, 16),
+        item {
+            type = org.bukkit.Material.GOLD_SPADE
+            enchant(DIG_SPEED, 4)
+            enchant(DURABILITY, 2)
+        },
+        item {
+            type = org.bukkit.Material.IRON_PICKAXE
+            enchant(DIG_SPEED, 3)
+            enchant(DURABILITY, 3)
+        }
     )
     ;
 

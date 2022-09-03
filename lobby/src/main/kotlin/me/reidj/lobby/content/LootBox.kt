@@ -128,6 +128,7 @@ class LootBox : Listener, Ticked {
             user.giveEther(giveBack)
         } else {
             drop.give(user)
+            stat.donates.add(drop.getName())
         }
 
         user.giveExperience(boxType.lootBox.experience)

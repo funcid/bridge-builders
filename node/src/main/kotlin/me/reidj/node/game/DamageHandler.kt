@@ -89,6 +89,8 @@ class DamageHandler : Listener {
                 getEntity().gameMode = GameMode.SURVIVAL
                 getEntity().foodLevel = 20
                 user.lastDamager = null
+                user.isGod = true
+                after(3 * 20) { user.isGod = false }
             } else if (time < 2) {
                 Anime.title(getEntity(), "§dВозрождение...")
             } else if (time == 2) {
@@ -147,12 +149,12 @@ class DamageHandler : Listener {
         if ((damager is Player || damager is Arrow) && entity is Player) {
             val damager = if (damager is Projectile) (damager as Projectile).shooter as Player else damager as Player
             val team = teams.firstOrNull { damager.uniqueId in it.players } ?: return
-            if (entity.uniqueId in team.players) {
+            val user = getUser(entity.uniqueId) ?: return
+            if (entity.uniqueId in team.players || user.isGod) {
                 cancelled = true
             } else {
                 if (damager.itemInHand.getType().name.endsWith("AXE"))
                     damage /= 3
-                val user = getUser(entity.uniqueId) ?: return
                 user.lastDamager = damager
             }
         }

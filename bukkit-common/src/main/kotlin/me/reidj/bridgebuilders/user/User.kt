@@ -27,6 +27,7 @@ class User(stat: Stat) {
     var isArmLock = false
     var isTeleportAvailable = false
     var inGame = false
+    var isGod = false
 
     var collectedBlocks = 0
     var cacheKills = 0
