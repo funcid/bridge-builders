@@ -87,7 +87,7 @@ class BlockHandler(private val game: BridgeGame) : Listener {
             it.bridge.blockOfBridge(
                 block,
                 game.mapType
-            ) || location.distanceSquared(it.spawn) < 2 || block.type == SEA_LANTERN || game.blockNextToNpc(
+            ) || location.distanceSquared(it.spawn) < 4 * 4 || block.type == SEA_LANTERN || game.blockNextToNpc(
                 location
             )
         }
