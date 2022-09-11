@@ -54,6 +54,12 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
         val user = getUser(player)
         val uuid = player.uniqueId
 
+        // Чтобы /spec и /rejoin работали
+        if (activeStatus == Status.STARTING && Bukkit.getOnlinePlayers().size > slots) {
+            after(10) { ITransferService.get().transfer(uuid, getLobbyRealm()) }
+            return
+        }
+
         if (user == null) {
             player.sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
             after(10) { ITransferService.get().transfer(uuid, getLobbyRealm()) }
@@ -62,14 +68,6 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
 
         if (user.cachedPlayer == null)
             user.cachedPlayer = player
-
-        val stat = user.stat
-
-        if (stat.gameLockTime > 0 || stat.gameExitTime > 0) {
-            player.sendMessage(Formatting.error("На Вас наложена временная блокировка или Вы не закончили прошлую игру!"))
-            after(10) { ITransferService.get().transfer(uuid, getLobbyRealm()) }
-            return
-        }
 
         after(3) {
             player.setResourcePack("", "")
@@ -119,7 +117,7 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
         val players = Bukkit.getOnlinePlayers()
         val team = teams.firstOrNull { uuid in it.players } ?: return
         if (activeStatus == Status.STARTING) {
-            players.forEach { ModTransfer(true, slots, players.size).send("bridge:online", it) }
+            after(3) { players.forEach { ModTransfer(true, slots, players.size).send("bridge:online", it) } }
             ModifiersManager.voteRemove(player)
             userMap.remove(uuid)
             team.players.remove(uuid)

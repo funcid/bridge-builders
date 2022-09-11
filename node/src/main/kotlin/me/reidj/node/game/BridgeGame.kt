@@ -330,7 +330,7 @@ class BridgeGame {
 
         player.gameMode = org.bukkit.GameMode.SURVIVAL
 
-        Anime.timer(player, "Команда игры через", Status.GAME.lastSecond)
+        Anime.timer(player, "Игра закончится через", Status.GAME.lastSecond)
 
         player.customName = "${playerTeam.color.chatColor}[${
             playerTeam.color.teamName.substring(

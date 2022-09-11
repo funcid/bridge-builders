@@ -1,6 +1,5 @@
 package me.reidj.lobby.ticker.detail
 
-import implario.humanize.Humanize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,33 +49,11 @@ class BanManager : Ticked {
     companion object {
         fun endOfBan(user: User): Boolean {
             val stat = user.stat
-            if (stat.gameLockTime > 0) {
-                user.cachedPlayer?.sendMessage(Formatting.fine(
-                    "До разблокировки §3${
-                        timeConverter(
-                            (stat.gameLockTime - (System.currentTimeMillis() / 1000)).toInt()
-                        )
-                    }§f."
-                ))
-                return true
-            } else if (stat.gameExitTime > 0) {
-                user.cachedPlayer?.sendMessage(Formatting.error("Вы не можете начать новую игру, незакончив прошлую!"))
+            if (stat.gameExitTime > 0) {
+                user.cachedPlayer?.sendMessage(Formatting.error("Вы не можете начать новую игру, не закончив прошлую!"))
                 return true
             }
             return false
-        }
-
-        private fun timeConverter(totalSeconds: Int): String {
-            val minutes = (totalSeconds % 3600) / 60
-            val seconds = totalSeconds % 60
-            return "$minutes ${
-                Humanize.plurals(
-                    "минута",
-                    "минуты",
-                    "минут",
-                    minutes
-                )
-            } $seconds ${Humanize.plurals("секунда", "секунды", "секунд", seconds)}"
         }
     }
 }
