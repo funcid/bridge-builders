@@ -141,7 +141,6 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
             user.inventory = player.inventory
             user.exp = player.exp
 
-            stat.gameExitTime = System.currentTimeMillis() / 1000 + 300
             stat.lastRealm = IRealmService.get().currentRealmInfo.realmId.realmName
 
             team.players.remove(uuid)
