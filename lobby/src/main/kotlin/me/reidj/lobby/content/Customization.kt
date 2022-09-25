@@ -16,6 +16,7 @@ import me.reidj.bridgebuilders.donate.impl.*
 import me.reidj.bridgebuilders.getTexture
 import me.reidj.bridgebuilders.getUser
 import me.reidj.bridgebuilders.protocol.SaveUserPackage
+import me.reidj.bridgebuilders.user.User
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import ru.cristalix.core.formatting.Formatting
@@ -200,43 +201,7 @@ class Customization {
             description = "Выполняйте задания и получайте за это приятные награды!"
             hint("Открыть")
             texture = getTexture("achievement_icon")
-            onClick { player, _, _ ->
-                val user = getUser(player) ?: return@onClick
-                selection {
-                    title = "Достижения"
-                    rows = 3
-                    columns = 2
-                    hint = ""
-                    storage = AchievementType.values().map { achievement ->
-                        val playerHas = achievement.name in user.stat.achievements
-                        val canGet = achievement.predicate(user)
-                        button {
-                            texture = getTexture("achievement_icon")
-                            title =
-                                if (playerHas) "§aНаграда получена §7${achievement.title}" else "§b${achievement.title}"
-                            hint(if (canGet && !playerHas) "Забрать награду!" else "")
-                            hover(achievement.lore)
-                            onClick top@{ player, _, _ ->
-                                if (!canGet || playerHas || user.isArmLock)
-                                    return@top
-                                user.isArmLock = true
-                                Anime.close(player)
-                                player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1f)
-                                achievement.reward(user)
-                                user.stat.achievements.add(achievement.name)
-                                player.sendMessage(Formatting.fine("Вы успешно получили награду!"))
-                                clientSocket.write(
-                                    SaveUserPackage(
-                                        user.stat.uuid,
-                                        user.stat
-                                    )
-                                )
-                                after(5) { user.isArmLock = false }
-                            }
-                        }
-                    }.toMutableList()
-                }.open(player)
-            }
+            onClick { player, _, _ -> openAchievement(getUser(player) ?: return@onClick) }
         },
         button {
             title = "Стартовые наборы"
@@ -365,6 +330,44 @@ class Customization {
             }.open(player)
         }
     }
+
+    private fun openAchievement(user: User) {
+        selection {
+            title = "Достижения"
+            rows = 3
+            columns = 2
+            hint = ""
+            storage = AchievementType.values().map { achievement ->
+                val playerHas = achievement.name in user.stat.achievements
+                val canGet = achievement.predicate(user)
+                button {
+                    texture = getTexture("achievement_icon")
+                    title =
+                        if (playerHas) "§aНаграда получена §7${achievement.title}" else "§b${achievement.title}"
+                    hint(if (canGet && !playerHas) "Забрать награду!" else "")
+                    hover(achievement.lore)
+                    onClick top@{ player, _, _ ->
+                        if (!canGet || playerHas || user.isArmLock)
+                            return@top
+                        user.isArmLock = true
+                        player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1f)
+                        achievement.reward(user)
+                        user.stat.achievements.add(achievement.name)
+                        player.sendMessage(Formatting.fine("Вы успешно получили награду!"))
+                        clientSocket.write(
+                            SaveUserPackage(
+                                user.stat.uuid,
+                                user.stat
+                            )
+                        )
+                        after(5) { user.isArmLock = false }
+                        openAchievement(user)
+                    }
+                }
+            }.toMutableList()
+        }.open(user.cachedPlayer!!)
+    }
+
 
     private fun buy(player: Player, isDonate: Boolean, donate: DonatePosition) {
         Confirmation(
