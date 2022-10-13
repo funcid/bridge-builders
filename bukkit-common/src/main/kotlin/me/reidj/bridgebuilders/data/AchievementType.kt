@@ -290,7 +290,7 @@ enum class AchievementType(
             it.giveEther(8192)
             it.giveExperience(3000)
             val stat = it.stat
-            repeat(2) { _ -> stat.lootBoxes.add(me.reidj.bridgebuilders.data.LootBoxType.LEGENDARY) }
-            repeat(2) { stat.lootBoxes.add(me.reidj.bridgebuilders.data.LootBoxType.DONATE) }
+            repeat(2) { _ -> stat.lootBoxes.add(LootBoxType.LEGENDARY) }
+            repeat(2) { stat.lootBoxes.add(LootBoxType.DONATE) }
         }),
         }

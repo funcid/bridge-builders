@@ -215,23 +215,20 @@ class Customization {
                             title =
                                 if (playerHas) "§aНаграда получена §7${achievement.title}" else "§b${achievement.title}"
                             hint(if (canGet && !playerHas) "Забрать награду!" else "")
+                            special(playerHas)
                             hover(achievement.lore)
-                            onClick top@{ player, _, _ ->
+                            onLeftClick leftClick@{ player, _, _ ->
                                 if (!canGet || playerHas || user.isArmLock)
-                                    return@top
+                                    return@leftClick
                                 user.isArmLock = true
                                 Anime.close(player)
                                 player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1f)
                                 achievement.reward(user)
                                 user.stat.achievements.add(achievement.name)
                                 player.sendMessage(Formatting.fine("Вы успешно получили награду!"))
-                                clientSocket.write(
-                                    SaveUserPackage(
-                                        user.stat.uuid,
-                                        user.stat
-                                    )
-                                )
                                 after(5) { user.isArmLock = false }
+                                clientSocket.write(SaveUserPackage(user.stat.uuid, user.stat))
+                                return@leftClick
                             }
                         }
                     }.toMutableList()

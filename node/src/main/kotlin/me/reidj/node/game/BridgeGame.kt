@@ -87,6 +87,7 @@ class BridgeGame {
                     worldMeta.getLabel("$team-x"),
                     worldMeta.getLabel("$team-z"),
                 ),
+                mutableMapOf(),
                 mutableMapOf()
             )
         }.toMutableList()

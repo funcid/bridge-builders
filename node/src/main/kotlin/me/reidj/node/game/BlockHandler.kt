@@ -24,6 +24,7 @@ class BlockHandler(private val game: BridgeGame) : Listener {
 
     @EventHandler
     fun BlockPlaceEvent.handle() {
+        RegenerationManager.blocks[block.location] = block.typeId to block.data
         isCancelled = isCancelled(block) || teams.all { block.location.distanceSquared(it.spawn) > 60 * 72 }
     }
 
@@ -36,7 +37,8 @@ class BlockHandler(private val game: BridgeGame) : Listener {
 
         isCancelled = isCancelled(block) || (hasBlock && hasBlockCount)
 
-        RegenerationManager.addBlock(block)
+        if (RegenerationManager.blocks.any { place -> team.breakBlocks.any { it.value != place.value } })
+            RegenerationManager.addBlock(block)
 
         // Конец игры
         if (hasBlock && !hasBlockCount) {

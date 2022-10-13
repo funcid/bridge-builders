@@ -9,7 +9,7 @@ import org.bukkit.block.Block
  **/
 object RegenerationManager {
 
-    private val blocks = mutableMapOf<Location, Pair<Int, Byte>>()
+    val blocks = mutableMapOf<Location, Pair<Int, Byte>>()
 
     fun placeBlock() {
         if (blocks.isEmpty())

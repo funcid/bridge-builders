@@ -21,6 +21,7 @@ data class Team(
     val spawnPitch: Float,
     var bridge: Bridge,
     var collected: MutableMap<Block, Int>,
+    var breakBlocks: MutableMap<Location, Pair<Int, Byte>>,
     var blocksToPlace: Int = 0
 ) {
     val commandPrefix = "§8КОМАНДА"
