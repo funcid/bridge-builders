@@ -124,7 +124,7 @@ class BridgeGame {
         }
     }
 
-    fun getSpawnLocation(): Location = worldMeta.getLabel("spawn").apply {
+    fun getSpawnLocation(): Location = worldMeta.getLabel("spawn").clone().apply {
         x += 0.5
         z += 0.5
     }
