@@ -2,6 +2,7 @@ package me.reidj.lobby.listener
 
 import me.func.mod.Anime
 import me.func.mod.conversation.ModLoader
+import me.func.mod.selection.Reconnect
 import me.func.mod.util.after
 import me.func.protocol.Indicators
 import me.reidj.bridgebuilders.clientSocket
@@ -11,7 +12,6 @@ import me.reidj.bridgebuilders.protocol.SaveUserPackage
 import me.reidj.bridgebuilders.userMap
 import me.reidj.lobby.app
 import me.reidj.lobby.content.WeekRewards
-import me.reidj.lobby.util.GameUtil
 import me.reidj.lobby.util.GameUtil.spawn
 import me.reidj.lobby.util.ItemUtil.backItem
 import me.reidj.lobby.util.ItemUtil.cosmeticItem
@@ -77,11 +77,14 @@ class ConnectionHandler : Listener {
             if (stat.lastRealm != "") {
                 val realmStatus = IRealmService.get().getRealmById(RealmId.of(stat.lastRealm)).status
                 if (realmStatus != RealmStatus.WAITING_FOR_PLAYERS) {
-                    GameUtil.reconnect.run {
-                        text = "Вернуться в игру"
-                        hint = "Вернуться"
-                        open(player)
-                    }
+                    Reconnect {
+                        val click = getUser(it) ?: return@Reconnect
+                        if (user.isArmLock)
+                            return@Reconnect
+                        click.isArmLock = true
+                        it.performCommand("rejoin")
+                        after(5) { click.isArmLock = false }
+                    }.open(player)
                 }
             }
             // Обнулить комбо сбора наград если прошло больше суток или комбо > 7

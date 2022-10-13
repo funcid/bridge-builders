@@ -106,5 +106,5 @@ class App : JavaPlugin() {
         Thread.sleep(1000)
     }
 
-    fun getHub(): RealmId = RealmId.of("HUB-2")
+    fun getHub(): RealmId = RealmId.of("HUB-11")
 }

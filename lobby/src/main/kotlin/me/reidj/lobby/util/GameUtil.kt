@@ -1,11 +1,8 @@
 package me.reidj.lobby.util
 
 import me.func.mod.data.Sprites
-import me.func.mod.selection.Reconnect
 import me.func.mod.selection.button
 import me.func.mod.selection.choicer
-import me.func.mod.util.after
-import me.reidj.bridgebuilders.getUser
 import me.reidj.bridgebuilders.worldMeta
 import me.reidj.lobby.npc.NpcType
 import org.bukkit.Location
@@ -17,7 +14,7 @@ import ru.cristalix.core.realm.IRealmService
  **/
 object GameUtil {
 
-    val spawn: Location = worldMeta.getLabel("spawn").apply {
+    val spawn: Location = worldMeta.getLabel("spawn").clone().apply {
         x += .5
         z += .5
         yaw = 90f
@@ -35,14 +32,5 @@ object GameUtil {
                 onClick { it, _, _ -> it.performCommand(NpcType.TWO.command) }
             }
         )
-    }
-
-    val reconnect = Reconnect(300) {
-        val user = getUser(it) ?: return@Reconnect
-        if (user.isArmLock)
-            return@Reconnect
-        user.isArmLock = true
-        it.performCommand("rejoin")
-        after(5) { user.isArmLock = false }
     }
 }
