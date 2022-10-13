@@ -51,7 +51,6 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
 
     @EventHandler
     fun PlayerJoinEvent.handle() {
-        val user = getUser(player)
         val uuid = player.uniqueId
 
         // Чтобы /spec и /rejoin работали
@@ -59,6 +58,8 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
             after(10) { ITransferService.get().transfer(uuid, getLobbyRealm()) }
             return
         }
+
+        val user = getUser(player)
 
         if (user == null) {
             player.sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))

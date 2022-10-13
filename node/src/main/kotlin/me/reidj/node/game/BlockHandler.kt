@@ -7,6 +7,7 @@ import me.reidj.node.block_regeneration.RegenerationManager
 import me.reidj.node.teams
 import me.reidj.node.timer.Status
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.Material.*
 import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
@@ -22,9 +23,11 @@ import java.lang.Integer.min
  **/
 class BlockHandler(private val game: BridgeGame) : Listener {
 
+    private val placedBlocks = mutableMapOf<Location, Pair<Int, Byte>>()
+
     @EventHandler
     fun BlockPlaceEvent.handle() {
-        RegenerationManager.blocks[block.location] = block.typeId to block.data
+        placedBlocks[block.location] = block.typeId to block.data
         isCancelled = isCancelled(block) || teams.all { block.location.distanceSquared(it.spawn) > 60 * 72 }
     }
 
@@ -37,8 +40,11 @@ class BlockHandler(private val game: BridgeGame) : Listener {
 
         isCancelled = isCancelled(block) || (hasBlock && hasBlockCount)
 
-        if (RegenerationManager.blocks.any { place -> team.breakBlocks.any { it.value != place.value } })
-            RegenerationManager.addBlock(block)
+        if (placedBlocks.any { place -> team.breakBlocks.any { it.value != place.value } }) {
+            RegenerationManager.addBlock(block, team)
+        }
+
+        RegenerationManager.addBlock(block)
 
         // Конец игры
         if (hasBlock && !hasBlockCount) {
