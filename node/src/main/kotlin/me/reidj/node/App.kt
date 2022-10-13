@@ -72,7 +72,6 @@ class App : JavaPlugin() {
         clientSocket.addListener(RejoinPackage::class.java) { _, pckg ->
             val uuid = pckg.uuid
             (getUser(uuid) ?: return@addListener).stat.run {
-                gameExitTime = -1
                 lastRealm = ""
                 after(100) {
                     clientSocket.write(SaveUserPackage(uuid, this))
@@ -113,7 +112,6 @@ class App : JavaPlugin() {
     override fun onDisable() {
         Bukkit.getOnlinePlayers().mapNotNull { getUser(it) }.map { it.stat }.forEach {
             it.lastRealm = ""
-            it.gameExitTime = -1
         }
         runBlocking { clientSocket.write(bulkSave(true)) }
         Thread.sleep(1000)

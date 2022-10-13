@@ -35,8 +35,6 @@ data class Stat(
 
     var exp: Double,
 
-    var gameLockTime: Long,
-    var gameExitTime: Long,
     var dailyClaimTimestamp: Long,
     var lastEnter: Long,
 

@@ -23,7 +23,7 @@ fun ISocketClient.capabilities(vararg classes: KClass<out CorePackage>) = regist
 
 @JvmSynthetic
 inline fun <reified T : CorePackage> ISocketClient.listen(
-    crossinline handler: suspend ISocketClient.(RealmId, T) -> Unit,
+    crossinline handler: suspend ISocketClient.(RealmId, T) -> Unit
 ): Unit = addListener(T::class.java) { realmId, pckg ->
     CoroutineScope(Dispatchers.Default).launch { handler(realmId, pckg) }
 }

@@ -76,7 +76,7 @@ class ConnectionHandler : Listener {
 
             if (stat.lastRealm != "") {
                 val realmStatus = IRealmService.get().getRealmById(RealmId.of(stat.lastRealm)).status
-                if (stat.gameExitTime > 0 && stat.gameLockTime < 0 && realmStatus != RealmStatus.WAITING_FOR_PLAYERS) {
+                if (realmStatus != RealmStatus.WAITING_FOR_PLAYERS) {
                     GameUtil.reconnect.run {
                         text = "Вернуться в игру"
                         hint = "Вернуться"

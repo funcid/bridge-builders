@@ -2,6 +2,7 @@ package me.reidj.node.team
 
 import me.func.mod.Anime
 import me.reidj.node.map.MapType
+import me.reidj.node.util.after
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -33,7 +34,9 @@ data class Team(
 
     fun getCountBlocksTeam(map: MapType) = collected.map { it.value }.sum() < map.needBlocks
 
-    fun updateNumbersPlayersInTeam() = players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
-        Anime.bottomRightMessage(it, "Игроков в команде §8>> §a${players.size}")
+    fun updateNumbersPlayersInTeam() = after(3) {
+        players.mapNotNull { Bukkit.getPlayer(it) }.forEach {
+            Anime.bottomRightMessage(it, "Игроков в команде §8>> §a${players.size}")
+        }
     }
 }

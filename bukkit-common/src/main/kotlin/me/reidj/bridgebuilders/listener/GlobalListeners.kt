@@ -60,8 +60,6 @@ class GlobalListeners : Listener {
                     1.0,
                     -1L,
                     -1L,
-                    -1L,
-                    -1L,
                     isApprovedResourcepack = true,
                 )
             userMap.putIfAbsent(uniqueId, User(stat))

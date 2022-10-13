@@ -17,7 +17,7 @@ enum class MoneyKitType(
     HANDFUL_OF_COINS("Горсть Эфира", 29, 512),
     BAG_OF_COINS("Мешок с Эфиром", 39, 1024),
     CHEST_WITH_COINS("Сундук с Эфиром", 59, 2048),
-    TREASURY("Скоровищница c Эфиром", 79, 4096),
+    TREASURY("Сокровищница c Эфиром", 79, 4096),
     //SAFE("Сейф с Эфиром", 109, 8192),
     ;
 

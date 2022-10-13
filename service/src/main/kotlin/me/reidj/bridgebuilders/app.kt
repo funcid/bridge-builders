@@ -86,18 +86,6 @@ fun main() {
                     value
                 ) { _, throwable -> throwable.printStackTrace() }
             }
-        } else if (command == "unbanall") {
-            val map = mapOf<Bson, Bson>(
-                Filters.gt("lastRealm", "") to unset("lastRealm"),
-                Filters.gt("gameLockTime", 0) to unset("gameLockTime"),
-                Filters.gt("gameExitTime", 0) to unset("gameExitTime")
-            )
-            map.forEach { (key, value) ->
-                mongoAdapter.data.updateMany(
-                    key,
-                    value
-                ) { _, throwable -> throwable.printStackTrace() }
-            }
         }
     }
 }

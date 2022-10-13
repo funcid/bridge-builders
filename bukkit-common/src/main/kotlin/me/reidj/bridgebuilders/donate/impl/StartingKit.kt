@@ -69,7 +69,7 @@ enum class StartingKit(
         ItemStack(IRON_SPADE), ItemStack(BREAD, 16)
     ),
     MINER(
-        "Рудокоп", "Железная кирка\nКольчужный шлем\nМорковь х16", "rudocop", 512, 0,0, COMMON, arrayOf(
+        "Рудокоп", "Железная кирка\nКольчужный шлем\nМорковь х16", "rudocop", 512, 0, 0, COMMON, arrayOf(
             ItemStack(AIR),
             ItemStack(AIR),
             ItemStack(AIR),
@@ -77,7 +77,7 @@ enum class StartingKit(
         ), ItemStack(IRON_PICKAXE), ItemStack(CARROT_ITEM, 16)
     ),
     BLACKSMITH(
-        "Кузнец", "Кольчужный сет\nЖелезо х8\nЗолото х16\nЯблоки х16", "kuznec", 768, 0,10, UNUSUAL, arrayOf(
+        "Кузнец", "Кольчужный сет\nЖелезо х8\nЗолото х16\nЯблоки х16", "kuznec", 768, 0, 10, UNUSUAL, arrayOf(
             ItemStack(CHAINMAIL_BOOTS),
             ItemStack(CHAINMAIL_LEGGINGS),
             ItemStack(CHAINMAIL_CHESTPLATE),
@@ -204,8 +204,11 @@ enum class StartingKit(
             },
         ), item {
             type = org.bukkit.Material.BOW
-            enchant(DAMAGE_ALL, 1)
-            enchant(KNOCKBACK, 1)
+        }.apply {
+            itemMeta = itemMeta.apply {
+                addEnchant(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 1, true)
+                addEnchant(org.bukkit.enchantments.Enchantment.KNOCKBACK, 1, true)
+            }
         }, ItemStack(ARROW, 32), ItemStack(GOLDEN_APPLE, 3), ItemStack(APPLE, 32)
     ),
     HEALER(
@@ -303,18 +306,27 @@ enum class StartingKit(
         ItemStack(GOLDEN_CARROT, 16),
         item {
             type = GOLD_PICKAXE
-            enchant(DIG_SPEED, 3)
-            enchant(DURABILITY, 2)
+        }.apply {
+            itemMeta = itemMeta.apply {
+                addEnchant(DIG_SPEED, 3, true)
+                addEnchant(DURABILITY, 2, true)
+            }
         },
         item {
             type = GOLD_AXE
-            enchant(DIG_SPEED, 3)
-            enchant(DURABILITY, 2)
+        }.apply {
+            itemMeta = itemMeta.apply {
+                addEnchant(DIG_SPEED, 3, true)
+                addEnchant(DURABILITY, 2, true)
+            }
         },
         item {
             type = org.bukkit.Material.GOLD_SPADE
-            enchant(DIG_SPEED, 4)
-            enchant(DURABILITY, 1)
+        }.apply {
+            itemMeta = itemMeta.apply {
+                addEnchant(DIG_SPEED, 4, true)
+                addEnchant(DURABILITY, 1, true)
+            }
         },
     ),
     LUCIFER(
@@ -328,23 +340,35 @@ enum class StartingKit(
         arrayOf(
             item {
                 type = org.bukkit.Material.IRON_BOOTS
-                enchant(THORNS, 1)
-                enchant(PROTECTION_FIRE, 2)
+            }.apply {
+                itemMeta = itemMeta.apply {
+                    addEnchant(THORNS, 1, true)
+                    addEnchant(FIRE_ASPECT, 2, true)
+                }
             },
             item {
                 type = org.bukkit.Material.IRON_LEGGINGS
-                enchant(THORNS, 1)
-                enchant(PROTECTION_FIRE, 2)
+            }.apply {
+                itemMeta = itemMeta.apply {
+                    addEnchant(THORNS, 1, true)
+                    addEnchant(FIRE_ASPECT, 2, true)
+                }
             },
             item {
                 type = IRON_CHESTPLATE
-                enchant(THORNS, 1)
-                enchant(PROTECTION_FIRE, 2)
+            }.apply {
+                itemMeta = itemMeta.apply {
+                    addEnchant(THORNS, 1, true)
+                    addEnchant(FIRE_ASPECT, 2, true)
+                }
             },
             item {
                 type = IRON_HELMET
-                enchant(THORNS, 1)
-                enchant(PROTECTION_FIRE, 2)
+            }.apply {
+                itemMeta = itemMeta.apply {
+                    addEnchant(THORNS, 1, true)
+                    addEnchant(FIRE_ASPECT, 2, true)
+                }
             },
         ),
         ItemStack(DIAMOND_SWORD),
@@ -441,8 +465,11 @@ enum class StartingKit(
         ),
         item {
             type = org.bukkit.Material.WOOD_SWORD
-            enchant(DAMAGE_ALL, 3)
-            enchant(FIRE_ASPECT, 2)
+        }.apply {
+            itemMeta = itemMeta.apply {
+                addEnchant(DAMAGE_ALL, 3, true)
+                addEnchant(FIRE_ASPECT, 2, true)
+            }
         },
         ItemStack(DIAMOND_PICKAXE),
         item {
@@ -487,13 +514,19 @@ enum class StartingKit(
         }, ItemStack(GOLDEN_APPLE, 1), ItemStack(COOKED_BEEF, 16),
         item {
             type = org.bukkit.Material.GOLD_SPADE
-            enchant(DIG_SPEED, 4)
-            enchant(DURABILITY, 2)
+        }.apply {
+            itemMeta = itemMeta.apply {
+                addEnchant(DIG_SPEED, 4, true)
+                addEnchant(DURABILITY, 2, true)
+            }
         },
         item {
             type = org.bukkit.Material.IRON_PICKAXE
-            enchant(DIG_SPEED, 3)
-            enchant(DURABILITY, 3)
+        }.apply {
+            itemMeta = itemMeta.apply {
+                addEnchant(DIG_SPEED, 3, true)
+                addEnchant(DURABILITY, 3, true)
+            }
         }
     )
     ;

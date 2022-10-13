@@ -8,7 +8,6 @@ import me.reidj.bridgebuilders.getUser
 import me.reidj.bridgebuilders.protocol.RejoinPackage
 import me.reidj.lobby.PlayerBalancer
 import me.reidj.lobby.app
-import me.reidj.lobby.ticker.detail.BanManager
 import me.reidj.lobby.util.GameUtil
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.realm.IRealmService
@@ -23,7 +22,12 @@ import ru.cristalix.core.transfer.ITransferService
 class PlayerCommands {
 
     init {
-        command("rp") { player, _ -> player.setResourcePack(System.getenv("resourcepack"), "3845agc8-219j-12ed-861d-0242ac120002") }
+        command("rp") { player, _ ->
+            player.setResourcePack(
+                System.getenv("resourcepack"),
+                "3845agc8-219j-12ed-861d-0242ac120002"
+            )
+        }
         command("leave") { player, _ -> ITransferService.get().transfer(player.uniqueId, app.getHub()) }
         command("spectate") { player, args ->
             val realmId = IRealmService.get().getRealmsOfType("BRD")
@@ -46,7 +50,6 @@ class PlayerCommands {
                 Anime.killboardMessage(player, message)
                 return@command
             }
-            stat.gameExitTime = -1
             stat.lastRealm = ""
 
             clientSocket.write(RejoinPackage(stat.uuid))
@@ -54,10 +57,6 @@ class PlayerCommands {
             after(3) { ITransferService.get().transfer(player.uniqueId, realm.realmId) }
         }
         command("game") { player, _ -> GameUtil.compass.open(player) }
-        command("two") { player, _ ->
-            val user = getUser(player) ?: return@command
-            if (!BanManager.endOfBan(user))
-                PlayerBalancer("BRD", 8).accept(player)
-        }
+        command("two") { player, _ -> PlayerBalancer("BRD", 8).accept(player) }
     }
 }

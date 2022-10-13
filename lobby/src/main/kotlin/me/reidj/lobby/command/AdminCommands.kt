@@ -38,13 +38,5 @@ class AdminCommands {
             stat.wins += args[1].toInt()
             clientSocket.write(SaveUserPackage(stat.uuid, stat))
         }
-        regAdminCommand("uban") { _, args ->
-            (getUser(Bukkit.getPlayer(args[0])) ?: return@regAdminCommand).stat.run {
-                gameLockTime = 0
-                gameExitTime = 0
-                lastRealm = ""
-                clientSocket.write(SaveUserPackage(uuid, this))
-            }
-        }
     }
 }
