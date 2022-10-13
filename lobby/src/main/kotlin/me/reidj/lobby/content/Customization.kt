@@ -235,6 +235,7 @@ class Customization {
                     }.toMutableList()
                 }.open(player)
             }
+            onClick { player, _, _ -> openAchievement(getUser(player) ?: return@onClick) }
         },
         button {
             title = "Стартовые наборы"
