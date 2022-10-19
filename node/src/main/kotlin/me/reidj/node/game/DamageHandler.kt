@@ -55,7 +55,7 @@ class DamageHandler : Listener {
         val chatColor = team.color.chatColor
 
         val entityDeathMessage = MessageType.valueOf(user.stat.currentMessages).messages[2]
-            .replace("%e", "$chatColor ${getEntity().name}")
+            .replace("%e", "$chatColor${getEntity().name}")
 
         if (cause == EntityDamageEvent.DamageCause.FALL)
             printDeathMessage(entityDeathMessage)
@@ -70,6 +70,27 @@ class DamageHandler : Listener {
             location = location.clone().subtract(0.0, 0.15, 0.0)
             id = location.block.typeId
         } while ((id == 0 || id == 171 || id == 96 || id == 167) && counter < 20)
+
+        if (user.stat.currentGrave != GraveType.NONE.name) {
+            val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
+                .marker(true)
+                .invisible(true)
+                .gravity(false)
+                .slot(EnumItemSlot.HEAD, GraveType.valueOf(user.stat.currentGrave).getIcon())
+                .markTrash()
+                .build()
+            val graveName = StandHelper(location.clone().add(0.0, 1.0, 0.0))
+                .marker(true)
+                .invisible(true)
+                .gravity(false)
+                .name("§e${getEntity().name}")
+                .build()
+            UtilEntity.setScale(grave, 2.0, 2.0, 2.0)
+            after(20 * 120) {
+                grave.remove()
+                graveName.remove()
+            }
+        }
 
         // Удаление вещей
         removeItems(
@@ -106,27 +127,6 @@ class DamageHandler : Listener {
 
             printKillMessages(0, killer, user, chatColor, killerChatColor)
             printKillMessages(1, killer, user, chatColor, killerChatColor)
-
-            if (killer.stat.currentGrave != GraveType.NONE.name) {
-                val grave = StandHelper(location.clone().subtract(0.0, 3.6, 0.0))
-                    .marker(true)
-                    .invisible(true)
-                    .gravity(false)
-                    .slot(EnumItemSlot.HEAD, GraveType.valueOf(user.stat.currentGrave).getIcon())
-                    .markTrash()
-                    .build()
-                val graveName = StandHelper(location.clone().add(0.0, 1.0, 0.0))
-                    .marker(true)
-                    .invisible(true)
-                    .gravity(false)
-                    .name("§e${getEntity().name}")
-                    .build()
-                UtilEntity.setScale(grave, 2.0, 2.0, 2.0)
-                after(20 * 120) {
-                    grave.remove()
-                    graveName.remove()
-                }
-            }
 
             killer.run {
                 givePureEther(5)
