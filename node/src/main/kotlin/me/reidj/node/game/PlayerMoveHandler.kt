@@ -35,8 +35,11 @@ class PlayerMoveHandler(private val game: BridgeGame) : Listener {
             return
 
         // Если мост не достроен откидывать от него игрока
-        teams.filter { it.getCountBlocksTeam(game.mapType) && it.bridge.end.distanceSquared(location) < 29 * 12 && !player.isSpectator() }
-            .forEach { player.velocity = it.spawn.toVector().subtract(location.toVector()).normalize() }
+        teams.forEach { team ->
+            if (team.getCountBlocksTeam(game.mapType) && team.bridge.end.distanceSquared(location) < 29 * 12 && !player.isSpectator()) {
+                player.velocity = team.spawn.toVector().subtract(location.toVector()).normalize()
+            }
+        }
 
         // Телепортация на вражескую базу
         if (location.block.getRelative(BlockFace.DOWN).type == Material.SEA_LANTERN) {
