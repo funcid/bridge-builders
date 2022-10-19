@@ -42,31 +42,31 @@ object ModifiersManager {
             .first().first.on(player)
 
     fun open(player: Player) {
-        choicer.storage = ModifiersType.values().map {
+        choicer.storage = ModifiersType.values().map { type ->
             Button()
-                .title(it.title)
-                .description("Голосов: §3${it.voted.size}")
-                .hover(it.description)
-                .texture("minecraft:mcpatcher/cit/bridgebuilders/${it.texture}.png")
+                .title(type.title)
+                .description("Голосов: §3${type.voted.size}")
+                .hover(type.description)
+                .texture("minecraft:mcpatcher/cit/bridgebuilders/${type.texture}.png")
                 .special(false)
                 .hint("Голосовать")
                 .onLeftClick { player, _, _ ->
                     val uuid = player.uniqueId
-                    if (uuid in it.voted) {
+                    if (ModifiersType.values().map { it.voted }.any { it.any { voted -> voted == uuid } } || uuid in type.voted) {
                         player.error("Ошибка", "Ваш голос уже был отдан!")
                         Anime.close(player)
                         return@onLeftClick
                     }
-                    it.voted.add(uuid)
+                    type.voted.add(uuid)
                     Anime.close(player)
-                    player.sendMessage(Formatting.fine("Вы проголосовали за модификатор §b${it.title}"))
+                    player.sendMessage(Formatting.fine("Вы проголосовали за модификатор §b${type.title}"))
                 }
                 .onRightClick { player, _, _ ->
                     val uuid = player.uniqueId
-                    if (uuid in it.voted) {
-                        it.voted.remove(uuid)
+                    if (uuid in type.voted) {
+                        type.voted.remove(uuid)
                         Anime.close(player)
-                        player.sendMessage("Вы забрали свой голос за модификатор §b${it.title}")
+                        player.sendMessage("Вы забрали свой голос за модификатор §b${type.title}")
                     } else {
                         player.error("Ошибка", "Вы не голосовали за этот модификатор!")
                         Anime.close(player)
