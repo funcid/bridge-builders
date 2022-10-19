@@ -43,8 +43,6 @@ val godSet = hashSetOf(
     "0e7c0015-b27b-11eb-acca-1cb72caa35fd" // 3а6ив
 )
 
-private const val LEVEL_FORMAT = "%.0f из %.0f"
-
 fun getLobbyRealm(): RealmId = RealmId.of("BRIL-1")
 
 fun getUser(player: Player): User? = getUser(player.uniqueId)

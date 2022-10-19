@@ -7,6 +7,7 @@ import me.reidj.node.activeStatus
 import me.reidj.node.teams
 import me.reidj.node.timer.Status
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
@@ -20,17 +21,20 @@ class ChatHandler : Listener {
 
     @EventHandler
     fun AsyncPlayerChatEvent.handle() {
-        isCancelled = true
-
-        if (player.isSpectator())
+        if (player.isSpectator()) {
+            Bukkit.getOnlinePlayers()
+                .filter { it.isSpectator() }
+                .forEach { it.sendMessage(player.name + " >§7 " + ChatColor.stripColor(message)) }
+            cancel = true
             return
-
+        }
         val team = teams.firstOrNull { player.uniqueId in it.players }
-        val user = getUser(player) ?: return
         val players = Bukkit.getOnlinePlayers()
+        val user = getUser(player) ?: return
 
         if (team == null || activeStatus != Status.GAME) {
             players.forEach { it.sendMessage("${createDisplayName(user)} ${Formatting.ARROW_SYMBOL} $message") }
+            cancel = true
         } else {
             if (!message.startsWith("!")) {
                 team.players.mapNotNull { getUser(it) }.forEach {
@@ -48,6 +52,7 @@ class ChatHandler : Listener {
                     )
                 }
             }
+            cancel = true
         }
     }
 }
