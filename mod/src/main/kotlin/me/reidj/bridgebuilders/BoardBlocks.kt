@@ -27,7 +27,7 @@ object BoardBlocks {
             align = BOTTOM
             color = WHITE
             shadow = true
-            content = "www.cristalix.gg"
+            content = "cristalix.gg"
         })
         addChild(rectangle {
             offset = V3(0.0, 23.0)
@@ -57,7 +57,7 @@ object BoardBlocks {
     init {
         UIEngine.overlayContext + tab
 
-        mod.registerChannel("bridge:tabinit") {
+        mod.registerChannel("bridge:init") {
             val index = readInt()
             val needTotal = readInt()
             val collected = readInt()
@@ -73,27 +73,26 @@ object BoardBlocks {
             val index = readInt()
             val needTotal = readInt()
             val collected = readInt()
+            val box = tab.children[1] as RectangleElement
             val needBlocks = readInt()
             val sum = readInt()
 
-            val box = tab.children[1] as RectangleElement
-
             ((tab.children[index] as RectangleElement).children[2] as TextElement).content = "$collected из $needTotal"
-
-            (box.children[1] as TextElement).content = "${(sum * 1.0 / needBlocks * 100.0).toInt()}%"
-
             tab.children[index].animate(0.3) { color.alpha = max(1, collected) / needTotal * 0.8 + 0.2 }
 
             (box.children[0] as RectangleElement).animate(1) {
                 size.x = 380.0 / needBlocks * sum
             }
+
+            (box.children[1] as TextElement).content = "${(sum * 1.0 / needBlocks * 100.0).toInt()}%"
         }
 
         mod.registerHandler<GameLoop> {
             // Таб
             if (inGame) {
-                if (tab.children.isNotEmpty() && (!tab.enabled && Keyboard.isKeyDown(Keyboard.KEY_TAB))
-                    || (tab.enabled && !Keyboard.isKeyDown(Keyboard.KEY_TAB))
+                if (tab.children.isNotEmpty() && (!tab.enabled && Keyboard.isKeyDown(Keyboard.KEY_TAB)) || (tab.enabled && !Keyboard.isKeyDown(
+                        Keyboard.KEY_TAB
+                    ))
                 ) {
                     tab.enabled = !tab.enabled
                 }

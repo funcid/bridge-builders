@@ -19,7 +19,7 @@ object TeamProgress {
             align = BOTTOM
             color = WHITE
             scale = V3(0.8, 0.8, 0.8)
-            content = "www.cristalix.gg"
+            content = "cristalix.gg"
         })
         addChild(text {
             scale = V3(0.8, 0.8, 0.8)
