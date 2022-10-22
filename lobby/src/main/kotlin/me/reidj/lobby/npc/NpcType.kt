@@ -1,8 +1,8 @@
 package me.reidj.lobby.npc
 
-import me.func.mod.Banners
-import me.func.mod.Banners.location
-import me.func.protocol.element.Banner
+import me.func.mod.world.Banners
+import me.func.mod.world.Banners.location
+import me.func.protocol.data.element.Banner
 import me.reidj.bridgebuilders.worldMeta
 import org.bukkit.Location
 

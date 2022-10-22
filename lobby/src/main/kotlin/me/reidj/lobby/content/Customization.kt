@@ -1,14 +1,14 @@
 package me.reidj.lobby.content
 
 import me.func.mod.Anime
-import me.func.mod.Glow
-import me.func.mod.selection.Button
-import me.func.mod.selection.Confirmation
-import me.func.mod.selection.button
-import me.func.mod.selection.selection
+import me.func.mod.reactive.ReactiveButton
+import me.func.mod.ui.Glow
+import me.func.mod.ui.menu.button
+import me.func.mod.ui.menu.confirmation.Confirmation
+import me.func.mod.ui.menu.selection
 import me.func.mod.util.after
 import me.func.mod.util.command
-import me.func.protocol.GlowColor
+import me.func.protocol.data.color.GlowColor
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.data.AchievementType
 import me.reidj.bridgebuilders.donate.DonatePosition
@@ -39,7 +39,7 @@ class Customization {
         rows: Int,
         columns: Int,
         vararg donate: T,
-        converter: (Button, T) -> Button = { button, _ -> button }
+        converter: (ReactiveButton, T) -> ReactiveButton = { button, _ -> button }
     ) {
         selection {
             val user = getUser(player) ?: return@selection

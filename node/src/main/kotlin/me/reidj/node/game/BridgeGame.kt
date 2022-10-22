@@ -2,16 +2,16 @@ package me.reidj.node.game
 
 import kotlinx.coroutines.runBlocking
 import me.func.mod.Anime
-import me.func.mod.Glow
-import me.func.mod.Npc
-import me.func.mod.Npc.location
-import me.func.mod.Npc.onClick
 import me.func.mod.conversation.ModTransfer
+import me.func.mod.ui.Glow
 import me.func.mod.util.after
 import me.func.mod.util.listener
-import me.func.protocol.EndStatus
-import me.func.protocol.GlowColor
-import me.func.protocol.npc.NpcBehaviour
+import me.func.mod.world.Npc
+import me.func.mod.world.Npc.location
+import me.func.mod.world.Npc.onClick
+import me.func.protocol.data.color.GlowColor
+import me.func.protocol.data.status.EndStatus
+import me.func.protocol.world.npc.NpcBehaviour
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.data.LootBoxType
 import me.reidj.bridgebuilders.user.User

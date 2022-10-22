@@ -1,10 +1,10 @@
 package me.reidj.bridgebuilders.user
 
 import me.func.mod.Anime
-import me.func.mod.Glow
 import me.func.mod.conversation.ModTransfer
-import me.func.protocol.GlowColor
-import me.func.protocol.Position
+import me.func.mod.ui.Glow
+import me.func.protocol.data.color.GlowColor
+import me.func.protocol.math.Position
 import me.reidj.bridgebuilders.data.Stat
 import me.reidj.bridgebuilders.getRequiredExperience
 import org.bukkit.entity.Player
@@ -41,8 +41,6 @@ class User(stat: Stat) {
 
     fun giveEther(ether: Int) {
         givePureEther(ether)
-        if (cachedPlayer != null)
-            Anime.overlayText(cachedPlayer!!, Position.BOTTOM_RIGHT, "§dЭфира ${stat.ether}")
     }
 
     fun givePureEther(ether: Int) {
@@ -56,8 +54,8 @@ class User(stat: Stat) {
         givePureExperience(exp)
         ModTransfer(
             getLevel(),
-            stat.exp,
-            getRequiredExperience(me.reidj.bridgebuilders.getLevel(stat.exp))
+            stat.exp - getRequiredExperience(getLevel() - 1),
+            getRequiredExperience(getLevel()) - getRequiredExperience(getLevel() - 1)
         ).send("bridge:exp", cachedPlayer)
         if (getLevel() > prevLevel) {
             cachedPlayer?.let {

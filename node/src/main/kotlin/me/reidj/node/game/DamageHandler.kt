@@ -2,8 +2,8 @@ package me.reidj.node.game
 
 import clepto.bukkit.Cycle
 import me.func.mod.Anime
-import me.func.mod.Glow
-import me.func.protocol.GlowColor
+import me.func.mod.ui.Glow
+import me.func.protocol.data.color.GlowColor
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.donate.impl.GraveType
 import me.reidj.bridgebuilders.donate.impl.MessageType

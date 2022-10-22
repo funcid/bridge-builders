@@ -2,9 +2,12 @@ package me.reidj.lobby.listener
 
 import me.func.mod.Anime
 import me.func.mod.conversation.ModLoader
-import me.func.mod.selection.Reconnect
+import me.func.mod.ui.menu.button
+import me.func.mod.ui.menu.dailyReward
+import me.func.mod.ui.menu.recconnct.Reconnect
+import me.func.mod.ui.scoreboard.ScoreBoard
 import me.func.mod.util.after
-import me.func.protocol.Indicators
+import me.func.protocol.ui.indicator.Indicators
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.getUser
 import me.reidj.bridgebuilders.godSet
@@ -36,6 +39,16 @@ import ru.cristalix.core.transfer.ITransferService
  **/
 class ConnectionHandler : Listener {
 
+    init {
+        ScoreBoard.builder()
+            .key("scoreboard")
+            .header("BridgeBuilders")
+            .dynamic("Уровень") { "§b${getUser(it)?.getLevel()}" }
+            .dynamic("Эфира") { "§d${getUser(it)?.stat?.ether}" }
+            .empty()
+            .dynamic("Онлайн") { IRealmService.get().getOnlineOnRealms("BRIL") }
+    }
+
     @EventHandler
     fun PlayerJoinEvent.handle() {
         val user = getUser(player)
@@ -61,6 +74,8 @@ class ConnectionHandler : Listener {
 
             if (user.stat.isApprovedResourcepack)
                 player.performCommand("rp")
+
+            ScoreBoard.subscribe("scoreboard", player)
 
             Anime.hideIndicator(player, Indicators.ARMOR, Indicators.EXP, Indicators.HEALTH, Indicators.HUNGER)
 
@@ -94,14 +109,17 @@ class ConnectionHandler : Listener {
             if (now - stat.dailyClaimTimestamp * 10000 > 14 * 60 * 60 * 1000) {
                 Anime.close(player)
                 stat.dailyClaimTimestamp = now / 10000
-                Anime.openDailyRewardMenu(
-                    player,
-                    stat.rewardStreak,
-                    *WeekRewards.values().map { it.reward }.toTypedArray()
-                )
-
+                dailyReward {
+                    currentDay = stat.rewardStreak
+                    storage = WeekRewards.values().map {
+                        button {
+                            title = it.title
+                            item = it.icon
+                        }
+                    }.toMutableList()
+                }.open(player)
                 val dailyReward = WeekRewards.values()[stat.rewardStreak]
-                player.sendMessage(Formatting.fine("Ваша ежедневная награда: " + dailyReward.reward.title))
+                player.sendMessage(Formatting.fine("Ваша ежедневная награда: " + dailyReward.title))
                 dailyReward.give(user)
                 stat.rewardStreak++
             }

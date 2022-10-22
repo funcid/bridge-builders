@@ -67,7 +67,7 @@ class App : JavaPlugin() {
             registerService(IRenderService::class.java, BukkitRenderService(getServer()))
         }
 
-        Anime.include(Kit.NPC, Kit.STANDARD, Kit.LOOTBOX, Kit.GRAFFITI, Kit.EXPERIMENTAL, Kit.BATTLEPASS)
+        Anime.include(Kit.NPC, Kit.STANDARD, Kit.LOOTBOX, Kit.GRAFFITI, Kit.EXPERIMENTAL)
 
         // Mods
         ModLoader.loadAll("mods")

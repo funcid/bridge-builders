@@ -3,11 +3,11 @@ package me.reidj.lobby.content
 import clepto.bukkit.B
 import implario.humanize.Humanize
 import me.func.mod.Anime
-import me.func.mod.Banners
-import me.func.mod.Banners.shineBlocks
-import me.func.mod.data.LootDrop
-import me.func.mod.selection.button
-import me.func.mod.selection.selection
+import me.func.mod.conversation.data.LootDrop
+import me.func.mod.ui.menu.button
+import me.func.mod.ui.menu.selection
+import me.func.mod.world.Banners
+import me.func.mod.world.Banners.shineBlocks
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.data.LootBoxType
 import me.reidj.bridgebuilders.data.LootBoxType.*

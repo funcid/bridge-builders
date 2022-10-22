@@ -5,7 +5,7 @@ import me.func.mod.Anime
 import me.func.mod.conversation.ModLoader
 import me.func.mod.conversation.ModTransfer
 import me.func.mod.util.after
-import me.func.protocol.Indicators
+import me.func.protocol.ui.indicator.Indicators
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.protocol.SaveUserPackage
 import me.reidj.node.activeStatus

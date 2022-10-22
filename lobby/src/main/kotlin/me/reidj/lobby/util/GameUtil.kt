@@ -1,8 +1,8 @@
 package me.reidj.lobby.util
 
-import me.func.mod.data.Sprites
-import me.func.mod.selection.button
-import me.func.mod.selection.choicer
+import me.func.mod.conversation.data.Sprites
+import me.func.mod.ui.menu.button
+import me.func.mod.ui.menu.choicer
 import me.reidj.bridgebuilders.worldMeta
 import me.reidj.lobby.npc.NpcType
 import org.bukkit.Location

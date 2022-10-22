@@ -2,8 +2,8 @@ package me.reidj.node.game
 
 import dev.implario.bukkit.item.item
 import me.func.mod.Anime
-import me.func.mod.selection.Button
-import me.func.mod.selection.choicer
+import me.func.mod.reactive.ReactiveButton
+import me.func.mod.ui.menu.choicer
 import me.reidj.bridgebuilders.error
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -43,7 +43,7 @@ object ModifiersManager {
 
     fun open(player: Player) {
         choicer.storage = ModifiersType.values().map { type ->
-            Button()
+            ReactiveButton()
                 .title(type.title)
                 .description("Голосов: §3${type.voted.size}")
                 .hover(type.description)
