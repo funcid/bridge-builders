@@ -94,6 +94,7 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
             items.forEach { inventory.addItem(it) }
         } else {
             if (user.inGame) {
+                user.cachedPlayer = player
                 val playerTeam = teams.firstOrNull { user.team == it.color } ?: return
                 playerTeam.players.add(player.uniqueId)
                 playerTeam.updateNumbersPlayersInTeam()
