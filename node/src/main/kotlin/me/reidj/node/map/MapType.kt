@@ -8,6 +8,7 @@ import org.bukkit.Material.*
  * @author : Рейдж
  **/
 enum class MapType(
+    val title: String,
     val address: String,
     var blocks: Set<Block>,
     var needBlocks: Int,
@@ -15,6 +16,7 @@ enum class MapType(
     var height: Int
 ) {
     AQUAMARINE(
+        "Замок",
         "Aquamarine",
         HashSet<Block>(
             listOf(
@@ -41,6 +43,7 @@ enum class MapType(
         30
     ),
     BTR(
+        "Тропические острова",
         "btr",
         HashSet<Block>(
             listOf(
@@ -63,6 +66,7 @@ enum class MapType(
         30
     ),
     COSMOS(
+        "Космос",
         "Cosmos",
         HashSet<Block>(
             listOf(
@@ -84,6 +88,7 @@ enum class MapType(
         30
     ),
     PESOK(
+        "Пустыня",
         "pesok",
         HashSet<Block>(
             listOf(

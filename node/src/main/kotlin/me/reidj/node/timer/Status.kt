@@ -53,6 +53,8 @@ enum class Status(val lastSecond: Int, val now: (Int, BridgeGame) -> Int) {
                     team.players.mapNotNull { Bukkit.getPlayer(it) }.forEach { player ->
                         team.updateNumbersPlayersInTeam()
 
+                        me.func.mod.ui.scoreboard.ScoreBoard.hide(player)
+
                         me.reidj.node.game.ModifiersManager.modifierAccept(player)
 
                         Anime.alert(

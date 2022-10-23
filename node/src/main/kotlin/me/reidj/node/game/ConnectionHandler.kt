@@ -4,6 +4,7 @@ import dev.implario.bukkit.item.item
 import me.func.mod.Anime
 import me.func.mod.conversation.ModLoader
 import me.func.mod.conversation.ModTransfer
+import me.func.mod.ui.scoreboard.ScoreBoard
 import me.func.mod.util.after
 import me.func.protocol.ui.indicator.Indicators
 import me.reidj.bridgebuilders.*
@@ -50,6 +51,14 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
         text("§cВернуться")
     }
 
+    init {
+        ScoreBoard.builder()
+            .key("scoreboard")
+            .header("BridgeBuilders")
+            .dynamic("Карта") { "§3${game.mapType.title}" }
+            .build()
+    }
+
     @EventHandler
     fun PlayerJoinEvent.handle() {
         val uuid = player.uniqueId
@@ -87,6 +96,7 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
         if (activeStatus == Status.STARTING) {
             val inventory = player.inventory
             after(3) {
+                ScoreBoard.subscribe("scoreboard", player)
                 player.teleport(game.getSpawnLocation())
                 InteractHandler.showTeamList(player)
                 val players = Bukkit.getOnlinePlayers()
