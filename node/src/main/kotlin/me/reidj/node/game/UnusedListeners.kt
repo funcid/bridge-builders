@@ -8,7 +8,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 
 /**
@@ -33,10 +32,11 @@ class UnusedListeners : Listener {
     }
 
     @EventHandler
-    fun PrepareItemCraftEvent.handle() {
-        val result = recipe.result
-        if (result.getType() == Material.FLINT_AND_STEEL) {
-            result.setType(Material.AIR)
+    fun CraftItemEvent.handle() {
+        if (inventory.result == null)
+            return
+        if (inventory.result.getType() == Material.FLINT_AND_STEEL) {
+            inventory.result = null
         }
     }
 }
