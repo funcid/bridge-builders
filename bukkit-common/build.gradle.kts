@@ -12,7 +12,7 @@ dependencies {
     compileOnly("clepto:clepto-cristalix:3.0.2")
     compileOnly("implario:kotlin-api:1.1.1")
     compileOnly("implario:bukkit-tools:4.4.12")
-    compileOnly("me.func:animation-api:3.9.10")
+    compileOnly("me.func:animation-api:3.10.0")
 
     compileOnly(project(":service-common"))
 }

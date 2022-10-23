@@ -383,6 +383,7 @@ class Customization {
                     onClick top@{ player, _, _ ->
                         if (!canGet || playerHas || user.isArmLock)
                             return@top
+                        Anime.close(player)
                         user.isArmLock = true
                         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1f)
                         achievement.reward(user)
@@ -395,7 +396,6 @@ class Customization {
                             )
                         )
                         after(5) { user.isArmLock = false }
-                        openAchievement(user)
                     }
                 }
             }.toMutableList()
