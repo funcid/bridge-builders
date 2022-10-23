@@ -2,10 +2,13 @@ package me.reidj.node.game
 
 import me.reidj.node.activeStatus
 import me.reidj.node.timer.Status
+import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.FoodLevelChangeEvent
+import org.bukkit.event.inventory.CraftItemEvent
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 
 /**
@@ -27,5 +30,13 @@ class UnusedListeners : Listener {
     @EventHandler
     fun PlayerDropItemEvent.handle() {
         isCancelled = activeStatus == Status.STARTING
+    }
+
+    @EventHandler
+    fun PrepareItemCraftEvent.handle() {
+        val result = recipe.result
+        if (result.getType() == Material.FLINT_AND_STEEL) {
+            result.setType(Material.AIR)
+        }
     }
 }

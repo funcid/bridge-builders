@@ -13,6 +13,7 @@ import me.reidj.node.app
 import me.reidj.node.slots
 import me.reidj.node.teams
 import me.reidj.node.timer.Status
+import me.reidj.node.util.kickPlayer
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
@@ -62,8 +63,11 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
         val user = getUser(player)
 
         if (user == null) {
-            player.sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
-            after(10) { ITransferService.get().transfer(uuid, getLobbyRealm()) }
+            player.kickPlayer()
+            return
+        } else if (user.stat.lastRealm.isNotEmpty()) {
+            player.sendMessage(Formatting.error("Вы не можете начать следующую игру, не закончив прошлую!"))
+            player.kickPlayer()
             return
         }
 

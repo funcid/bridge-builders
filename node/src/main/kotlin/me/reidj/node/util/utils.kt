@@ -2,7 +2,11 @@ package me.reidj.node.util
 
 import dev.implario.bukkit.platform.Platforms
 import dev.implario.bukkit.routine.Routine
+import me.reidj.bridgebuilders.getLobbyRealm
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
+import ru.cristalix.core.formatting.Formatting
+import ru.cristalix.core.transfer.ITransferService
 import java.util.function.Consumer
 
 private val routines = hashSetOf<Routine>()
@@ -20,6 +24,11 @@ fun after(ticks: Long, action: Consumer<Routine>): Routine {
     routines.add(routine)
     routine.id = taskId[0]
     return routine
+}
+
+fun Player.kickPlayer() {
+    sendMessage(Formatting.error("Нам не удалось прогрузить Вашу статистику."))
+    me.func.mod.util.after(10) { ITransferService.get().transfer(uniqueId, getLobbyRealm()) }
 }
 
 fun every(ticks: Long, action: Consumer<Routine>): Routine {
