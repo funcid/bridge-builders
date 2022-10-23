@@ -59,6 +59,10 @@ fun main() {
             }
         }
         listen<RejoinPackage> { _, pckg ->
+            withContext(Dispatchers.IO) { mongoAdapter.find(pckg.uuid).get() }?.let {
+                it.lastRealm = ""
+                mongoAdapter.save(it)
+            }
             write(pckg)
         }
     }
@@ -79,6 +83,17 @@ fun main() {
                 Filters.gt("lastRealm", "") to unset("lastRealm"),
                 Filters.gt("gameLockTime", 0) to unset("gameLockTime"),
                 Filters.gt("gameExitTime", 0) to unset("gameExitTime")
+            )
+            map.forEach { (key, value) ->
+                mongoAdapter.data.updateMany(
+                    key,
+                    value
+                ) { _, throwable -> throwable.printStackTrace() }
+            }
+        } else if (command == "uban") {
+            val map = mapOf<Bson, Bson>(
+                Filters.gt("money", 0) to unset("money"),
+                Filters.gt("lastRealm", "") to unset("lastRealm")
             )
             map.forEach { (key, value) ->
                 mongoAdapter.data.updateMany(

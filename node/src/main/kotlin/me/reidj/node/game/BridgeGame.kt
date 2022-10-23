@@ -14,6 +14,7 @@ import me.func.protocol.data.status.EndStatus
 import me.func.protocol.world.npc.NpcBehaviour
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.data.LootBoxType
+import me.reidj.bridgebuilders.protocol.RejoinPackage
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.MapLoader
 import me.reidj.node.activeStatus
@@ -284,16 +285,17 @@ class BridgeGame {
         }
         Bukkit.getOnlinePlayers().filter { !it.isSpectator() }.mapNotNull { getUser(it) }.onEach {
             it.run {
+                stat.lastRealm = ""
                 stat.games++
                 inGame = false
                 if (Math.random() < 0.02) {
                     val lootBox = LootBoxType.values().drop(5).random()
-                    LootBoxType.values().drop(5).forEach { println(it) }
                     stat.lootBoxes.add(lootBox)
                     Bukkit.broadcastMessage(Formatting.fine("§e${if (cachedPlayer == null) "ERROR" else cachedPlayer!!.name} §fполучил ${lootBox.lootBox.rare.getColored()} лутбокс§f!"))
                 }
             }
         }
+        userMap.forEach { clientSocket.write(RejoinPackage(it.key)) }
         after(5) {
             runBlocking { clientSocket.write(bulkSave(true)) }
             Thread.sleep(1000)

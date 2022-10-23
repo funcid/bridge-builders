@@ -1,10 +1,5 @@
 plugins {
     id("org.jetbrains.kotlin.jvm")
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-}
-
-shadowJar {
-    archiveBaseName.set 'bridgebuilders-service'
 }
 
 dependencies {
@@ -15,12 +10,10 @@ dependencies {
     implementation project(":service-common")
 }
 
-tasks {
-    jar { enabled = false }
-    build { dependsOn(shadowJar) }
-    shadowJar {
-        manifest.attributes["Main-Class"] = "me.reidj.bridgebuilders.AppKt"
-        archiveClassifier.set(null as String)
+afterEvaluate {
+    jar {
+        archiveBaseName.set 'bridgebuilders-service'
+        from configurations.runtimeClasspath.collect { it.directory ? it : zipTree(it) }
+        duplicatesStrategy DuplicatesStrategy.EXCLUDE
     }
 }
-

@@ -3,6 +3,7 @@ package me.reidj.node.timer
 import me.func.mod.Anime
 import me.reidj.bridgebuilders.donate.impl.StartingKit
 import me.reidj.bridgebuilders.getUser
+import me.reidj.bridgebuilders.protocol.RejoinPackage
 import me.reidj.node.activeStatus
 import me.reidj.node.block_regeneration.RegenerationManager
 import me.reidj.node.game.BridgeGame
@@ -106,6 +107,8 @@ enum class Status(val lastSecond: Int, val now: (Int, BridgeGame) -> Int) {
             ru.cristalix.core.karma.IKarmaService.get().enableGG { true }
             activeStatus = END
         } else if (Bukkit.getOnlinePlayers().isEmpty()) {
+            me.reidj.bridgebuilders.userMap.forEach { entry -> me.reidj.bridgebuilders.clientSocket.write(RejoinPackage(entry.key)) }
+            me.reidj.bridgebuilders.userMap.clear()
             game.stopGame()
         }
         time

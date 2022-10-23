@@ -110,9 +110,7 @@ class App : JavaPlugin() {
     }
 
     override fun onDisable() {
-        Bukkit.getOnlinePlayers().mapNotNull { getUser(it) }.map { it.stat }.forEach {
-            it.lastRealm = ""
-        }
+        Bukkit.getOnlinePlayers().mapNotNull { getUser(it) }.map { it.stat }.forEach { it.lastRealm = "" }
         runBlocking { clientSocket.write(bulkSave(true)) }
         Thread.sleep(1000)
     }
