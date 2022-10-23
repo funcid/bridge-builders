@@ -62,6 +62,8 @@ class GlobalListeners : Listener {
                     -1L,
                     isApprovedResourcepack = true,
                 )
+            if (stat.lastRealm == null)
+                stat.lastRealm = ""
             userMap.putIfAbsent(uniqueId, User(stat))
             completeIntent(plugin)
         }

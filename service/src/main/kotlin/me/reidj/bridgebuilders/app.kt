@@ -36,7 +36,9 @@ fun main() {
         CoreApi.get().registerService(IPermissionService::class.java, PermissionService(this))
 
         listen<LoadStatPackage> { realmId, pckg ->
-            withContext(Dispatchers.IO) { mongoAdapter.find(pckg.uuid).get() }.run {
+            withContext(Dispatchers.IO) { mongoAdapter.find(pckg.uuid).get() }?.run {
+                if (lastRealm == null)
+                    lastRealm = ""
                 pckg.stat = this
                 forward(realmId, pckg)
                 println("Loaded on ${realmId.realmName}! Player: ${pckg.uuid}")
@@ -99,7 +101,7 @@ fun main() {
                 mongoAdapter.data.updateMany(
                     key,
                     value
-                ) { _, throwable -> throwable.printStackTrace() }
+                ) { _, throwable -> throwable?.printStackTrace() }
             }
         }
     }
