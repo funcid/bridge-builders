@@ -47,6 +47,7 @@ class ConnectionHandler : Listener {
             .dynamic("Эфира") { "§d${getUser(it)?.stat?.ether}" }
             .empty()
             .dynamic("Онлайн") { IRealmService.get().getOnlineOnRealms("BRIL") }
+            .build()
     }
 
     @EventHandler
@@ -124,6 +125,7 @@ class ConnectionHandler : Listener {
                 stat.rewardStreak++
             }
             stat.lastEnter = now / 10000
+            clientSocket.write(SaveUserPackage(uuid, stat))
         }
     }
 

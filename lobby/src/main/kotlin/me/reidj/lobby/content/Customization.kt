@@ -9,6 +9,7 @@ import me.func.mod.ui.menu.selection
 import me.func.mod.util.after
 import me.func.mod.util.command
 import me.func.protocol.data.color.GlowColor
+import me.func.protocol.data.emoji.Emoji
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.data.AchievementType
 import me.reidj.bridgebuilders.donate.DonatePosition
@@ -49,7 +50,7 @@ class Customization {
             this.rows = rows
             this.columns = columns
 
-            vault = if (isDonate) "donate" else "ruby"
+            vault = if (isDonate) Emoji.DONATE else Emoji.RUBY
 
             money = if (isDonate) {
                 val balance = ISocketClient.get().writeAndAwaitResponse<GetAccountBalancePackage>(

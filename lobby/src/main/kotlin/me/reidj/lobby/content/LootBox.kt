@@ -8,6 +8,7 @@ import me.func.mod.ui.menu.button
 import me.func.mod.ui.menu.selection
 import me.func.mod.world.Banners
 import me.func.mod.world.Banners.shineBlocks
+import me.func.protocol.data.emoji.Emoji
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.data.LootBoxType
 import me.reidj.bridgebuilders.data.LootBoxType.*
@@ -53,7 +54,7 @@ class LootBox : Listener, Ticked {
         title = "Ваши лутбоксы"
         hint = "Открыть"
         rows = 3
-        vault = "ruby"
+        vault = Emoji.RUBY
         columns = 3
     }
 
