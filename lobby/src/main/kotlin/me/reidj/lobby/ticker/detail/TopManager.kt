@@ -1,16 +1,11 @@
 package me.reidj.lobby.ticker.detail
 
 import com.google.common.collect.Maps
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.future.await
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.protocol.TopPackage
 import me.reidj.bridgebuilders.top.TopEntry
 import me.reidj.bridgebuilders.worldMeta
+import me.reidj.lobby.ticker.Ticked
 import org.bukkit.Location
 import ru.cristalix.boards.bukkitapi.Board
 import ru.cristalix.boards.bukkitapi.Boards
@@ -24,11 +19,10 @@ import java.util.*
  **/
 
 private const val DATA_COUNT = 10
+private const val UPDATE_SECONDS = 30
 private val TOP_DATA_FORMAT = DecimalFormat("###,###,###")
 
-class TopManager : () -> Unit {
-    private val scope = CoroutineScope(Dispatchers.Default)
-    private val mutex = Mutex()
+class TopManager : Ticked {
 
     private val tops = Maps.newConcurrentMap<TopPackage.TopType, List<TopEntry<String, String>>>()
     private val boards = Maps.newConcurrentMap<TopPackage.TopType, Board>()
@@ -40,7 +34,7 @@ class TopManager : () -> Unit {
             boards[TopPackage.TopType.valueOf(pair[0].uppercase())] = newBoard("Топ по ${pair[4]}", pair[3], it.apply {
                 x += 0.5
                 y += 4.5
-                yaw =  pair[1].toFloat()
+                yaw = pair[1].toFloat()
                 pitch = 0f
             })
         }
@@ -54,43 +48,44 @@ class TopManager : () -> Unit {
         it.location = location
     }.also(Boards::addBoard)
 
-    private suspend fun updateData() {
+    private fun updateData() {
         for (field in TopPackage.TopType.values()) {
-            val topPackageResponse = clientSocket.writeAndAwaitResponse<TopPackage>(
+            clientSocket.writeAndAwaitResponse<TopPackage>(
                 TopPackage(
                     field,
                     DATA_COUNT
                 )
-            ).await()
-            tops[field] = topPackageResponse.entries.map { TopEntry(if (it.displayName == null) "ERROR" else it.displayName!!, TOP_DATA_FORMAT.format(it.value)) }
+            ).thenApplyAsync { pckg ->
+                tops[field] = pckg.entries.map {
+                    TopEntry(
+                        if (it.displayName == null) "ERROR" else it.displayName!!,
+                        TOP_DATA_FORMAT.format(it.value)
+                    )
+                }
+            }
         }
     }
 
-    override fun invoke() {
-        if (mutex.isLocked) return
-        scope.launch {
-            mutex.withLock {
-                runCatching {
-                    updateData()
-                    val data = GlobalSerializers.toJson(tops)
-                    if ("{}" == data || data == null) return@withLock
-                    boards.forEach { (field, top) ->
-                        top.clearContent()
-                        var counter = 0
-                        if (tops[field] == null) return@forEach
-                        tops[field]!!.forEach {
-                            counter++
-                            top.addContent(
-                                UUID.randomUUID(),
-                                "" + counter,
-                                it.key,
-                                it.value
-                            )
-                        }
-                        top.updateContent()
-                    }
-                }.exceptionOrNull()?.printStackTrace()
+    override fun tick(args: Int) {
+        if (args % (20 * UPDATE_SECONDS) != 0)
+            return
+        updateData()
+        val data = GlobalSerializers.toJson(tops)
+        if ("{}" == data || data == null) return
+        boards.forEach { (field, top) ->
+            top.clearContent()
+            var counter = 0
+            if (tops[field] == null) return@forEach
+            tops[field]!!.forEach {
+                counter++
+                top.addContent(
+                    UUID.randomUUID(),
+                    "" + counter,
+                    it.key,
+                    it.value
+                )
             }
+            top.updateContent()
         }
     }
 }

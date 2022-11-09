@@ -37,8 +37,6 @@ fun main() {
 
         listen<LoadStatPackage> { realmId, pckg ->
             withContext(Dispatchers.IO) { mongoAdapter.find(pckg.uuid).get() }?.run {
-                if (lastRealm == null)
-                    lastRealm = ""
                 pckg.stat = this
                 forward(realmId, pckg)
                 println("Loaded on ${realmId.realmName}! Player: ${pckg.uuid}")

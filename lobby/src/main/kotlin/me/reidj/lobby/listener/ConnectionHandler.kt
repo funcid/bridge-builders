@@ -65,8 +65,8 @@ class ConnectionHandler : Listener {
             user.cachedPlayer = player
 
         player.isOp = uuid.toString() in godSet
-        player.allowFlight = IPermissionService.get().isDonator(uuid)
         player.gameMode = GameMode.ADVENTURE
+        player.allowFlight = IPermissionService.get().isDonator(uuid)
 
         ITabService.get().update(player)
 
