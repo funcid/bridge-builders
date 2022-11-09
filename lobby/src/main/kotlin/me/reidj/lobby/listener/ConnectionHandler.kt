@@ -5,8 +5,10 @@ import me.func.mod.conversation.ModLoader
 import me.func.mod.ui.menu.button
 import me.func.mod.ui.menu.dailyReward
 import me.func.mod.ui.menu.recconnct.Reconnect
-import me.func.mod.ui.scoreboard.ScoreBoard
+import me.func.mod.ui.token.Token
+import me.func.mod.ui.token.TokenGroup
 import me.func.mod.util.after
+import me.func.protocol.data.emoji.Emoji
 import me.func.protocol.ui.indicator.Indicators
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.getUser
@@ -39,16 +41,12 @@ import ru.cristalix.core.transfer.ITransferService
  **/
 class ConnectionHandler : Listener {
 
-    init {
-        ScoreBoard.builder()
-            .key("scoreboard")
-            .header("BridgeBuilders")
-            .dynamic("Уровень") { "§b${getUser(it)?.getLevel()}" }
-            .dynamic("Эфира") { "§d${getUser(it)?.stat?.ether}" }
-            .empty()
-            .dynamic("Онлайн") { IRealmService.get().getOnlineOnRealms("BRIL") }
+    private val group = TokenGroup(
+        Token.builder()
+            .title("Эфира")
+            .content { player -> Emoji.RUBY + "§c " + getUser(player)!!.stat.ether }
             .build()
-    }
+    )
 
     @EventHandler
     fun PlayerJoinEvent.handle() {
@@ -73,10 +71,10 @@ class ConnectionHandler : Listener {
         after(3) {
             player.setResourcePack("", "")
 
+            group.subscribe(player)
+
             if (user.stat.isApprovedResourcepack)
                 player.performCommand("rp")
-
-            ScoreBoard.subscribe("scoreboard", player)
 
             Anime.hideIndicator(player, Indicators.ARMOR, Indicators.EXP, Indicators.HEALTH, Indicators.HUNGER)
 

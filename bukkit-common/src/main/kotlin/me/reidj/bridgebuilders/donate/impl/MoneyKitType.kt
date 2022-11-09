@@ -23,7 +23,7 @@ enum class MoneyKitType(
 
     override fun getTitle() = title
 
-    override fun getDescription() = "Вы получите §d$reward Эфира"
+    override fun getDescription() = "Вы получите §c$reward Эфира"
 
     override fun getEther() = 0
 

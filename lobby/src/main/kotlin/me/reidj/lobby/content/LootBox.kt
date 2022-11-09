@@ -125,7 +125,7 @@ class LootBox : Listener, Ticked {
 
         if (stat.donates.contains(drop.getName())) {
             val giveBack = (drop.getRare().ordinal + 1) * 48
-            player.sendMessage(Formatting.fine("§aДубликат! §fЗаменен на §d$giveBack эфира§f."))
+            player.sendMessage(Formatting.fine("§aДубликат! §fЗаменен на §c$giveBack эфира§f."))
             user.giveEther(giveBack)
         } else {
             drop.give(user)

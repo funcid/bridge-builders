@@ -238,7 +238,7 @@ class BridgeGame {
                 givePureEther(30)
                 givePureExperience(30)
                 cachedPlayer?.let { player ->
-                    player.sendMessage(Formatting.fine("Вы получили §d30 Эфира §fи §b30 опыта §fза победу."))
+                    player.sendMessage(Formatting.fine("Вы получили §c30 Эфира §fи §b30 опыта §fза победу."))
                     Anime.showEnding(
                         player,
                         EndStatus.WIN,
@@ -272,7 +272,7 @@ class BridgeGame {
                     givePureEther(15)
                     giveExperience(15)
                     cachedPlayer?.let { player ->
-                        player.sendMessage(Formatting.fine("Вы получили §d15 Эфира §fи §b15 опыта§f."))
+                        player.sendMessage(Formatting.fine("Вы получили §c15 Эфира §fи §b15 опыта§f."))
                         Anime.showEnding(
                             player,
                             EndStatus.LOSE,

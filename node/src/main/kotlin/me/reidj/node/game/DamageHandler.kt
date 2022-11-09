@@ -125,7 +125,7 @@ class DamageHandler : Listener {
             val killer = getUser(user.lastDamager!!) ?: return
             val killerTeam = teams.firstOrNull { killer.stat.uuid in it.players } ?: return
             val killerChatColor = killerTeam.color.chatColor
-            val message = "Вы получили §d5 эфира §fза убийство."
+            val message = "Вы получили §c5 эфира §fза убийство."
 
             printKillMessages(0, killer, user, chatColor, killerChatColor)
             printKillMessages(1, killer, user, chatColor, killerChatColor)

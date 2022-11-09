@@ -28,6 +28,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.inventory.IInventoryService
 import ru.cristalix.core.inventory.InventoryService
+import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.party.IPartyService
 import ru.cristalix.core.party.PartyService
 import ru.cristalix.core.realm.IRealmService
@@ -104,3 +105,5 @@ class App : JavaPlugin() {
 
     fun getHub(): RealmId = RealmId.of("HUB-11")
 }
+
+fun client(): ISocketClient = ISocketClient.get()

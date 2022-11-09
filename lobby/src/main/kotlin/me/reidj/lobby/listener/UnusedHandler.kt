@@ -9,6 +9,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPhysicsEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.block.LeavesDecayEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.AsyncPlayerChatEvent
@@ -27,6 +28,11 @@ class UnusedHandler : Listener {
     fun PlayerMoveEvent.handle() {
         if (player.location.block.y <= 2)
             player.teleport(spawn)
+    }
+
+    @EventHandler
+    fun LeavesDecayEvent.handle() {
+        isCancelled = true
     }
 
     @EventHandler

@@ -407,7 +407,7 @@ class Customization {
     private fun buy(player: Player, isDonate: Boolean, donate: DonatePosition) {
         Confirmation(
             "Купить §a${donate.getTitle()}",
-            "за ${if (isDonate) donate.getCrystals() else donate.getEther()} ${if (isDonate) "§bКристаллик(а)" else "§dЭфира"}"
+            "за ${if (isDonate) donate.getCrystals() else donate.getEther()} ${if (isDonate) "§bКристаллик(а)" else "§cЭфира"}"
         ) {
             val user = getUser(player) ?: return@Confirmation
             val stat = user.stat

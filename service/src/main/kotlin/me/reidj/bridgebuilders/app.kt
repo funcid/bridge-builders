@@ -2,9 +2,7 @@ package me.reidj.bridgebuilders
 
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates.unset
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import me.reidj.bridgebuilders.protocol.*
 import org.bson.conversions.Bson
 import ru.cristalix.core.CoreApi
@@ -20,7 +18,7 @@ import ru.cristalix.core.permissions.PermissionService
  **/
 
 fun main() {
-    MicroserviceBootstrap.bootstrap(MicroServicePlatform(3))
+    MicroserviceBootstrap.bootstrap(MicroServicePlatform(4))
 
     val mongoAdapter = MongoAdapter(System.getenv("db_url"), System.getenv("db_data"), "data43")
 
@@ -35,31 +33,31 @@ fun main() {
 
         CoreApi.get().registerService(IPermissionService::class.java, PermissionService(this))
 
-        listen<LoadStatPackage> { realmId, pckg ->
-            withContext(Dispatchers.IO) { mongoAdapter.find(pckg.uuid).get() }?.run {
+        addListener(LoadStatPackage::class.java) { realmId, pckg ->
+            mongoAdapter.find(pckg.uuid).get().run {
                 pckg.stat = this
                 forward(realmId, pckg)
                 println("Loaded on ${realmId.realmName}! Player: ${pckg.uuid}")
             }
         }
-        listen<SaveUserPackage> { realmId, pckg ->
+        addListener(SaveUserPackage::class.java) { realmId, pckg ->
             mongoAdapter.save(pckg.stat)
             println("Received SaveUserPackage from ${realmId.realmName} for ${pckg.uuid}")
 
         }
-        listen<BulkSaveUserPackage> { realmId, pckg ->
+        addListener(BulkSaveUserPackage::class.java) { realmId, pckg ->
             mongoAdapter.save(pckg.packages.map { it.stat })
             println("Received BulkSaveUserPackage from ${realmId.realmName}")
         }
-        listen<TopPackage> { realmId, pckg ->
+        addListener(TopPackage::class.java) { realmId, pckg ->
             mongoAdapter.getTop(pckg.topType, pckg.limit).thenAccept {
                 pckg.entries = it
                 forward(realmId, pckg)
                 println("Top generated for ${realmId.realmName}")
             }
         }
-        listen<RejoinPackage> { _, pckg ->
-            withContext(Dispatchers.IO) { mongoAdapter.find(pckg.uuid).get() }?.let {
+        addListener(RejoinPackage::class.java) { _, pckg ->
+            mongoAdapter.find(pckg.uuid).get()?.let {
                 it.lastRealm = ""
                 mongoAdapter.save(it)
             }

@@ -18,9 +18,9 @@ dependencies {
     implementation("clepto:clepto-bukkit:3.4.2")
     implementation("clepto:clepto-cristalix:3.0.2")
 
-    implementation("me.func:animation-api:3.10.0")
+    implementation 'me.func:visual-driver:3.2.9.RELEASE'
 
-    implementation("cristalix:boards-bukkit-api:3.0.15")
+    implementation 'ru.cristalix:boards-bukkit-api:3.0.16'
 
     implementation(project(":bukkit-common"))
     implementation(project(":service-common"))

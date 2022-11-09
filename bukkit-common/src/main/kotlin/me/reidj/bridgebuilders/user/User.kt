@@ -4,7 +4,6 @@ import me.func.mod.Anime
 import me.func.mod.conversation.ModTransfer
 import me.func.mod.ui.Glow
 import me.func.protocol.data.color.GlowColor
-import me.func.protocol.math.Position
 import me.reidj.bridgebuilders.data.Stat
 import me.reidj.bridgebuilders.getRequiredExperience
 import org.bukkit.entity.Player
@@ -67,7 +66,7 @@ class User(stat: Stat) {
                 Glow.animate(it, .5, GlowColor.BLUE)
                 if (getLevel() % 10 == 0) {
                     giveEther(512)
-                    it.sendMessage(Formatting.fine("Вы получили §d512 Эфира §f за повышение уровня."))
+                    it.sendMessage(Formatting.fine("Вы получили §c512 Эфира §f за повышение уровня."))
                 }
             }
         }
