@@ -6,5 +6,5 @@ package me.reidj.lobby.ticker
  **/
 interface Ticked {
 
-    fun tick(args: Int)
+    fun tick(int: Int)
 }

@@ -1,18 +1,31 @@
 package me.reidj.lobby
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import me.reidj.lobby.ticker.Ticked
-import org.bukkit.scheduler.BukkitRunnable
 
 /**
  * @project : BridgeBuilders
  * @author : Рейдж
  **/
-class TickTimerHandler(private vararg val ticked: Ticked): BukkitRunnable() {
 
-    private var counter = 1
+class TickTimerHandler(private val injects: List<Ticked>) : () -> Unit {
 
-    override fun run() {
-        counter++
-        ticked.forEach { it.tick(counter) }
+    private var tick = 0
+
+    private val scope = CoroutineScope(Dispatchers.Default)
+    private val mutex = Mutex()
+
+    override fun invoke() {
+        if (mutex.isLocked) return
+        scope.launch {
+            mutex.withLock {
+                tick++
+                injects.forEach { it.tick(tick) }
+            }
+        }
     }
 }

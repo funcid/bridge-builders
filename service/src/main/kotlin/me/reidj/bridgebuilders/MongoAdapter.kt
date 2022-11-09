@@ -5,9 +5,11 @@ import com.mongodb.async.client.MongoClient
 import com.mongodb.async.client.MongoClients
 import com.mongodb.async.client.MongoCollection
 import com.mongodb.client.model.*
+import com.mongodb.client.model.Aggregates.limit
+import com.mongodb.client.model.Aggregates.project
 import com.mongodb.session.ClientSession
+import kotlinx.coroutines.future.await
 import me.reidj.bridgebuilders.data.Stat
-import me.reidj.bridgebuilders.protocol.TopPackage.TopType
 import me.reidj.bridgebuilders.top.PlayerTopEntry
 import me.reidj.bridgebuilders.top.TopEntry
 import me.reidj.bridgebuilders.util.UtilCristalix
@@ -90,25 +92,26 @@ open class MongoAdapter(dbUrl: String, dbName: String, collection: String) {
 
     private fun handle(throwable: Throwable?) = throwable?.printStackTrace()
 
-    open fun <V> makeRatingByField(fieldName: String, limit: Int): CompletableFuture<List<TopEntry<Stat, V>>> {
+    open fun <V> makeRatingByField(fieldName: String, limit: Int): List<TopEntry<Stat, V>> {
         val entries = ArrayList<TopEntry<Stat, V>>()
         val future: CompletableFuture<List<TopEntry<Stat, V>>> = CompletableFuture<List<TopEntry<Stat, V>>>()
 
-        data.createIndex(Indexes.hashed("_id")) { _, _ -> }
-        data.createIndex(Indexes.hashed("uuid")) { _, _ -> }
-        data.createIndex(Indexes.ascending(fieldName)) { _, _ -> }
-
-        data.aggregate(listOf(
-            Aggregates.project(
+        val operations = listOf(
+            project(
                 Projections.fields(
                     Projections.include(fieldName),
                     Projections.include("uuid"),
                     Projections.exclude("_id")
                 )
             ), Aggregates.sort(Sorts.descending(fieldName)),
-            Aggregates.limit(limit)
-        )).forEach({ document: Document ->
-            readDocument(document)?.let { entries.add(TopEntry(it, document[fieldName] as V)) }
+            limit(limit)
+        )
+
+        data.aggregate(operations).forEach({ document: Document ->
+            if (readDocument(document) == null) {
+                throw NullPointerException("Document is null")
+            }
+            entries.add(TopEntry(readDocument(document)!!, document[fieldName] as V))
         }) { _: Void?, throwable: Throwable? ->
             if (throwable != null) {
                 future.completeExceptionally(throwable)
@@ -116,31 +119,50 @@ open class MongoAdapter(dbUrl: String, dbName: String, collection: String) {
             }
             future.complete(entries)
         }
-        return future
+
+        return future.get()
     }
 
-    open fun getTop(topType: TopType, limit: Int) = CompletableFuture<MutableList<PlayerTopEntry<Any>>>().apply {
-        makeRatingByField<String>(topType.name.lowercase(), limit).thenApplyAsync { entries ->
-            val playerEntries = mutableListOf<PlayerTopEntry<Any>>()
-            entries.forEach { it.key.let { stat -> playerEntries.add(PlayerTopEntry(stat, it.value)) } }
-            try {
-                val uuids = arrayListOf<UUID>()
-                entries.forEach { uuids.add(it.key.uuid) }
-                val groups = ISocketClient.get()
-                    .writeAndAwaitResponse<BulkGroupsPackage>(BulkGroupsPackage(uuids))
-                    .get(5L, TimeUnit.SECONDS)
-                    .groups
-                val map = groups.associateBy { it.uuid }
-                playerEntries.forEach {
-                    val data = map[it.key.uuid]
-                    it.userName = if (data == null) "ERROR" else data.username
-                    it.displayName = if (data == null) "ERROR" else UtilCristalix.createDisplayName(data)
+    suspend fun getTop(topType: String, limit: Int): List<PlayerTopEntry<Any>> {
+        val entries = makeRatingByField<String>(topType, limit)
+        val playerEntries = mutableListOf<PlayerTopEntry<Any>>()
+
+        entries.forEach { it.key.let { stat -> playerEntries.add(PlayerTopEntry(stat, it.value)) } }
+
+        try {
+            val uuids = arrayListOf<UUID>()
+
+            entries.forEach { uuids.add(it.key.uuid) }
+
+            val map = ISocketClient.get()
+                .writeAndAwaitResponse<BulkGroupsPackage>(BulkGroupsPackage(uuids))
+                .await()
+                .groups.associateBy { it.uuid }
+
+            playerEntries.forEach {
+                map[it.key.uuid]?.let {data ->
+                    it.userName = data.username
+                    it.displayName = UtilCristalix.createDisplayName(data)
                 }
-            } catch (exception: java.lang.Exception) {
-                exception.printStackTrace()
             }
-            complete(playerEntries)
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+            playerEntries.forEach {
+                it.userName = "ERROR"
+                it.displayName = "ERROR"
+            }
+        }
+        return playerEntries.map {
+            PlayerTopEntry(it.key, it.value).also { new ->
+                new.displayName = it.displayName
+                new.userName = it.userName
+            }
         }
     }
 
+    fun clear(uuid: UUID) {
+        data.deleteOne(Filters.eq("uuid", uuid.toString())) { _, throwable: Throwable? ->
+            throwable?.printStackTrace()
+        }
+    }
 }

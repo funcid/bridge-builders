@@ -7,12 +7,7 @@ import ru.cristalix.core.network.CorePackage
  * @project : BridgeBuilders
  * @author : Рейдж
  **/
-data class TopPackage(val topType: TopType, val limit: Int): CorePackage() {
+data class TopPackage(val topType: String, val limit: Int): CorePackage() {
 
     lateinit var entries: List<PlayerTopEntry<Any>>
-
-    enum class TopType {
-        WINS,
-        EXP,
-    }
 }

@@ -59,6 +59,7 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
             .build()
     }
 
+
     @EventHandler
     fun PlayerJoinEvent.handle() {
         val uuid = player.uniqueId

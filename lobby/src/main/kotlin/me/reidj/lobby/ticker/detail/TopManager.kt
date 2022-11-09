@@ -20,18 +20,19 @@ import java.util.*
 
 private const val DATA_COUNT = 10
 private const val UPDATE_SECONDS = 30
-private val TOP_DATA_FORMAT = DecimalFormat("###,###,###")
 
 class TopManager : Ticked {
 
-    private val tops = Maps.newConcurrentMap<TopPackage.TopType, List<TopEntry<String, String>>>()
-    private val boards = Maps.newConcurrentMap<TopPackage.TopType, Board>()
+    private val tops = Maps.newConcurrentMap<String, List<TopEntry<String, String>>>()
+    private val boards = Maps.newConcurrentMap<String, Board>()
+
+    private val topDataFormat = DecimalFormat("###,###,###")
 
     init {
         // Создание топов
         worldMeta.getLabels("top").forEach {
             val pair = it.tag.split(" ")
-            boards[TopPackage.TopType.valueOf(pair[0].uppercase())] = newBoard("Топ по ${pair[4]}", pair[3], it.apply {
+            boards[pair[0]] = newBoard("Топ по ${pair[4]}", pair[3], it.apply {
                 x += 0.5
                 y += 4.5
                 yaw = pair[1].toFloat()
@@ -49,18 +50,10 @@ class TopManager : Ticked {
     }.also(Boards::addBoard)
 
     private fun updateData() {
-        for (field in TopPackage.TopType.values()) {
-            clientSocket.writeAndAwaitResponse<TopPackage>(
-                TopPackage(
-                    field,
-                    DATA_COUNT
-                )
-            ).thenApplyAsync { pckg ->
-                tops[field] = pckg.entries.map {
-                    TopEntry(
-                        if (it.displayName == null) "ERROR" else it.displayName!!,
-                        TOP_DATA_FORMAT.format(it.value)
-                    )
+        for (field in boards.keys) {
+            clientSocket.writeAndAwaitResponse<TopPackage>(TopPackage(field, DATA_COUNT)).thenAcceptAsync { topPackage ->
+                tops[field] = topPackage.entries.map {
+                    TopEntry(if (it.displayName == null) "ERROR" else it.displayName!!, topDataFormat.format(it.value))
                 }
             }
         }

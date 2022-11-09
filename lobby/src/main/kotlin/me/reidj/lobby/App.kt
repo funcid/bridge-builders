@@ -24,11 +24,11 @@ import me.reidj.lobby.listener.UnusedHandler
 import me.reidj.lobby.npc.NpcManager
 import me.reidj.lobby.ticker.detail.RepeatTasks
 import me.reidj.lobby.ticker.detail.TopManager
+import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.inventory.IInventoryService
 import ru.cristalix.core.inventory.InventoryService
-import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.party.IPartyService
 import ru.cristalix.core.party.PartyService
 import ru.cristalix.core.realm.IRealmService
@@ -95,7 +95,7 @@ class App : JavaPlugin() {
         listener(GlobalListeners(), npcManager, lootBox, ConnectionHandler(), InteractHandler(), UnusedHandler(), TabViewManager())
 
         // Обработка каждого тика
-        TickTimerHandler(npcManager, lootBox, RepeatTasks(), TopManager()).runTaskTimerAsynchronously(this, 0, 1)
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, TickTimerHandler(listOf(npcManager, lootBox, RepeatTasks(), TopManager())), 0, 1)
     }
 
     override fun onDisable() {
@@ -105,5 +105,3 @@ class App : JavaPlugin() {
 
     fun getHub(): RealmId = RealmId.of("HUB-11")
 }
-
-fun client(): ISocketClient = ISocketClient.get()
