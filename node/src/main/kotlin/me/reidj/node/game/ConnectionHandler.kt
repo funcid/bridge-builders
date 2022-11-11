@@ -75,7 +75,8 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
         if (user == null) {
             player.kickPlayer()
             return
-        } else if (user.stat.lastRealm.isNotEmpty() && user.stat.lastRealm != IRealmService.get().currentRealmInfo.realmId.realmName) {
+        }
+        if (user.stat.lastRealm.isNotEmpty() && user.stat.lastRealm != IRealmService.get().currentRealmInfo.realmId.realmName) {
             player.sendMessage(Formatting.error("Вы не можете начать следующую игру, не закончив прошлую!"))
             player.kickPlayer()
             return

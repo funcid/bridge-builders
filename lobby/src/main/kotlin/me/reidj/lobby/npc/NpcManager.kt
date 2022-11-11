@@ -45,8 +45,8 @@ class NpcManager : Ticked, Listener {
         }
     }
 
-    override fun tick(args: Int) {
-        if (args % 20 != 0)
+    override fun tick(int: Int) {
+        if (int % 20 != 0)
             return
         Bukkit.getOnlinePlayers().forEach {
             Banners.content(

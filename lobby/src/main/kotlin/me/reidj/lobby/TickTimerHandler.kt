@@ -12,6 +12,8 @@ import me.reidj.lobby.ticker.Ticked
  * @author : Рейдж
  **/
 
+private const val RESET_PERIOD = 20 * 60L * 10
+
 class TickTimerHandler(private val injects: List<Ticked>) : () -> Unit {
 
     private var tick = 0
@@ -23,7 +25,11 @@ class TickTimerHandler(private val injects: List<Ticked>) : () -> Unit {
         if (mutex.isLocked) return
         scope.launch {
             mutex.withLock {
-                tick++
+                if (tick % RESET_PERIOD == 0L) {
+                    tick = 1
+                } else {
+                    tick++
+                }
                 injects.forEach { it.tick(tick) }
             }
         }
