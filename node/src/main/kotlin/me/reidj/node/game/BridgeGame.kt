@@ -1,6 +1,5 @@
 package me.reidj.node.game
 
-import kotlinx.coroutines.runBlocking
 import me.func.mod.Anime
 import me.func.mod.conversation.ModTransfer
 import me.func.mod.ui.Glow
@@ -15,6 +14,7 @@ import me.func.protocol.world.npc.NpcBehaviour
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.data.LootBoxType
 import me.reidj.bridgebuilders.protocol.RejoinPackage
+import me.reidj.bridgebuilders.protocol.SaveUserPackage
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.MapLoader
 import me.reidj.node.activeStatus
@@ -237,6 +237,7 @@ class BridgeGame {
             it.run {
                 givePureEther(30)
                 givePureExperience(30)
+                stat.wins++
                 cachedPlayer?.let { player ->
                     player.sendMessage(Formatting.fine("Вы получили §c30 Эфира §fи §b30 опыта §fза победу."))
                     Anime.showEnding(
@@ -263,7 +264,6 @@ class BridgeGame {
                         }
                     }
                 }
-                stat.wins++
             }
         }
         teams.filter { it != team }.forEach { looser ->
@@ -296,10 +296,7 @@ class BridgeGame {
             }
         }
         userMap.forEach { clientSocket.write(RejoinPackage(it.key)) }
-        after(5) {
-            runBlocking { clientSocket.write(bulkSave(true)) }
-            Thread.sleep(1000)
-        }
+        after(5) { clientSocket.write(bulkSave(true)) }
         after(40) { stopGame() }
     }
 

@@ -133,13 +133,13 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
         val uuid = player.uniqueId
         val players = Bukkit.getOnlinePlayers()
         val team = teams.firstOrNull { uuid in it.players } ?: return
+        val user = getUser(player) ?: return
         if (activeStatus == Status.STARTING) {
             after(3) { players.forEach { ModTransfer(true, slots, players.size).send("bridge:online", it) } }
             ModifiersManager.voteRemove(player)
             userMap.remove(uuid)
             team.players.remove(uuid)
         } else if (activeStatus == Status.GAME) {
-            val user = getUser(player) ?: return
             val stat = user.stat
             val inventory = player.inventory
 
@@ -161,9 +161,8 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
             stat.lastRealm = IRealmService.get().currentRealmInfo.realmId.realmName
 
             team.players.remove(uuid)
-
-            clientSocket.write(SaveUserPackage(uuid, user.stat))
         }
+        clientSocket.write(SaveUserPackage(uuid, user.stat))
     }
 
     @EventHandler
