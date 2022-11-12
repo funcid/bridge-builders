@@ -69,7 +69,6 @@ class BlockHandler(private val game: BridgeGame) : Listener {
             ru.cristalix.core.karma.IKarmaService.get().enableGG { true }
 
             game.end(team)
-            activeStatus = Status.END
         }
 
         // Автопереплавка руды

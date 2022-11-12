@@ -14,7 +14,6 @@ import me.func.protocol.world.npc.NpcBehaviour
 import me.reidj.bridgebuilders.*
 import me.reidj.bridgebuilders.data.LootBoxType
 import me.reidj.bridgebuilders.protocol.RejoinPackage
-import me.reidj.bridgebuilders.protocol.SaveUserPackage
 import me.reidj.bridgebuilders.user.User
 import me.reidj.bridgebuilders.util.MapLoader
 import me.reidj.node.activeStatus
@@ -234,70 +233,66 @@ class BridgeGame {
 
     fun end(team: Team) {
         team.players.mapNotNull { getUser(it) }.forEach {
-            it.run {
-                givePureEther(30)
-                givePureExperience(30)
-                stat.wins++
-                cachedPlayer?.let { player ->
-                    player.sendMessage(Formatting.fine("Вы получили §c30 Эфира §fи §b30 опыта §fза победу."))
-                    Anime.showEnding(
-                        player,
-                        EndStatus.WIN,
-                        listOf("Блоков принесено:", "Игроков убито:"),
-                        listOf("$collectedBlocks", "$cacheKills")
-                    )
-                    player.world!!.spawn(player.location, Firework::class.java).run {
-                        fireworkMeta = fireworkMeta.apply {
-                            addEffect(
-                                FireworkEffect.builder()
-                                    .flicker(true)
-                                    .trail(true)
-                                    .with(FireworkEffect.Type.BALL_LARGE)
-                                    .with(FireworkEffect.Type.BALL)
-                                    .with(FireworkEffect.Type.BALL_LARGE)
-                                    .withColor(org.bukkit.Color.YELLOW)
-                                    .withColor(org.bukkit.Color.GREEN)
-                                    .withColor(org.bukkit.Color.WHITE)
-                                    .build()
-                            )
-                            power = 0
-                        }
+            it.givePureEther(30)
+            it.givePureExperience(30)
+            it.stat.wins++
+            it.cachedPlayer?.let { player ->
+                player.sendMessage(Formatting.fine("Вы получили §c30 Эфира §fи §b30 опыта §fза победу."))
+                Anime.showEnding(
+                    player,
+                    EndStatus.WIN,
+                    listOf("Блоков принесено:", "Игроков убито:"),
+                    listOf("${it.collectedBlocks}", "${it.cacheKills}")
+                )
+                player.world!!.spawn(player.location, Firework::class.java).run {
+                    fireworkMeta = fireworkMeta.apply {
+                        addEffect(
+                            FireworkEffect.builder()
+                                .flicker(true)
+                                .trail(true)
+                                .with(FireworkEffect.Type.BALL_LARGE)
+                                .with(FireworkEffect.Type.BALL)
+                                .with(FireworkEffect.Type.BALL_LARGE)
+                                .withColor(org.bukkit.Color.YELLOW)
+                                .withColor(org.bukkit.Color.GREEN)
+                                .withColor(org.bukkit.Color.WHITE)
+                                .build()
+                        )
+                        power = 0
                     }
                 }
             }
         }
         teams.filter { it != team }.forEach { looser ->
             looser.players.mapNotNull { getUser(it) }.forEach {
-                it.run {
-                    givePureEther(15)
-                    giveExperience(15)
-                    cachedPlayer?.let { player ->
-                        player.sendMessage(Formatting.fine("Вы получили §c15 Эфира §fи §b15 опыта§f."))
-                        Anime.showEnding(
-                            player,
-                            EndStatus.LOSE,
-                            listOf("Блоков принесено:", "Игроков убито:"),
-                            listOf("${it.collectedBlocks}", "$cacheKills")
-                        )
-                    }
+                it.givePureEther(15)
+                it.giveExperience(15)
+                it.cachedPlayer?.let { player ->
+                    player.sendMessage(Formatting.fine("Вы получили §c15 Эфира §fи §b15 опыта§f."))
+                    Anime.showEnding(
+                        player,
+                        EndStatus.LOSE,
+                        listOf("Блоков принесено:", "Игроков убито:"),
+                        listOf("${it.collectedBlocks}", "${it.cacheKills}")
+                    )
                 }
             }
         }
-        Bukkit.getOnlinePlayers().filter { !it.isSpectator() }.mapNotNull { getUser(it) }.onEach {
-            it.run {
-                stat.lastRealm = ""
-                stat.games++
-                inGame = false
-                if (Math.random() < 0.02) {
-                    val lootBox = LootBoxType.values().drop(5).random()
-                    stat.lootBoxes.add(lootBox)
-                    Bukkit.broadcastMessage(Formatting.fine("§e${if (cachedPlayer == null) "ERROR" else cachedPlayer!!.name} §fполучил ${lootBox.lootBox.rare.getColored()} лутбокс§f!"))
-                }
+        Bukkit.getOnlinePlayers().filter { !it.isSpectator() }.mapNotNull { getUser(it) }.forEach {
+            it.stat.lastRealm = ""
+            it.stat.games++
+            it.inGame = false
+            if (Math.random() < 0.02) {
+                val lootBox = LootBoxType.values().drop(5).random()
+                it.stat.lootBoxes.add(lootBox)
+                Bukkit.broadcastMessage(Formatting.fine("§e${if (it.cachedPlayer == null) "ERROR" else it.cachedPlayer!!.name} §fполучил ${lootBox.lootBox.rare.getColored()} лутбокс§f!"))
             }
         }
-        userMap.forEach { clientSocket.write(RejoinPackage(it.key)) }
-        after(5) { clientSocket.write(bulkSave(true)) }
-        after(40) { stopGame() }
+        userMap.filter { it.value.stat.lastRealm != "" }.forEach { clientSocket.write(RejoinPackage(it.key)) }
+        after(40) {
+            clientSocket.write(bulkSave(true))
+            stopGame()
+        }
     }
 
     fun standardOperations(player: Player, user: User, playerTeam: Team) {

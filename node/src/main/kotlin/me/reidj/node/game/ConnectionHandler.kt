@@ -19,7 +19,6 @@ import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -129,7 +128,7 @@ class ConnectionHandler(private val game: BridgeGame) : Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler
     fun PlayerQuitEvent.handle() {
         val uuid = player.uniqueId
         val players = Bukkit.getOnlinePlayers()

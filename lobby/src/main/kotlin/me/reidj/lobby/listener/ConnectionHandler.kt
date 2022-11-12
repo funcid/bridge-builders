@@ -68,7 +68,7 @@ class ConnectionHandler : Listener {
 
         ITabService.get().update(player)
 
-        after(3) {
+        after(10) {
             player.setResourcePack("", "")
 
             group.subscribe(player)
@@ -121,9 +121,9 @@ class ConnectionHandler : Listener {
                 player.sendMessage(Formatting.fine("Ваша ежедневная награда: " + dailyReward.title))
                 dailyReward.give(user)
                 stat.rewardStreak++
+                clientSocket.write(SaveUserPackage(uuid, stat))
             }
             stat.lastEnter = now / 10000
-            clientSocket.write(SaveUserPackage(uuid, stat))
         }
     }
 
