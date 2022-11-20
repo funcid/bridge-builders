@@ -8,6 +8,7 @@ import com.mongodb.client.model.*
 import com.mongodb.client.model.Aggregates.limit
 import com.mongodb.client.model.Aggregates.project
 import com.mongodb.session.ClientSession
+import kotlinx.coroutines.future.await
 import me.reidj.bridgebuilders.data.Stat
 import me.reidj.bridgebuilders.top.PlayerTopEntry
 import me.reidj.bridgebuilders.top.TopEntry
@@ -122,7 +123,7 @@ open class MongoAdapter(dbUrl: String, dbName: String, collection: String) {
         return future.get()
     }
 
-    fun getTop(topType: String, limit: Int): List<PlayerTopEntry<Any>> {
+    suspend fun getTop(topType: String, limit: Int): List<PlayerTopEntry<Any>> {
         val entries = makeRatingByField<String>(topType, limit)
         val playerEntries = mutableListOf<PlayerTopEntry<Any>>()
 
@@ -135,11 +136,11 @@ open class MongoAdapter(dbUrl: String, dbName: String, collection: String) {
 
             val map = ISocketClient.get()
                 .writeAndAwaitResponse<BulkGroupsPackage>(BulkGroupsPackage(uuids))
-                .get(5L, TimeUnit.SECONDS)
+                .await()
                 .groups.associateBy { it.uuid }
 
             playerEntries.forEach {
-                map[it.key.uuid]?.let {data ->
+                map[it.key.uuid]?.let { data ->
                     it.userName = data.username
                     it.displayName = UtilCristalix.createDisplayName(data)
                 }

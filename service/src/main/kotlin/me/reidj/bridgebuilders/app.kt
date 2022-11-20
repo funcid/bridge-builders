@@ -2,6 +2,9 @@ package me.reidj.bridgebuilders
 
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates.unset
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import me.reidj.bridgebuilders.protocol.*
 import org.bson.conversions.Bson
@@ -50,10 +53,12 @@ fun main() {
             println("Received BulkSaveUserPackage from ${realmId.realmName}")
         }
         addListener(TopPackage::class.java) { realmId, pckg ->
-            val top = mongoAdapter.getTop(pckg.topType, pckg.limit)
-            pckg.entries = top
-            forward(realmId, pckg)
-            println("Top generated for ${realmId.realmName}")
+            CoroutineScope(Dispatchers.Default).launch {
+                val top = mongoAdapter.getTop(pckg.topType, pckg.limit)
+                pckg.entries = top
+                forward(realmId, pckg)
+                println("Top generated for ${realmId.realmName}")
+            }
         }
         addListener(RejoinPackage::class.java) { _, pckg ->
             mongoAdapter.find(pckg.uuid).get()?.let {
