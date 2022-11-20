@@ -44,7 +44,7 @@ class ConnectionHandler : Listener {
     private val group = TokenGroup(
         Token.builder()
             .title("Эфира")
-            .content { player -> Emoji.RUBY + "§c " + getUser(player)!!.stat.ether }
+            .content { player -> Emoji.RUBY + "§c " + getUser(player)?.stat?.ether }
             .build()
     )
 

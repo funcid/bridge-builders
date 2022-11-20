@@ -3,7 +3,9 @@ package me.reidj.bridgebuilders.user
 import me.func.mod.Anime
 import me.func.mod.conversation.ModTransfer
 import me.func.mod.ui.Glow
+import me.func.mod.world.Banners
 import me.func.protocol.data.color.GlowColor
+import me.func.protocol.data.element.Banner
 import me.reidj.bridgebuilders.data.Stat
 import me.reidj.bridgebuilders.getRequiredExperience
 import org.bukkit.entity.Player
@@ -75,4 +77,10 @@ class User(stat: Stat) {
     fun givePureExperience(exp: Int) {
         stat.exp += exp
     }
+
+    fun updateBanner(banner: Banner, title: String) = Banners.content(
+        cachedPlayer!!,
+        banner,
+        "§6$title\nПобед: §3${stat.wins}\nУбийств: §3${stat.kills}\nСыграно: §3${stat.games}"
+    )
 }

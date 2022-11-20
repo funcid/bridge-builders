@@ -57,12 +57,7 @@ class NpcManager : Ticked, Listener {
                 }"
             )
             val user = getUser(it) ?: return@forEach
-            val stat = user.stat
-            Banners.content(
-                it,
-                NpcType.GUIDE.banner,
-                "§6${NpcType.GUIDE.bannerTitle}\nПобед: §3${stat.wins}\nУбийств: §3${stat.kills}\nСыграно: §3${stat.games}"
-            )
+            user.updateBanner(NpcType.GUIDE.banner, NpcType.GUIDE.bannerTitle)
         }
     }
 
