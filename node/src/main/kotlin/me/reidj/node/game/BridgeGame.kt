@@ -302,32 +302,38 @@ class BridgeGame {
 
         teams.forEachIndexed { index, team ->
             val color = org.bukkit.Color.fromRGB(team.color.color)
-            Bukkit.getOnlinePlayers().forEach {
-                // Отправка прогресса команд
-                ModTransfer(
-                    index + 2,
-                    color.getRed(),
-                    color.getGreen(),
-                    color.getBlue()
-                ).send("bridge:progressinit", it)
+            after(5) {
+                Bukkit.getOnlinePlayers().forEach {
+                    // Отправка прогресса команд
+                    ModTransfer(
+                        index + 2,
+                        color.getRed(),
+                        color.getGreen(),
+                        color.getBlue()
+                    ).send("bridge:progressinit", it)
+                }
             }
-            Bukkit.getOnlinePlayers().forEach { online ->
-                ModTransfer(
-                    index + 2,
-                    mapType.needBlocks,
-                    team.collected.map { block -> block.value }.sum()
-                ).send("bridge:progressupdate", online)
+            after(10) {
+                Bukkit.getOnlinePlayers().forEach { online ->
+                    ModTransfer(
+                        index + 2,
+                        mapType.needBlocks,
+                        team.collected.map { block -> block.value }.sum()
+                    ).send("bridge:progressupdate", online)
+                }
             }
         }
         playerTeam.collected.entries.forEachIndexed { index, block ->
             // Заполнение таба
-            ModTransfer(
-                index + 2,
-                block.key.needTotal,
-                block.value,
-                block.key.title,
-                block.key.getItem(1)
-            ).send("bridge:init", player)
+            after(12) {
+                ModTransfer(
+                    index + 2,
+                    block.key.needTotal,
+                    block.value,
+                    block.key.title,
+                    block.key.getItem(1)
+                ).send("bridge:init", player)
+            }
             // Отправка прогресса
             ModTransfer(
                 index + 2,
