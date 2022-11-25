@@ -27,6 +27,9 @@ import me.reidj.lobby.ticker.detail.TopManager
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import ru.cristalix.core.CoreApi
+import ru.cristalix.core.command.ICommandService
+import ru.cristalix.core.coupons.BukkitCouponsService
+import ru.cristalix.core.coupons.ICouponsService
 import ru.cristalix.core.inventory.IInventoryService
 import ru.cristalix.core.inventory.InventoryService
 import ru.cristalix.core.party.IPartyService
@@ -65,6 +68,7 @@ class App : JavaPlugin() {
             registerService(ITransferService::class.java, TransferService(clientSocket))
             registerService(IInventoryService::class.java, InventoryService())
             registerService(IRenderService::class.java, BukkitRenderService(getServer()))
+            registerService(ICouponsService::class.java, BukkitCouponsService(clientSocket, ICommandService.get()))
         }
 
         Anime.include(Kit.NPC, Kit.STANDARD, Kit.LOOTBOX, Kit.GRAFFITI, Kit.EXPERIMENTAL)

@@ -20,6 +20,7 @@ import me.reidj.bridgebuilders.protocol.SaveUserPackage
 import me.reidj.bridgebuilders.user.User
 import org.bukkit.Sound
 import org.bukkit.entity.Player
+import ru.cristalix.core.coupons.ICouponsService
 import ru.cristalix.core.formatting.Formatting
 import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.network.packages.GetAccountBalancePackage
@@ -72,6 +73,7 @@ class Customization {
                         else -> false
                     }
                     price = if (!isDonate) pos.getEther().toLong() else pos.getCrystals().toLong()
+                    if (isDonate) sale(ICouponsService.get().getDiscount(player.uniqueId))
                     hint(if (current) "Выбрано" else if (has) "Выбрать" else "Купить")
                     onClick { player, _, _ ->
                         if (current)
