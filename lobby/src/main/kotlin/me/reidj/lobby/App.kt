@@ -86,7 +86,7 @@ class App : JavaPlugin() {
             servicedServers = arrayOf("BRD")
         }
 
-        worldMeta = MapLoader().load("LOBB2")
+        worldMeta = MapLoader().load("LOBB")
 
         lootBox = LootBox()
         npcManager = NpcManager()

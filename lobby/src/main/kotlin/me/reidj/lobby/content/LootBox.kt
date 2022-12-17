@@ -75,8 +75,7 @@ class LootBox : Listener, Ticked {
         if (inventory.type == InventoryType.ENDER_CHEST) {
             isCancelled = true
             val player = player as Player
-            val user = getUser(player) ?: return
-            val stat = user.stat
+            val stat = (getUser(player) ?: return).stat
             menu.money = "Эфира ${stat.ether}"
             menu.storage = stat.lootBoxes.map {
                 val box = it.lootBox
@@ -86,23 +85,25 @@ class LootBox : Listener, Ticked {
                         price = box.openPrice.toLong()
                     title = "${box.rare.getColored()} лутбокс"
                     description = if (box.openLevel > 0) "Уровень для открытия ${box.openLevel}" else ""
-                    onClick { player, _, _ ->
-                        if (stat.ether < box.openPrice) {
-                            Anime.close(player)
-                            player.sendMessage(Formatting.error("Недостаточно средств!"))
-                            player.error("Ошибка!", "Недостаточно средств")
+                    onClick { clicked, _, _ ->
+                        val clickUser = getUser(clicked) ?: return@onClick
+                        val clickStat = clickUser.stat
+                        if (clickStat.ether < box.openPrice) {
+                            Anime.close(clicked)
+                            clicked.sendMessage(Formatting.error("Недостаточно средств!"))
+                            clicked.error("Ошибка!", "Недостаточно средств")
                             return@onClick
-                        } else if (user.getLevel() < box.openLevel) {
-                            Anime.close(player)
-                            player.sendMessage(Formatting.error("У Вас слишком низкий уровень!"))
-                            player.error("Ошибка!", "Слишком низкий уровень")
+                        } else if (clickUser.getLevel() < box.openLevel) {
+                            Anime.close(clicked)
+                            clicked.sendMessage(Formatting.error("У Вас слишком низкий уровень!"))
+                            clicked.error("Ошибка!", "Слишком низкий уровень")
                             return@onClick
                         }
-                        Anime.close(player)
-                        user.giveEther(-box.openPrice)
-                        stat.lootBoxes.remove(it)
-                        stat.lootBoxOpened++
-                        open(user, player, it)
+                        Anime.close(clicked)
+                        clickUser.giveEther(-box.openPrice)
+                        clickStat.lootBoxes.remove(it)
+                        clickStat.lootBoxOpened++
+                        open(clickUser, clicked, it)
                     }
                 }
             }.toMutableList()
@@ -139,8 +140,8 @@ class LootBox : Listener, Ticked {
         clientSocket.write(SaveUserPackage(stat.uuid, stat))
     }
 
-    override fun tick(args: Int) {
-        if (args % 30 == 0) {
+    override fun tick(int: Int) {
+        if (int % 30 == 0) {
             Bukkit.getOnlinePlayers().mapNotNull { getUser(it) }.forEach {
                 val size = it.stat.lootBoxes.size
                 it.cachedPlayer?.let { player ->

@@ -1,10 +1,6 @@
 package me.reidj.lobby.ticker.detail
 
 import com.google.common.collect.Maps
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.future.await
-import kotlinx.coroutines.launch
 import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.protocol.TopPackage
 import me.reidj.bridgebuilders.top.TopEntry
@@ -53,10 +49,10 @@ class TopManager : Ticked {
         it.location = location
     }.also(Boards::addBoard)
 
-    private suspend fun updateData() {
+    private fun updateData() {
         for (field in boards.keys) {
             val topPackageResponse =
-                clientSocket.writeAndAwaitResponse<TopPackage>(TopPackage(field, DATA_COUNT)).await()
+                clientSocket.writeAndAwaitResponse<TopPackage>(TopPackage(field, DATA_COUNT)).get()
             tops[field] = topPackageResponse.entries.map {
                 TopEntry(
                     it.displayName ?: error("displayName is null"),
@@ -66,30 +62,26 @@ class TopManager : Ticked {
         }
     }
 
-    override fun tick(args: Int) {
-        if (args % (20 * UPDATE_SECONDS) != 0)
+    override fun tick(int: Int) {
+        if (int % (20 * UPDATE_SECONDS) != 0)
             return
-        CoroutineScope(Dispatchers.Default).launch {
-            runCatching {
-                updateData()
-                val data = GlobalSerializers.toJson(tops)
-                if ("{}" == data || data == null) return@launch
-                boards.forEach { (field, top) ->
-                    top.clearContent()
-                    var counter = 0
-                    if (tops[field] == null) return@forEach
-                    tops[field]!!.forEach {
-                        counter++
-                        top.addContent(
-                            UUID.randomUUID(),
-                            "" + counter,
-                            it.key,
-                            it.value
-                        )
-                    }
-                    top.updateContent()
-                }
-            }.exceptionOrNull()?.printStackTrace()
+        updateData()
+        val data = GlobalSerializers.toJson(tops)
+        if ("{}" == data || data == null) return
+        boards.forEach { (field, top) ->
+            top.clearContent()
+            var counter = 0
+            if (tops[field] == null) return@forEach
+            tops[field]!!.forEach {
+                counter++
+                top.addContent(
+                    UUID.randomUUID(),
+                    "" + counter,
+                    it.key,
+                    it.value
+                )
+            }
+            top.updateContent()
         }
     }
 }

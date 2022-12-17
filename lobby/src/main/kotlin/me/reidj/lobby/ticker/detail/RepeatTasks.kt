@@ -24,10 +24,10 @@ class RepeatTasks : Ticked {
         .event(clickUrl)
         .create()
 
-    override fun tick(args: Int) {
-        if (args % 20000 == 0)
+    override fun tick(int: Int) {
+        if (int % 20000 == 0)
             Bukkit.getOnlinePlayers().forEach { player -> player.sendMessage(ChatMessageType.CHAT, *alertMessage) }
-        if (args % 20 == 0)
+        if (int % 20 == 0)
             GameUtil.compass.storage[0].description = "Онлайн: §3" + IRealmService.get().getOnlineOnRealms("BRD")
     }
 }

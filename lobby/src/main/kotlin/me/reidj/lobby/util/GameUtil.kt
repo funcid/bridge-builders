@@ -17,7 +17,6 @@ object GameUtil {
     val spawn: Location = worldMeta.getLabel("spawn").clone().apply {
         x += .5
         z += .5
-        yaw = 90f
     }
 
     val compass = choicer {

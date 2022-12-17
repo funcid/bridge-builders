@@ -26,7 +26,7 @@ enum class NpcType(
         "https://webdata.c7x.dev/textures/skin/bf30a1df-85de-11e8-a6de-1cb72caa35fd",
         "bf30a1df-85de-11e8-a6de-1cb72caa35fd",
         90f,
-        createBanner(worldMeta.getLabel("two"), 40, 0.62, 60, 0.5,5.0, -90.0, false)
+        createBanner(worldMeta.getLabel("two"), 40, 0.62, 60, 0.5,5.0, 180.0, false)
     ),
     GUIDE(
         "Профиль BridgeBuilders",

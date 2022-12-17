@@ -73,18 +73,15 @@ fun main() {
         val command = readLine()
         if (command == "vipe") {
             val map = mapOf<Bson, Bson>(
-                Filters.gt("money", 0) to unset("money"),
-                // TODO Тут ебанёт скорее всего надо поменять
-                Filters.gt("achievement", listOf<String>()) to unset("achievement"),
+                Filters.gt("ether", 0) to unset("ether"),
+                Filters.gt("exp", 0.0) to unset("exp"),
+                Filters.gt("achievements", listOf<String>()) to unset("achievements"),
                 Filters.gt("games", 0) to unset("games"),
                 Filters.gt("kills", 0) to unset("kills"),
-                Filters.gt("lootBox", 0) to unset("lootBox"),
+                Filters.gt("lootBoxes", listOf<String>()) to unset("lootBoxes"),
                 Filters.gt("lootBoxOpened", 0) to unset("lootBoxOpened"),
-                Filters.gt("isBan", false) to unset("isBan"),
                 Filters.gt("wins", 0) to unset("wins"),
                 Filters.gt("lastRealm", "") to unset("lastRealm"),
-                Filters.gt("gameLockTime", 0) to unset("gameLockTime"),
-                Filters.gt("gameExitTime", 0) to unset("gameExitTime")
             )
             map.forEach { (key, value) ->
                 mongoAdapter.data.updateMany(
@@ -94,7 +91,6 @@ fun main() {
             }
         } else if (command == "uban") {
             val map = mapOf<Bson, Bson>(
-                Filters.gt("money", 0) to unset("money"),
                 Filters.gt("lastRealm", "") to unset("lastRealm")
             )
             map.forEach { (key, value) ->

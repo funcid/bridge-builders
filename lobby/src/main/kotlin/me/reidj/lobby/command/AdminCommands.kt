@@ -17,7 +17,9 @@ class AdminCommands {
         regAdminCommand("loot") { _, args ->
             val user = getUser(Bukkit.getPlayer(args[0])) ?: return@regAdminCommand
             val stat = user.stat
-            stat.lootBoxes.add(LootBoxType.valueOf(args[1]))
+            repeat(args[2].toInt()) {
+                stat.lootBoxes.add(LootBoxType.valueOf(args[1]))
+            }
             clientSocket.write(SaveUserPackage(stat.uuid, stat))
         }
         regAdminCommand("ether") { _, args ->

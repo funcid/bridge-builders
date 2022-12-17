@@ -62,6 +62,40 @@ class GlobalListeners : Listener {
                     -1L,
                     isApprovedResourcepack = true,
                 )
+
+            if (stat.ether == null) {
+                stat.ether = 0
+            }
+
+            if (stat.exp == null) {
+                stat.exp = 0.0
+            }
+
+            if (stat.achievements == null) {
+                stat.achievements = mutableSetOf()
+            }
+
+            if (stat.games == null) {
+                stat.games = 0
+            }
+
+            if (stat.kills == null) {
+                stat.kills = 0
+            }
+
+            if (stat.lootBoxes == null) {
+                stat.lootBoxes = mutableListOf()
+            }
+
+            if (stat.wins == null) {
+                stat.wins = 0
+            }
+
+            if (stat.lastRealm == null) {
+                stat.lastRealm = ""
+            }
+
+
             userMap.putIfAbsent(uniqueId, User(stat))
             completeIntent(plugin)
         }
