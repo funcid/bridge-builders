@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import me.reidj.lobby.ticker.Ticked
+import org.bukkit.scheduler.BukkitRunnable
 
 /**
  * @project : BridgeBuilders
@@ -14,7 +15,7 @@ import me.reidj.lobby.ticker.Ticked
 
 private const val RESET_PERIOD = 20 * 60L * 10
 
-class TickTimerHandler(private val injects: List<Ticked>) : () -> Unit {
+class TickTimerHandler(private val injects: List<Ticked>) : () -> Unit, BukkitRunnable() {
 
     private var tick = 0
 
@@ -33,5 +34,9 @@ class TickTimerHandler(private val injects: List<Ticked>) : () -> Unit {
                 injects.forEach { it.tick(tick) }
             }
         }
+    }
+
+    override fun run() {
+        invoke()
     }
 }

@@ -24,7 +24,6 @@ import me.reidj.lobby.listener.UnusedHandler
 import me.reidj.lobby.npc.NpcManager
 import me.reidj.lobby.ticker.detail.RepeatTasks
 import me.reidj.lobby.ticker.detail.TopManager
-import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import ru.cristalix.core.CoreApi
 import ru.cristalix.core.command.ICommandService
@@ -99,7 +98,7 @@ class App : JavaPlugin() {
         listener(GlobalListeners(), npcManager, lootBox, ConnectionHandler(), InteractHandler(), UnusedHandler(), TabViewManager())
 
         // Обработка каждого тика
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, TickTimerHandler(listOf(npcManager, lootBox, RepeatTasks(), TopManager())), 0, 1)
+        TickTimerHandler(listOf(npcManager, lootBox, RepeatTasks(), TopManager())).runTaskTimerAsynchronously(this, 0, 1)
     }
 
     override fun onDisable() {

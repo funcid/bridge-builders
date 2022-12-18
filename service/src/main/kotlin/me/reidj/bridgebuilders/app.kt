@@ -53,12 +53,10 @@ fun main() {
             println("Received BulkSaveUserPackage from ${realmId.realmName}")
         }
         addListener(TopPackage::class.java) { realmId, pckg ->
-            CoroutineScope(Dispatchers.Default).launch {
-                val top = mongoAdapter.getTop(pckg.topType, pckg.limit)
-                pckg.entries = top
-                forward(realmId, pckg)
-                println("Top generated for ${realmId.realmName}")
-            }
+            val top = mongoAdapter.getTop(pckg.topType, pckg.limit)
+            pckg.entries = top
+            forward(realmId, pckg)
+            println("Top generated for ${realmId.realmName}")
         }
         addListener(RejoinPackage::class.java) { _, pckg ->
             mongoAdapter.find(pckg.uuid).get()?.let {
