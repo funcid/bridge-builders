@@ -5,8 +5,8 @@ import me.reidj.bridgebuilders.clientSocket
 import me.reidj.bridgebuilders.protocol.TopPackage
 import me.reidj.bridgebuilders.top.TopEntry
 import me.reidj.bridgebuilders.worldMeta
-import me.reidj.lobby.ticker.Ticked
 import org.bukkit.Location
+import org.bukkit.scheduler.BukkitRunnable
 import ru.cristalix.boards.bukkitapi.Board
 import ru.cristalix.boards.bukkitapi.Boards
 import ru.cristalix.core.GlobalSerializers
@@ -21,7 +21,7 @@ import java.util.*
 private const val DATA_COUNT = 10
 private const val UPDATE_SECONDS = 30
 
-class TopManager : Ticked {
+class TopManager : BukkitRunnable() {
 
     private val tops = Maps.newConcurrentMap<String, List<TopEntry<String, String>>>()
     private val boards = Maps.newConcurrentMap<String, Board>()
@@ -51,37 +51,40 @@ class TopManager : Ticked {
 
     private fun updateData() {
         for (field in boards.keys) {
-            val topPackageResponse =
-                clientSocket.writeAndAwaitResponse<TopPackage>(TopPackage(field, DATA_COUNT)).get()
-            tops[field] = topPackageResponse.entries.map {
-                TopEntry(
-                    it.displayName ?: error("displayName is null"),
-                    topDataFormat.format(it.value)
-                )
-            }.toList()
+            clientSocket.writeAndAwaitResponse<TopPackage>(TopPackage(field, DATA_COUNT)).thenAcceptAsync {
+                tops[field] = it.entries.map { entry ->
+                    TopEntry(
+                        entry.displayName ?: error("displayName is null"),
+                        topDataFormat.format(entry.value)
+                    )
+                }
+            }
         }
     }
 
-    override fun tick(int: Int) {
-        if (int % (20 * UPDATE_SECONDS) != 0)
-            return
-        updateData()
-        val data = GlobalSerializers.toJson(tops)
-        if ("{}" == data || data == null) return
-        boards.forEach { (field, top) ->
-            top.clearContent()
-            var counter = 0
-            if (tops[field] == null) return@forEach
-            tops[field]!!.forEach {
-                counter++
-                top.addContent(
-                    UUID.randomUUID(),
-                    "" + counter,
-                    it.key,
-                    it.value
-                )
+    private var time = 0
+
+    override fun run() {
+        time++
+        if (time % (20 * UPDATE_SECONDS) == 0) {
+            updateData()
+            val data = GlobalSerializers.toJson(tops)
+            if ("{}" == data || data == null) return
+            boards.forEach { (field, top) ->
+                top.clearContent()
+                var counter = 0
+                if (tops[field] == null) return@forEach
+                for (topEntry in tops[field]!!) {
+                    counter++
+                    top.addContent(
+                        UUID.randomUUID(),
+                        "" + counter,
+                        topEntry.key,
+                        topEntry.value
+                    )
+                }
+                top.updateContent()
             }
-            top.updateContent()
         }
     }
 }

@@ -98,7 +98,8 @@ class App : JavaPlugin() {
         listener(GlobalListeners(), npcManager, lootBox, ConnectionHandler(), InteractHandler(), UnusedHandler(), TabViewManager())
 
         // Обработка каждого тика
-        TickTimerHandler(listOf(npcManager, lootBox, RepeatTasks(), TopManager())).runTaskTimerAsynchronously(this, 0, 1)
+        TickTimerHandler(listOf(npcManager, lootBox, RepeatTasks())).runTaskTimerAsynchronously(this, 0, 1)
+        TopManager().runTaskTimer(this, 0, 1)
     }
 
     override fun onDisable() {

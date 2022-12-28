@@ -18,7 +18,6 @@ import ru.cristalix.core.network.ISocketClient
 import ru.cristalix.core.network.packages.BulkGroupsPackage
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
 
@@ -53,18 +52,6 @@ open class MongoAdapter(dbUrl: String, dbName: String, collection: String) {
                 e.printStackTrace()
             }
         }
-    }
-
-    fun findAll(): CompletableFuture<Map<UUID, Stat>> {
-        val future = CompletableFuture<Map<UUID, Stat>>()
-        val documentFindIterable = data.find()
-        val map = ConcurrentHashMap<UUID, Stat>()
-        documentFindIterable.forEach({ document: Document ->
-            val obj: Stat? = readDocument(document)
-            if (obj != null)
-                map[obj.uuid] = obj
-        }) { _: Void, _: Throwable -> future.complete(map) }
-        return future
     }
 
     private fun readDocument(document: Document?) =
@@ -156,12 +143,6 @@ open class MongoAdapter(dbUrl: String, dbName: String, collection: String) {
                 new.displayName = it.displayName
                 new.userName = it.userName
             }
-        }
-    }
-
-    fun clear(uuid: UUID) {
-        data.deleteOne(Filters.eq("uuid", uuid.toString())) { _, throwable: Throwable? ->
-            throwable?.printStackTrace()
         }
     }
 }
